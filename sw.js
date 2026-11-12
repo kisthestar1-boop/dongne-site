@@ -1,6 +1,6 @@
 /* 동네미팅 앱 설치·오프라인용 서비스 워커 */
-const V = "dm-v2";
-const FILES = ["./", "./index.html", "./match.html", "./game.html", "./game-manifest.json", "./game-icon-192.png", "./game-icon-512.png", "./config.js", "./manifest.json", "./icon-192.png", "./icon-512.png"];
+const V = "dm-v3";
+const FILES = ["./", "./index.html", "./match.html", "./game.html", "./td.html", "./td-manifest.json", "./game-manifest.json", "./game-icon-192.png", "./game-icon-512.png", "./config.js", "./manifest.json", "./icon-192.png", "./icon-512.png"];
 self.addEventListener("install", e => { e.waitUntil(caches.open(V).then(c => c.addAll(FILES))); self.skipWaiting(); });
 self.addEventListener("activate", e => {
   e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== V).map(k => caches.delete(k)))));
