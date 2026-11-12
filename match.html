@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>동네미팅 · 마음 체크</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#F7EFE6">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Noto+Sans+KR:wght@400;700;800&display=swap">
+<style>
+:root{--bg:#F7EFE6;--card:#FFFBF6;--ink:#3A2E28;--mu:#8A7A70;--ln:#EADBCD;--pink:#E7837B;--pk2:#FBE3DE;--blue:#8FB3D9;--gn2:#E3F1E3}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans KR",system-ui,sans-serif}
+.wrap{max-width:520px;margin:0 auto;padding:18px 18px 40px}
+h1{font-family:"Gowun Dodum",sans-serif;font-size:1.35rem;margin:6px 0 2px}
+.sub{color:var(--mu);font-size:.84rem;margin:0 0 14px}
+.card{background:var(--card);border:1px solid var(--ln);border-radius:20px;padding:16px;margin-top:12px}
+label{font-size:.8rem;font-weight:700;display:block;margin:10px 0 5px}
+textarea,input{width:100%;font:inherit;padding:11px 13px;border-radius:14px;border:1px solid var(--ln);background:#fff}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn{width:100%;margin-top:14px;padding:14px;border:0;border-radius:16px;background:var(--ink);color:#fff;font-weight:800;font-size:1rem;font-family:inherit;cursor:pointer}
+.btn.soft{background:#fff;color:var(--ink);border:1px solid var(--ln)}
+.btn:disabled{opacity:.45}
+.who{display:flex;align-items:center;gap:12px}
+.av{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;font-size:1.4rem;font-weight:800;color:#fff;flex:none}
+.av.M{background:var(--blue)}.av.F{background:var(--pink)}
+.pick{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:12px}
+.pick button{padding:16px 8px;border-radius:16px;border:2px solid var(--ln);background:#fff;font-weight:700;font-size:1rem;font-family:inherit;color:var(--ink);cursor:pointer}
+.pick button.on{border-color:var(--pink);background:var(--pk2)}
+.pick button.on::before{content:"♥ ";color:var(--pink)}
+.cover{text-align:center;padding:30px 10px}
+.cover svg{width:110px}
+.prog{height:6px;background:#EFE3D7;border-radius:3px;overflow:hidden;margin-top:8px}.prog i{display:block;height:100%;background:var(--pink);transition:width .4s}
+.pair{display:flex;align-items:center;justify-content:center;gap:10px;padding:12px;border-radius:16px;background:var(--gn2);margin-top:8px;font-weight:800}
+.pair .h{color:var(--pink)}
+.note{font-size:.76rem;color:var(--mu);margin-top:8px;line-height:1.55}
+.tag{display:inline-block;font-size:.7rem;border-radius:99px;padding:2px 9px;background:var(--pk2);color:#A2453D;font-weight:800}
+</style></head>
+<body><div class="wrap" id="app"></div>
+<script>
+(()=>{const K="dmMatch1",A=document.getElementById("app");
+let S=load()||{step:"setup",M:[],F:[],order:[],i:0,votes:{},max:2};
+function load(){try{return JSON.parse(localStorage.getItem(K))}catch(e){return null}}
+function save(){try{localStorage.setItem(K,JSON.stringify(S))}catch(e){}}
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const heart='<svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="56" fill="#FBE3DE"/><path d="M36 54a14 14 0 0 1 24-10a14 14 0 0 1 24 10c0 14-24 28-24 28S36 68 36 54z" fill="#E7837B"/></svg>';
+function r(){save();
+ if(S.step==="setup"){A.innerHTML=`<span class="tag">진행자용</span><h1>💌 마음 체크</h1><p class="sub">폰 한 대를 차례로 건네며 마음에 든 분을 몰래 체크해요. 서로 고른 쌍만 마지막에 공개돼요. 인터넷이 없어도 돼요.</p>
+  <div class="card"><div class="cols"><div><label>남성 닉네임 (줄마다 한 명)</label><textarea id="m" rows="5">${esc(S.M.join("\n"))}</textarea></div>
+  <div><label>여성 닉네임 (줄마다 한 명)</label><textarea id="f" rows="5">${esc(S.F.join("\n"))}</textarea></div></div>
+  <label>한 사람이 고를 수 있는 최대 인원</label><input id="mx" type="number" min="1" max="4" value="${S.max}">
+  <button class="btn" id="start">시작하기</button><p class="note">🔒 기록은 이 폰에만 남고, 결과 확인 후 [모두 지우기]로 삭제돼요.</p></div>`;
+  A.querySelector("#start").onclick=()=>{const sp=id=>A.querySelector(id).value.split("\n").map(s=>s.trim()).filter(Boolean);
+   S.M=sp("#m");S.F=sp("#f");S.max=Math.max(1,Math.min(4,+A.querySelector("#mx").value||2));
+   if(!S.M.length||!S.F.length)return alert("남녀 닉네임을 적어 주세요");
+   S.order=[...S.M.map(n=>["M",n]),...S.F.map(n=>["F",n])];S.i=0;S.votes={};S.step="cover";r()};return}
+ if(S.step==="cover"){const [g,n]=S.order[S.i];A.innerHTML=`<div class="prog"><i style="width:${S.i/S.order.length*100}%"></i></div>
+  <div class="cover">${heart}<h1>${esc(n)}님 차례예요</h1><p class="sub">${S.i+1} / ${S.order.length} · 다른 분은 화면을 보지 않게 해 주세요</p>
+  <button class="btn" id="go">제가 ${esc(n)}이에요</button></div>`;A.querySelector("#go").onclick=()=>{S.step="vote";S.cur=[];r()};return}
+ if(S.step==="vote"){const [g,n]=S.order[S.i],opp=g==="M"?S.F:S.M;S.cur=S.cur||[];
+  A.innerHTML=`<div class="prog"><i style="width:${S.i/S.order.length*100}%"></i></div><div class="card"><div class="who"><div class="av ${g}">${esc(n[0])}</div><div><b>${esc(n)}님</b><p class="sub" style="margin:2px 0 0">다시 만나고 싶은 분을 골라 주세요 (최대 ${S.max}명, 안 골라도 돼요)</p></div></div>
+  <div class="pick">${opp.map(o=>`<button data-o="${esc(o)}" class="${S.cur.includes(o)?"on":""}">${esc(o)}</button>`).join("")}</div>
+  <button class="btn" id="ok">${S.cur.length?"이렇게 할게요":"이번엔 없어요"}</button></div>`;
+  A.querySelectorAll("[data-o]").forEach(b=>b.onclick=()=>{const o=b.dataset.o;if(S.cur.includes(o))S.cur=S.cur.filter(x=>x!==o);else if(S.cur.length<S.max)S.cur.push(o);r()});
+  A.querySelector("#ok").onclick=()=>{S.votes[g+":"+n]=S.cur;S.cur=[];S.i++;S.step=S.i>=S.order.length?"lock":"cover";r()};return}
+ if(S.step==="lock"){A.innerHTML=`<div class="cover">${heart}<h1>모두 체크했어요</h1><p class="sub">결과는 진행자만 확인해요</p><button class="btn" id="see">진행자: 결과 보기</button></div>`;
+  A.querySelector("#see").onclick=()=>{S.step="result";r()};return}
+ if(S.step==="result"){const pairs=[];S.M.forEach(m=>(S.votes["M:"+m]||[]).forEach(f=>{if((S.votes["F:"+f]||[]).includes(m))pairs.push([m,f])}));
+  A.innerHTML=`<span class="tag">진행자용</span><h1>🎉 서로 고른 쌍</h1><p class="sub">${pairs.length?`${pairs.length}쌍이 서로를 골랐어요. 이 분들께만 연락처를 전해 주세요.`:"이번엔 서로 고른 쌍이 없어요. 고른 사실은 누구에게도 알려지지 않아요."}</p>
+  <div class="card">${pairs.map(([m,f])=>`<div class="pair"><span>${esc(m)}</span><span class="h">♥</span><span>${esc(f)}</span></div>`).join("")||'<p class="note">다음 모임에서 또 만나요 ☕</p>'}</div>
+  <button class="btn soft" id="again">처음부터 다시</button><button class="btn" id="wipe">모두 지우기</button>
+  <p class="note">한쪽만 고른 경우는 표시하지 않아요. 상대에게 알려지지 않게 하기 위해서예요.</p>`;
+  A.querySelector("#again").onclick=()=>{S.step="setup";S.votes={};r()};
+  A.querySelector("#wipe").onclick=()=>{if(!confirm("체크 기록과 닉네임을 이 폰에서 모두 지울까요?"))return;S={step:"setup",M:[],F:[],order:[],i:0,votes:{},max:2};try{localStorage.removeItem(K)}catch(e){}r()};}}
+r();})();
+</script></body></html>

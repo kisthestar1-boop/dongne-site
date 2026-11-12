@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>동네미팅 | 김해·창원·부산 소개팅 모임</title>
+<meta name="description" content="동네에서 만나는 30대 소규모 로테이션 소개팅. 실명·사진 없이, 서로 OK일 때만 연결돼요.">
+<meta name="theme-color" content="#F7EFE6">
+<meta property="og:title" content="동네미팅 — 장유 첫 4:4 소개팅 모임">
+<meta property="og:description" content="11월 28일(토) 저녁 6시 · 장유 율하 · 89~96년생 남4 여4">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Noto+Sans+KR:wght@400;500;700;800&display=swap">
+<style>
+:root{--bg:#F7EFE6;--card:#FFFBF6;--ink:#3A2E28;--mu:#8A7A70;--ln:#EADBCD;--pink:#E7837B;--pk2:#FBE3DE;--grn:#6FA57A;--gn2:#E3F1E3;--gold:#C99A4B;
+--f:"Noto Sans KR",system-ui,sans-serif;--h:"Gowun Dodum","Noto Sans KR",sans-serif}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f);line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:520px;margin:0 auto;padding:0 18px 90px}
+header{display:flex;align-items:center;justify-content:space-between;padding:16px 0}
+.logo{font-family:var(--h);font-size:1.25rem;font-weight:700;display:flex;gap:8px;align-items:center}
+.logo img{width:30px;height:30px;border-radius:9px}
+.area{font-size:.75rem;color:var(--mu)}
+.hero{background:linear-gradient(160deg,#FFF6EE,#FCE7DF);border-radius:24px;padding:22px 20px 18px;position:relative;overflow:hidden}
+.hero h1{font-family:var(--h);font-size:1.6rem;line-height:1.35;margin:0 0 8px}
+.hero h1 mark{background:linear-gradient(transparent 58%,#FFD9A8 58%);color:inherit}
+.hero p{margin:0;color:#6B5A50;font-size:.92rem}
+.hero svg{display:block;width:100%;height:auto;margin-top:12px}
+.card{background:var(--card);border:1px solid var(--ln);border-radius:20px;padding:18px;margin-top:14px}
+.ev-top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.ev-top b{font-size:1.05rem}
+.badge{font-size:.72rem;font-weight:800;border-radius:99px;padding:3px 10px;background:var(--gn2);color:#2F6B3A;white-space:nowrap}
+.badge.wait{background:var(--pk2);color:#A2453D}
+.facts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.facts div{background:#FFF;border-radius:14px;padding:10px 12px;font-size:.82rem;border:1px solid #F1E6DA}
+.facts span{display:block;font-size:.7rem;color:var(--mu)}
+.seats{display:flex;gap:10px;margin-top:12px}
+.seat{flex:1;background:#FFF;border-radius:14px;padding:10px 12px;border:1px solid #F1E6DA}
+.seat small{font-size:.72rem;color:var(--mu)}
+.dots{display:flex;gap:5px;margin-top:6px}.dots i{width:16px;height:16px;border-radius:50%;background:#EFE3D7}
+.dots i.on.M{background:#8FB3D9}.dots i.on.F{background:var(--pink)}
+.seat b{font-size:.8rem}
+h2{font-family:var(--h);font-size:1.2rem;margin:28px 0 6px}
+.steps{display:grid;gap:10px}
+.step{display:grid;grid-template-columns:54px 1fr;gap:12px;align-items:center;background:var(--card);border:1px solid var(--ln);border-radius:18px;padding:12px}
+.step svg{width:54px;height:54px}
+.step b{display:block;font-size:.92rem}.step p{margin:2px 0 0;font-size:.8rem;color:var(--mu)}
+.trust{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.trust div{background:var(--gn2);border-radius:16px;padding:12px 8px;text-align:center;font-size:.76rem;font-weight:700;color:#2F5B36}
+.trust i{display:block;font-style:normal;font-size:1.4rem;margin-bottom:4px}
+form .row{margin-top:12px}
+label{display:block;font-size:.8rem;font-weight:700;margin-bottom:5px}
+input,select{width:100%;font:inherit;font-size:1rem;padding:12px 14px;border-radius:14px;border:1px solid var(--ln);background:#FFF;color:var(--ink)}
+input:focus,select:focus{outline:2px solid #F3C3B2;border-color:#F3C3B2}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.seg button{font:inherit;padding:12px;border-radius:14px;border:1px solid var(--ln);background:#FFF;font-weight:700;color:var(--ink);cursor:pointer}
+.seg button.on{background:var(--pink);border-color:var(--pink);color:#fff}
+.agree{display:flex;gap:8px;align-items:flex-start;font-size:.8rem;color:#6B5A50;margin-top:14px}
+.agree input{width:20px;height:20px;margin-top:2px;flex:none}
+.cta{width:100%;margin-top:16px;padding:15px;border:0;border-radius:16px;background:var(--ink);color:#fff;font:800 1rem var(--f);cursor:pointer}
+.cta:disabled{opacity:.5}
+.hint{font-size:.74rem;color:var(--mu);margin-top:8px;text-align:center}
+.done{text-align:center;padding:10px 4px}
+.done svg{width:120px;height:120px}
+.done b{display:block;font-size:1.1rem;margin-top:6px}
+.copybox{white-space:pre-wrap;background:#FFF;border:1px dashed var(--ln);border-radius:14px;padding:12px;font-size:.84rem;text-align:left;margin-top:10px}
+.btn2{display:inline-block;margin-top:10px;padding:11px 16px;border-radius:14px;border:1px solid var(--ink);background:#FFF;font:700 .9rem var(--f);color:var(--ink);text-decoration:none;cursor:pointer}
+details{background:var(--card);border:1px solid var(--ln);border-radius:16px;padding:12px 14px;margin-top:8px}
+summary{font-weight:700;font-size:.9rem;cursor:pointer;list-style:none}summary::after{content:"＋";float:right;color:var(--mu)}
+details[open] summary::after{content:"－"}
+details p{margin:8px 0 0;font-size:.84rem;color:#5E4F46}
+.bar{position:fixed;left:0;right:0;bottom:0;padding:10px 18px calc(10px + env(safe-area-inset-bottom));background:rgba(247,239,230,.94);backdrop-filter:blur(8px);border-top:1px solid var(--ln)}
+.bar a{display:block;max-width:520px;margin:0 auto;text-align:center;padding:14px;border-radius:16px;background:var(--pink);color:#fff;font-weight:800;text-decoration:none}
+.install{display:none;margin-top:14px;background:#FFF;border:1px solid var(--ln);border-radius:16px;padding:12px 14px;font-size:.82rem;align-items:center;gap:10px}
+.install.show{display:flex}.install button{margin-left:auto;flex:none}
+footer{margin-top:30px;font-size:.72rem;color:var(--mu);text-align:center}
+footer a{color:var(--mu)}
+</style></head>
+<body>
+<div class="wrap">
+<header>
+  <div class="logo"><img src="icon-192.png" alt="">동네미팅</div>
+  <div class="area">📍 김해 · 창원 · 부산</div>
+</header>
+
+<section class="hero">
+  <h1>앱 대화는 그만,<br><mark>동네에서 얼굴 보고</mark> 만나요</h1>
+  <p>30대 소규모 로테이션 소개팅. 실명·사진 없이, 서로 OK일 때만 연결돼요.</p>
+  <svg viewBox="0 0 360 170" aria-hidden="true">
+    <rect x="0" y="118" width="360" height="52" rx="12" fill="#EED9C6"/>
+    <rect x="110" y="100" width="140" height="14" rx="7" fill="#C99A75"/>
+    <rect x="128" y="114" width="8" height="40" fill="#B48463"/><rect x="224" y="114" width="8" height="40" fill="#B48463"/>
+    <!-- 왼쪽 사람 -->
+    <circle cx="82" cy="58" r="20" fill="#F5D3BC"/><path d="M62 54 Q82 28 102 54 L102 46 Q82 22 62 46Z" fill="#4A3A33"/>
+    <path d="M56 118 Q58 82 82 80 Q106 82 108 118Z" fill="#8FB3D9"/>
+    <circle cx="76" cy="60" r="2" fill="#3A2E28"/><circle cx="88" cy="60" r="2" fill="#3A2E28"/><path d="M77 68 Q82 72 87 68" stroke="#3A2E28" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <!-- 오른쪽 사람 -->
+    <circle cx="278" cy="58" r="20" fill="#F7D9C6"/><path d="M256 62 Q254 30 278 32 Q302 30 300 62 Q300 84 296 92 L292 60 Q278 44 264 60 L260 92 Q256 84 256 62Z" fill="#5B4237"/>
+    <path d="M252 118 Q254 82 278 80 Q302 82 304 118Z" fill="#E7837B"/>
+    <circle cx="272" cy="60" r="2" fill="#3A2E28"/><circle cx="284" cy="60" r="2" fill="#3A2E28"/><path d="M273 68 Q278 72 283 68" stroke="#3A2E28" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <!-- 컵 -->
+    <rect x="146" y="84" width="16" height="16" rx="3" fill="#FFF"/><rect x="198" y="84" width="16" height="16" rx="3" fill="#FFF"/>
+    <path d="M150 80 q3 -6 0 -12 M206 80 q3 -6 0 -12" stroke="#D8C3B0" stroke-width="2" fill="none"/>
+    <!-- 말풍선 -->
+    <rect x="132" y="14" width="96" height="38" rx="14" fill="#FFF"/><path d="M174 52 l6 8 l6 -8z" fill="#FFF"/>
+    <text x="180" y="39" text-anchor="middle" font-size="15" font-family="Gowun Dodum, sans-serif" fill="#3A2E28">반가워요 ☕</text>
+  </svg>
+</section>
+
+<section class="card" id="event">
+  <div class="ev-top"><b id="evTitle">장유 첫 동네미팅 4:4</b><span class="badge" id="evBadge">모집 중</span></div>
+  <div class="facts">
+    <div><span>🗓 언제</span><b id="evDate"></b></div>
+    <div><span>📍 어디서</span><b id="evPlace"></b></div>
+    <div><span>👥 누구</span><b id="evAges"></b></div>
+    <div><span>💳 참가비</span><b id="evPrice"></b></div>
+  </div>
+  <div class="seats">
+    <div class="seat"><small>남성 자리</small><div class="dots" id="dotsM"></div><b id="leftM"></b></div>
+    <div class="seat"><small>여성 자리</small><div class="dots" id="dotsF"></div><b id="leftF"></b></div>
+  </div>
+  <div class="install" id="install">📲 홈 화면에 앱처럼 설치해 두면 다음 모임 소식을 바로 볼 수 있어요<button class="btn2" id="installBtn">설치</button></div>
+</section>
+
+<h2>이렇게 진행돼요</h2>
+<div class="steps">
+  <div class="step"><svg viewBox="0 0 54 54"><rect width="54" height="54" rx="16" fill="#FBE3DE"/><rect x="17" y="10" width="20" height="34" rx="5" fill="#fff" stroke="#E7837B" stroke-width="2"/><path d="M22 22h10M22 28h7" stroke="#E7837B" stroke-width="2.5" stroke-linecap="round"/></svg><div><b>① 1분 신청</b><p>닉네임·출생연도·연락처만. 실명과 사진은 받지 않아요.</p></div></div>
+  <div class="step"><svg viewBox="0 0 54 54"><rect width="54" height="54" rx="16" fill="#E3F1E3"/><circle cx="20" cy="22" r="6" fill="#8FB3D9"/><circle cx="34" cy="22" r="6" fill="#E7837B"/><path d="M12 40q8-12 16 0M26 40q8-12 16 0" fill="#fff" stroke="#6FA57A" stroke-width="2"/></svg><div><b>② 성비가 맞으면 확정</b><p>남녀 4명씩 모이면 확정 문자와 장소를 보내 드려요.</p></div></div>
+  <div class="step"><svg viewBox="0 0 54 54"><rect width="54" height="54" rx="16" fill="#FFF1D8"/><path d="M14 30a8 8 0 0 1 13-6a8 8 0 0 1 13 6c0 7-13 13-13 13S14 37 14 30z" fill="#E7837B"/></svg><div><b>③ 돌아가며 대화 → 서로 OK면 연결</b><p>모두와 한 번씩 이야기하고, 마음에 든 분을 몰래 체크해요.</p></div></div>
+</div>
+
+<h2>안심하고 오세요</h2>
+<div class="trust">
+  <div><i>🙈</i>실명·사진<br>안 받아요</div>
+  <div><i>🗑</i>연락처는<br>모임 7일 뒤 삭제</div>
+  <div><i>🤝</i>서로 OK일 때만<br>연락처 전달</div>
+</div>
+
+<h2 id="apply">신청하기</h2>
+<section class="card">
+  <form id="f" novalidate>
+    <div class="row"><label>성별</label>
+      <div class="seg" id="seg"><button type="button" data-g="M">남성</button><button type="button" data-g="F">여성</button></div></div>
+    <div class="row"><label for="nick">닉네임</label><input id="nick" maxlength="12" placeholder="모임에서 부를 이름" autocomplete="off"></div>
+    <div class="row"><label for="birth">출생연도</label><select id="birth"></select></div>
+    <div class="row"><label for="phone">연락처</label><input id="phone" inputmode="tel" placeholder="010-0000-0000" maxlength="13"></div>
+    <label class="agree"><input type="checkbox" id="ok"><span>확정 안내를 위해 연락처를 받고, <b>모임 7일 뒤 삭제</b>하는 데 동의해요.</span></label>
+    <button class="cta" id="go" type="submit">신청할게요</button>
+    <div class="hint" id="hint">입금 안내는 성비가 맞아 확정되면 문자로 드려요</div>
+  </form>
+  <div class="done" id="done" hidden></div>
+</section>
+
+<h2>자주 묻는 질문</h2>
+<details><summary>혼자 가도 돼요?</summary><p>대부분 혼자 오세요. 진행자가 처음부터 끝까지 안내해 드려요.</p></details>
+<details><summary>어떻게 연결돼요?</summary><p>모임이 끝날 때 마음에 드는 분을 체크하고, 서로 고른 경우에만 연락처를 전해 드려요. 고르지 않은 쪽에는 아무것도 알려지지 않아요.</p></details>
+<details><summary>성비가 안 맞으면요?</summary><p>남녀 4명씩 모일 때만 확정돼요. 안 맞으면 입금 전에 날짜 변경이나 다음 모임을 안내해 드려요.</p></details>
+<details><summary>나이 제한이 있나요?</summary><p>이번 모임은 89~96년생이에요. 다른 나이대 모임이 열리면 인스타에서 먼저 알려 드려요.</p></details>
+
+<footer>
+  문의: 인스타그램 <a id="instaLink" href="#">@dongnae.meet</a><br>
+  © 동네미팅 · 김해 장유
+</footer>
+</div>
+<div class="bar"><a href="#apply" id="barBtn">1분 신청하기</a></div>
+
+<script src="config.js"></script>
+<script>
+(()=>{const C=window.DM,E=C.event,$=s=>document.querySelector(s);
+const sb=C.supabaseUrl&&C.supabaseKey?{u:C.supabaseUrl.replace(/\/$/,""),k:C.supabaseKey}:null;
+const H=sb?{apikey:sb.k,Authorization:"Bearer "+sb.k,"Content-Type":"application/json"}:{};
+$("#evTitle").textContent=E.title;$("#evDate").textContent=E.dateText;$("#evPlace").textContent=E.place;
+$("#evAges").textContent=E.ages+" 남"+E.seats.M+" 여"+E.seats.F;$("#evPrice").textContent="남 "+E.price.M+" · 여 "+E.price.F;
+const il=$("#instaLink");il.textContent="@"+C.insta;il.href="https://instagram.com/"+C.insta;
+const bs=$("#birth");bs.innerHTML='<option value="">선택해 주세요</option>'+Array.from({length:E.birthMax-E.birthMin+1},(_,i)=>E.birthMin+i).map(y=>`<option>${y}</option>`).join("");
+let cnt={M:null,F:null};
+function seats(){["M","F"].forEach(g=>{const n=cnt[g],t=E.seats[g];$("#dots"+g).innerHTML=Array.from({length:t},(_,i)=>`<i class="${n!=null&&i<n?"on "+g:""}"></i>`).join("");
+  $("#left"+g).textContent=n==null?"선착순":(n>=t?"마감 · 대기 신청 가능":`${t-n}자리 남았어요`)});
+  const full=cnt.M>=E.seats.M&&cnt.F>=E.seats.F;const b=$("#evBadge");b.textContent=full?"마감 · 대기 접수":"모집 중";b.classList.toggle("wait",full);
+  if(new Date(E.date)<new Date()){b.textContent="종료";b.classList.add("wait")}}
+seats();
+if(sb){fetch(sb.u+"/rest/v1/rpc/seat_counts",{method:"POST",headers:H,body:JSON.stringify({ev:E.id})}).then(r=>r.json()).then(d=>{const x=Array.isArray(d)?d[0]:d;if(x){cnt={M:x.m|0,F:x.f|0};seats()}}).catch(()=>{})}
+let g="";$("#seg").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;g=b.dataset.g;[...$("#seg").children].forEach(x=>x.classList.toggle("on",x===b))});
+$("#phone").addEventListener("input",e=>{let v=e.target.value.replace(/\D/g,"").slice(0,11);e.target.value=v.length>7?v.replace(/(\d{3})(\d{4})(\d+)/,"$1-$2-$3"):v.length>3?v.replace(/(\d{3})(\d+)/,"$1-$2"):v});
+const heart=`<svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="56" fill="#FBE3DE"/><path d="M36 54a14 14 0 0 1 24-10a14 14 0 0 1 24 10c0 14-24 28-24 28S36 68 36 54z" fill="#E7837B"/></svg>`;
+$("#f").addEventListener("submit",async e=>{e.preventDefault();
+  const nick=$("#nick").value.trim(),birth=$("#birth").value,phone=$("#phone").value.trim(),hint=$("#hint");
+  if(!g)return hint.textContent="성별을 골라 주세요";if(!nick)return hint.textContent="닉네임을 적어 주세요";if(!birth)return hint.textContent="출생연도를 골라 주세요";
+  if(!/^010-\d{4}-\d{4}$/.test(phone))return hint.textContent="연락처를 010-0000-0000 형식으로 적어 주세요";if(!$("#ok").checked)return hint.textContent="안내 동의에 체크해 주세요";
+  const full=cnt[g]!=null&&cnt[g]>=E.seats[g];const gl=g==="M"?"남성":"여성";
+  if(sb){$("#go").disabled=true;$("#go").textContent="보내는 중…";
+    try{const r=await fetch(sb.u+"/rest/v1/applicants",{method:"POST",headers:{...H,Prefer:"return=minimal"},body:JSON.stringify({event_id:E.id,gender:g,nick,birth:+birth,phone,status:full?"대기":"신청"})});
+      if(!r.ok)throw 0;
+      $("#f").hidden=true;const d=$("#done");d.hidden=false;
+      d.innerHTML=`${heart}<b>${full?"대기 신청 완료!":"신청 완료!"}</b><p>${esc(nick)}님(${gl}, ${birth}년생)<br>${full?"자리가 나면 바로 문자 드릴게요.":"성비가 맞으면 확정 문자와 입금 안내를 보내 드려요."}</p><a class="btn2" href="https://instagram.com/${C.insta}">인스타에서 소식 받기</a>`;return}
+    catch(_){$("#go").disabled=false;$("#go").textContent="신청할게요";hint.textContent="잠시 연결이 안 돼요. 아래 인스타 DM으로도 신청할 수 있어요"}}
+  const txt=`[동네미팅 신청] ${E.dateText}\n성별: ${gl}\n닉네임: ${nick}\n출생연도: ${birth}\n연락처: ${phone}`;
+  $("#f").hidden=true;const d=$("#done");d.hidden=false;
+  d.innerHTML=`${heart}<b>거의 다 됐어요!</b><p>아래 내용을 복사해서 인스타 DM으로 보내 주시면 신청이 끝나요.</p><div class="copybox">${esc(txt)}</div><button class="btn2" id="cp">복사하기</button> <a class="btn2" href="https://ig.me/m/${C.insta}">DM 보내기</a>`;
+  $("#cp").onclick=async()=>{try{await navigator.clipboard.writeText(txt);$("#cp").textContent="복사했어요 ✓"}catch(_){}}});
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+/* 홈 화면 설치 */
+let dp=null;window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();dp=e;$("#install").classList.add("show")});
+$("#installBtn").onclick=async()=>{if(!dp)return;dp.prompt();await dp.userChoice;dp=null;$("#install").classList.remove("show")};
+if(/iphone|ipad/i.test(navigator.userAgent)&&!navigator.standalone){const i=$("#install");i.innerHTML="📲 아래 공유 버튼 → <b>홈 화면에 추가</b>를 누르면 앱처럼 설치돼요";i.classList.add("show")}
+if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
+})();
+</script>
+</body></html>
