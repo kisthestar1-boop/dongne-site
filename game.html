@@ -3,7 +3,9 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>동네 카페 머지</title>
 <meta name="theme-color" content="#F3E4D2">
-<link rel="icon" href="icon-192.png">
+<link rel="icon" href="game-icon-192.png">
+<link rel="manifest" href="game-manifest.json">
+<link rel="apple-touch-icon" href="game-icon-192.png">
 <style>
 :root{--bg:#F3E4D2;--ink:#3A2A20;--card:#FFF8EF}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -82,6 +84,7 @@ document.addEventListener("click",async e=>{const c=e.target.closest("[data-c]")
     const h=hist.pop();g=h.g;score=h.score;nxt=h.nxt;undos--;over=false;lastPop=null;$("#ov").classList.remove("on");draw();return}
   if(e.target.closest("#share")){const t=`동네 카페 머지에서 ${score}점! 너도 해 봐 ☕ ${location.href}`;try{if(navigator.share)await navigator.share({text:t});else{await navigator.clipboard.writeText(t);toast("복사했어요")}}catch(_){}}});
 reset();how(true);
+if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
 })();
 </script>
 </body></html>
