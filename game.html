@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>동네 카페 머지</title>
+<meta name="theme-color" content="#F3E4D2">
+<link rel="icon" href="icon-192.png">
+<style>
+:root{--bg:#F3E4D2;--ink:#3A2A20;--card:#FFF8EF}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:"Noto Sans KR",system-ui,sans-serif;overflow:hidden;touch-action:manipulation;user-select:none}
+.app{max-width:460px;margin:0 auto;height:100%;display:flex;flex-direction:column;padding:12px 12px calc(12px + env(safe-area-inset-bottom))}
+.top{display:flex;align-items:center;gap:8px}
+.top h1{font-size:1.05rem;margin:0;flex:1}
+.pill{background:var(--card);border-radius:99px;padding:5px 12px;font-weight:800;font-size:.85rem;box-shadow:0 2px 0 rgba(0,0,0,.06)}
+.next{display:flex;align-items:center;gap:8px;margin:10px 0 8px;font-size:.8rem;color:#7A6656}
+.next .it{width:38px;height:38px}
+.board{position:relative;flex:1;background:#E8D3BC;border-radius:18px;padding:6px;display:grid;grid-template-columns:repeat(5,1fr);gap:6px;min-height:0}
+.col{position:relative;border-radius:12px;background:rgba(255,255,255,.28);display:flex;flex-direction:column-reverse;gap:5px;padding:5px 4px;cursor:pointer}
+.col:active{background:rgba(255,255,255,.45)}
+.it{width:100%;aspect-ratio:1;border-radius:12px;display:grid;place-items:center;font-size:clamp(18px,7vw,30px);box-shadow:inset 0 -3px 0 rgba(0,0,0,.08);position:relative}
+.it b{position:absolute;bottom:1px;right:4px;font-size:.5rem;color:rgba(0,0,0,.45)}
+.it.pop{animation:pop .25s ease-out}
+@keyframes pop{0%{transform:scale(.6)}100%{transform:scale(1)}}
+.danger{position:absolute;left:6px;right:6px;top:6px;height:3px;border-radius:2px;background:#E7837B;opacity:.5}
+.bar{display:flex;gap:8px;margin-top:10px}
+.bar button{flex:1;border:0;border-radius:14px;padding:12px;font:800 .9rem system-ui;background:var(--card);color:var(--ink);box-shadow:0 2px 0 rgba(0,0,0,.08)}
+.bar button.main{background:#3A2A20;color:#fff}
+.ov{position:fixed;inset:0;background:rgba(58,42,32,.55);display:none;align-items:center;justify-content:center;padding:20px;z-index:9}
+.ov.on{display:flex}
+.box{background:var(--card);border-radius:22px;padding:22px 20px;max-width:360px;width:100%;text-align:center}
+.box h2{margin:6px 0 4px}.box p{margin:6px 0;color:#6B5A4C;font-size:.9rem;line-height:1.55}
+.box .big{font-size:2.2rem;font-weight:900}
+.chain{display:flex;flex-wrap:wrap;gap:4px;justify-content:center;margin:10px 0}
+.chain span{font-size:1.3rem}
+.box button{width:100%;margin-top:10px;border:0;border-radius:14px;padding:13px;font:800 1rem system-ui;background:#3A2A20;color:#fff}
+.box button.sub{background:#EADBCD;color:var(--ink)}
+.toast{position:fixed;left:50%;top:18%;transform:translateX(-50%);background:#3A2A20;color:#fff;padding:8px 14px;border-radius:99px;font-weight:800;font-size:.85rem;opacity:0;transition:opacity .3s;pointer-events:none;z-index:8}
+.toast.on{opacity:1}
+</style></head>
+<body>
+<div class="app">
+  <div class="top"><h1>☕ 동네 카페 머지</h1><span class="pill" id="sc">0</span><span class="pill" id="bs">🏆 0</span></div>
+  <div class="next">다음 재료 <div class="it" id="nx"></div><span id="nn"></span></div>
+  <div class="board" id="bd"><div class="danger"></div></div>
+  <div class="bar"><button id="undo">↩ 되돌리기 <small id="uc"></small></button><button class="main" id="how">❓ 방법</button></div>
+</div>
+<div class="toast" id="tt"></div>
+<div class="ov on" id="ov"><div class="box" id="bx"></div></div>
+<script>
+(()=>{
+const ITEMS=[["🫘","원두","#E9D2B5"],["☕","에스프레소","#F2DCC2"],["🥛","라떼","#F7E9D6"],["🧋","밀크티","#EBD9F0"],["🍰","케이크","#FBE0E4"],["🥐","크루아상","#FBE9C4"],["🍮","푸딩","#FFEFC2"],["🎂","홀케이크","#FAD4DA"],["🏠","동네 카페","#D9EBD5"]];
+const COLS=5,ROWS=7,$=s=>document.querySelector(s);
+let g,score,best=+(localStorage.getItem("dcmBest")||0),nxt,hist=[],undos=3,over=false;
+function rnd(){const r=Math.random();return r<.55?0:r<.85?1:2}
+function reset(){g=Array.from({length:COLS},()=>[]);score=0;hist=[];undos=3;over=false;nxt=rnd();draw()}
+function cell(v,pop){const[e,n,c]=ITEMS[v];return `<div class="it ${pop?"pop":""}" style="background:${c}">${e}<b>${v+1}</b></div>`}
+let lastPop=null;
+function draw(){$("#sc").textContent=score;$("#bs").textContent="🏆 "+best;
+  const nx=$("#nx");nx.outerHTML=`<div class="it" id="nx" style="background:${ITEMS[nxt][2]}">${ITEMS[nxt][0]}</div>`;$("#nn").textContent=ITEMS[nxt][1];
+  $("#uc").textContent=`(${undos})`;
+  $("#bd").innerHTML='<div class="danger"></div>'+g.map((c,i)=>`<div class="col" data-c="${i}">${c.map((v,j)=>cell(v,lastPop&&lastPop[0]===i&&lastPop[1]===j)).join("")}</div>`).join("")}
+function toast(t){const e=$("#tt");e.textContent=t;e.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove("on"),1100)}
+function drop(i){if(over)return;const c=g[i];if(c.length>=ROWS){toast("이 줄은 꽉 찼어요");return}
+  hist.push({g:g.map(x=>x.slice()),score,nxt});if(hist.length>10)hist.shift();
+  c.push(nxt);let combo=0;
+  while(c.length>=2&&c[c.length-1]===c[c.length-2]&&c[c.length-1]<ITEMS.length-1){const v=c.pop();c.pop();c.push(v+1);combo++;score+=(v+2)*10*combo;
+    if(v+1===ITEMS.length-1)toast("🏠 동네 카페 완성! +500"),score+=500;}
+  if(combo>1)toast(`${combo}연속 머지! 🔥`);
+  lastPop=[i,c.length-1];nxt=rnd();
+  if(score>best){best=score;try{localStorage.setItem("dcmBest",best)}catch(e){}}
+  draw();if(g.every(x=>x.length>=ROWS))end()}
+function end(){over=true;const top=Math.max(...g.flat());
+  $("#bx").innerHTML=`<div style="font-size:2.4rem">${ITEMS[top][0]}</div><h2>영업 종료!</h2><div class="big">${score}점</div><p>오늘 최고 메뉴: <b>${ITEMS[top][1]}</b><br>최고 기록 ${best}점</p>
+  ${undos>0?`<button class="sub" id="rev">↩ 되돌리기로 이어하기 (${undos})</button>`:""}<button id="again">다시 하기</button><button class="sub" id="share">친구에게 자랑하기</button>`;$("#ov").classList.add("on")}
+function how(first){$("#bx").innerHTML=`<div style="font-size:2.4rem">☕</div><h2>동네 카페 머지</h2><p>줄을 눌러 재료를 떨어뜨려요.<br><b>같은 재료가 위아래로 만나면</b> 다음 메뉴로 바뀌어요!</p>
+  <div class="chain">${ITEMS.map(i=>`<span title="${i[1]}">${i[0]}</span>`).join("→")}</div><p>모든 줄이 꽉 차면 영업 종료.<br>🏠 동네 카페까지 만들어 보세요!</p><button id="go">${first?"시작하기":"계속하기"}</button>`;$("#ov").classList.add("on")}
+document.addEventListener("click",async e=>{const c=e.target.closest("[data-c]");if(c){drop(+c.dataset.c);return}
+  if(e.target.closest("#go")){$("#ov").classList.remove("on");return}
+  if(e.target.closest("#again")){reset();$("#ov").classList.remove("on");return}
+  if(e.target.closest("#how")){how(false);return}
+  if(e.target.closest("#undo")||e.target.closest("#rev")){if(!hist.length){toast("되돌릴 게 없어요");return}if(undos<=0){toast("되돌리기를 다 썼어요");return}
+    const h=hist.pop();g=h.g;score=h.score;nxt=h.nxt;undos--;over=false;lastPop=null;$("#ov").classList.remove("on");draw();return}
+  if(e.target.closest("#share")){const t=`동네 카페 머지에서 ${score}점! 너도 해 봐 ☕ ${location.href}`;try{if(navigator.share)await navigator.share({text:t});else{await navigator.clipboard.writeText(t);toast("복사했어요")}}catch(_){}}});
+reset();how(true);
+})();
+</script>
+</body></html>
