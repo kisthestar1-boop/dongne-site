@@ -473,6 +473,23 @@ $("#bHost").textContent=t("친구랑 방 만들기","Create room");$("#bJoin").t
 $("#bHost").onclick=hostRoom;$("#bJoin").onclick=joinUI;
 if("serviceWorker" in navigator&&location.protocol==="https:")navigator.serviceWorker.register("pp-sw.js").catch(()=>{});
 
+
+/* ---------- 배경음악 (직접 만든 곡 · 웹오디오로 연주) ---------- */
+const BGM=(()=>{let on=false,next=0,step=0,timer=null;const F=n=>440*Math.pow(2,(n-69)/12);
+ const CH=[[60,64,67],[57,60,64],[53,57,60],[55,59,62]];
+ const MEL=[72,0,76,79,76,0,74,72, 69,0,72,76,74,0,72,0, 65,0,69,72,74,72,69,0, 67,71,74,0,76,74,71,0];
+ function note(f,t,d,type,v){const a=AC;const o=a.createOscillator(),g=a.createGain();o.type=type;o.frequency.value=f;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+.01);g.gain.exponentialRampToValueAtTime(.0008,t+d);o.connect(g);g.connect(a.destination);o.start(t);o.stop(t+d+.02)}
+ function hat(t,v){const a=AC,n=a.sampleRate*.04,b=a.createBuffer(1,n,a.sampleRate),c=b.getChannelData(0);for(let i=0;i<n;i++)c[i]=(Math.random()*2-1)*(1-i/n);const s=a.createBufferSource(),g=a.createGain(),f=a.createBiquadFilter();f.type="highpass";f.frequency.value=6000;s.buffer=b;g.gain.value=v;s.connect(f);f.connect(g);g.connect(a.destination);s.start(t)}
+ function tick(){if(!AC||!on)return;const fast=state==="play",spb=60/(fast?138:104)/2;
+  while(next<AC.currentTime+.15){const t=next,bar=Math.floor(step/8)%4,i=step%32,ch=CH[bar];
+   if(!muted){const v=fast?1:.7;
+    if(step%8===0)note(F(ch[0]-24),t,spb*3.5,"triangle",.11*v);if(step%8===4)note(F(ch[0]-12),t,spb*2,"triangle",.07*v);
+    if(step%2===0)note(F(ch[(step/2)%3]),t,spb*1.2,"square",.018*v);
+    const m=MEL[i];if(m&&(fast||i%2===0))note(F(m),t,spb*(fast?1.4:2.4),"sine",.05*v);
+    if(fast&&step%2===1)hat(t,.025)}
+   next+=spb;step++}}
+ return{start(){if(on||!ac())return;on=true;next=AC.currentTime+.05;timer=setInterval(tick,40)},stop(){on=false;clearInterval(timer)}}})();
+addEventListener("pointerdown",()=>BGM.start(),{once:true});addEventListener("keydown",()=>BGM.start(),{once:true});
 /* ---------- 메인 루프 ---------- */
 let last=performance.now(),T=0;
 function loop(now){const dt=Math.min(.033,(now-last)/1000);last=now;T+=dt;stT+=dt;
