@@ -36,6 +36,8 @@ canvas{display:block}
 #joy{position:absolute;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.12);border:2px solid rgba(255,255,255,.3);display:none}
 #knob{position:absolute;left:35px;top:35px;width:50px;height:50px;border-radius:50%;background:rgba(255,255,255,.55)}
 #act{position:absolute;right:28px;bottom:40px;width:96px;height:96px;border-radius:50%;background:rgba(255,210,63,.85);border:3px solid #fff;color:#2A1060;font-weight:900;font-size:18px;pointer-events:auto;display:grid;place-items:center}
+@media (max-width:640px){.chip{min-width:0;padding:3px 7px 3px 4px;gap:4px}.chip .dot{width:20px;height:20px;font-size:12px}.chip b{font-size:10px}.chip i{font-size:12px}#chips{gap:4px;top:6px}#info{top:48px;font-size:13px}.card{padding:16px 18px}.how{font-size:16px}}
+#act{width:110px!important;height:110px!important;font-size:20px!important;right:22px!important;bottom:34px!important;user-select:none}
 #mute{position:fixed;right:10px;bottom:10px;pointer-events:auto;background:rgba(20,10,50,.5);color:#fff;border:0;border-radius:10px;padding:6px 10px;font-size:16px;cursor:pointer}
 </style></head><body>
 <div id="hud"><div id="chips"></div><div id="info"></div><div id="banner"></div><div id="hint"></div></div>
@@ -145,7 +147,7 @@ function myInput(){let x=(keys.KeyD||keys.ArrowRight?1:0)-(keys.KeyA||keys.Arrow
 const arena=new THREE.Group();scene.add(arena);
 function clearArena(){while(arena.children.length){const c=arena.children.pop();c.traverse(o=>{if(o.geometry)o.geometry.dispose()})}}
 function spawnRing(r,off){P.forEach((p,i)=>{const a=(i/4)*6.283+(off||Math.PI/2);place(p,Math.cos(a)*r,Math.sin(a)*r)})}
-function place(p,x,z){Object.assign(p,{x,z,y:0,vx:0,vz:0,ex:0,ez:0,vy:0,out:false,falling:false,ko:false,grounded:true,stun:0,cd:0,dashT:0,score:0,face:Math.atan2(-x,-z),aiT:0,tx:x,tz:z,jumpWant:0});p.mesh.visible=true;p.mesh.position.set(x,0,z);p.mesh.userData.b.scale.set(1,1,1)}
+function place(p,x,z){Object.assign(p,{x,z,y:0,vx:0,vz:0,ex:0,ez:0,vy:0,out:false,falling:false,ko:false,grounded:true,stun:0,cd:0,dashT:0,score:0,frozen:0,done:0,hp:2.4,face:Math.atan2(-x,-z),aiT:0,tx:x,tz:z,jumpWant:0});p.mesh.visible=true;p.mesh.position.set(x,0,z);p.mesh.userData.b.scale.set(1,1,1)}
 function platformDisc(R,col,edge){const g=new THREE.Group();const top=mesh(new THREE.CylinderGeometry(R,R,1,64),col,false,true);top.position.y=-.5;g.add(top);
   const rim=mesh(new THREE.TorusGeometry(R,.18,10,64),edge||"#FFE066");rim.rotation.x=Math.PI/2;rim.position.y=0;g.add(rim);
   const under=mesh(new THREE.CylinderGeometry(R*.95,R*.4,3,48),"#3A2475");under.position.y=-2.5;g.add(under);return g}
@@ -249,6 +251,93 @@ const GAMES=[
    const l=Math.hypot(dx,dz)||1;return [dx/l,dz/l,act]},
   rank(){const alive=P.filter(p=>!p.out);return [...alive,...this.outs.slice().reverse().map(i=>P[i])]},
   over(T){return P.filter(p=>!p.out).length<=1||T>this.len}},
+ {id:"redlight",camK:1.45,em:"🚦",name:t("무궁화 꽃이 피었습니다","Red Light, Green Light"),how:t("술래가 돌아보면 멈춰요! 움직이다 걸리면 처음으로","Freeze when the owl looks! Caught moving = back to start"),act:"jump",actLabel:t("점프","JUMP"),keys:t("이동: WASD/방향키","Move: WASD/Arrows"),len:50,
+  setup(){const g=mesh(new THREE.BoxGeometry(19,1,23),"#9BE58A",false,true);g.position.set(0,-.5,0);arena.add(g);
+   for(let i=-5;i<=5;i++){const c=new THREE.Mesh(new THREE.PlaneGeometry(19,1),M(i%2?"#8ED87C":"#A7EC95"));c.rotation.x=-Math.PI/2;c.position.set(0,.01,i*2);c.receiveShadow=true;arena.add(c)}
+   const st=new THREE.Mesh(new THREE.PlaneGeometry(19,.4),new THREE.MeshBasicMaterial({color:"#FFFFFF"}));st.rotation.x=-Math.PI/2;st.position.set(0,.02,9);arena.add(st);
+   const fin=new THREE.Mesh(new THREE.PlaneGeometry(19,.8),new THREE.MeshBasicMaterial({color:"#FFD23F"}));fin.rotation.x=-Math.PI/2;fin.position.set(0,.02,-9.6);arena.add(fin);
+   const o=new THREE.Group();const body=mesh(new THREE.SphereGeometry(1.3,24,18),"#B07AE8",true);body.position.y=1.4;o.add(body);
+   this.face=new THREE.Group();for(const s of[-1,1]){const w=mesh(new THREE.SphereGeometry(.42,16,12),"#FFFFFF");w.position.set(s*.5,1.75,1.05);this.face.add(w);const pu=new THREE.Mesh(new THREE.SphereGeometry(.2,12,8),new THREE.MeshBasicMaterial({color:"#22183A"}));pu.position.set(s*.5,1.75,1.42);this.face.add(pu);
+    const e=mesh(new THREE.ConeGeometry(.3,.6,4),"#B07AE8",true);e.position.set(s*.75,2.75,0);this.face.add(e)}
+   const bk=mesh(new THREE.ConeGeometry(.22,.45,8),"#FFB020");bk.rotation.x=Math.PI/2;bk.position.set(0,1.4,1.35);this.face.add(bk);o.add(this.face);
+   o.position.set(0,0,-10.9);arena.add(o);this.owl=o;
+   P.forEach((p,i)=>{place(p,-6+i*4,9);p.face=Math.PI});this.phase="green";this.pt=rnd(2.5,4);this.fin=[];this.redT=0},
+  update(dt,T){this.pt-=dt;
+   if(this.phase==="green"&&this.pt<=0){this.phase="red";this.pt=rnd(1.6,2.8);this.redT=0;say(t("멈춰!","STOP!"),"#FF6B6B",.8);SND.tick()}
+   else if(this.phase==="red"&&this.pt<=0){this.phase="green";this.pt=Math.max(1.4,rnd(2,4)-T*.03);say(t("무궁화 꽃이…","GO!"),"#9BE58A",.8);SND.go()}
+   if(this.phase==="red")this.redT+=dt;
+   const target=this.phase==="red"?0:Math.PI;this.face.rotation.y+=(target-this.face.rotation.y)*Math.min(1,dt*12);
+   for(const p of P){if(p.out||p.done)continue;
+    if(this.phase==="red"&&this.redT>.35){const sp=Math.hypot(p.vx+p.ex,p.vz+p.ez);if(sp>1.1&&p.stun<=0){SND.out();burst(p.x,1,p.z,"#FF6B6B",12,5);if(p.you)say(t("걸렸다! 처음으로","CAUGHT! Back to start"),"#FF6B6B",1.2);else popTxt(p,t("걸림!","CAUGHT"),"#FF6B6B");p.x=rnd(-7,7);p.z=9;p.vx=p.vz=p.ex=p.ez=0;p.stun=.6}}
+    if(p.z<-9.3){p.done=1;p.frozen=1;this.fin.push(p.id);SND.coin();confetti(15);if(p.you)say(t("도착!","FINISH!"),"#FFE066",1);else popTxt(p,["1","2","3","4"][this.fin.length-1]+t("등","st"),"#FFE066");renderChips()}}},
+  ground(){return true},
+  clampP(p){p.x=clamp(p.x,-8.8,8.8);p.z=clamp(p.z,-10.6,10.2)},
+  ai(p,dt){if(this.phase==="green"){const near=this.pt<.25+(1-p.skill)*.2&&Math.random()<p.skill;return near?[0,0,false]:[rnd(-.15,.15),-(.7+p.skill*.3),false]}
+   if(p.react==null)p.react=0;const rt=.12+(1-p.skill)*.55+rnd(0,.15);return this.redT<rt?[0,-.8,false]:[0,0,false]},
+  rank(){const rest=P.filter(p=>!this.fin.includes(p.id)).sort((a,b)=>a.z-b.z);return [...this.fin.map(i=>P[i]),...rest]},
+  over(T){return this.fin.length>=3||T>this.len}},
+ {id:"lava",em:"🌋",name:t("용암 바닥","Lava Floor"),how:t("빛나는 바닥은 곧 용암이 돼요! 점프로 피할 수도 있어요","Glowing tiles turn to lava! Jump or run"),act:"jump",actLabel:t("점프","JUMP"),keys:t("이동: WASD/방향키 · 점프: 스페이스","Move: WASD/Arrows · Jump: Space"),len:55,
+  setup(){this.N=9;this.T=[];const cols=["#E9D8C4","#F4E6D3"];for(let i=0;i<9;i++)for(let j=0;j<9;j++){const m=mesh(new THREE.BoxGeometry(1.94,.6,1.94),cols[(i+j)%2],false,true);m.material=m.material.clone();m.position.set((i-4)*2,-.3,(j-4)*2);arena.add(m);this.T.push({m,i,j,st:0,t:0,base:new THREE.Color(cols[(i+j)%2])})}
+   const rim=mesh(new THREE.BoxGeometry(19,1.2,19),"#6B4FD8");rim.position.y=-1.05;arena.add(rim);this.sp=1.2;spawnRing(4,Math.PI/4)},
+  tile(x,z){const i=Math.round(x/2)+4,j=Math.round(z/2)+4;if(i<0||j<0||i>8||j>8)return null;return this.T[i*9+j]},
+  update(dt,T){this.sp-=dt;if(this.sp<=0){this.sp=Math.max(.35,.9-T*.012);const k=1+Math.floor(T/9);for(let n=0;n<k;n++){const free=this.T.filter(x=>x.st===0);if(!free.length)break;
+     let tl=pick(free);if(Math.random()<.35){const al=P.filter(p=>!p.out);if(al.length){const q=pick(al),u=this.tile(q.x,q.z);if(u&&u.st===0)tl=u}}tl.st=1;tl.t=0}}
+   const warn=new THREE.Color("#FF9A3C"),lava=new THREE.Color("#FF3D1F");
+   for(const tl of this.T){if(tl.st===0)continue;tl.t+=dt;
+    if(tl.st===1){const k=clamp(tl.t/1.1,0,1);tl.m.material.color.copy(tl.base).lerp(warn,k*(.6+.4*Math.abs(Math.sin(tl.t*14))));if(tl.t>1.1){tl.st=2;tl.t=0;SND.crack();burst((tl.i-4)*2,.4,(tl.j-4)*2,"#FF7A2A",5,3)}}
+    else if(tl.st===2){tl.m.material.color.copy(lava).lerp(new THREE.Color("#FFD23F"),Math.abs(Math.sin(tl.t*6))*.35);tl.m.position.y=-.3+Math.sin(tl.t*8)*.05;if(tl.t>2.2){tl.st=0;tl.m.material.color.copy(tl.base);tl.m.position.y=-.3}}}
+   for(const p of P){if(p.out||p.y>.25)continue;const tl=this.tile(p.x,p.z);if(tl&&tl.st===2){burst(p.x,.6,p.z,"#FF5A2A",18,6);shake=.3;eliminate(p)}}},
+  ground(){return true},
+  clampP(p){p.x=clamp(p.x,-8.9,8.9);p.z=clamp(p.z,-8.9,8.9)},
+  ai(p,dt){const cur=this.tile(p.x,p.z);p.aiT-=dt;
+   if(cur&&cur.st>0||p.aiT<=0){p.aiT=rnd(.4,1);let best=null,bd=1e9;for(const tl of this.T){if(tl.st!==0)continue;const x=(tl.i-4)*2,z=(tl.j-4)*2,d=Math.hypot(x-p.x,z-p.z)+rnd(0,2)*(1-p.skill)+(Math.abs(x)+Math.abs(z))*.05;if(d<bd){bd=d;best=[x,z]}}if(best){p.tx=best[0];p.tz=best[1]}}
+   let dx=p.tx-p.x,dz=p.tz-p.z;const l=Math.hypot(dx,dz);if(l<.3)return [0,0,false];
+   const jump=cur&&cur.st===1&&cur.t>.9&&p.grounded&&Math.random()<p.skill*.5;return [dx/l,dz/l,jump]},
+  rank(){const alive=P.filter(p=>!p.out);return [...alive,...this.outs.slice().reverse().map(i=>P[i])]},
+  over(T){return P.filter(p=>!p.out).length<=1||T>this.len}},
+ {id:"circle",em:"⭕",name:t("동그라미 따라가기","Safe Circle"),how:t("움직이는 초록 동그라미 안에 있어요! 밖에 오래 있으면 탈락","Stay inside the moving green circle!"),act:"dash",actLabel:t("돌진","DASH"),keys:t("이동: WASD/방향키 · 돌진(밀치기): 스페이스","Move: WASD/Arrows · Dash: Space"),len:60,
+  setup(){const d=platformDisc(10,"#7A5FC9","#FFE066");d.add(stripes(10,20,"#6A4FB8"));arena.add(d);
+   this.cR=3.2;this.cx=0;this.cz=0;this.tx=0;this.tz=0;const g=new THREE.Group();
+   this.disc=new THREE.Mesh(new THREE.CircleGeometry(1,40),new THREE.MeshBasicMaterial({color:"#7CFF9B",transparent:true,opacity:.45}));this.disc.rotation.x=-Math.PI/2;this.disc.position.y=.03;g.add(this.disc);
+   this.ring=new THREE.Mesh(new THREE.TorusGeometry(1,.06,8,48),new THREE.MeshBasicMaterial({color:"#B9FFC9"}));this.ring.rotation.x=Math.PI/2;this.ring.position.y=.06;g.add(this.ring);arena.add(g);this.cg=g;
+   spawnRing(1.6);P.forEach(p=>p.hp=2.4);this.retT=0},
+  update(dt,T){this.cR=Math.max(1.7,3.2-T*.03);const sp=1.2+T*.06;
+   const dx=this.tx-this.cx,dz=this.tz-this.cz,l=Math.hypot(dx,dz);if(l<.3){const a=rnd(0,6.283),r=rnd(0,7.5-this.cR);this.tx=Math.cos(a)*r;this.tz=Math.sin(a)*r}else{this.cx+=dx/l*sp*dt;this.cz+=dz/l*sp*dt}
+   this.cg.position.set(this.cx,0,this.cz);this.cg.scale.set(this.cR,1,this.cR);this.disc.material.opacity=.35+Math.sin(T*4)*.1;
+   for(const p of P){if(p.out)continue;const ins=Math.hypot(p.x-this.cx,p.z-this.cz)<this.cR;const rg=p.mesh.userData.ring;
+    if(!ins&&T>2.5){p.hp-=dt;rg.material.color.set(Math.sin(T*20)>0?"#FF3355":p.col);if(p.you&&Math.floor(p.hp*4)!==p._hpT){p._hpT=Math.floor(p.hp*4);SND.tick()}if(p.hp<=0){burst(p.x,.8,p.z,"#FF3355",14,5);eliminate(p)}}
+    else{rg.material.color.set(p.col);p.hp=Math.min(2.4,p.hp+dt*.5)}}},
+  ground(p){return Math.hypot(p.x,p.z)<10.1},
+  ai(p,dt){let dx=this.cx-p.x+(this.tx-this.cx)*.15,dz=this.cz-p.z+(this.tz-this.cz)*.15;const l=Math.hypot(dx,dz);
+   const w=(1-p.skill)*.8;dx+=rnd(-w,w);dz+=rnd(-w,w);let act=false;
+   for(const q of P)if(q!==p&&!q.out&&Math.hypot(q.x-p.x,q.z-p.z)<2&&Math.hypot(p.x-this.cx,p.z-this.cz)<this.cR&&Math.random()<p.skill*.04)act=true;
+   if(l<.6)return [0,0,act];const m=Math.hypot(dx,dz)||1;return [dx/m,dz/m,act]},
+  rank(){const alive=P.filter(p=>!p.out).sort((a,b)=>b.hp-a.hp);return [...alive,...this.outs.slice().reverse().map(i=>P[i])]},
+  over(T){return P.filter(p=>!p.out).length<=1||T>this.len}},
+ {id:"sheep",camK:1.1,em:"🐑",name:t("양떼 대이동","Sheep Stampede"),how:t("몰려오는 양떼를 빈틈으로 피하거나 점프로 넘어요!","Dodge the flock through the gaps, or jump over!"),act:"jump",actLabel:t("점프","JUMP"),keys:t("이동: WASD/방향키 · 점프: 스페이스","Move: WASD/Arrows · Jump: Space"),len:55,
+  setup(){const g=mesh(new THREE.BoxGeometry(22,1,16),"#A7E07F",false,true);g.position.y=-.5;arena.add(g);
+   for(let i=0;i<14;i++){const f=mesh(new THREE.SphereGeometry(rnd(.15,.3),8,6),pick(["#FFFFFF","#FFE066","#FF9BB5"]));f.position.set(rnd(-10,10),.05,pick([-7.6,7.6]));arena.add(f)}
+   for(const z of[-8.2,8.2]){const fe=mesh(new THREE.BoxGeometry(22,.6,.25),"#C98F5A",true);fe.position.set(0,.3,z);arena.add(fe)}
+   this.sheep=[];this.sp=1.2;this.wave=0;spawnRing(3)},
+  mkSheep(){const g=new THREE.Group();const b=mesh(new THREE.SphereGeometry(.55,14,10),"#FFFFFF",true);b.scale.set(1.25,.9,1);b.position.y=.6;g.add(b);
+   for(let i=0;i<5;i++){const f=mesh(new THREE.SphereGeometry(.28,10,8),"#F5F5F5",true);f.position.set(rnd(-.5,.5),.85+rnd(0,.15),rnd(-.35,.35));g.add(f)}
+   const h=mesh(new THREE.SphereGeometry(.28,12,8),"#3A3550",true);h.position.set(.7,.75,0);g.add(h);return g},
+  update(dt,T){this.sp-=dt;if(this.sp<=0){this.wave++;this.sp=Math.max(1.1,2.4-T*.025);const dir=T>15&&Math.random()<.4?-1:1,spd=5+T*.09+rnd(0,1);
+    const gap=rnd(-5.5,5.5),gap2=T>25?rnd(-5.5,5.5):99,gw=Math.max(1.6,2.6-T*.015);
+    for(let z=-7.2;z<=7.2;z+=1.1){if(Math.abs(z-gap)<gw||Math.abs(z-gap2)<gw*.8)continue;const m=this.mkSheep();m.rotation.y=dir>0?0:Math.PI;const x=-12*dir+rnd(-.3,.3);m.position.set(x,0,z);arena.add(m);this.sheep.push({m,x,z,dir,spd,ph:rnd(0,6)})}SND.tick()}
+   for(let i=this.sheep.length-1;i>=0;i--){const s=this.sheep[i];s.x+=s.dir*s.spd*dt;s.ph+=dt*14;s.m.position.set(s.x,Math.abs(Math.sin(s.ph))*.15,s.z);
+    if(Math.abs(s.x)>13){arena.remove(s.m);this.sheep.splice(i,1);continue}
+    for(const p of P){if(p.out||p.ko)continue;if(Math.abs(p.x-s.x)<.95&&Math.abs(p.z-s.z)<.75&&p.y<.85){p.ko=true;p.ex+=s.dir*13;p.ez+=rnd(-3,3);p.vy=9;SND.bump();shake=.3;burst(p.x,.8,p.z,"#FFFFFF",14,6)}}}},
+  ground(p){return !p.ko},
+  clampP(p){if(!p.ko){p.x=clamp(p.x,-10.5,10.5);p.z=clamp(p.z,-7.6,7.6)}},
+  ai(p,dt){let bestS=null,bt=1e9;for(const s of this.sheep){const ahead=(p.x-s.x)*s.dir;if(ahead<-1)continue;const tt=ahead/s.spd;if(tt<bt){bt=tt;bestS=s}}
+   if(!bestS)return [(-p.x)*.1,(-p.z)*.1,false];
+   const row=this.sheep.filter(s=>Math.abs(s.x-bestS.x)<.8&&s.dir===bestS.dir);const zs=row.map(s=>s.z).sort((a,b)=>a-b);
+   let bz=p.z,bd=1e9;for(let z=-7;z<=7;z+=.5){if(zs.some(q=>Math.abs(q-z)<.9))continue;const d=Math.abs(z-p.z);if(d<bd){bd=d;bz=z}}
+   const blocked=zs.some(q=>Math.abs(q-p.z)<.9);let jump=false;if(blocked&&bt<.35&&p.grounded&&Math.random()<p.skill*.6)jump=true;
+   const dz=bz-p.z,need=bt<2.2;const dx=(-bestS.dir)*.2-p.x*.04;return [dx,need?Math.sign(dz)*Math.min(1,Math.abs(dz)):0,jump]},
+  rank(){const alive=P.filter(p=>!p.out);return [...alive,...this.outs.slice().reverse().map(i=>P[i])]},
+  over(T){return P.filter(p=>!p.out).length<=1||T>this.len}},
 ];
 
 /* ---------- 공통 물리 ---------- */
@@ -259,7 +348,7 @@ function upPops(dt){const v=new THREE.Vector3();for(let i=popEls.length-1;i>=0;i
 function physics(dt){
  for(const p of P){if(p.out)continue;let ix=0,iz=0,act=false;
   if(state==="play"){[ix,iz,act]=p.ai?G.ai(p,dt):myInput()}
-  if(p.stun>0){p.stun-=dt;ix=iz=0;act=false}
+  if(p.stun>0){p.stun-=dt;ix=iz=0;act=false}if(p.frozen){ix=iz=0;act=false;p.vx*=.8;p.vz*=.8}
   if(p.ko||p.falling){ix=iz=0;act=false}
   const sp=6.2,k=Math.min(1,dt*(p.grounded?11:3.5));p.vx+=(ix*sp-p.vx)*k;p.vz+=(iz*sp-p.vz)*k;
   const ed=Math.exp(-dt*(p.grounded?3.2:.6));p.ex*=ed;p.ez*=ed;p.cd-=dt;p.dashT-=dt;
@@ -287,8 +376,8 @@ function animP(dt,T){for(const p of P){if(!p.mesh.visible)continue;const m=p.mes
 /* ---------- 화면 (HUD) ---------- */
 function renderChips(){$("#chips").innerHTML=P.map(p=>`<div class="chip${p.you?" you":""}${p.out&&state==="play"?" out":""}"><span class="dot" style="background:${p.col}">${p.em}</span><span><b>${p.name}</b><i>${p.pts}</i>${state==="play"&&G&&G.timed?` <small style="font-weight:800">⭐${p.score}</small>`:""}</span></div>`).join("")}
 const ov=id=>{["#ovTitle","#ovIntro","#ovRes","#ovEnd"].forEach(x=>$(x).classList.toggle("on",x===id))};
-function setCam(T){const base=state==="end"?[Math.sin(T*.3)*9,7,13]:[0,17,17];cam.position.set(base[0]+(shake>0?rnd(-shake,shake):0),base[1]+(shake>0?rnd(-shake,shake):0),base[2]);cam.lookAt(0,state==="end"?1.5:-1.2,state==="end"?0:1.2)}
-function startParty(){ac();P.forEach(p=>p.pts=0);order=shuffle(GAMES.slice()).slice(0,5);round=0;nextRound()}
+function setCam(T){const por=innerWidth<innerHeight*1.05,k=(por?1.55:1)*(state!=="title"&&state!=="end"&&G&&G.camK||1);const base=state==="end"?[Math.sin(T*.3)*9,7*k,13*k]:[0,17*k,17*k*(por?.85:1)];cam.position.set(base[0]+(shake>0?rnd(-shake,shake):0),base[1]+(shake>0?rnd(-shake,shake):0),base[2]);cam.lookAt(0,state==="end"?1.5:-1.2,state==="end"?0:1.2)}
+function startParty(){ac();P.forEach(p=>p.pts=0);order=shuffle(GAMES.slice()).slice(0,5);{const fg=new URLSearchParams(location.search).get("g");const fgm=GAMES.find(x=>x.id===fg);if(fgm)order=[fgm,...order.filter(x=>x!==fgm)].slice(0,5)}round=0;nextRound()}
 function nextRound(){G=order[round];G.outs=[];clearArena();FX.splice(0).forEach(f=>scene.remove(f.m));G.setup();GT=0;state="intro";stT=0;lastCount=4;
  $("#iEm").textContent=G.em;$("#iName").textContent=G.name;$("#iHow").textContent=G.how;$("#iKeys").textContent=TOUCH?t("왼쪽 드래그로 이동 · 오른쪽 버튼: ","Drag left side to move · Button: ")+G.actLabel:G.keys;
  $("#iRound").textContent=t(`라운드 ${round+1} / ${order.length}`,`ROUND ${round+1} / ${order.length}`);$("#act").textContent=G.actLabel;$("#hint").textContent=G.keys;ov("#ovIntro");renderChips();SND.go()}
