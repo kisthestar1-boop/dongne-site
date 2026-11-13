@@ -1,0 +1,44 @@
+name: 팡팡 파티 안드로이드 앱 만들기
+on:
+  workflow_dispatch:
+  push:
+    paths: ["party3d.html", "android-app/**", ".github/workflows/android.yml"]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: 17 }
+      - name: 웹 파일 준비
+        run: |
+          cd android-app
+          mkdir -p www
+          curl -sL https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js -o www/three.min.js
+          sed 's#https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js#three.min.js#' ../party3d.html > www/index.html
+          cp ../pp-icon-192.png ../pp-icon-512.png www/
+      - name: 안드로이드 프로젝트 만들기
+        run: |
+          cd android-app
+          npm install
+          npx cap add android
+          npx cap sync android
+          VC=$(( ${{ github.run_number }} + 0 ))
+          sed -i "s/versionCode 1/versionCode $VC/; s/versionName \"1.0\"/versionName \"1.0.$VC\"/" android/app/build.gradle
+          # 앱 아이콘
+          for d in mdpi hdpi xhdpi xxhdpi xxxhdpi; do
+            for f in ic_launcher ic_launcher_round ic_launcher_foreground; do
+              [ -f android/app/src/main/res/mipmap-$d/$f.png ] && cp www/pp-icon-512.png android/app/src/main/res/mipmap-$d/$f.png || true
+            done
+          done
+      - name: 앱 파일(AAB) 만들기 · 서명 전
+        run: |
+          cd android-app/android
+          chmod +x gradlew
+          ./gradlew bundleRelease
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pangpang-party-unsigned-aab
+          path: android-app/android/app/build/outputs/bundle/release/*.aab
