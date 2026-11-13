@@ -42,7 +42,7 @@ canvas{display:block}
 <div id="touch"><div id="joy"><div id="knob"></div></div><div id="act">JUMP</div></div>
 <button id="mute">🔊</button>
 <div class="ov on" id="ovTitle"><div><div class="ttl" id="tTitle">팡팡 파티!</div><div class="sub" id="tSub"></div><button class="btn" id="bPlay">PLAY</button><div class="sub" id="tBest" style="margin-top:14px;font-size:14px"></div></div></div>
-<div class="ov" id="ovIntro"><div class="card"><div class="gem" id="iEm"></div><div class="gname" id="iName"></div><div class="how" id="iHow"></div><div class="keys" id="iKeys"></div><div class="sub" id="iRound" style="margin:10px 0 0"></div></div></div>
+<div class="ov" id="ovIntro"><div class="card"><div class="gem" id="iEm"></div><div class="gname" id="iName"></div><div class="how" id="iHow"></div><div class="keys" id="iKeys"></div><div class="sub" id="iRound" style="margin:10px 0 0"></div><div class="keys" id="iSkip" style="margin-top:6px;opacity:.7"></div></div></div>
 <div class="ov" id="ovRes"><div class="card"><div class="gname" id="rTitle"></div><div class="rank" id="rList"></div></div></div>
 <div class="ov" id="ovEnd" style="background:transparent;align-items:flex-end;padding-bottom:6vh"><div><div class="ttl" id="eTitle" style="font-size:clamp(36px,7vw,72px)"></div><div class="rank" id="eList" style="margin:12px auto 16px;max-width:340px"></div><button class="btn" id="bAgain"></button></div></div>
 <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
@@ -81,7 +81,8 @@ for(let i=0;i<26;i++){const a=i/26*6.283,r=rnd(24,34),s=rnd(1.2,3);const b=mesh(
 function resize(){const w=innerWidth,h=innerHeight;R3.setSize(w,h);cam.aspect=w/h;cam.updateProjectionMatrix()}addEventListener("resize",resize);resize();
 
 /* ---------- 캐릭터 ---------- */
-const PL=[{n:t("나","You"),c:"#FF5D8F",e:0,em:"😀"},{n:t("토토","Bunny"),c:"#4CC38A",e:1,em:"🐰"},{n:t("곰곰","Bear"),c:"#4BA3FF",e:2,em:"🐻"},{n:t("냥냥","Kitty"),c:"#FFB020",e:3,em:"🐱"}];
+const PL=[{n:t("나 (공룡)","You (Dino)"),c:"#FF5D8F",e:0,em:"🦖"},{n:t("토토","Bunny"),c:"#4CC38A",e:1,em:"🐰"},{n:t("곰곰","Bear"),c:"#4BA3FF",e:2,em:"🐻"},{n:t("냥냥","Kitty"),c:"#FFB020",e:3,em:"🐱"}];
+function lighten3(c){const x=new THREE.Color(c);x.lerp(new THREE.Color("#ffffff"),.45);return "#"+x.getHexString()}
 function makeAnimal(col,ears,you){const g=new THREE.Group(),b=new THREE.Group();g.add(b);
   const body=mesh(new THREE.SphereGeometry(.72,28,20),col,true);body.scale.set(1,.93,1);body.position.y=.72;b.add(body);
   const belly=mesh(new THREE.SphereGeometry(.46,20,14),"#FFF6EA");belly.scale.set(1,1,.45);belly.position.set(0,.6,.5);b.add(belly);
@@ -94,7 +95,22 @@ function makeAnimal(col,ears,you){const g=new THREE.Group(),b=new THREE.Group();
     if(ears===1){const e=mesh(new THREE.SphereGeometry(.17,14,10),col,true);e.scale.set(1,3,.75);e.position.set(s*.26,1.65,-.05);e.rotation.z=-s*.15;b.add(e);const ei=mesh(new THREE.SphereGeometry(.09,10,8),"#FFC2D1");ei.scale.set(1,3.6,.5);ei.position.set(s*.26,1.65,.06);ei.rotation.z=-s*.15;b.add(ei)}
     if(ears===2){const e=mesh(new THREE.SphereGeometry(.24,14,10),col,true);e.position.set(s*.48,1.28,-.05);b.add(e);const ei=mesh(new THREE.SphereGeometry(.12,10,8),"#FFC2D1");ei.scale.set(1,1,.5);ei.position.set(s*.48,1.28,.12);b.add(ei)}
     if(ears===3){const e=mesh(new THREE.ConeGeometry(.25,.5,4),col,true);e.position.set(s*.38,1.4,0);e.rotation.z=-s*.35;b.add(e);const ei=mesh(new THREE.ConeGeometry(.12,.3,4),"#FFC2D1");ei.position.set(s*.37,1.38,.1);ei.rotation.z=-s*.35;b.add(ei)}}
-  if(ears===0){const tuft=mesh(new THREE.ConeGeometry(.16,.45,8),col,true);tuft.position.set(0,1.55,0);tuft.rotation.z=.4;b.add(tuft);const tf=mesh(new THREE.SphereGeometry(.12,10,8),"#FFE066",true);tf.position.set(.16,1.78,0);b.add(tf)}
+  const dark=new THREE.MeshBasicMaterial({color:"#22183A"});
+  if(ears===0){/* 공룡: 등 가시 + 꼬리 + 배 무늬 */for(let i=0;i<4;i++){const sp=mesh(new THREE.ConeGeometry(.13-i*.015,.32-i*.03,6),"#FFE066",true);const a=-.2-i*.42;sp.position.set(0,.72+Math.cos(a)*.74,Math.sin(a)*.74);sp.rotation.x=a+Math.PI/2-Math.PI/2+(-a);sp.lookAt(0,.72+Math.cos(a)*2,Math.sin(a)*2);sp.rotateX(Math.PI/2);b.add(sp)}
+    const tl=mesh(new THREE.ConeGeometry(.28,.9,12),col,true);tl.position.set(0,.4,-.85);tl.rotation.x=-1.9;b.add(tl);
+    const nos=mesh(new THREE.SphereGeometry(.3,16,12),lighten3(col),true);nos.scale.set(1.1,.7,.8);nos.position.set(0,.74,.6);b.add(nos);
+    for(const s of[-1,1]){const n=new THREE.Mesh(new THREE.SphereGeometry(.03,6,4),dark);n.position.set(s*.08,.8,.83);b.add(n)}}
+  if(ears===1){/* 토끼: 분홍 코 + 앞니 + 솜꼬리 */const n=mesh(new THREE.SphereGeometry(.07,10,8),"#FF8FAB");n.position.set(0,.8,.78);b.add(n);
+    for(const s of[-1,1]){const th=mesh(new THREE.BoxGeometry(.07,.11,.03),"#FFFFFF");th.position.set(s*.04,.66,.78);b.add(th)}
+    const tail=mesh(new THREE.SphereGeometry(.22,14,10),"#FFFFFF",true);tail.position.set(0,.45,-.72);b.add(tail)}
+  if(ears===2){/* 곰: 주둥이 + 까만 코 + 짧은 꼬리 + 배 반달 */const mz=mesh(new THREE.SphereGeometry(.26,16,12),"#F2D2A9",true);mz.scale.set(1.15,.8,.8);mz.position.set(0,.72,.62);b.add(mz);
+    const n=new THREE.Mesh(new THREE.SphereGeometry(.09,10,8),dark);n.scale.set(1.3,.8,.8);n.position.set(0,.8,.83);b.add(n);
+    const tail=mesh(new THREE.SphereGeometry(.14,10,8),col,true);tail.position.set(0,.4,-.7);b.add(tail);
+    const mn=mesh(new THREE.TorusGeometry(.14,.04,6,16,Math.PI),"#FFE066");mn.position.set(0,.42,.62);mn.rotation.z=Math.PI;b.add(mn)}
+  if(ears===3){/* 고양이: 수염 + 분홍 세모코 + 줄무늬 + 긴 꼬리 */const n=mesh(new THREE.ConeGeometry(.06,.07,3),"#FF8FAB");n.rotation.x=Math.PI/2;n.rotation.y=Math.PI;n.position.set(0,.8,.8);b.add(n);
+    for(const s of[-1,1])for(const k of[-1,1]){const w=new THREE.Mesh(new THREE.CylinderGeometry(.008,.008,.42,4),dark);w.rotation.z=Math.PI/2+k*.18*s;w.position.set(s*.38,.76+k*.04,.68);b.add(w)}
+    for(let i=0;i<3;i++){const st=mesh(new THREE.TorusGeometry(.6-i*.08,.035,6,20,1.2),"#E08A00");st.rotation.y=Math.PI/2;st.rotation.z=1.1;st.position.set(0,.92-i*.18,-.1);b.add(st)}
+    const cv=new THREE.CatmullRomCurve3([new THREE.Vector3(0,.35,-.6),new THREE.Vector3(0,.5,-1.05),new THREE.Vector3(0,1.0,-1.15),new THREE.Vector3(0,1.25,-.95)]);const tl=mesh(new THREE.TubeGeometry(cv,16,.08,8,false),col,true);b.add(tl)}
   const mo=new THREE.Mesh(new THREE.TorusGeometry(.13,.035,8,16,Math.PI),new THREE.MeshBasicMaterial({color:"#22183A"}));mo.rotation.z=Math.PI;mo.position.set(0,.76,.7);b.add(mo);
   const ring=new THREE.Mesh(new THREE.RingGeometry(.85,1.02,32),new THREE.MeshBasicMaterial({color:col,transparent:true,opacity:.85}));ring.rotation.x=-Math.PI/2;ring.position.y=.03;g.add(ring);
   if(you){const ar=new THREE.Mesh(new THREE.ConeGeometry(.25,.45,4),new THREE.MeshBasicMaterial({color:"#FFE066"}));ar.rotation.x=Math.PI;ar.position.y=2.35;g.add(ar);g.userData.arrow=ar}
@@ -236,7 +252,7 @@ const GAMES=[
 ];
 
 /* ---------- 공통 물리 ---------- */
-let G=null,GT=0,state="title",round=0,order=[],stT=0,lastCount=0;
+let introHold=6,G=null,GT=0,state="title",round=0,order=[],stT=0,lastCount=0;
 function eliminate(p){if(p.out)return;p.out=true;p.mesh.visible=false;G.outs.push(p.id);SND.out();if(p.you)say(t("탈락!","OUT!"),"#FF6B6B",1.4);else popTxt(p,t("탈락","OUT"),"#FF6B6B");renderChips()}
 const popEls=[];function popTxt(p,s,col){const e=document.createElement("div");e.textContent=s;e.style.cssText=`position:fixed;font-weight:900;font-size:22px;color:${col};-webkit-text-stroke:1.5px #2A1060;pointer-events:none;transition:none`;document.body.appendChild(e);popEls.push({e,p,t:0,y:p.y})}
 function upPops(dt){const v=new THREE.Vector3();for(let i=popEls.length-1;i>=0;i--){const o=popEls[i];o.t+=dt;v.set(o.p.x,o.y+2.6+o.t*1.6,o.p.z).project(cam);o.e.style.left=((v.x+1)/2*innerWidth-14)+"px";o.e.style.top=((1-v.y)/2*innerHeight)+"px";o.e.style.opacity=String(clamp(2-o.t*2,0,1));if(o.t>1){o.e.remove();popEls.splice(i,1)}}}
@@ -289,7 +305,7 @@ function endParty(){state="end";stT=0;clearArena();const R=[...P].sort((a,b)=>b.
  $("#eList").innerHTML=R.map((p,i)=>`<div class="rk${p.you?" you":""}" style="font-size:15px;padding:6px 12px"><span class="n">${["🥇","🥈","🥉","4"][i]}</span><span>${p.em} ${p.name}</span><span class="p">${p.pts}</span></div>`).join("");
  $("#bAgain").textContent=t("한 판 더!","PLAY AGAIN");ov("#ovEnd");confetti(120);SND.win();
  try{const me=P[0].pts,best=+(localStorage.getItem("pp3best")||0);if(me>best)localStorage.setItem("pp3best",String(me))}catch(_){}renderChips()}
-$("#bPlay").onclick=startParty;$("#bAgain").onclick=startParty;
+$("#bPlay").onclick=startParty;$("#ovIntro").addEventListener("pointerdown",()=>{if(state==="intro"&&stT<introHold)stT=introHold});addEventListener("keydown",e=>{if(state==="intro"&&stT<introHold&&(e.code==="Space"||e.code==="Enter"))stT=introHold});$("#bAgain").onclick=startParty;
 $("#tTitle").textContent=t("팡팡 파티!","Party Pop!");$("#tSub").textContent=t("동물 친구들과 미니게임 대결! 5판 중 최고 점수를 노려요","Mini-game battle with animal friends! Win the most points in 5 rounds");$("#bPlay").textContent=t("플레이!","PLAY!");
 try{const b=+(localStorage.getItem("pp3best")||0);if(b)$("#tBest").textContent=t("내 최고 점수: ","Your best: ")+b}catch(_){}
 /* 타이틀 화면: 캐릭터들이 뛰어노는 모습 */
@@ -300,9 +316,11 @@ renderChips();
 let last=performance.now(),T=0;
 function loop(now){const dt=Math.min(.033,(now-last)/1000);last=now;T+=dt;stT+=dt;
  if(state==="title"){P.forEach((p,i)=>{const a=T*.6+i*1.57;p.x=Math.cos(a)*4;p.z=Math.sin(a)*4;p.vx=-Math.sin(a)*2.4;p.vz=Math.cos(a)*2.4;p.face=Math.atan2(p.vx,p.vz);if(p.grounded&&Math.random()<.01){p.vy=9;p.grounded=false}p.vy-=30*dt;p.y=Math.max(0,p.y+p.vy*dt);if(p.y===0){p.grounded=true;p.vy=0}})}
- else if(state==="intro"){const c=Math.ceil(3.2-stT);if(stT>.4&&c!==lastCount&&c>0){lastCount=c;SND.tick();if(stT>1.2)ov(null),say(String(c),"#FFE066",.9)}
-  if(stT>1.2&&$("#ovIntro").classList.contains("on"))ov(null);
-  if(stT>=3.2){state="play";GT=0;say(t("시작!","GO!"),"#9BE58A",.8);SND.go()}physics(dt)}
+ else if(state==="intro"){const H=introHold,c=Math.ceil(H+3-stT);
+  const left=Math.max(0,Math.ceil(H-stT));$("#iSkip").textContent=stT<H?t(`${left}초 뒤 시작 · 누르면 바로 시작`,`Starting in ${left}s · tap to start`):"";
+  if(stT>=H&&$("#ovIntro").classList.contains("on"))ov(null);
+  if(stT>=H&&c!==lastCount&&c>0){lastCount=c;SND.tick();say(String(c),"#FFE066",.9)}
+  if(stT>=H+3){state="play";GT=0;say(t("시작!","GO!"),"#9BE58A",.8);SND.go()}physics(dt)}
  else if(state==="play"){GT+=dt;G.update(dt,GT);physics(dt);
   const left=G.timed?Math.max(0,Math.ceil(G.len-GT)):null;$("#info").textContent=`${G.em} ${G.name}  ·  `+(G.timed?`⏱ ${left}`:t(`남은 친구 ${P.filter(p=>!p.out).length}`,`${P.filter(p=>!p.out).length} left`));
   if(G.timed&&left<=3&&left!==G._lt){G._lt=left;if(left>0){SND.tick();say(String(left),"#FF6B6B",.6)}}
