@@ -269,7 +269,7 @@ const GAMES=[
    const l=Math.hypot(dx,dz)||1;return [dx/l,dz/l,act]},
   rank(){const alive=P.filter(p=>!p.out);return [...alive,...this.outs.slice().reverse().map(i=>P[i])]},
   over(T){return P.filter(p=>!p.out).length<=1||T>this.len}},
- {id:"redlight",camK:1.45,em:"🚦",name:t("무궁화 꽃이 피었습니다","Red Light, Green Light"),how:t("술래가 돌아보면 멈춰요! 움직이다 걸리면 처음으로","Freeze when the owl looks! Caught moving = back to start"),act:"jump",actLabel:t("점프","JUMP"),keys:t("이동: WASD/방향키","Move: WASD/Arrows"),len:50,
+ {id:"redlight",camK:1.45,spd:.45,em:"🚦",name:t("무궁화 꽃이 피었습니다","Red Light, Green Light"),how:t("술래가 돌아보면 멈춰요! 움직이다 걸리면 처음으로","Freeze when the owl looks! Caught moving = back to start"),act:"jump",actLabel:t("점프","JUMP"),keys:t("이동: WASD/방향키","Move: WASD/Arrows"),len:50,
   setup(){const g=mesh(new THREE.BoxGeometry(19,1,23),"#9BE58A",false,true);g.position.set(0,-.5,0);arena.add(g);
    for(let i=-5;i<=5;i++){const c=new THREE.Mesh(new THREE.PlaneGeometry(19,1),M(i%2?"#8ED87C":"#A7EC95"));c.rotation.x=-Math.PI/2;c.position.set(0,.01,i*2);c.receiveShadow=true;arena.add(c)}
    const st=new THREE.Mesh(new THREE.PlaneGeometry(19,.4),new THREE.MeshBasicMaterial({color:"#FFFFFF"}));st.rotation.x=-Math.PI/2;st.position.set(0,.02,9);arena.add(st);
@@ -279,10 +279,11 @@ const GAMES=[
     const e=mesh(new THREE.ConeGeometry(.3,.6,4),"#B07AE8",true);e.position.set(s*.75,2.75,0);this.face.add(e)}
    const bk=mesh(new THREE.ConeGeometry(.22,.45,8),"#FFB020");bk.rotation.x=Math.PI/2;bk.position.set(0,1.4,1.35);this.face.add(bk);o.add(this.face);
    o.position.set(0,0,-10.9);arena.add(o);this.owl=o;
-   P.forEach((p,i)=>{place(p,-6+i*4,9);p.face=Math.PI});this.phase="green";this.pt=rnd(2.5,4);this.fin=[];this.redT=0},
+   P.forEach((p,i)=>{place(p,-6+i*4,9);p.face=Math.PI});this.phase="green";this.pt=rnd(1.6,2.3);this.fin=[];this.redT=0;this.warn=0},
   update(dt,T){this.pt-=dt;
-   if(this.phase==="green"&&this.pt<=0){this.phase="red";this.pt=rnd(1.6,2.8);this.redT=0;say(t("멈춰!","STOP!"),"#FF6B6B",.8);SND.tick()}
-   else if(this.phase==="red"&&this.pt<=0){this.phase="green";this.pt=Math.max(1.4,rnd(2,4)-T*.03);say(t("무궁화 꽃이…","GO!"),"#9BE58A",.8);SND.go()}
+   if(this.phase==="green"&&this.pt<.45&&!this.warn){this.warn=1;SND.tick()}this.owl.rotation.z=this.phase==="green"&&this.pt<.45?Math.sin(T*40)*.08:0;
+   if(this.phase==="green"&&this.pt<=0){this.warn=0;this.phase="red";this.pt=rnd(1.8,3);this.redT=0;say(t("멈춰!","STOP!"),"#FF6B6B",.8);SND.tick()}
+   else if(this.phase==="red"&&this.pt<=0){this.phase="green";this.pt=R()<.3?rnd(.8,1.2):Math.max(1.2,rnd(1.6,3.2)-T*.02);say(t("무궁화 꽃이…","GO!"),"#9BE58A",.8);SND.go()}
    if(this.phase==="red")this.redT+=dt;
    const target=this.phase==="red"?0:Math.PI;this.face.rotation.y+=(target-this.face.rotation.y)*Math.min(1,dt*12);
    for(const p of P){if(p.out||p.done)continue;
@@ -369,7 +370,7 @@ function physics(dt){
   if(state==="play"){[ix,iz,act]=p.you?myInput():(NET.mode==="guest"?(NET.rin[p.id]||[0,0,false]):(p.ai?aiCall(p,dt):(NET.inp[p.id]||[0,0,false])));p.lastIn=[ix,iz,act]}
   if(p.stun>0){p.stun-=dt;ix=iz=0;act=false}if(p.frozen){ix=iz=0;act=false;p.vx*=.8;p.vz*=.8}
   if(p.ko||p.falling){ix=iz=0;act=false}
-  const sp=6.2,k=Math.min(1,dt*(p.grounded?11:3.5));p.vx+=(ix*sp-p.vx)*k;p.vz+=(iz*sp-p.vz)*k;
+  const sp=6.2*(G.spd||1),k=Math.min(1,dt*(p.grounded?11:3.5));p.vx+=(ix*sp-p.vx)*k;p.vz+=(iz*sp-p.vz)*k;
   const ed=Math.exp(-dt*(p.grounded?3.2:.6));p.ex*=ed;p.ez*=ed;p.cd-=dt;p.dashT-=dt;
   if(act){if(G.act==="jump"&&p.grounded){p.vy=10.5;p.grounded=false;SND.jump();if(p.you)burst(p.x,.2,p.z,"#fff",5,2)}
    else if(G.act==="dash"&&p.cd<=0){const f=p.face;p.ex+=Math.sin(f)*12;p.ez+=Math.cos(f)*12;p.cd=1.1;p.dashT=.3;SND.dash();burst(p.x,.4,p.z,"#fff",6,3)}}
