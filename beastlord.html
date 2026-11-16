@@ -7,6 +7,7 @@
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;height:100%;background:var(--bg);color:var(--tx);font-family:"Noto Sans KR","Apple SD Gothic Neo",system-ui,sans-serif;overflow:hidden}
 #app{display:flex;flex-direction:column;height:100%;max-width:760px;margin:0 auto}
+#app.w{max-width:1240px}.cols{display:grid;grid-template-columns:1.25fr 1fr;gap:12px;height:100%}.cols>section{overflow:auto;background:#0003;border:2px solid var(--ln);border-radius:16px;padding:12px}.cols>section>h1{margin:0 0 10px;font-size:15px;color:var(--gold)}#app.w .deck{grid-template-columns:repeat(8,1fr)}#app.w .slot .em{font-size:24px}#app.w .slot{font-size:10px}
 #top{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:var(--pn);border-bottom:2px solid var(--ln);font-weight:800}
 #top b{color:var(--gold)}#main{flex:1;overflow:auto;padding:12px 14px 16px}
 #nav{display:flex;background:var(--pn);border-top:2px solid var(--ln)}
@@ -106,7 +107,21 @@ function battle(){if(S.deck.length<4){toast("덱에 영웅을 4장 이상 넣어
  S.log.push(new Date().toLocaleTimeString("ko-KR",{hour:"2-digit",minute:"2-digit"})+" "+msg);save();toast(msg);draw()}
 function vCastle(){return `<h2>🏰 내 성</h2><div class="panel"><div class="row"><span class="stat">🏆 트로피 ${S.tro}</span><span class="stat">🪙 ${S.gold}</span><span class="stat">영웅 ${Object.keys(S.h).length}/${H.length}</span></div>
  <p class="mut">앞으로 이곳에서 성을 꾸미고, 금광·병영 같은 건물을 업그레이드해요. (준비 중)</p><button class="btn s" id="rs">처음부터 다시 (시험용)</button></div>`}
-function draw(){top();nav();const m=$("#main");m.innerHTML=({hero:vHero,deck:vDeck,chest:vChest,battle:vBattle,castle:vCastle})[tab]();bind()}
+const isW=()=>innerWidth>=860;
+function vLeft(){return vDeck().replace(/<h2>.*?<\/h2>/,'<h2>🃏 내 덱 <small>8장까지 · 아래 영웅을 누르면 상세·강화</small></h2>')+vHero().replace(/<h2>.*?<\/h2>/,'<h2 style="margin-top:12px">🦊 내 영웅</h2>').replace(/<div class="grid">/,'<div class="grid" id="hg">')}
+function vRight(){return vBattle()+vChest()+vCastle()}
+function draw(){top();const A=$("#app");A.classList.toggle("w",isW());const m=$("#main");
+ if(isW()){$("#nav").style.display="none";m.style.overflow="hidden";m.innerHTML=`<div class="cols"><section id="L"><h1>⚙ 유닛 설정</h1>${vLeft()}</section><section id="Rr"><h1>⚔ 전투</h1>${vRight()}</section></div>`;bindW()}
+ else{$("#nav").style.display="flex";m.style.overflow="auto";nav();m.innerHTML=({hero:vHero,deck:vDeck,chest:vChest,battle:vBattle,castle:vCastle})[tab]();bind()}}
+function bindW(){const L=$("#L");
+ L.querySelectorAll("[data-rm]").forEach(s=>s.onclick=()=>{S.deck.splice(+s.dataset.rm,1);save();draw()});
+ L.querySelectorAll("#hg .card").forEach(c=>c.onclick=()=>{if(S.h[c.dataset.id]){sel=c.dataset.id;draw()}else toast("아직 없는 영웅이에요 · 상자에서 나와요")});
+ const hv=$("#hv");if(hv){const x=byId[sel],o=S.h[sel];const inD=S.deck.includes(sel);const b=document.createElement("button");b.className="btn s";b.textContent=inD?"덱에서 빼기":"덱에 넣기";hv.querySelector(".row:last-child").prepend(b);b.onclick=()=>{if(inD)S.deck.splice(S.deck.indexOf(sel),1);else if(S.deck.length<8)S.deck.push(sel);else{toast("덱은 8장까지예요");return}save();draw()};
+  $("#cl").onclick=()=>{sel=null;draw()};$("#up").onclick=()=>{const rr=RAR[x.r];if(o.lv>=rr.max)return;const ns=needSh(x,o.lv),ng=needGold(o.lv);if(o.sh<ns||S.gold<ng){toast(o.sh<ns?"카드가 모자라요":"골드가 모자라요");return}o.sh-=ns;S.gold-=ng;o.lv++;save();toast(x.nm+" Lv "+o.lv+"!");draw()};
+  hv.querySelectorAll("[data-tr]").forEach(t=>t.onclick=()=>{if(o.lv<3)return;o.tr=+t.dataset.tr;save();draw()})}
+ const R2=$("#Rr");R2.querySelectorAll("[data-ch]").forEach(c=>c.onclick=()=>{const i=+c.dataset.ch,k=S.chests[i];if(k.t&&Date.now()>=k.t)openChest(i);else toast("아직 열리는 중이에요")});
+ const go=$("#go");if(go)go.onclick=battle;const rs=$("#rs");if(rs)rs.onclick=()=>{S=fresh();save();draw()}}
+addEventListener("resize",()=>draw());
 function bind(){const m=$("#main");
  if(tab==="hero")m.querySelectorAll(".card").forEach(c=>c.onclick=()=>{if(S.h[c.dataset.id]){sel=c.dataset.id;draw()}else toast("아직 없는 영웅이에요 · 상자에서 나와요")});
  if(tab==="hero"&&sel){$("#cl").onclick=()=>{sel=null;draw()};const x=byId[sel],o=S.h[sel];$("#up").onclick=()=>{const rr=RAR[x.r];if(o.lv>=rr.max)return;const ns=needSh(x,o.lv),ng=needGold(o.lv);if(o.sh<ns||S.gold<ng){toast(o.sh<ns?"카드가 모자라요":"골드가 모자라요");return}o.sh-=ns;S.gold-=ng;o.lv++;save();toast(`${x.nm} Lv ${o.lv}!`);draw()};
@@ -115,7 +130,7 @@ function bind(){const m=$("#main");
  if(tab==="chest")m.querySelectorAll("[data-ch]").forEach(c=>c.onclick=()=>{const i=+c.dataset.ch,k=S.chests[i];if(k.t&&Date.now()>=k.t)openChest(i);else toast("아직 열리는 중이에요")});
  if(tab==="battle"){$("#go").onclick=battle}
  if(tab==="castle"){$("#rs").onclick=()=>{S=fresh();save();draw()}}}
-setInterval(()=>{if(tab==="chest")draw()},1000);
+setInterval(()=>{if(tab==="chest"&&!isW())draw();else if(isW()&&!$("#hv")&&!$("#ov.on"))draw()},1000);
 draw();window.__bl={S:()=>S,H};
 })();
 </script></body></html>

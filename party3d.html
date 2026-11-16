@@ -710,7 +710,7 @@ const GAMES=[
   ai(){return [0,0,false]},
   rank(){const alive=P.filter(p=>!p.out);return [...alive,...this.outs.slice().reverse().map(i=>P[i])]},
   over(T){return P.filter(p=>!p.out).length<=1||T>this.len}},
- {id:"shoot",nolag:1,solo:1,em:"🎯",ico:"🎯",name:t("물풍선 표적 맞히기","Splash Targets"),how:t("🎯 왼쪽·오른쪽으로 움직이며 물풍선을 퐁! 움직이는 과녁을 맞혀요. ⭐ 금색 과녁은 3점이에요~","Move left/right and splash the moving targets! Gold ones are worth 3"),act:"none",actLabel:t("발사!","SHOOT!"),keys:t("이동: ←/→ 또는 A/D · 발사: 스페이스","Move: ←/→ or A/D · Shoot: Space"),tk:t("왼쪽 드래그로 이동 · 오른쪽 버튼으로 발사!","Drag left side to move · Tap the button to shoot!"),len:35,timed:1,camK:1.1,
+ {id:"shoot",nolag:1,solo:1,em:"🎯",ico:"🎯",name:t("물풍선 표적 맞히기","Splash Targets"),how:t("🎯 앞·뒤·옆 자유롭게 움직이며 물풍선을 퐁! 움직이는 과녁을 맞혀요. ⭐ 금색 과녁은 3점이에요~","Move freely and splash the moving targets! Gold ones are worth 3"),act:"none",actLabel:t("발사!","SHOOT!"),keys:t("이동: 방향키/WASD · 발사: 스페이스","Move: Arrows/WASD · Shoot: Space"),tk:t("왼쪽 드래그로 자유 이동 · 오른쪽 버튼으로 발사!","Drag left side to move freely · Tap the button to shoot!"),len:35,timed:1,camK:1.1,
   setup(){const g=mesh(new THREE.BoxGeometry(24,1,20),"#A8E6FF",false,true);g.position.y=-.5;arena.add(g);
    for(let k=0;k<6;k++){const s=new THREE.Mesh(new THREE.PlaneGeometry(24,1.6),M(k%2?"#C6F0FF":"#B3EAFF"));s.rotation.x=-Math.PI/2;s.position.set(0,.01,-8.2+k*1.6);s.receiveShadow=true;arena.add(s)}
    const ln=new THREE.Mesh(new THREE.PlaneGeometry(22,.3),new THREE.MeshBasicMaterial({color:"#FFFFFF"}));ln.rotation.x=-Math.PI/2;ln.position.set(0,.02,3.6);arena.add(ln);
@@ -734,9 +734,9 @@ const GAMES=[
       burst(g.x,2.1,g.z,g.gold?"#FFE066":p.col,16,6);burst(g.x,2.1,g.z,"#7AD9FF",8,4);SND.coin();popTxt(p,"+"+pts,"#FFE066",pts>1?32:24);
       if(p.you){heartFx(p,pts+1);if(pts>1)say(g.gold?t("금 과녁! +3 ⭐","GOLD! +3 ⭐"):t("한가운데! +2 🎯","Bullseye! +2 🎯"),"#FFE066",.8)}renderChips();done=true;break}}
     if(done){if(b.z<-9.3)burst(b.x,b.y,-9.3,"#7AD9FF",6,3);arena.remove(b.m);this.balls.splice(i,1)}}},
-  drive(p,dt){const i=p.lastIn||[0,0];p.vx=i[0]*7.5;p.vz=(6-p.z)*8;if(Math.abs(i[0])>.2)p.face=Math.PI},
+  drive(p,dt){const i=p.lastIn||[0,0];p.vx=i[0]*7.5;p.vz=Math.abs(i[1])>.15?i[1]*6.5:0;if(Math.abs(i[0])>.2)p.face=Math.PI},
   ground(){return true},
-  clampP(p){p.x=clamp(p.x,-10,10)},
+  clampP(p){p.x=clamp(p.x,-10,10);p.z=clamp(p.z,1.2,8.6)},
   ai(p,dt){let best=null,bs=1e9;for(const g of this.tg){if(g.hit)continue;const tt=(p.z-.8-g.z)/22,px=g.x+g.v*tt;if(Math.abs(px)>9.6)continue;const s=Math.abs(px-p.x)-(g.gold?4:0)+(g.z<-6?1:0);if(s<bs){bs=s;best={g,px}}}
    p._af^=1;if(!best)return [0,0,false];if(p._err===undefined||R()<dt*1.5)p._err=rnd(-1,1)*(1-p.skill)*1.6;const dx=best.px+p._err-p.x;
    return [clamp(dx*1.4,-1,1),0,Math.abs(dx)<best.g.r*.9&&p._af===1&&R()<.55+p.skill]},
