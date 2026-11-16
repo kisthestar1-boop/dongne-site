@@ -15,7 +15,7 @@ canvas{display:block}
 .chip b{display:block;font-size:13px;line-height:1.1}.chip i{font-style:normal;font-weight:900;color:#FFE066;font-size:15px}
 .chip.out{opacity:.4}
 #info{position:absolute;top:66px;left:50%;transform:translateX(-50%);font-weight:800;font-size:15px;text-shadow:0 2px 6px rgba(0,0,0,.5);white-space:nowrap}
-#banner{position:absolute;top:38%;left:50%;transform:translate(-50%,-50%);font-size:clamp(40px,9vw,96px);font-weight:900;color:#FFE066;-webkit-text-stroke:3px #2A1060;text-shadow:0 6px 0 #2A1060;opacity:0;transition:opacity .2s,transform .2s;white-space:nowrap}
+#banner{position:absolute;top:24%;left:50%;transform:translate(-50%,-50%);font-size:clamp(24px,4.2vw,48px);font-weight:900;color:#FFE066;-webkit-text-stroke:2px #2A1060;paint-order:stroke fill;text-shadow:0 3px 0 #2A1060;opacity:0;transition:opacity .2s,transform .2s;max-width:86vw;text-align:center;line-height:1.15;pointer-events:none}
 #banner.on{opacity:1}
 #hint{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);font-size:13px;font-weight:700;background:rgba(20,10,50,.5);padding:5px 12px;border-radius:10px;white-space:nowrap}
 .ov{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 40%,rgba(80,40,160,.55),rgba(20,8,50,.85));pointer-events:auto;color:#fff;text-align:center}
@@ -346,8 +346,8 @@ const GAMES=[
    dx=p.tx-p.x;dz=p.tz-p.z;const l=Math.hypot(dx,dz);if(l<.5){dx=dz=0}else{dx/=l;dz/=l;dx*=.5;dz*=.5}
    if(r>this.R-1.5){dx-=p.x/r;dz-=p.z/r}
    const ang=Math.atan2(p.z,p.x);let diff=((ang-this.a)*this.dir)%Math.PI;if(diff<0)diff+=Math.PI;const tt=diff/this.w;
-   if(p.jumpWant<=0)p.jumpWant=.2+rnd(0,.1)+(1-p.skill)*.22*R();
-   let jump=false;if(tt<p.jumpWant&&p.grounded&&r>1.1&&r<8.8*(this.sc||1)+.4){jump=R()<.88+p.skill*.2;p.jumpWant=0;if(!jump)p.jumpWant=-1}
+   if(p.jumpWant<=0)p.jumpWant=.3+rnd(0,.08)+(1-p.skill)*.06*R();
+   let jump=false;if(tt<p.jumpWant&&p.grounded&&r>1.1&&r<8.8*(this.sc||1)+.4){jump=R()<.96+p.skill*.1;p.jumpWant=0;if(!jump)p.jumpWant=-1}
    if(p.jumpWant<0&&tt>.6)p.jumpWant=0;
    return [dx,dz,jump]},
   rank(){const alive=P.filter(p=>!p.out);return [...alive,...this.outs.slice().reverse().map(i=>P[i])]},
@@ -355,11 +355,17 @@ const GAMES=[
  {id:"hot",em:"💣",name:t("폭탄 돌리기","Hot Potato"),how:t("폭탄을 가진 사람에게 닿으면 넘어와요! 터질 때 들고 있으면 탈락","Touch to pass the bomb! Don't hold it when it blows"),act:"dash",actLabel:t("돌진","DASH"),keys:t("이동: WASD/방향키 · 돌진: 스페이스","Move: WASD/Arrows · Dash: Space"),len:90,
   setup(){const g=mesh(new THREE.CylinderGeometry(10,10,1,64),"#FFCF7A",false,true);g.position.y=-.5;arena.add(g);arena.add(stripes(10,10,"#FFDB97"));
    for(let i=0;i<18;i++){const a=i/18*6.283;const b=mesh(new THREE.CylinderGeometry(.35,.35,1,10),i%2?"#FF7AA8":"#7AD9FF",true);b.position.set(Math.cos(a)*10.2,.3,Math.sin(a)*10.2);arena.add(b)}
-   this.bomb=mesh(new THREE.SphereGeometry(.5,16,12),"#2C2540",true);const sp=new THREE.Mesh(new THREE.SphereGeometry(.14,8,6),new THREE.MeshBasicMaterial({color:"#FF5A2A"}));sp.position.y=.62;this.bomb.add(sp);this.spark=sp;arena.add(this.bomb);
+   this.bomb=new THREE.Group();{const bd=mesh(new THREE.SphereGeometry(.62,24,18),"#3A2F5E",true);this.bomb.add(bd);const sh=new THREE.Mesh(new THREE.SphereGeometry(.14,10,8),new THREE.MeshBasicMaterial({color:"#FFFFFF",transparent:true,opacity:.85}));sh.position.set(-.26,.3,.46);sh.scale.set(1.3,.8,.5);this.bomb.add(sh);
+   const cap=mesh(new THREE.CylinderGeometry(.2,.26,.2,14),"#9AA0B5",true);cap.position.y=.66;this.bomb.add(cap);
+   const fz=mesh(new THREE.TorusGeometry(.22,.035,6,14,Math.PI*1.1),"#E0B070");fz.position.set(.2,.9,0);fz.rotation.z=-.4;this.bomb.add(fz);
+   const sp=new THREE.Mesh(new THREE.OctahedronGeometry(.17),new THREE.MeshBasicMaterial({color:"#FF7A2A"}));sp.position.set(.4,1.08,0);this.bomb.add(sp);this.spark=sp;
+   for(const sx of[-1,1]){const ey=new THREE.Mesh(new THREE.SphereGeometry(.09,8,6),new THREE.MeshBasicMaterial({color:"#FFFFFF"}));ey.position.set(sx*.24,.1,.56);this.bomb.add(ey);const pu=new THREE.Mesh(new THREE.SphereGeometry(.05,8,6),new THREE.MeshBasicMaterial({color:"#22183A"}));pu.position.set(sx*.24,.09,.63);this.bomb.add(pu)}
+   const mt=new THREE.Mesh(new THREE.TorusGeometry(.09,.025,6,10,Math.PI),new THREE.MeshBasicMaterial({color:"#FF8FB8"}));mt.position.set(0,-.12,.6);mt.rotation.z=Math.PI;this.bomb.add(mt)}
+   arena.add(this.bomb);
    spawnRing(5);this.round();},
   round(){const alive=P.filter(p=>!p.out);this.holder=pick(alive);this.fuse=rnd(7,11);this.passCd=0;this.fuse0=this.fuse},
   update(dt,T){if(!this.holder)return;this.fuse-=dt;this.passCd-=dt;const h=this.holder;
-   {const f=h.face||0,wb=Math.sin(T*16)*.14;this.bomb.position.set(h.x+Math.sin(f)*.75+Math.cos(f)*(.55+wb),h.y+1.3+Math.abs(Math.sin(T*9))*.15,h.z+Math.cos(f)*.75-Math.sin(f)*(.55+wb));h._ft=(h._ft||0)-dt;if(h._ft<=0){h._ft=rnd(1.1,1.8);popTxt(h,pick(["앗 뜨거!","어떡해~","허둥지둥!","누가 받아줘!","으아~"]),"#FFB3A0",h.you?28:22)}}const k=1-this.fuse/this.fuse0;this.bomb.scale.setScalar(1+k*.4+Math.sin(T*(8+k*30))*.06*k);this.spark.visible=Math.sin(T*40)>0;
+   {const f=h.face||0,wb=Math.sin(T*16)*.14;this.bomb.position.set(h.x+Math.sin(f)*.75+Math.cos(f)*(.55+wb),h.y+1.55+Math.abs(Math.sin(T*9))*.15,h.z+Math.cos(f)*.75-Math.sin(f)*(.55+wb));h._ft=(h._ft||0)-dt;if(h._ft<=0){h._ft=rnd(1.1,1.8);popTxt(h,pick(["앗 뜨거!","어떡해~","허둥지둥!","누가 받아줘!","으아~"]),"#FFB3A0",h.you?28:22)}}const k=1-this.fuse/this.fuse0;this.bomb.scale.setScalar(1+k*.4+Math.sin(T*(8+k*30))*.06*k);this.spark.visible=Math.sin(T*40)>0;
    if(Math.floor(this.fuse*(k>.7?4:2))!==this._tk){this._tk=Math.floor(this.fuse*(k>.7?4:2));SND.tick()}
    if(this.passCd<=0)for(const q of P){if(q===h||q.out||q.falling)continue;if(Math.hypot(q.x-h.x,q.z-h.z)<1.55){this.holder=q;this.passCd=.45;SND.dash();burst(q.x,2,q.z,"#FFE066",8,4);if(q.you)say(t("받았다!","YOU GOT IT!"),"#FF6B6B",.7);break}}
    if(this.fuse<=0){SND.boom();shake=.7;const x=h.x,z=h.z;burst(x,1,z,"#FF7A2A",34,10);burst(x,1,z,"#3A2F55",16,7);
@@ -489,13 +495,14 @@ const GAMES=[
    this.rg=new THREE.Group();const rope=mesh(new THREE.CylinderGeometry(.11,.11,13,8),"#E0B070",true);rope.rotation.z=Math.PI/2;rope.position.y=1.0;this.rg.add(rope);
    const pole=mesh(new THREE.CylinderGeometry(.05,.05,1.4,6),"#fff");pole.position.set(0,1.7,0);this.rg.add(pole);const fl=mesh(new THREE.ConeGeometry(.35,.7,3),"#FF4D6D");fl.rotation.z=-Math.PI/2;fl.position.set(.3,2.1,0);this.rg.add(fl);arena.add(this.rg);
    this.bx=[-2.6,-4.6,2.6,4.6];this.r=0;this.rate=[0,0];this.said=0;
-   P.forEach((p,i)=>{p.lz=0;place(p,this.bx[i],0);p.face=i<2?Math.PI/2:-Math.PI/2})},
+   P.forEach((p,i)=>{p.lz=0;place(p,this.bx[i],0);p.face=i<2?Math.PI/2:-Math.PI/2;p._pl=0;p.hands=[-1,1].map(sz=>{const h=mesh(new THREE.SphereGeometry(.2,12,10),"#FFF3E0",true);h.position.set(p.x,1,sz*.28);arena.add(h);return h})})},
   update(dt,T){if(!this.said){this.said=1;say(t(`나는 왼쪽 ${P[0].em} 팀! 영차!`,`I'm ${P[0].em} on the LEFT! Heave ho!`),"#FFE066",2.2)}
-   if(NET.mode!=="guest"){const tp=[0,0];for(const p of P){if(tapped(p)){p.score++;tp[p.id<2?0:1]++;if(p.y<.05){p.vy=4.2;p.grounded=false}}}
+   if(NET.mode!=="guest"){const tp=[0,0];for(const p of P){if(tapped(p)){p.score++;tp[p.id<2?0:1]++;p._pl=1;if(p.score%7===0)popTxt(p,pick(["영차!","으랏차!","당겨라~","힘내!"]),"#FFE066",p.you?28:22);if(p.y<.05){p.vy=2.2;p.grounded=false}}}
     for(let k=0;k<2;k++)this.rate[k]+=(tp[k]/Math.max(dt,.001)-this.rate[k])*Math.min(1,dt*3);
     this.r=clamp(this.r+(this.rate[1]-this.rate[0])*.2*dt,-4,4)}
    else this.r=P[0].x-this.bx[0];
-   this.rg.position.x=this.r},
+   this.rg.position.x=this.r;
+   for(const p of P){p._pl=Math.max(0,(p._pl||0)-dt*3.2);const dir=p.id<2?1:-1,lean=.22+.4*p._pl+Math.sin(T*9+p.id)*.04;p._ln=lean;if(p.hands)p.hands.forEach((h,k)=>{h.position.set(p.x+dir*(.62-lean*.5),1.0+p._pl*.05,(k?1:-1)*.28)})}},
   drive(p,dt){if(NET.mode==="guest"){p.vx=p.vz=0;return}p.vx=(this.bx[p.id]+this.r-p.x)*9;p.vz=((p.lz||0)-p.z)*9},
   ground(){return true},
   ai(p,dt){return tapAI(p,dt,3.2+p.skill*1.4)},
@@ -539,7 +546,7 @@ const GAMES=[
    for(const p of P){if(p.sw>0)p.sw-=dt;const u=p.sw>0?1-p.sw/.3:-1;const a=u<0?.55:u<.3?.55-(u/.3)*1.8:-1.25+Math.pow((u-.3)/.7,.6)*3.2;if(p._hy===undefined)p._hy=p.face;p._hy+=Math.atan2(Math.sin(p.face-p._hy),Math.cos(p.face-p._hy))*Math.min(1,dt*9);const hf=p._hy;p.hm.visible=!p.out;p.hm.position.set(p.x+Math.sin(hf)*.55+Math.cos(hf)*1.05,p.y+.8,p.z+Math.cos(hf)*.55-Math.sin(hf)*1.05);p.hm.rotation.y=hf;p.hm.children[0].rotation.x=a}
    if(this.sp<=0){this.sp=rnd(.45,.8)*(T>15?.75:1);const idle=this.H.filter(h=>h.st===0);if(this.H.length-idle.length<4&&idle.length){const h=pick(idle);h.st=1;h.t=0;h.gold=R()<.12?1:0;h.mn.visible=!h.gold;h.mg.visible=!!h.gold;h.hold=Math.max(.9,rnd(1.4,2.1)-T*.015)}}
    for(const p of P){if(p.out)continue;const tp=tapped(p);if(tp&&p.sw<=0)p.sw=.3;if(!tp||!host)continue;
-    let best=null,bd=2.1;for(const h of this.H){if((h.st===1||h.st===2)&&h.up>.25){const d=Math.hypot(h.x-p.x,h.z-p.z);if(d<bd){bd=d;best=h}}}
+    let best=null,bd=3.3;for(const h of this.H){if((h.st===1||h.st===2)&&h.up>.08){const d=Math.hypot(h.x-p.x,h.z-p.z);if(d<bd){bd=d;best=h}}}
     if(best){p.face=Math.atan2(best.x-p.x,best.z-p.z);this.hitM(best,p,0)}
     else{let fr=null,fd=2.2;for(const q of P){if(q===p||q.out||(q.stun>0))continue;const d=Math.hypot(q.x-p.x,q.z-p.z);if(d<fd){fd=d;fr=q}}
      if(fr){const dx=fr.x-p.x,dz=fr.z-p.z,l=Math.hypot(dx,dz)||1;p.face=Math.atan2(dx,dz);fr.ex+=dx/l*14;fr.ez+=dz/l*14;fr.stun=.3;SND.bump();tone(700,.14,"square",.08,220);shake=Math.max(shake,.2);burst(fr.x,1.4,fr.z,"#FFB3D1",10,5);popTxt(fr,pick(["왜 때려요~","아야! 왜요~","뿅! 으앙","치사해~"]),"#FFB3D1");if(fr.you)say(t("앗! 친구가 뿅 했어요","A friend bonked you!"),"#FF9BB5",.9)}
@@ -700,12 +707,14 @@ for(const id of ["tiles","lava"])GAMES.find(g=>g.id===id).revive=function(){let 
 let introHold=6,G=null,GT=0,state="title",round=0,order=[],stT=0,lastCount=0;
 function eliminate(p){if(p.out)return;if(NET.mode==="guest"&&!NET.applying)return;
  if(false&&p.you&&!NET.mode&&G&&G.revive&&!G.rev&&state==="play"){const q=G.revive(p);if(q){G.rev=1;p.x=q[0];p.z=q[1];p.y=0;p.vy=0;p.vx=p.vz=p.ex=p.ez=0;p.falling=false;p.ko=false;p.grounded=true;p.stun=.5;p.inv=3;p.mesh.userData.b.rotation.x=0;p.mesh.visible=true;say(t("한 번 더! 💖","One more chance! 💖"),"#FF9BD2",1.3);burst(p.x,1,p.z,"#FF9BD2",18,6);return}}
- if(NET.mode==="host")NET.send({t:"out",i:p.id});p.out=true;p.mesh.visible=false;G.outs.push(p.id);SND.out();if(p.you)say(t("탈락!","OUT!"),"#FF6B6B",1.4);else popTxt(p,t("탈락","OUT"),"#FF6B6B");renderChips()}
+ if(NET.mode==="host")NET.send({t:"out",i:p.id});p.out=true;p.mesh.visible=false;G.outs.push(p.id);SND.out();{const gid=G&&G.id,CH={spd:["삐약~ ㅠㅠ","삐약! 분해~","삐이약… 엉엉"],jmp:["깡총… 아야 ㅠㅠ","토토 떨어진다~","깡총! 으앙~"],soft:["메에~ ㅠㅠ","몽실몽실 굴러간다~","메에… 엉엉"],dash:["크앙… 분하다!","공룡도 울어요 ㅠㅠ","으르릉… 다음엔 이긴다!"]};
+ const SIT=({hot:["펑! 앗 뜨거워~","폭탄 싫어~ ㅠㅠ","으악 터졌다!"],hball:["하트가 없어요 ㅠㅠ","공에 맞았다~ 엉엉","윽… 쿵! 탈락"],sweep:["막대에 꽈당! ㅠㅠ","빙글빙글 어지러워~","앗 못 피했다!"],mbox:["펑! 내가 터졌어~","상자가 나한테 왔어 ㅠㅠ","으앙~ 0이다!"],sumo:["으아아~ 밀렸다!","퐁당~ ㅠㅠ","나가버렸다~"],circle:["퐁당~ 빠졌다!","미끄러졌어 ㅠㅠ","앗! 밖으로~"],sheep:["양들한테 밀렸다~","메에~ 으악!","쿵! ㅠㅠ"],lava:["앗 뜨거! 풍덩~","용암 싫어~ ㅠㅠ","으아아~ 아치치!"],tiles:["타일이 사라졌다~","으아아~ 떨어진다!","앗! 바닥이 없어 ㅠㅠ"]})[gid]||["으아아~","ㅠㅠ","살려줘~","엉엉…","아이고~"];
+ const m=R()<.45&&CH[p.tr]?pick(CH[p.tr]):pick(SIT);p._pt=0;popEls.length=Math.min(popEls.length,3);popTxt({x:p.x,y:Math.max(0,p.y)+.5,z:p.z,tr:p.tr},m,"#FF6B6B",26);if(p.you)say(pick(["탈락! ㅠㅠ","아이고~ 탈락!","다음엔 꼭!","엉엉 탈락…"]),"#FF9BB5",1.2)}renderChips()}
 const popEls=[];const BUB={spd:["#FFF6B8","#FFC400","#8A5A00","🐥"],jmp:["#EADCFF","#A57BFF","#5B2FA8","🐰"],soft:["#FFE1EE","#FF8FC0","#C23A78","🐑"],dash:["#D5F8E6","#4FCB8F","#1D7A4D","🦖"],_:["#FFE9F2","#FF9BD2","#C23A78","💛"]};
-function popTxt(p,s,col,sz){const e=document.createElement("div");const bb=BUB[p.tr]||BUB._,big=(sz||22)>=34;e.textContent=(/[+0-9❤]/.test(s)||s.length<2?"":bb[3]+" ")+s;e.style.cssText=`position:fixed;font-weight:900;font-size:${Math.round((sz||22)*.82)}px;color:${bb[2]};background:${bb[0]};border:3px solid ${bb[1]};border-radius:22px;padding:2px 12px 3px;white-space:nowrap;box-shadow:0 3px 0 ${bb[1]},0 4px 8px rgba(40,10,90,.35);pointer-events:none;transition:none;transform:translateX(-50%)${big?" scale(1.1)":""}`;document.body.appendChild(e);popEls.push({e,p,t:0,y:p.y})}
+function popTxt(p,s,col,sz){const nw=performance.now();if(popEls.length>=4||nw-(p._pt||0)<1400)return;p._pt=nw;const e=document.createElement("div");const bb=BUB[p.tr]||BUB._,big=(sz||22)>=34;e.textContent=(/[+0-9❤]/.test(s)||s.length<2?"":bb[3]+" ")+s;e.style.cssText=`position:fixed;font-weight:900;font-size:${Math.max(11,Math.round((sz||22)*.46))}px;color:${bb[2]};background:${bb[0]};border:2px solid ${bb[1]};border-radius:12px;padding:0 6px 1px;opacity:.95;white-space:nowrap;box-shadow:0 2px 0 ${bb[1]};pointer-events:none;transition:none;transform:translateX(-50%)`;document.body.appendChild(e);popEls.push({e,p,t:0,y:p.y})}
 const meTag=document.createElement("div");meTag.textContent=t("💛 나","💛 Me");meTag.style.cssText="position:fixed;z-index:20;pointer-events:none;background:linear-gradient(#FFF7C2,#FFE3EE);color:#E0457B;font-weight:900;font-size:17px;padding:1px 13px;border-radius:18px;border:3px solid #fff;box-shadow:0 3px 10px rgba(255,110,160,.55);transform:translateX(-50%);display:none";document.body.appendChild(meTag);
 function upMeTag(){const me=P.find(p=>p.you);if(!me||me.out||!me.mesh.visible||state!=="play"||!G){meTag.style.display="none";return}const v=new THREE.Vector3(me.x,me.y+2.75*me.mesh.scale.x,me.z).project(cam);if(me.mesh.userData.arrow)me.mesh.userData.arrow.visible=false;meTag.style.left=((v.x+1)/2*innerWidth)+"px";meTag.style.top=((1-v.y)/2*innerHeight-4)+"px";meTag.style.display="block"}
-function upPops(dt){const v=new THREE.Vector3();for(let i=popEls.length-1;i>=0;i--){const o=popEls[i];o.t+=dt;v.set(o.p.x,o.y+2.6+o.t*1.6,o.p.z).project(cam);o.e.style.left=((v.x+1)/2*innerWidth)+"px";o.e.style.top=((1-v.y)/2*innerHeight)+"px";o.e.style.opacity=String(clamp(2-o.t*2,0,1));if(o.t>1){o.e.remove();popEls.splice(i,1)}}}
+function upPops(dt){const v=new THREE.Vector3();for(let i=popEls.length-1;i>=0;i--){const o=popEls[i];o.t+=dt;v.set(o.p.x,o.y+3.5+o.t*1.0,o.p.z).project(cam);o.e.style.left=((v.x+1)/2*innerWidth)+"px";o.e.style.top=((1-v.y)/2*innerHeight)+"px";o.e.style.opacity=String(clamp(2-o.t*2,0,1));if(o.t>1){o.e.remove();popEls.splice(i,1)}}}
 let AISEED=777;function aiCall(p,dt){if(!G.nolag){p._lt=(p._lt||0)-dt;if(p._lt>0&&p._la)return [p._la[0],p._la[1],false];p._lt=.1+(1-p.skill)*.4*(.6+Math.random()*.8)}
  const k=SEED;SEED=AISEED;const r=G.ai(p,dt);AISEED=SEED;SEED=k;if(!G.nolag)p._la=r;return r}
 function physics(dt){
@@ -736,7 +745,7 @@ function animP(dt,T){for(const p of P){if(!p.mesh.visible)continue;const m=p.mes
   if(b.userData.ft)b.userData.ft.forEach((f,k)=>{const sg=k?1:-1;f.position.z=.1+Math.sin(ph+(k?Math.PI:0))*.2*mvk;f.position.y=.1+Math.max(0,Math.sin(ph+(k?Math.PI:0)))*.12*mvk});
   if(b.userData.ar)b.userData.ar.forEach((a2,k)=>{a2.position.z=.05-Math.sin(ph+(k?Math.PI:0))*.16*mvk;a2.position.y=.98+(!p.grounded&&!p.falling?.25:0)+(1-mvk)*Math.sin(T*2+k)*.02});
   p.squash=Math.max(0,(p.squash||0)-dt);const s=p.squash>0?Math.sin(p.squash/.25*Math.PI)*.25:0;const air=!p.grounded&&!p.falling?.08:0;{const K=b.userData.k||1;b.scale.set((1+s)*K,(1-s+air)*K,(1+s)*K)}
-  b.rotation.x=p.stun>0?Math.sin(T*25)*.2:(p.falling||p.ko?b.rotation.x+dt*6:clamp(spd/6,0,1)*.12);if(!p.falling&&!p.ko&&p.stun<=0)b.rotation.x+=(clamp(spd/6,0,1)*.16-b.rotation.x)*Math.min(1,dt*8);
+  b.rotation.x=p.stun>0?Math.sin(T*25)*.2:(p.falling||p.ko?b.rotation.x+dt*6:clamp(spd/6,0,1)*.12);if(!p.falling&&!p.ko&&p.stun<=0)b.rotation.x+=(clamp(spd/6,0,1)*.16-b.rotation.x)*Math.min(1,dt*8);if(G&&G.id==="tug"&&p._ln!==undefined)b.rotation.x=-p._ln;
   if(b.userData.eyes){const bt=(T+p.id*1.7)%3.6,bl=bt<.14?.12:1;b.userData.eyes.forEach(e=>e[0].scale.y=e[1]*bl)}
   m.userData.ring.visible=p.grounded&&!p.falling;if(m.userData.arrow){m.userData.arrow.position.y=3.0+Math.sin(T*5)*.15;m.userData.arrow.rotation.y+=dt*2}}}
 
