@@ -262,7 +262,7 @@ function mkHam(p){const h=new THREE.Group(),k=p.tr;const hy=1.55;
  else if(k==="soft"){for(const[x,y,z,r]of[[0,0,0,.4],[-.4,.1,0,.3],[.4,.1,0,.3],[0,.35,.1,.28],[0,-.3,.1,.27],[.1,.05,.35,.28],[.1,.05,-.35,.28]]){const c=mesh(new THREE.SphereGeometry(r,12,10),"#FFFFFF",true);c.position.set(x,hy+y,z);h.add(c)}const hr=mesh(new THREE.SphereGeometry(.16,10,8),"#FF8FB8");hr.position.set(0,hy,.42);h.add(hr)}
  else if(k==="dash"){const c=mesh(new THREE.CylinderGeometry(.4,.4,.95,16),"#6FD6A0",true);c.rotation.z=Math.PI/2;c.position.y=hy;h.add(c);for(const x of[-.3,0,.3]){const sp=mesh(new THREE.ConeGeometry(.15,.32,8),"#FFB347",true);sp.position.set(x,hy+.55,0);h.add(sp)}for(const sx of[-1,1]){const cp=mesh(new THREE.CylinderGeometry(.33,.33,.08,16),"#FFF3A0");cp.rotation.z=Math.PI/2;cp.position.set(sx*.5,hy,0);h.add(cp)}}
  else{const c=mesh(new THREE.SphereGeometry(.5,16,12),"#FF7DB0",true);c.position.y=hy;h.add(c);const rg=mesh(new THREE.TorusGeometry(.5,.07,8,20),"#FFFFFF");rg.rotation.y=Math.PI/2;rg.position.y=hy;h.add(rg);for(const sz of[-1,1]){const e=mesh(new THREE.SphereGeometry(.07,8,6),"#2A1060");e.position.set(.2*sz,hy+.1,.45);h.add(e)}const sm=mesh(new THREE.TorusGeometry(.14,.025,6,10,Math.PI),"#2A1060");sm.rotation.z=Math.PI;sm.position.set(0,hy-.02,.5);h.add(sm)}
- return h}
+ h.scale.setScalar(1.3);return h}
 const GAMES=[
  {id:"sumo",em:"🥊",name:t("밀어내기 왕","Bump King"),how:t("부딪혀서 다른 친구를 떨어뜨려요! 바닥이 점점 작아져요","Bump others off! The arena keeps shrinking"),act:"dash",actLabel:t("돌진","DASH"),keys:t("이동: WASD/방향키 · 돌진: 스페이스","Move: WASD/Arrows · Dash: Space"),len:45,
   setup(){this.R=9;this.d=platformDisc(9,"#8E6CEB");this.d.add(stripes(9,12,"#A58BF5"));arena.add(this.d);spawnRing(5.5)},
@@ -536,7 +536,7 @@ const GAMES=[
     else if(h.st===2){h.t+=dt;if(h.t>h.hold)h.st=4}
     else if(h.st===3){h.t+=dt;if(h.t>.4)h.st=4}
     else if(h.st===4){h.up=Math.max(0,h.up-dt*5);if(h.up<=0)h.st=0}
-    if(h.hitT>0)h.hitT-=dt;const ht=h.hitT>0?h.hitT:0;h.m.position.y=-1.4+h.up*1.7;h.m.scale.y=h.st===3?(.45+.1*Math.sin(ht*30)):1;h.m.scale.x=h.m.scale.z=h.st===3?1.3:1;h.m.rotation.z=ht>0?Math.sin(ht*40)*.35*(ht/.55):0}},
+    if(h.hitT>0)h.hitT-=dt;const ht=h.hitT>0?h.hitT:0;h.m.position.y=-1.4+h.up*2.5;h.m.scale.y=h.st===3?(.45+.1*Math.sin(ht*30)):1;h.m.scale.x=h.m.scale.z=h.st===3?1.3:1;h.m.rotation.z=ht>0?Math.sin(ht*40)*.35*(ht/.55):0}},
   ground(){return true},
   clampP(p){p.x=clamp(p.x,-9.4,9.4);p.z=clamp(p.z,-9.4,9.4)},
   ai(p,dt){let best=null,bd=1e9;for(const h of this.H)if((h.st===1||h.st===2)&&h.up>.3){const d=Math.hypot(h.x-p.x,h.z-p.z)+rnd(0,2.5)*(1-p.skill);if(d<bd){bd=d;best=h}}
