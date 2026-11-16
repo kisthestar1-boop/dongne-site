@@ -139,7 +139,7 @@ function upStage(dt,T){cheer=Math.max(0,cheer-dt);for(const f of FANS){const ud=
 function resize(){const w=innerWidth,h=innerHeight;R3.setSize(w,h);cam.aspect=w/h;cam.updateProjectionMatrix()}addEventListener("resize",resize);resize();
 
 /* ---------- 캐릭터 ---------- */
-const PL=[{n:t("나 (공룡)","You (Dino)"),c:"#6FD8BC",e:0,em:"🦖"},{n:t("토토","Bunny"),c:"#BFA3F5",e:1,em:"🐰"},{n:t("몽실","Sheepy"),c:"#A5D6F7",e:2,em:"🐑"},{n:t("삐약","Chick"),c:"#FFE259",e:3,em:"🐥"}];
+const PL=[{n:t("나 (공룡)","You (Dino)"),c:"#8FE6CC",e:0,em:"🦖"},{n:t("토토","Bunny"),c:"#C9B2F2",e:1,em:"🐰"},{n:t("몽실","Sheepy"),c:"#BCDDF5",e:2,em:"🐑"},{n:t("삐약","Chick"),c:"#FFDE3C",e:3,em:"🐥"}];
 function STAR(){const sh=new THREE.Shape();for(let i=0;i<10;i++){const r=i%2?.09:.2,a=i/10*6.283+Math.PI/2;const x=Math.cos(a)*r,y=Math.sin(a)*r;i?sh.lineTo(x,y):sh.moveTo(x,y)}sh.closePath();const g=new THREE.ExtrudeGeometry(sh,{depth:.07,bevelEnabled:true,bevelSize:.025,bevelThickness:.025,bevelSegments:2});g.center();return g}
 function lighten3(c){const x=new THREE.Color(c);x.lerp(new THREE.Color("#ffffff"),.45);return "#"+x.getHexString()}
 const SPR=[];/* 2D 그림 캐릭터는 보류 — 3D 캐릭터 사용 */
@@ -147,41 +147,42 @@ const SPR_AR=[331/512,325/512,448/512,332/512];
 function makeAnimal(col,ears,you){const g=new THREE.Group(),b=new THREE.Group();g.add(b);
   const S=(r,x,y,z,sx,sy,sz,c,cast,par)=>{const m=mesh(new THREE.SphereGeometry(r,24,16),c,cast);m.scale.set(sx||1,sy||1,sz||1);m.position.set(x,y,z);(par||b).add(m);return m};
   const B=(r,x,y,z,sx,sy,sz,c,par)=>{const m=new THREE.Mesh(new THREE.SphereGeometry(r,14,10),new THREE.MeshBasicMaterial({color:c}));m.scale.set(sx||1,sy||1,sz||1);m.position.set(x,y,z);(par||b).add(m);return m};
-  const HY=1.36,hd=new THREE.Group();hd.position.y=HY;b.add(hd);b.userData.hd=hd;
+  const HY=1.68,hd=new THREE.Group();hd.position.y=HY;b.add(hd);b.userData.hd=hd;
   /* 몸통(작게) + 머리(크게) — 제미나이 그림 비율 */
   const bodyCol=ears===3?"#FFFFFF":ears===2?lighten3(col):col;
-  S(.52,0,.62,0,1,1.08,.92,bodyCol,true);
-  if(ears===0)S(.36,0,.58,.3,1,1.1,.5,"#FFEFA0");
-  if(ears===1)S(.34,0,.58,.3,1,1.1,.5,"#FFF6EA");
-  if(ears===3){const bt=mesh(new THREE.TorusGeometry(.5,.07,8,24),"#FF8A3D",true);bt.rotation.x=Math.PI/2;bt.position.y=.55;b.add(bt);S(.1,0,.78,.46,1,1,.6,"#FF8A3D");S(.06,.2,.7,.44,1,1,.6,"#7DE0B0")}
-  S(.8,0,0,0,ears===2?1.02:1.06,.98,1,ears===2?"#FFF3E2":col,true,hd);
+  S(.55,0,.88,0,1,1.12,.95,bodyCol,true);
+  if(ears===0)S(.42,0,.84,.3,1,1.15,.5,"#F5E9A0");
+  if(ears===1)S(.36,0,.84,.3,1,1.15,.5,"#FBE8FA");
+  if(ears===3){const bt=mesh(new THREE.TorusGeometry(.5,.07,8,24),"#FF8A3D",true);bt.rotation.x=Math.PI/2;bt.position.y=.8;b.add(bt);S(.1,0,1.05,.5,1,1,.6,"#FF8A3D");S(.06,.2,.97,.48,1,1,.6,"#7DE0B0")}
+  S(.8,0,0,0,ears===2?1.02:1.06,.98,1,ears===2?"#FFE9DC":col,true,hd);
   /* 눈 */
   for(const s of[-1,1]){const w=B(.17,s*.31,.1,.68,1,1.2,.6,"#22183A",hd);(b.userData.eyes=b.userData.eyes||[]).push([w,1.2]);
     B(.06,s*.31+.05,.19,.8,1,1,.6,"#fff",hd);B(.025,s*.31-.05,.03,.82,1,1,.6,"#fff",hd);
     const ck=B(.13,s*.52,-.14,.56,1.4,.75,.4,"#FF9BB5",hd);ck.material.transparent=true;ck.material.opacity=.8;
     /* 발 (걷기) */
-    const ft=S(.2,s*.28,.1,.12,1,.6,1.4,ears===3?"#FF9A3C":col,true);(b.userData.ft=b.userData.ft||[]).push(ft);
+    const ft=new THREE.Group();ft.position.set(s*.26,.1,.12);b.add(ft);{const fo=mesh(new THREE.SphereGeometry(.2,16,10),ears===3?"#FF9A3C":col,true);fo.scale.set(1,.6,1.4);ft.add(fo);const lg=mesh(new THREE.SphereGeometry(.14,12,10),ears===3?"#FFFFFF":col,true);lg.scale.set(1,2.2,1);lg.position.set(0,.32,-.1);ft.add(lg)}(b.userData.ft=b.userData.ft||[]).push(ft);
     /* 팔 (움직임) */
-    const ar=S(.15,s*.66,.66,.08,.9,1.3,.9,ears===3?"#FFD83A":col,true);(b.userData.ar=b.userData.ar||[]).push(ar)}
+    const ar=S(.14,s*.72,.98,.08,.9,1.6,.9,ears===3?"#FFD83A":col,true);ar.rotation.z=s*.9;(b.userData.ar=b.userData.ar||[]).push(ar)}
   /* 입: 활짝 웃는 입 */
   const open=(y)=>{S(.23,0,y,.66,1.2,.8,.5,"#7A1F3D",false,hd);S(.1,0,y-.09,.74,1.5,.5,.4,"#FF8FAB",false,hd)};
   if(ears===0){/* 공룡 */
     S(.4,0,-.18,.45,1.15,.7,.8,lighten3(col),true,hd);open(-.22);
     for(const x of[-.22,0,.22]){const hs=mesh(new THREE.ConeGeometry(.1,.3,6),"#FFE066",true);hs.position.set(x,.8-Math.abs(x)*.5,.05);hs.rotation.z=-x*1.3;hd.add(hs)}
-    for(let i=0;i<3;i++){const sp=mesh(new THREE.ConeGeometry(.11-i*.015,.28-i*.04,6),"#FFE066",true);sp.position.set(0,.98-i*.3,-.5-i*.05);sp.rotation.x=-.9;b.add(sp)}
-    const tl=mesh(new THREE.ConeGeometry(.26,.9,12),col,true);tl.position.set(0,.34,-.72);tl.rotation.x=-1.9;b.add(tl)}
+    for(let i=0;i<3;i++){const sp=mesh(new THREE.ConeGeometry(.11-i*.015,.28-i*.04,6),"#FFE066",true);sp.position.set(0,1.28-i*.3,-.5-i*.05);sp.rotation.x=-.9;b.add(sp)}
+    const tl=mesh(new THREE.ConeGeometry(.26,.9,12),col,true);tl.position.set(0,.6,-.78);tl.rotation.x=-1.9;b.add(tl)}
   if(ears===1){/* 토끼 */
     for(const s of[-1,1]){S(.17,s*.27,.95,-.05,1,3.1,.7,col,true,hd).rotation.z=-s*.14;S(.09,s*.27,.95,.06,1,3.6,.5,"#FFC2D1",false,hd).rotation.z=-s*.14;
       const st=mesh(STAR(),"#E0CCFF",true);st.position.set(s*.4,1.62,-.05);st.rotation.z=-s*.14;hd.add(st)}
     S(.07,0,-.02,.78,1.2,.8,.7,"#FF8FAB",false,hd);open(-.22);
     for(const s of[-1,1]){const th=mesh(new THREE.BoxGeometry(.07,.1,.03),"#FFFFFF");th.position.set(s*.04,-.3,.74);hd.add(th)}
-    S(.2,0,.45,-.55,1,1,1,"#FFFFFF",true)}
+    S(.2,0,.72,-.58,1,1,1,"#FFFFFF",true)}
   if(ears===2){/* 양 */
     for(let i=0;i<10;i++){const a=i/10*6.283;S(.3,Math.cos(a)*.58,.55+Math.sin(a*2)*.04,Math.sin(a)*.3-.25,1,1,1,col,true,hd)}
     for(const [x,y] of[[-.25,.78],[.25,.8],[0,.88]])S(.26,x,y,.05,1,1,1,lighten3(col),true,hd);
     for(const s of[-1,1]){S(.16,s*.82,.12,.1,1.4,.7,.8,"#FFF3E2",true,hd).rotation.z=-s*.5;const hn=mesh(new THREE.TorusGeometry(.14,.06,8,16,Math.PI*1.5),"#F3D9A6",true);hn.position.set(s*.62,.45,-.02);hn.rotation.y=Math.PI/2;hn.rotation.z=s>0?0:Math.PI;hd.add(hn)}
     S(.06,0,-.02,.78,1.3,.8,.7,"#FF8FAB",false,hd);open(-.24);
-    for(let i=0;i<3;i++)S([.22,.16,.15][i],[0,.16,-.15][i],.5+[0,.1,.08][i],-.75,1,1,1,"#FFFFFF",true)}
+    for(let i=0;i<3;i++)S([.22,.16,.15][i],[0,.16,-.15][i],.78+[0,.1,.08][i],-.78,1,1,1,"#FFFFFF",true)}
+    for(let i=0;i<8;i++){const a=i/8*6.283;S(.24,Math.cos(a)*.42,.9+Math.sin(a*3)*.06,Math.sin(a)*.38,1,1,1,col,true)}
   if(ears===3){/* 병아리 + 헬멧 */
     const bk=mesh(new THREE.ConeGeometry(.13,.3,10),"#FF9A3C",true);bk.rotation.x=Math.PI/2;bk.position.set(0,-.1,.82);hd.add(bk);
     for(const [x,r] of[[-.1,.4],[0,0],[.1,-.4]]){const tf=mesh(new THREE.ConeGeometry(.07,.34,6),col,true);tf.position.set(x,.88,.02);tf.rotation.z=r;hd.add(tf)}
@@ -446,7 +447,7 @@ function animP(dt,T){for(const p of P){if(!p.mesh.visible)continue;const m=p.mes
   const spd=Math.hypot(p.vx,p.vz);if(m.userData.spr){const sw=m.userData.sw;if(Math.abs(p.vx)>.6)m.userData.fl=p.vx<0?-1:1;m.userData.spr.scale.x=sw*(m.userData.fl||1)}const mvk=p.grounded?clamp(spd/5,0,1):0;p.wph=(p.wph||0)+dt*(6+spd*1.6)*(mvk>.05?1:0);const ph=p.wph;
   b.position.y=p.grounded?Math.pow(Math.abs(Math.sin(ph)),1.5)*.12*mvk+(1-mvk)*Math.sin(T*2.2+p.id)*.015:0;b.rotation.z=Math.sin(ph)*.11*mvk;
   if(b.userData.ft)b.userData.ft.forEach((f,k)=>{const sg=k?1:-1;f.position.z=.1+Math.sin(ph+(k?Math.PI:0))*.2*mvk;f.position.y=.1+Math.max(0,Math.sin(ph+(k?Math.PI:0)))*.12*mvk});
-  if(b.userData.ar)b.userData.ar.forEach((a2,k)=>{a2.position.z=.05-Math.sin(ph+(k?Math.PI:0))*.16*mvk;a2.position.y=.62+(!p.grounded&&!p.falling?.25:0)+(1-mvk)*Math.sin(T*2+k)*.02});
+  if(b.userData.ar)b.userData.ar.forEach((a2,k)=>{a2.position.z=.05-Math.sin(ph+(k?Math.PI:0))*.16*mvk;a2.position.y=.98+(!p.grounded&&!p.falling?.25:0)+(1-mvk)*Math.sin(T*2+k)*.02});
   p.squash=Math.max(0,(p.squash||0)-dt);const s=p.squash>0?Math.sin(p.squash/.25*Math.PI)*.25:0;const air=!p.grounded&&!p.falling?.08:0;{const K=b.userData.k||1;b.scale.set((1+s)*K,(1-s+air)*K,(1+s)*K)}
   b.rotation.x=p.stun>0?Math.sin(T*25)*.2:(p.falling||p.ko?b.rotation.x+dt*6:clamp(spd/6,0,1)*.12);if(!p.falling&&!p.ko&&p.stun<=0)b.rotation.x+=(clamp(spd/6,0,1)*.16-b.rotation.x)*Math.min(1,dt*8);
   if(b.userData.eyes){const bt=(T+p.id*1.7)%3.6,bl=bt<.14?.12:1;b.userData.eyes.forEach(e=>e[0].scale.y=e[1]*bl)}
