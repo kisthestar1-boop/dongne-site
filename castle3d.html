@@ -87,7 +87,7 @@ for(let i=0;i<60;i++){const x=rnd(-110,110),z=-rnd(9,45);tree(x,z,rnd(.8,1.7))}
 for(let i=0;i<9;i++){const m=mesh(new THREE.ConeGeometry(rnd(14,26),rnd(16,30),6),i%2?"#8CA3D9":"#9AB4E8");m.position.set(-90+i*24,6,-70-rnd(0,12));m.castShadow=false;scene.add(m)}
 const clouds=[];for(let i=0;i<9;i++){const g=new THREE.Group();for(let j=0;j<4;j++){const s=mesh(new THREE.SphereGeometry(rnd(2,3.4),10,8),"#FFFFFF",false,false);s.position.set(j*2.4-3,rnd(-.3,.4),rnd(-1,1));s.scale.y=.7;g.add(s)}g.position.set(rnd(-120,120),rnd(30,40),rnd(-70,-40));scene.add(g);clouds.push(g)}
 /* ---------- castles ---------- */
-const CX=50,castles=[];
+const CX=36,castles=[];
 function mkCastle(side){const g=new THREE.Group();const c=side<0?"#6FB5FF":"#FF8A7A",c2=side<0?"#3E7BD6":"#D6504A";
  const base=mesh(new THREE.BoxGeometry(7,4.2,9),"#E8E0D0",true);base.position.y=2.1;g.add(base);
  for(let i=0;i<5;i++){const b=mesh(new THREE.BoxGeometry(1,.9,1),"#E8E0D0");b.position.set(-3+i*1.5,4.65,4);g.add(b);const b2=b.clone();b2.position.z=-4;g.add(b2)}
@@ -247,8 +247,8 @@ function frame(now){requestAnimationFrame(frame);let dt=Math.min(.05,(now-last)/
  else{for(const o of units)updUnit(o,dt*0)}
  updFx(dt);
  /* camera follows the front line */
- let fx_=0,n=0;for(const u of units){if(!u.dead){fx_+=u.x;n++}}const tx=G.state==="title"?0:(n?clamp(fx_/n,-30,30):0);camX+=(tx-camX)*Math.min(1,dt*1.6);
- const asp=cam.aspect,dist=asp<1?95:asp<1.4?105:92;G.shake*=.88;const sh=G.shake;
+ let fx_=0,n=0;for(const u of units){if(!u.dead){fx_+=u.x;n++}}camX=0;
+ const asp=cam.aspect,dist=asp<1?120:asp<1.4?100:80;G.shake=0;const sh=0;
  cam.position.set(camX+rnd(-sh,sh),dist*.36,dist*.8+rnd(-sh,sh));cam.lookAt(camX,1.2,0);sun.position.set(camX-18,34,22);sun.target.position.set(camX,0,0);
  renderer.render(scene,cam);ui()}
 G.state="title";requestAnimationFrame(frame);
