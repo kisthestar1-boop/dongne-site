@@ -799,7 +799,7 @@ const BGM=(()=>{let on=false,next=0,step=0,timer=null;const F=n=>440*Math.pow(2,
  return{start(){if(on||!ac())return;on=true;next=AC.currentTime+.05;timer=setInterval(tick,40)},stop(){on=false;clearInterval(timer)}}})();
 addEventListener("pointerdown",()=>BGM.start(),{once:true});addEventListener("keydown",()=>BGM.start(),{once:true});
 /* ---------- 메인 루프 ---------- */
-let FF=1;const ffB=$("#ff");ffB.onclick=()=>{FF=FF===1?2:FF===2?4:1;ffB.textContent="⏩ ×"+FF};ffB.addEventListener("keydown",e=>e.stopPropagation());
+let FF=1;const ffB=$("#ff");ffB.onclick=()=>{FF=FF===1?1.5:FF===1.5?2:FF===2?4:1;ffB.textContent="⏩ ×"+FF};ffB.addEventListener("keydown",e=>e.stopPropagation());
 let last=performance.now(),T=0;
 function loop(now){const dt=Math.min(.033,(now-last)/1000);last=now;T+=dt;stT+=dt;
  if(state==="title"){P.forEach((p,i)=>{const a=T*.6+i*1.57;p.x=Math.cos(a)*4;p.z=Math.sin(a)*4;p.vx=-Math.sin(a)*2.4;p.vz=Math.cos(a)*2.4;p.face=Math.atan2(p.vx,p.vz);if(p.grounded&&Math.random()<.01){p.vy=9;p.grounded=false}p.vy-=30*dt;p.y=Math.max(0,p.y+p.vy*dt);if(p.y===0){p.grounded=true;p.vy=0}})}
@@ -808,8 +808,8 @@ function loop(now){const dt=Math.min(.033,(now-last)/1000);last=now;T+=dt;stT+=d
   if(stT>=H&&$("#ovIntro").classList.contains("on"))ov(null);
   if(stT>=H&&c!==lastCount&&c>0){lastCount=c;SND.tick();say(String(c),"#FFE066",.9)}
   if(stT>=H+3&&!(NET.mode==="guest"&&!NET.goOk)){NET.goOk=false;state="play";GT=0;say(t("시작!","GO!"),"#9BE58A",.8);SND.go()}physics(dt)}
- else if(state==="play"){const me=P.find(p=>p.you);if(me&&me.out&&!G._aff&&!NET.mode){G._aff=1;FF=4;ffB.textContent="⏩ ×4";say(t("빨리 보기 ⏩","Fast forward ⏩"),"#9BE58A",1)}
-  const nn=NET.mode?1:FF;for(let kk=0;kk<nn&&state==="play";kk++){GT+=dt;G.update(dt,GT);physics(dt);if(!NET.mode&&me&&me.out){G._dd=(G._dd||0)+dt}if(NET.mode!=="guest"&&(G.over(GT)||(G._dd>1.6))){say(t("끝!","FINISH!"),"#FFE066",1);finishRound()}}
+ else if(state==="play"){const me=P.find(p=>p.you);if(me&&me.out&&!G._aff&&!NET.mode){G._aff=1;FF=1.5;ffB.textContent="⏩ ×1.5";say(t("빨리 보기 ⏩","Fast forward ⏩"),"#9BE58A",1)}
+  let nn=1;if(!NET.mode){window.__fa=(window.__fa||0)+FF;nn=Math.floor(window.__fa);window.__fa-=nn}for(let kk=0;kk<nn&&state==="play";kk++){GT+=dt;G.update(dt,GT);physics(dt);if(!NET.mode&&me&&me.out){G._dd=(G._dd||0)+dt}if(NET.mode!=="guest"&&(G.over(GT)||(G._dd>1.6))){say(t("끝!","FINISH!"),"#FFE066",1);finishRound()}}
   {const hb=$("#howBox");if(hb){if(state==="play"&&G){if(hb._g!==G.id){hb._g=G.id;hb.textContent=G.em+" "+G.how}hb.style.display="block"}else{hb.style.display="none";hb._g=null}}}
   if(state==="play"){const left=G.timed?Math.max(0,Math.ceil(G.len-GT)):null;$("#info").textContent=`${G.em} ${G.name}  ·  `+(G.timed?`⏱ ${left}`:t(`남은 친구 ${P.filter(p=>!p.out).length}`,`${P.filter(p=>!p.out).length} left`));
   if(G.timed&&left<=3&&left!==G._lt){G._lt=left;if(left>0){SND.tick();say(String(left),"#FF6B6B",.6)}}
