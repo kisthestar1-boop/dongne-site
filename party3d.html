@@ -705,6 +705,92 @@ const GAMES=[
   ai(){return [0,0,false]},
   rank(){const alive=P.filter(p=>!p.out);return [...alive,...this.outs.slice().reverse().map(i=>P[i])]},
   over(T){return P.filter(p=>!p.out).length<=1||T>this.len}},
+ {id:"shoot",nolag:1,solo:1,em:"🎯",ico:"🎯",name:t("물풍선 표적 맞히기","Splash Targets"),how:t("🎯 왼쪽·오른쪽으로 움직이며 물풍선을 퐁! 움직이는 과녁을 맞혀요. ⭐ 금색 과녁은 3점이에요~","Move left/right and splash the moving targets! Gold ones are worth 3"),act:"none",actLabel:t("발사!","SHOOT!"),keys:t("이동: ←/→ 또는 A/D · 발사: 스페이스","Move: ←/→ or A/D · Shoot: Space"),tk:t("왼쪽 드래그로 이동 · 오른쪽 버튼으로 발사!","Drag left side to move · Tap the button to shoot!"),len:35,timed:1,camK:1.1,
+  setup(){const g=mesh(new THREE.BoxGeometry(24,1,20),"#A8E6FF",false,true);g.position.y=-.5;arena.add(g);
+   for(let k=0;k<6;k++){const s=new THREE.Mesh(new THREE.PlaneGeometry(24,1.6),M(k%2?"#C6F0FF":"#B3EAFF"));s.rotation.x=-Math.PI/2;s.position.set(0,.01,-8.2+k*1.6);s.receiveShadow=true;arena.add(s)}
+   const ln=new THREE.Mesh(new THREE.PlaneGeometry(22,.3),new THREE.MeshBasicMaterial({color:"#FFFFFF"}));ln.rotation.x=-Math.PI/2;ln.position.set(0,.02,3.6);arena.add(ln);
+   for(const z of[-4.2,-7.6]){const r=mesh(new THREE.BoxGeometry(23,.35,.35),"#FFB3C7",true);r.position.set(0,.18,z);arena.add(r)}
+   const back=mesh(new THREE.BoxGeometry(24,3.2,.5),"#FFE5F0",true,true);back.position.set(0,1.6,-9.6);arena.add(back);
+   this.tg=[];this.balls=[];for(let i=0;i<5;i++)this.addT(i<3?-4.2:-7.6,R()<.18);
+   P.forEach((p,i)=>{place(p,[-6,-2,2,6][i],6);p.face=Math.PI;p.fcd=0;p._af=0})},
+  addT(z,gold){const gp=new THREE.Group(),r=gold?.75:1.05;const cols=gold?["#FFC93C","#FFF3B0","#FFC93C"]:["#FF4D6D","#FFFFFF","#FF4D6D"];
+   cols.forEach((c,k)=>{const d=mesh(new THREE.CylinderGeometry(r*(1-k*.3),r*(1-k*.3),.14+k*.03,28),c,true);d.rotation.x=Math.PI/2;gp.add(d)});
+   if(gold){const st=mesh(STAR(),"#FFFFFF");st.position.z=.15;gp.add(st)}
+   const po=mesh(new THREE.CylinderGeometry(.09,.09,1.6,8),"#8E6CEB",true);po.position.y=-1.3;gp.add(po);
+   const dir=R()<.5?-1:1,x=rnd(-8,8);gp.position.set(x,2.1,z);arena.add(gp);
+   this.tg.push({m:gp,x,z,r,gold,v:dir*(gold?rnd(4.5,6):rnd(2,3.6)),hit:0,ph:rnd(0,6)})},
+  update(dt,T){if(T>18)for(const g of this.tg)g.v*=1+dt*.02;
+   for(let i=this.tg.length-1;i>=0;i--){const g=this.tg[i];
+    if(g.hit){g.hit-=dt;g.m.scale.setScalar(Math.max(.01,g.hit/.35));if(g.hit<=0){arena.remove(g.m);this.tg.splice(i,1);const z=g.z;setTimeout(()=>{if(G===this&&state==="play")this.addT(z,R()<.2)},rnd(300,900))}continue}
+    g.x+=g.v*dt;if(g.x>9.6){g.x=9.6;g.v=-Math.abs(g.v)}if(g.x<-9.6){g.x=-9.6;g.v=Math.abs(g.v)}g.m.position.set(g.x,2.1+Math.sin(T*3+g.ph)*.15,g.z);g.m.rotation.z=Math.sin(T*2+g.ph)*.12}
+   for(const p of P){p.fcd-=dt;if(tapped(p)&&p.fcd<=0){p.fcd=.38;const b=mesh(new THREE.SphereGeometry(.28,14,10),p.col,true);b.position.set(p.x,1.3,p.z-.8);arena.add(b);this.balls.push({m:b,x:p.x,y:1.3,z:p.z-.8,o:p});tone(700+p.id*60,.07,"triangle",.06,1100);p.squash=.15}}
+   for(let i=this.balls.length-1;i>=0;i--){const b=this.balls[i];b.z-=22*dt;b.y+=(2.1-b.y)*Math.min(1,dt*4);b.m.position.set(b.x,b.y,b.z);let done=b.z<-9.3;
+    if(!done)for(const g of this.tg){if(g.hit)continue;if(Math.abs(b.z-g.z)<.55&&Math.abs(b.x-g.x)<g.r+.15){g.hit=.35;const pts=g.gold?3:(Math.abs(b.x-g.x)<g.r*.35?2:1);const p=b.o;p.score+=pts;
+      burst(g.x,2.1,g.z,g.gold?"#FFE066":p.col,16,6);burst(g.x,2.1,g.z,"#7AD9FF",8,4);SND.coin();popTxt(p,"+"+pts,"#FFE066",pts>1?32:24);
+      if(p.you){heartFx(p,pts+1);if(pts>1)say(g.gold?t("금 과녁! +3 ⭐","GOLD! +3 ⭐"):t("한가운데! +2 🎯","Bullseye! +2 🎯"),"#FFE066",.8)}renderChips();done=true;break}}
+    if(done){if(b.z<-9.3)burst(b.x,b.y,-9.3,"#7AD9FF",6,3);arena.remove(b.m);this.balls.splice(i,1)}}},
+  drive(p,dt){const i=p.lastIn||[0,0];p.vx=i[0]*7.5;p.vz=(6-p.z)*8;if(Math.abs(i[0])>.2)p.face=Math.PI},
+  ground(){return true},
+  clampP(p){p.x=clamp(p.x,-10,10)},
+  ai(p,dt){let best=null,bs=1e9;for(const g of this.tg){if(g.hit)continue;const tt=(p.z-.8-g.z)/22,px=g.x+g.v*tt;if(Math.abs(px)>9.6)continue;const s=Math.abs(px-p.x)-(g.gold?4:0)+(g.z<-6?1:0);if(s<bs){bs=s;best={g,px}}}
+   p._af^=1;if(!best)return [0,0,false];if(p._err===undefined||R()<dt*1.5)p._err=rnd(-1,1)*(1-p.skill)*1.6;const dx=best.px+p._err-p.x;
+   return [clamp(dx*1.4,-1,1),0,Math.abs(dx)<best.g.r*.9&&p._af===1&&R()<.55+p.skill]},
+  rank(){return [...P].sort((a,b)=>b.score-a.score)},
+  over(T){return T>this.len}},
+ {id:"dance",nolag:1,solo:1,em:"💃",ico:"🎵",name:t("춤 따라 하기","Dance Copy"),how:t("💃 화면에 나온 화살표 방향으로 쏙! 👏 박수가 나오면 버튼을 눌러요. 빨리 맞힐수록 점수가 커요~","Push the arrow shown! 👏 means press the button. Faster = more points"),act:"none",actLabel:t("👏 박수","👏 CLAP"),keys:t("화살표: 방향키/WASD · 👏: 스페이스","Arrows: WASD/Arrow keys · 👏: Space"),tk:t("왼쪽을 화살표 방향으로 쓱! · 👏는 오른쪽 버튼","Swipe the left side in the arrow direction · 👏 = button"),len:42,timed:1,
+  setup(){this.R=8;const d=platformDisc(8,"#C59BFF","#FFFFFF");d.add(stripes(8,16,"#D7B8FF"));arena.add(d);
+   for(let i=0;i<14;i++){const a=i/14*6.283,l=new THREE.Mesh(new THREE.SphereGeometry(.22,10,8),new THREE.MeshBasicMaterial({color:["#FFE066","#FF7AA8","#7AD9FF","#9BE58A"][i%4]}));l.position.set(Math.cos(a)*8,.3,Math.sin(a)*8);arena.add(l);(this.lights=this.lights||[]).push(l)}
+   const w=document.createElement("div");w.className="mb";w.style.cssText="position:fixed;left:50%;bottom:62px;transform:translateX(-50%);z-index:30;pointer-events:none;text-align:center;font-weight:900";
+   w.innerHTML=`<div id="dcArr" style="font-size:clamp(60px,11vw,104px);line-height:1;filter:drop-shadow(0 5px 0 rgba(90,40,140,.45));transition:transform .12s"></div><div id="dcBar" style="margin:6px auto 0;height:12px;width:min(260px,60vw);border-radius:8px;background:rgba(255,255,255,.4);overflow:hidden;border:2px solid #fff"><div style="height:100%;width:100%;background:linear-gradient(90deg,#FF7AA8,#FFE066)"></div></div>`;
+   document.body.appendChild(w);this.el=w;this.arr=w.querySelector("#dcArr");this.bar=w.querySelector("#dcBar>div");
+   this.ph="gap";this.t=1.2;this.n=0;this.lights=this.lights.slice(-14);
+   P.forEach((p,i)=>{place(p,[-4.5,-1.5,1.5,4.5][i],1);p.face=0;p.ans=null;p.rel=true;p.bx=p.x})},
+  DIRS:[["⬆️",0,-1],["⬇️",0,1],["⬅️",-1,0],["➡️",1,0],["👏",0,0]],
+  beat(){this.n++;const clap=this.n>3&&R()<.2;this.cur=clap?4:Math.floor(R()*4);this.win=Math.max(.85,1.7-this.n*.045);this.t=this.win;this.ph="go";this.first=0;
+   P.forEach(p=>{p.ans=null;p.aiR=rnd(.3,.85)*(1.25-p.skill)*this.win/1.4;p.aiOk=R()<.6+p.skill*.5});
+   this.arr.textContent=this.DIRS[this.cur][0];this.arr.style.transform="scale(1.25)";setTimeout(()=>{if(this.arr)this.arr.style.transform="scale(1)"},120);tone([523,587,659,784,880][this.cur],.12,"triangle",.08)},
+  judge(p,k){if(p.ans!==null)return;p.ans=k;const ok=k===this.cur;
+   if(ok){const sp=this.t/this.win,pts=1+(sp>.55?1:0)+(this.first===0?1:0);this.first++;p.score+=pts;p.vy=7;p.grounded=false;p.spin=.45;burst(p.x,1.6,p.z,p.col,10,4);
+    popTxt(p,"+"+pts,"#FFE066",pts>2?32:24);if(p.you){SND.coin();heartFx(p,pts+1);if(pts>=3)say(t("완벽해요! 💖","PERFECT! 💖"),"#FF9BD2",.7)}renderChips()}
+   else{p.stun=.5;popTxt(p,pick(["어라?","반대야~","앗 틀렸다!"]),"#FF9BB5",22);if(p.you)tone(200,.18,"sawtooth",.07,120)}},
+  update(dt,T){this.t-=dt;this.lights.forEach((l,i)=>l.position.y=.3+Math.max(0,Math.sin(T*8+i))*.35);
+   if(this.ph==="gap"){this.bar.style.width="0%";if(this.t<=0)this.beat();return}
+   this.bar.style.width=(clamp(this.t/this.win,0,1)*100)+"%";
+   for(const p of P){const i=p.lastIn||[0,0,false],m=Math.hypot(i[0],i[1]);if(m<.3&&!i[2])p.rel=true;if(p.ans!==null||!p.rel)continue;
+    if(i[2]){p.rel=false;this.judge(p,4)}else if(m>.6){p.rel=false;this.judge(p,Math.abs(i[0])>Math.abs(i[1])?(i[0]<0?2:3):(i[1]<0?0:1))}}
+   if(this.t<=0||P.every(p=>p.ans!==null)){this.ph="gap";this.t=.45;this.arr.style.transform="scale(.85)"}},
+  drive(p,dt){p.vx=p.vz=0;p.x+=(p.bx-p.x)*Math.min(1,dt*6);if(p.spin>0){p.spin-=dt;p.face+=dt*14}else{let d=-p.face;while(d>Math.PI)d-=6.283;while(d<-Math.PI)d+=6.283;p.face+=d*Math.min(1,dt*10)}},
+  ground(){return true},
+  ai(p,dt){if(this.ph!=="go"||p.ans!==null)return [0,0,false];if(this.win-this.t<p.aiR)return [0,0,false];let k=this.cur;if(!p.aiOk)k=(k+1+Math.floor(R()*3))%5;const d=this.DIRS[k];return k===4?[0,0,true]:[d[1],d[2],false]},
+  rank(){return [...P].sort((a,b)=>b.score-a.score)},
+  over(T){return T>this.len}},
+ {id:"quiz",solo:1,em:"⭕",ico:"⭕",name:t("O X 퀴즈","O X Quiz"),how:t("⭕❌ 문제를 읽고 맞다고 생각하면 ⭕ 쪽, 아니면 ❌ 쪽으로 달려가요! 맞히면 점수 쏙~","Read the question and run to ⭕ (true) or ❌ (false)!"),act:"jump",actLabel:t("점프","JUMP"),keys:t("이동: WASD/방향키 · 점프: 스페이스","Move: WASD/Arrows · Jump: Space"),len:80,timed:1,
+  QS:[["펭귄은 날 수 있어요.","Penguins can fly.",0],["바나나는 노란색이에요.","Bananas are yellow.",1],["거미 다리는 8개예요.","Spiders have 8 legs.",1],["해는 서쪽에서 떠요.","The sun rises in the west.",0],["고래는 물고기예요.","Whales are fish.",0],["무지개 색은 7가지예요.","A rainbow has 7 colors.",1],["얼음은 물보다 가벼워서 둥둥 떠요.","Ice floats on water.",1],["문어 다리는 6개예요.","An octopus has 6 legs.",0],["1주일은 7일이에요.","A week has 7 days.",1],["달은 스스로 빛을 내요.","The moon makes its own light.",0],["토마토는 원래 채소가 아니라 과일 쪽이에요.","A tomato is botanically a fruit.",1],["벌은 꿀을 만들어요.","Bees make honey.",1],["기린 목뼈 수는 사람보다 훨씬 많아요.","Giraffes have many more neck bones than people.",0],["북극곰은 남극에 살아요.","Polar bears live in Antarctica.",0],["지구는 해 주위를 돌아요.","The Earth goes around the Sun.",1],["타조 알은 달걀보다 작아요.","Ostrich eggs are smaller than hen eggs.",0],["개구리는 올챙이였어요.","Frogs start as tadpoles.",1],["하루는 24시간이에요.","A day has 24 hours.",1]],
+  setup(){const g=mesh(new THREE.BoxGeometry(22,1,14),"#FFF1C9",false,true);g.position.y=-.5;arena.add(g);
+   const o=new THREE.Mesh(new THREE.PlaneGeometry(10.4,13.4),M("#9ED8FF"));o.rotation.x=-Math.PI/2;o.position.set(-5.4,.01,0);o.receiveShadow=true;arena.add(o);
+   const x=new THREE.Mesh(new THREE.PlaneGeometry(10.4,13.4),M("#FFB0C0"));x.rotation.x=-Math.PI/2;x.position.set(5.4,.01,0);x.receiveShadow=true;arena.add(x);
+   const ring=mesh(new THREE.TorusGeometry(1.6,.35,12,36),"#2F8BFF",true);ring.position.set(-5.4,2.4,-6.4);arena.add(ring);
+   for(const s of[-1,1]){const b=mesh(new THREE.BoxGeometry(.6,3.8,.6),"#FF3B5C",true);b.position.set(5.4,2.4,-6.4);b.rotation.z=s*Math.PI/4;arena.add(b)}
+   const mid=new THREE.Mesh(new THREE.PlaneGeometry(.35,13.4),new THREE.MeshBasicMaterial({color:"#FFFFFF"}));mid.rotation.x=-Math.PI/2;mid.position.set(0,.02,0);arena.add(mid);
+   const w=document.createElement("div");w.className="mb";w.style.cssText="position:fixed;left:50%;bottom:58px;transform:translateX(-50%);z-index:30;pointer-events:none;text-align:center;font-weight:900;width:min(640px,92vw);display:flex;flex-direction:column-reverse";
+   w.innerHTML=`<div id="qzQ" style="background:linear-gradient(#FFFDF4,#FFE6F1);border:4px solid #fff;border-radius:22px;padding:8px 16px;color:#7A3A9A;font-size:clamp(17px,3.6vw,28px);box-shadow:0 4px 0 rgba(150,70,170,.35)"></div><div id="qzT" style="margin-bottom:6px;font-size:clamp(20px,4vw,30px);color:#FFE066;text-shadow:0 2px 0 #5B2A86"></div>`;
+   document.body.appendChild(w);this.q=w.querySelector("#qzQ");this.tm=w.querySelector("#qzT");
+   this.list=shuffle(this.QS.slice()).slice(0,6);this.k=-1;this.ph="gap";this.t=.8;spawnRing(2.5)},
+  ask(){this.k++;const q=this.list[this.k];this.ans=q[2];this.q.textContent=`Q${this.k+1}. `+t(q[0],q[1]);this.ph="ask";this.t=6.5;SND.go();
+   P.forEach(p=>{p.aiOk=R()<.55+p.skill*.6;p.aiZ=rnd(-4.5,4.5);p.aiFlip=R()<.3?rnd(2,4):0})},
+  update(dt,T){this.t-=dt;
+   if(this.ph==="gap"){if(this.t<=0){if(this.k>=this.list.length-1)this.ph="done";else this.ask()}return}
+   if(this.ph==="ask"){const s=Math.ceil(this.t);this.tm.textContent="⏱ "+s;if(s!==this._ls){this._ls=s;if(s<=3)SND.tick()}
+    if(this.t<=0){this.ph="show";this.t=2;this.tm.textContent=this.ans?t("정답은 ⭕!","Answer: ⭕ TRUE!"):t("정답은 ❌!","Answer: ❌ FALSE!");
+     for(const p of P){const side=p.x<-.3?1:p.x>.3?0:-1;if(side===this.ans){p.score++;p.vy=7;p.grounded=false;burst(p.x,1.5,p.z,"#FFE066",12,5);popTxt(p,pick(["맞았다!","딩동댕~","+1"]),"#FFE066",26);if(p.you){SND.coin();heartFx(p,3)}}
+      else{p.stun=.8;burst(p.x,2.2,p.z,"#7AD9FF",14,4);popTxt(p,side<0?t("가운데는 안 돼요~","Pick a side!"):pick(["땡! 물벼락~","아이고~","틀렸다 ㅠㅠ"]),"#9FD8FF",24);if(p.you)tone(220,.25,"sawtooth",.08,110)}}
+     renderChips()}}
+   else if(this.ph==="show"&&this.t<=0){this.ph="gap";this.t=.6}},
+  ground(){return true},
+  clampP(p){p.x=clamp(p.x,-10.4,10.4);p.z=clamp(p.z,-6.4,6.4)},
+  ai(p,dt){if(this.ph!=="ask")return [0,0,false];let side=p.aiOk?this.ans:1-this.ans;if(p.aiFlip&&this.t<p.aiFlip)side=1-side;const tx=side?-5.4+((p.id%2)?1.4:-1.4):5.4+((p.id%2)?1.4:-1.4),dx=tx-p.x,dz=p.aiZ-p.z,l=Math.hypot(dx,dz);return l<.6?[0,0,R()<.01]:[dx/l,dz/l,false]},
+  rank(){return [...P].sort((a,b)=>b.score-a.score)},
+  over(T){return this.ph==="done"||T>this.len}},
 ];
 addEventListener("keydown",e=>{if(e.repeat||state!=="play"||!G||G.id!=="mbox")return;if(e.code==="Digit1"||e.code==="Numpad1"||e.code==="ArrowLeft")G.choose(1);if(e.code==="Digit2"||e.code==="Numpad2"||e.code==="ArrowRight")G.choose(2)});
 GAMES.find(g=>g.id==="sumo").revive=function(){return [0,0]};
