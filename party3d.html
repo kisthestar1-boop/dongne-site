@@ -325,8 +325,27 @@ const GAMES=[
     const e=mesh(new THREE.ConeGeometry(.3,.6,4),"#B07AE8",true);e.position.set(s*.75,2.75,0);this.face.add(e)}
    const bk=mesh(new THREE.ConeGeometry(.22,.45,8),"#FFB020");bk.rotation.x=Math.PI/2;bk.position.set(0,1.4,1.35);this.face.add(bk);o.add(this.face);
    o.position.set(0,0,-10.9);arena.add(o);this.owl=o;
+   /* 경기장 꾸미기: 무지개 결승 아치 · 풍선 · 블록 관중석 */
+   {const RB=["#FF6B6B","#FFA94D","#FFE066","#8CE99A","#74C0FC","#B197FC"];
+    RB.forEach((c,i)=>{const r=mesh(new THREE.TorusGeometry(9.9-i*.42,.22,10,48,Math.PI),c,true);r.position.set(0,0,-9.9);arena.add(r)});
+    const ban=mesh(new THREE.BoxGeometry(5.2,1,.25),"#FFFFFF",true);ban.position.set(0,6.6,-9.75);arena.add(ban);
+    {const cv=document.createElement("canvas");cv.width=512;cv.height=96;const x=cv.getContext("2d");x.fillStyle="#FF6FA8";x.font="bold 64px sans-serif";x.textAlign="center";x.textBaseline="middle";x.fillText(t("🏁 결승 🏁","🏁 FINISH 🏁"),256,50);const tx=new THREE.CanvasTexture(cv);tx.colorSpace=THREE.SRGBColorSpace;
+     const pl=new THREE.Mesh(new THREE.PlaneGeometry(5,.94),new THREE.MeshBasicMaterial({map:tx,transparent:true}));pl.position.set(0,6.6,-9.6);arena.add(pl)}
+    const BC=["#FF8FB8","#7FD8FF","#FFD86B","#A6EB8F","#C9A6FF","#FFB27A"];this.bal=[];
+    for(const sx of[-1,1])for(const zz of[-9.9,-3,4])for(let k=0;k<3;k++){const b=new THREE.Group(),col=BC[(k+(zz>0?2:0)+(sx>0?1:0))%6];const bb=mesh(new THREE.SphereGeometry(.55,16,12),col,true);bb.scale.set(1,1.18,1);b.add(bb);
+     const hl=new THREE.Mesh(new THREE.SphereGeometry(.12,8,6),new THREE.MeshBasicMaterial({color:"#fff",transparent:true,opacity:.7}));hl.position.set(-.2,.25,.42);b.add(hl);
+     const st=new THREE.Mesh(new THREE.CylinderGeometry(.02,.02,2.2,4),new THREE.MeshBasicMaterial({color:"#FFFFFF"}));st.position.y=-1.7;b.add(st);
+     b.position.set(sx*(9.9+(k-1)*.45)+(zz===-9.9?0:sx*.4),2.6+k*.35+(k===1?.4:0),zz+(k-1)*.35);b.userData.ph=k+zz;arena.add(b);this.bal.push(b)}
+    const SC=["#FF8FB8","#7FD8FF","#FFD86B","#A6EB8F","#C9A6FF","#FFB27A","#3FCFA8","#FFC93C"];this.fans=[];
+    for(const sx of[-1,1])for(let row=0;row<3;row++){const step=mesh(new THREE.BoxGeometry(1.1,.7+row*.7,20),row%2?"#E7D9FF":"#D3C0FF",true,true);step.position.set(sx*(10.4+row*1.1),(.7+row*.7)/2-.5,0);arena.add(step);
+     for(let z=-8;z<=8;z+=2.2){if(R()<.25)continue;const f=new THREE.Group(),col=SC[(row*5+((z+8)*3|0)+(sx>0?3:0))%SC.length];const bd=mesh(new THREE.BoxGeometry(.7,.7,.7),col,true);f.add(bd);
+      for(const e of[-1,1]){const w=new THREE.Mesh(new THREE.BoxGeometry(.16,.2,.02),new THREE.MeshBasicMaterial({color:"#22183A"}));w.position.set(e*.15,.08,.36);f.add(w)}
+      const m=new THREE.Mesh(new THREE.BoxGeometry(.22,.06,.02),new THREE.MeshBasicMaterial({color:"#FF6B8A"}));m.position.set(0,-.14,.36);f.add(m);
+      f.position.set(sx*(10.4+row*1.1),.7+row*.7-.5+.35,z+rnd(-.2,.2));f.rotation.y=-sx*Math.PI/2;f.userData.by=f.position.y;f.userData.ph=rnd(0,6);arena.add(f);this.fans.push(f)}}}
    P.forEach((p,i)=>{place(p,-6+i*4,9);p.face=Math.PI});this.phase="green";this.pt=rnd(1.6,2.3);this.fin=[];this.redT=0;this.warn=0},
   update(dt,T){this.pt-=dt;
+   if(this.bal)for(const b of this.bal)b.position.y+=Math.sin(T*1.6+b.userData.ph)*.004;
+   if(this.fans)for(const f of this.fans)f.position.y=f.userData.by+Math.max(0,Math.sin(T*(this.fin.length?9:3)+f.userData.ph))*(this.fin.length?.35:.12);
    if(this.phase==="green"&&this.pt<.45&&!this.warn){this.warn=1;SND.tick()}this.owl.rotation.z=this.phase==="green"&&this.pt<.45?Math.sin(T*40)*.08:0;
    if(this.phase==="green"&&this.pt<=0){this.warn=0;this.phase="red";this.pt=rnd(1.8,3);this.redT=0;say(t("멈춰!","STOP!"),"#FF6B6B",.8);SND.tick()}
    else if(this.phase==="red"&&this.pt<=0){this.phase="green";this.pt=R()<.3?rnd(.8,1.2):Math.max(1.2,rnd(1.6,3.2)-T*.02);say(t("무궁화 꽃이…","GO!"),"#9BE58A",.8);SND.go()}
