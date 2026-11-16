@@ -145,43 +145,51 @@ function lighten3(c){const x=new THREE.Color(c);x.lerp(new THREE.Color("#ffffff"
 const SPR=[];/* 2D 그림 캐릭터는 보류 — 3D 캐릭터 사용 */
 const SPR_AR=[331/512,325/512,448/512,332/512];
 function makeAnimal(col,ears,you){const g=new THREE.Group(),b=new THREE.Group();g.add(b);
-  const body=mesh(new THREE.SphereGeometry(.72,28,20),col,true);body.scale.set(1,1.02,1);body.position.y=.72;b.add(body);
-  const belly=mesh(new THREE.SphereGeometry(.46,20,14),ears===0?"#FFEFA0":"#FFF6EA");belly.scale.set(1,1,.45);belly.position.set(0,.6,.5);b.add(belly);
-  for(const s of[-1,1]){const w=mesh(new THREE.SphereGeometry(.185,16,12),"#2A1E44");w.scale.set(1,1.15,.7);w.position.set(s*.3,.96,.62);b.add(w);(b.userData.eyes=b.userData.eyes||[]).push([w,1.1]);
-    const p=new THREE.Mesh(new THREE.SphereGeometry(.185,14,10),new THREE.MeshBasicMaterial({color:"#22183A"}));p.scale.set(1,1.1,.6);p.position.set(s*.29,.95,.7);p.visible=false;b.add(p);b.userData.eyes.push([p,1.1]);
-    const h=new THREE.Mesh(new THREE.SphereGeometry(.06,8,6),new THREE.MeshBasicMaterial({color:"#fff"}));h.position.set(s*.3+.05,1.04,.77);b.add(h);const h2=new THREE.Mesh(new THREE.SphereGeometry(.02,6,4),new THREE.MeshBasicMaterial({color:"#fff"}));h2.position.set(s*.3-.05,.9,.77);b.add(h2);
-    const ck=new THREE.Mesh(new THREE.SphereGeometry(.13,10,8),new THREE.MeshBasicMaterial({color:"#FF9BB5",transparent:true,opacity:.8}));ck.scale.set(1.3,.7,.4);ck.position.set(s*.52,.68,.5);b.add(ck);
-    const ft=mesh(new THREE.SphereGeometry(.2,12,8),col,true);ft.scale.set(1,.6,1.3);ft.position.set(s*.3,.1,.1);b.add(ft);(b.userData.ft=b.userData.ft||[]).push(ft);
-    const ar=mesh(new THREE.SphereGeometry(.16,12,8),col,true);ar.position.set(s*.72,.62,.05);b.add(ar);(b.userData.ar=b.userData.ar||[]).push(ar);
-    if(ears===1){const e=mesh(new THREE.SphereGeometry(.17,14,10),col,true);e.scale.set(1,3,.75);e.position.set(s*.26,1.65,-.05);e.rotation.z=-s*.15;b.add(e);const ei=mesh(new THREE.SphereGeometry(.09,10,8),"#FFC2D1");ei.scale.set(1,3.6,.5);ei.position.set(s*.26,1.65,.06);ei.rotation.z=-s*.15;b.add(ei)}
-    if(ears===1){const st=mesh(STAR(),"#E0CCFF",true);st.position.set(s*.32,2.2,-.05);st.rotation.z=-s*.15;b.add(st)}
-    if(ears===2){const e=mesh(new THREE.SphereGeometry(.16,12,10),"#FFF3E2",true);e.scale.set(1.5,.7,.8);e.position.set(s*.66,1.02,.1);e.rotation.z=-s*.5;b.add(e);const hn=mesh(new THREE.TorusGeometry(.15,.065,8,16,Math.PI*1.5),"#F3D9A6",true);hn.position.set(s*.5,1.25,-.02);hn.rotation.y=Math.PI/2;hn.rotation.z=s>0?0:Math.PI;b.add(hn)}
-    if(ears===3){const wg=mesh(new THREE.SphereGeometry(.2,12,10),col,true);wg.scale.set(.5,1,1.2);wg.position.set(s*.74,.6,-.05);wg.rotation.z=s*.4;b.add(wg)}}
-  const dark=new THREE.MeshBasicMaterial({color:"#22183A"});
-  if(ears===0){/* 공룡: 등 가시 + 꼬리 + 배 무늬 */for(let i=0;i<4;i++){const sp=mesh(new THREE.ConeGeometry(.13-i*.015,.32-i*.03,6),"#FFE066",true);const a=-.2-i*.42;sp.position.set(0,.72+Math.cos(a)*.74,Math.sin(a)*.74);sp.rotation.x=a+Math.PI/2-Math.PI/2+(-a);sp.lookAt(0,.72+Math.cos(a)*2,Math.sin(a)*2);sp.rotateX(Math.PI/2);b.add(sp)}
-    for(const x of[-.2,0,.2]){const hs=mesh(new THREE.ConeGeometry(.09,.24,6),"#FFE066",true);hs.position.set(x,1.5-Math.abs(x)*.4,.12);hs.rotation.z=-x*1.2;b.add(hs)}
-    const tl=mesh(new THREE.ConeGeometry(.28,.9,12),col,true);tl.position.set(0,.4,-.85);tl.rotation.x=-1.9;b.add(tl);
-    const nos=mesh(new THREE.SphereGeometry(.3,16,12),lighten3(col),true);nos.scale.set(1.1,.7,.8);nos.position.set(0,.74,.6);b.add(nos);
-    for(const s of[-1,1]){const n=new THREE.Mesh(new THREE.SphereGeometry(.03,6,4),dark);n.position.set(s*.08,.8,.83);b.add(n)}}
-  if(ears===1){/* 토끼: 분홍 코 + 앞니 + 솜꼬리 */const n=mesh(new THREE.SphereGeometry(.07,10,8),"#FF8FAB");n.position.set(0,.8,.78);b.add(n);
-    for(const s of[-1,1]){const th=mesh(new THREE.BoxGeometry(.07,.11,.03),"#FFFFFF");th.position.set(s*.04,.66,.78);b.add(th)}
-    const tail=mesh(new THREE.SphereGeometry(.22,14,10),"#FFFFFF",true);tail.position.set(0,.45,-.72);b.add(tail)}
-  if(ears===2){/* 양 몽실: 몽글 털뭉치 + 크림 얼굴 + 구름 꼬리 */const fc=mesh(new THREE.SphereGeometry(.44,20,14),"#FFF3E2");fc.scale.set(1.15,.95,.5);fc.position.set(0,.8,.42);b.add(fc);
-    for(let i=0;i<9;i++){const a=i/9*6.283;const pf=mesh(new THREE.SphereGeometry(.26,12,10),col,true);pf.position.set(Math.cos(a)*.55,1.3+Math.sin(a*2)*.05,Math.sin(a)*.4-.1);b.add(pf)}
-    for(const [x,y] of[[-.18,1.48],[.18,1.5],[0,1.56]]){const pf=mesh(new THREE.SphereGeometry(.2,12,10),lighten3(col),true);pf.position.set(x,y,.15);b.add(pf)}
-    for(const [x,y,z,r] of[[0,.55,-.82,.22],[.16,.68,-.85,.17],[-.15,.66,-.84,.16]]){const c=mesh(new THREE.SphereGeometry(r,12,10),"#FFFFFF",true);c.position.set(x,y,z);b.add(c)}
-    const n=mesh(new THREE.SphereGeometry(.06,10,8),"#FF8FAB");n.scale.set(1.3,.8,.7);n.position.set(0,.78,.66);b.add(n)}
-  if(ears===3){/* 병아리 삐약: 부리 + 머리 깃 + 우주 헬멧 + 주황 우주복 띠 */const bk=mesh(new THREE.ConeGeometry(.12,.26,10),"#FF9A3C",true);bk.rotation.x=Math.PI/2;bk.position.set(0,.76,.8);b.add(bk);
-    for(const [x,r] of[[-.1,.35],[0,0],[.1,-.35]]){const tf=mesh(new THREE.ConeGeometry(.07,.32,6),col,true);tf.position.set(x,1.55,.05);tf.rotation.z=r;b.add(tf)}
-    const hm=new THREE.Mesh(new THREE.SphereGeometry(1.08,28,20),new THREE.MeshBasicMaterial({color:"#DDF4FF",transparent:true,opacity:.26,depthWrite:false}));hm.position.y=.85;b.add(hm);
-    const su=mesh(new THREE.SphereGeometry(.745,28,16,0,6.283,1.75,1.39),"#FFFFFF",true);su.scale.set(1,1.02,1);su.position.y=.72;b.add(su);const belt=mesh(new THREE.TorusGeometry(.7,.06,8,24),"#FF8A3D",true);belt.rotation.x=Math.PI/2;belt.position.y=.45;belt.scale.set(1,1,1);b.add(belt)}
-  const mo=new THREE.Mesh(new THREE.TorusGeometry(.13,.035,8,16,Math.PI),new THREE.MeshBasicMaterial({color:"#22183A"}));mo.rotation.z=Math.PI;mo.position.set(0,.76,.7);b.add(mo);
+  const S=(r,x,y,z,sx,sy,sz,c,cast,par)=>{const m=mesh(new THREE.SphereGeometry(r,24,16),c,cast);m.scale.set(sx||1,sy||1,sz||1);m.position.set(x,y,z);(par||b).add(m);return m};
+  const B=(r,x,y,z,sx,sy,sz,c,par)=>{const m=new THREE.Mesh(new THREE.SphereGeometry(r,14,10),new THREE.MeshBasicMaterial({color:c}));m.scale.set(sx||1,sy||1,sz||1);m.position.set(x,y,z);(par||b).add(m);return m};
+  const HY=1.36,hd=new THREE.Group();hd.position.y=HY;b.add(hd);b.userData.hd=hd;
+  /* 몸통(작게) + 머리(크게) — 제미나이 그림 비율 */
+  const bodyCol=ears===3?"#FFFFFF":ears===2?lighten3(col):col;
+  S(.52,0,.62,0,1,1.08,.92,bodyCol,true);
+  if(ears===0)S(.36,0,.58,.3,1,1.1,.5,"#FFEFA0");
+  if(ears===1)S(.34,0,.58,.3,1,1.1,.5,"#FFF6EA");
+  if(ears===3){const bt=mesh(new THREE.TorusGeometry(.5,.07,8,24),"#FF8A3D",true);bt.rotation.x=Math.PI/2;bt.position.y=.55;b.add(bt);S(.1,0,.78,.46,1,1,.6,"#FF8A3D");S(.06,.2,.7,.44,1,1,.6,"#7DE0B0")}
+  S(.8,0,0,0,ears===2?1.02:1.06,.98,1,ears===2?"#FFF3E2":col,true,hd);
+  /* 눈 */
+  for(const s of[-1,1]){const w=B(.17,s*.31,.1,.68,1,1.2,.6,"#22183A",hd);(b.userData.eyes=b.userData.eyes||[]).push([w,1.2]);
+    B(.06,s*.31+.05,.19,.8,1,1,.6,"#fff",hd);B(.025,s*.31-.05,.03,.82,1,1,.6,"#fff",hd);
+    const ck=B(.13,s*.52,-.14,.56,1.4,.75,.4,"#FF9BB5",hd);ck.material.transparent=true;ck.material.opacity=.8;
+    /* 발 (걷기) */
+    const ft=S(.2,s*.28,.1,.12,1,.6,1.4,ears===3?"#FF9A3C":col,true);(b.userData.ft=b.userData.ft||[]).push(ft);
+    /* 팔 (움직임) */
+    const ar=S(.15,s*.66,.66,.08,.9,1.3,.9,ears===3?"#FFD83A":col,true);(b.userData.ar=b.userData.ar||[]).push(ar)}
+  /* 입: 활짝 웃는 입 */
+  const open=(y)=>{S(.23,0,y,.66,1.2,.8,.5,"#7A1F3D",false,hd);S(.1,0,y-.09,.74,1.5,.5,.4,"#FF8FAB",false,hd)};
+  if(ears===0){/* 공룡 */
+    S(.4,0,-.18,.45,1.15,.7,.8,lighten3(col),true,hd);open(-.22);
+    for(const x of[-.22,0,.22]){const hs=mesh(new THREE.ConeGeometry(.1,.3,6),"#FFE066",true);hs.position.set(x,.8-Math.abs(x)*.5,.05);hs.rotation.z=-x*1.3;hd.add(hs)}
+    for(let i=0;i<3;i++){const sp=mesh(new THREE.ConeGeometry(.11-i*.015,.28-i*.04,6),"#FFE066",true);sp.position.set(0,.98-i*.3,-.5-i*.05);sp.rotation.x=-.9;b.add(sp)}
+    const tl=mesh(new THREE.ConeGeometry(.26,.9,12),col,true);tl.position.set(0,.34,-.72);tl.rotation.x=-1.9;b.add(tl)}
+  if(ears===1){/* 토끼 */
+    for(const s of[-1,1]){S(.17,s*.27,.95,-.05,1,3.1,.7,col,true,hd).rotation.z=-s*.14;S(.09,s*.27,.95,.06,1,3.6,.5,"#FFC2D1",false,hd).rotation.z=-s*.14;
+      const st=mesh(STAR(),"#E0CCFF",true);st.position.set(s*.4,1.62,-.05);st.rotation.z=-s*.14;hd.add(st)}
+    S(.07,0,-.02,.78,1.2,.8,.7,"#FF8FAB",false,hd);open(-.22);
+    for(const s of[-1,1]){const th=mesh(new THREE.BoxGeometry(.07,.1,.03),"#FFFFFF");th.position.set(s*.04,-.3,.74);hd.add(th)}
+    S(.2,0,.45,-.55,1,1,1,"#FFFFFF",true)}
+  if(ears===2){/* 양 */
+    for(let i=0;i<10;i++){const a=i/10*6.283;S(.3,Math.cos(a)*.58,.55+Math.sin(a*2)*.04,Math.sin(a)*.3-.25,1,1,1,col,true,hd)}
+    for(const [x,y] of[[-.25,.78],[.25,.8],[0,.88]])S(.26,x,y,.05,1,1,1,lighten3(col),true,hd);
+    for(const s of[-1,1]){S(.16,s*.82,.12,.1,1.4,.7,.8,"#FFF3E2",true,hd).rotation.z=-s*.5;const hn=mesh(new THREE.TorusGeometry(.14,.06,8,16,Math.PI*1.5),"#F3D9A6",true);hn.position.set(s*.62,.45,-.02);hn.rotation.y=Math.PI/2;hn.rotation.z=s>0?0:Math.PI;hd.add(hn)}
+    S(.06,0,-.02,.78,1.3,.8,.7,"#FF8FAB",false,hd);open(-.24);
+    for(let i=0;i<3;i++)S([.22,.16,.15][i],[0,.16,-.15][i],.5+[0,.1,.08][i],-.75,1,1,1,"#FFFFFF",true)}
+  if(ears===3){/* 병아리 + 헬멧 */
+    const bk=mesh(new THREE.ConeGeometry(.13,.3,10),"#FF9A3C",true);bk.rotation.x=Math.PI/2;bk.position.set(0,-.1,.82);hd.add(bk);
+    for(const [x,r] of[[-.1,.4],[0,0],[.1,-.4]]){const tf=mesh(new THREE.ConeGeometry(.07,.34,6),col,true);tf.position.set(x,.88,.02);tf.rotation.z=r;hd.add(tf)}
+    const hm=new THREE.Mesh(new THREE.SphereGeometry(1.02,28,20),new THREE.MeshBasicMaterial({color:"#FFFFFF",transparent:true,opacity:.13,depthWrite:false}));hd.add(hm);
+    const rim=mesh(new THREE.TorusGeometry(.62,.09,10,28),"#FFFFFF",true);rim.rotation.x=Math.PI/2;rim.position.y=-.78;hd.add(rim)}
   const ring=new THREE.Mesh(new THREE.RingGeometry(.85,1.02,32),new THREE.MeshBasicMaterial({color:col,transparent:true,opacity:.85}));ring.rotation.x=-Math.PI/2;ring.position.y=.03;g.add(ring);
-  if(you){const ar=new THREE.Mesh(new THREE.ConeGeometry(.25,.45,4),new THREE.MeshBasicMaterial({color:"#FFE066"}));ar.rotation.x=Math.PI;ar.position.y=2.35;g.add(ar);g.userData.arrow=ar}
-  if(SPR[ears]){b.children.forEach(c=>c.visible=false);const H=2.9,sp=new THREE.Sprite(new THREE.SpriteMaterial({map:SPR[ears],transparent:true,alphaTest:.08,depthWrite:true}));
-    sp.scale.set(H,H,1);sp.position.y=H/2-.05;b.add(sp);g.userData.spr=sp;g.userData.sw=H;
-    const sh=new THREE.Mesh(new THREE.CircleGeometry(.62,24),new THREE.MeshBasicMaterial({color:"#2A1A50",transparent:true,opacity:.22,depthWrite:false}));sh.rotation.x=-Math.PI/2;sh.position.y=.025;g.add(sh)}
-  b.userData.k=1.25;b.scale.setScalar(1.25);g.userData.b=b;g.userData.ring=ring;return g}
+  if(you){const ar=new THREE.Mesh(new THREE.ConeGeometry(.25,.45,4),new THREE.MeshBasicMaterial({color:"#FFE066"}));ar.rotation.x=Math.PI;ar.position.y=3.0;g.add(ar);g.userData.arrow=ar}
+  b.userData.k=1.1;b.scale.setScalar(1.1);g.userData.b=b;g.userData.ring=ring;return g}
 let P=PL.map((d,i)=>({id:i,name:d.n,base:PL[i].em,col:d.c,em:d.em,you:i===0,ai:i!==0,skill:[0,.72,.8,.88][i],pts:0,mesh:null}));
 P.forEach(p=>{p.mesh=makeAnimal(p.col,PL[p.id].e,p.you);scene.add(p.mesh)});
 
@@ -442,12 +450,12 @@ function animP(dt,T){for(const p of P){if(!p.mesh.visible)continue;const m=p.mes
   p.squash=Math.max(0,(p.squash||0)-dt);const s=p.squash>0?Math.sin(p.squash/.25*Math.PI)*.25:0;const air=!p.grounded&&!p.falling?.08:0;{const K=b.userData.k||1;b.scale.set((1+s)*K,(1-s+air)*K,(1+s)*K)}
   b.rotation.x=p.stun>0?Math.sin(T*25)*.2:(p.falling||p.ko?b.rotation.x+dt*6:clamp(spd/6,0,1)*.12);if(!p.falling&&!p.ko&&p.stun<=0)b.rotation.x+=(clamp(spd/6,0,1)*.16-b.rotation.x)*Math.min(1,dt*8);
   if(b.userData.eyes){const bt=(T+p.id*1.7)%3.6,bl=bt<.14?.12:1;b.userData.eyes.forEach(e=>e[0].scale.y=e[1]*bl)}
-  m.userData.ring.visible=p.grounded&&!p.falling;if(m.userData.arrow){m.userData.arrow.position.y=2.35+Math.sin(T*5)*.15;m.userData.arrow.rotation.y+=dt*2}}}
+  m.userData.ring.visible=p.grounded&&!p.falling;if(m.userData.arrow){m.userData.arrow.position.y=3.0+Math.sin(T*5)*.15;m.userData.arrow.rotation.y+=dt*2}}}
 
 /* ---------- 화면 (HUD) ---------- */
 function renderChips(){$("#chips").innerHTML=P.map(p=>`<div class="chip${p.you?" you":""}${p.out&&state==="play"?" out":""}"><span class="dot" style="background:${p.col}">${p.em}</span><span><b>${p.name}</b><i>${p.pts}</i>${state==="play"&&G&&G.timed?` <small style="font-weight:800">⭐${p.score}</small>`:""}</span></div>`).join("")}
 const ov=id=>{["#ovTitle","#ovRoom","#ovIntro","#ovRes","#ovEnd"].forEach(x=>$(x).classList.toggle("on",x===id))};
-function setCam(T){const por=innerWidth<innerHeight*1.05,k=(por?1.55:1)*(state!=="title"&&state!=="end"&&G&&G.camK||1);const base=state==="end"?[Math.sin(T*.3)*9,7*k,13*k]:[0,17*k,17*k*(por?.85:1)];cam.position.set(base[0]+(shake>0?rnd(-shake,shake):0),base[1]+(shake>0?rnd(-shake,shake):0),base[2]);cam.lookAt(0,state==="end"?1.5:-1.2,state==="end"?0:1.2)}
+function setCam(T){const por=innerWidth<innerHeight*1.05,k=(por?1.55:1)*(state!=="title"&&state!=="end"&&G&&G.camK||1);const base=state==="end"?[Math.sin(T*.3)*9,7*k,13*k]:[0,12.5*k,19.5*k*(por?.85:1)];cam.position.set(base[0]+(shake>0?rnd(-shake,shake):0),base[1]+(shake>0?rnd(-shake,shake):0),base[2]);cam.lookAt(0,state==="end"?1.5:-1.2,state==="end"?0:1.2)}
 function startParty(){ac();if(NET.mode==="guest")return;srand((Math.random()*1e9)|0);P.forEach(p=>p.pts=0);order=shuffle(GAMES.slice()).slice(0,5);{const fg=new URLSearchParams(location.search).get("g");const fgm=GAMES.find(x=>x.id===fg);if(fgm)order=[fgm,...order.filter(x=>x!==fgm)].slice(0,5)}round=0;nextRound()}
 function nextRound(){if(NET.mode==="host"){const sd=(Math.random()*1e9)|0;NET.send({t:"round",r:round,g:order.map(x=>x.id),seed:sd});srand(sd)}G=order[round];G.outs=[];clearArena();stageFor(G);FX.splice(0).forEach(f=>scene.remove(f.m));G.setup();GT=0;state="intro";stT=0;lastCount=4;
  $("#iEm").textContent=G.em;$("#iName").textContent=G.name;$("#iHow").textContent=G.how;$("#iKeys").textContent=TOUCH?t("왼쪽 드래그로 이동 · 오른쪽 버튼: ","Drag left side to move · Button: ")+G.actLabel:G.keys;
