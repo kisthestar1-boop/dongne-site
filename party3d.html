@@ -187,7 +187,7 @@ function makeAnimal(col,ears,you){const g=new THREE.Group(),b=new THREE.Group();
     const bk=mesh(new THREE.ConeGeometry(.13,.3,10),"#FF9A3C",true);bk.rotation.x=Math.PI/2;bk.position.set(0,-.1,.82);hd.add(bk);
     for(const [x,r] of[[-.1,.4],[0,0],[.1,-.4]]){const tf=mesh(new THREE.ConeGeometry(.07,.34,6),col,true);tf.position.set(x,.88,.02);tf.rotation.z=r;hd.add(tf)}
     const hm=new THREE.Mesh(new THREE.SphereGeometry(1.02,28,20),new THREE.MeshBasicMaterial({color:"#FFFFFF",transparent:true,opacity:.13,depthWrite:false}));hd.add(hm);
-    const rim=mesh(new THREE.TorusGeometry(.62,.09,10,28),"#FFFFFF",true);rim.rotation.x=Math.PI/2;rim.position.y=-.78;hd.add(rim)}
+    const bp=mesh(new THREE.BoxGeometry(.6,.7,.3),"#F4F6FA",true);bp.position.set(0,.95,-.58);b.add(bp);const bs=mesh(new THREE.BoxGeometry(.5,.12,.32),"#FF8A3D");bs.position.set(0,.8,-.58);b.add(bs);const rim=mesh(new THREE.TorusGeometry(.62,.09,10,28),"#FFFFFF",true);rim.rotation.x=Math.PI/2;rim.position.y=-.78;hd.add(rim)}
   const ring=new THREE.Mesh(new THREE.RingGeometry(.85,1.02,32),new THREE.MeshBasicMaterial({color:col,transparent:true,opacity:.85}));ring.rotation.x=-Math.PI/2;ring.position.y=.03;g.add(ring);
   if(you){const ar=new THREE.Mesh(new THREE.ConeGeometry(.25,.45,4),new THREE.MeshBasicMaterial({color:"#FFE066"}));ar.rotation.x=Math.PI;ar.position.y=3.0;g.add(ar);g.userData.arrow=ar}
   b.userData.k=1.1;b.scale.setScalar(1.1);g.userData.b=b;g.userData.ring=ring;return g}
