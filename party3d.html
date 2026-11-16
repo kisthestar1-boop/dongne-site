@@ -55,6 +55,8 @@ canvas{display:block}
 @media (max-width:640px){.chip{min-width:0;padding:3px 7px 3px 4px;gap:4px}.chip .dot{width:20px;height:20px;font-size:12px}.chip b{font-size:10px}.chip i{font-size:12px}#chips{gap:4px;top:6px}#info{top:48px;font-size:13px}.card{padding:16px 18px}.how{font-size:16px}}
 #act{width:110px!important;height:110px!important;font-size:20px!important;right:22px!important;bottom:34px!important;user-select:none}
 #ff{display:none;position:fixed;right:10px;top:84px;pointer-events:auto;background:rgba(20,10,50,.6);color:#fff;border:2px solid rgba(255,255,255,.5);border-radius:12px;padding:8px 12px;font-size:15px;font-weight:800;cursor:pointer;z-index:5}
+#fsBtn{display:none;position:fixed;left:8px;top:8px;z-index:30;pointer-events:auto;background:rgba(20,10,50,.55);color:#fff;border:2px solid rgba(255,255,255,.5);border-radius:10px;width:38px;height:38px;font-size:20px;line-height:1;cursor:pointer}
+#fsTip{display:none;position:fixed;left:50%;bottom:18%;transform:translateX(-50%);z-index:40;max-width:88vw;background:rgba(20,10,50,.88);color:#fff;font-weight:800;font-size:15px;line-height:1.45;text-align:center;padding:10px 16px;border-radius:14px;border:2px solid rgba(255,255,255,.4);pointer-events:none;word-break:keep-all}
 #mute{position:fixed;right:10px;bottom:10px;pointer-events:auto;background:rgba(20,10,50,.5);color:#fff;border:0;border-radius:10px;padding:6px 10px;font-size:16px;cursor:pointer}
 #howBox{position:fixed;right:10px;top:124px;max-width:min(400px,54vw);z-index:15;pointer-events:none;background:rgba(40,20,80,.7);color:#fff;font-size:clamp(15px,1.6vw,19px);font-weight:800;line-height:1.4;padding:9px 14px;border-radius:14px;border:2px solid rgba(255,255,255,.35);text-shadow:0 1px 3px rgba(0,0,0,.5);display:none}#pickRow{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}#pickRow button{border:4px solid #fff;background:rgba(255,255,255,.25);border-radius:24px;padding:10px 12px 12px;color:#fff;display:flex;flex-direction:column;align-items:center;width:min(170px,42vw);cursor:pointer;font-family:inherit;box-shadow:0 6px 0 rgba(60,20,110,.5)}#pickRow button img{width:min(128px,30vw);height:min(128px,30vw);filter:drop-shadow(0 4px 6px rgba(40,10,90,.45))}#pickRow button b{font-size:22px;margin-top:2px;text-shadow:0 2px 0 rgba(60,20,110,.5)}#pickRow button small{font-size:13px;font-weight:700;opacity:.95}#pickRow button:hover,#pickRow button.on{background:#FFE9F2;color:#C23A78;border-color:#FF9BD2;transform:translateY(-3px)}#pickRow button:hover b,#pickRow button.on b{text-shadow:none}@keyframes pk1{0%,100%{transform:translateX(-10px) scale(1,1) rotate(-6deg)}25%{transform:translateX(0) translateY(-7px) rotate(0)}50%{transform:translateX(10px) rotate(6deg)}75%{transform:translateX(0) translateY(-7px) rotate(0)}}
 @keyframes pk2{0%,35%,100%{transform:translateY(0) scale(1.1,.88)}12%{transform:translateY(0) scale(1.1,.88)}22%{transform:translateY(-34px) scale(.92,1.12)}30%{transform:translateY(-6px) scale(1,1)}}
@@ -97,7 +99,7 @@ canvas{display:block}
 </style></head><body>
 <div id="hud"><div id="chips"></div><div id="info"></div><div id="banner"></div><div id="hint"></div></div>
 <div id="touch"><div id="joy"><div id="knob"></div></div><div id="act">JUMP</div></div>
-<button id="mute">🔊</button><button id="ff">⏩ ×1</button>
+<button id="mute">🔊</button><button id="fsBtn" title="전체 화면">⛶</button><div id="fsTip"></div><button id="ff">⏩ ×1</button>
 <div id="howBox"></div><div class="ov" id="ovPick"><div><div style="font-size:44px;font-weight:900;color:#FFE066;-webkit-text-stroke:6px #5B2A86;paint-order:stroke fill;text-shadow:0 4px 0 #5B2A86;margin-bottom:4px">💕 누구로 할까요? 💕</div><div class="sub" style="margin-bottom:22px;font-size:19px">나와 함께할 친구를 골라 주세요 💛</div><div id="pickRow"></div><button class="btn b2" id="pickBack" style="margin-top:14px;font-size:15px;padding:8px 18px">← 뒤로</button></div></div><div class="ov on" id="ovTitle"><div><div class="ttl" id="tTitle">팡팡 파티!</div><div class="sub" id="tSub"></div><button class="btn" id="bPlay">PLAY</button><div class="row"><button class="btn b2" id="bHost">친구랑 방 만들기</button><button class="btn b3" id="bJoin">방 코드로 들어가기</button></div><div class="sub" id="tBest" style="margin-top:14px;font-size:14px"></div></div></div>
 <div class="ov" id="ovRoom"><div class="card" id="roomCard"></div></div>
 <div id="emo"><button>😂</button><button>👍</button><button>😮</button><button>🔥</button></div><div id="netMsg"></div>
@@ -145,7 +147,7 @@ const deco=new THREE.Group();scene.add(deco);
  for(let i=0;i<14;i++){const a=i/14*6.283+rnd(-.2,.2),r=rnd(22,30),cl=new THREE.Group();const n=4+(i%3);for(let k=0;k<n;k++){const sp=new THREE.Mesh(new THREE.SphereGeometry(rnd(1.3,2.4),16,12),new THREE.MeshLambertMaterial({color:"#FFFFFF",emissive:"#FFE8F4",emissiveIntensity:.55}));sp.position.set((k-n/2)*1.6,rnd(-.4,.6),rnd(-.8,.8));cl.add(sp)}cl.position.set(Math.cos(a)*r,rnd(-12,-3),Math.sin(a)*r);cl.userData.ph=rnd(0,6);deco.add(cl)}
  for(let i=0;i<16;i++){const a=i/16*6.283+.2,r=rnd(17,26),bl=new THREE.Group(),col=BC[i%BC.length];const bb=mesh(new THREE.SphereGeometry(1,20,16),col);bb.scale.set(1,1.18,1);bl.add(bb);const hl=new THREE.Mesh(new THREE.SphereGeometry(.22,10,8),new THREE.MeshBasicMaterial({color:"#fff",transparent:true,opacity:.7}));hl.position.set(-.35,.45,.75);bl.add(hl);
   const kn=mesh(new THREE.ConeGeometry(.18,.25,8),col);kn.position.y=-1.25;kn.rotation.x=Math.PI;bl.add(kn);const st=new THREE.Mesh(new THREE.CylinderGeometry(.025,.025,3,4),new THREE.MeshBasicMaterial({color:"#FFFFFF"}));st.position.y=-2.8;bl.add(st);
-  bl.position.set(Math.cos(a)*r,rnd(-2,6),Math.sin(a)*r);bl.userData.ph=rnd(0,6);deco.add(bl)}
+  bl.position.set(Math.cos(a)*r,rnd(-2,6),Math.sin(a)*r);if(bl.position.z>4)bl.position.z=-bl.position.z;/* 카메라 앞 풍선이 세로 화면을 가리지 않게 뒤로 */bl.userData.ph=rnd(0,6);deco.add(bl)}
  for(let i=0;i<22;i++){const a=rnd(0,6.283),r=rnd(18,32);const stx=new THREE.Mesh(new THREE.OctahedronGeometry(rnd(.25,.45)),new THREE.MeshBasicMaterial({color:pick(["#FFF3A0","#FFFFFF","#FFD1E8"])}));stx.position.set(Math.cos(a)*r,rnd(2,12),Math.sin(a)*r);stx.userData.ph=rnd(0,6);stx.userData.spin=1;deco.add(stx)}}
 /* ---------- 경기장 꾸미기: 무지개 결승 아치 · 풍선 · 블록 관중석 ---------- */
 let cheer=0;const stage=new THREE.Group();scene.add(stage);const FANS=[];let archG=null,archTx=null,archCv=null;
@@ -253,9 +255,25 @@ addEventListener("blur",()=>{for(const k in keys)keys[k]=0});
 let joy={on:false,id:null,x:0,y:0,cx:0,cy:0},touchAct=false;
 if(TOUCH){$("#touch").style.display="block";$("#hint").style.display="none"}
 const J=$("#joy"),K=$("#knob");
-addEventListener("pointerdown",e=>{if(!TOUCH||e.pointerType==="mouse")return;if(e.target.closest("#act,.btn,#mute,#ff"))return;if(e.clientX<innerWidth*.6&&!joy.on){joy={on:true,id:e.pointerId,x:0,y:0,cx:e.clientX,cy:e.clientY};J.style.display="block";J.style.left=(e.clientX-60)+"px";J.style.top=(e.clientY-60)+"px"}});
+addEventListener("pointerdown",e=>{if(!TOUCH||e.pointerType==="mouse")return;if(e.target.closest("#act,.btn,#mute,#ff,#fsBtn"))return;if(e.clientX<innerWidth*.6&&!joy.on){joy={on:true,id:e.pointerId,x:0,y:0,cx:e.clientX,cy:e.clientY};J.style.display="block";J.style.left=(Math.min(Math.max(e.clientX,64),innerWidth-64)-60)+"px";J.style.top=(Math.min(Math.max(e.clientY,64),innerHeight-64)-60)+"px"}});
 addEventListener("pointermove",e=>{if(!joy.on||e.pointerId!==joy.id)return;let dx=e.clientX-joy.cx,dy=e.clientY-joy.cy;const d=Math.hypot(dx,dy),m=50;if(d>m){dx*=m/d;dy*=m/d}joy.x=dx/m;joy.y=dy/m;K.style.left=(35+dx)+"px";K.style.top=(35+dy)+"px"});
 const jEnd=e=>{if(e.pointerId!==joy.id)return;joy.on=false;joy.x=joy.y=0;J.style.display="none";K.style.left=K.style.top="35px"};addEventListener("pointerup",jEnd);addEventListener("pointercancel",jEnd);
+
+/* 전체 화면: 안드로이드는 바로, 카카오톡 안에서는 크롬으로 열기, 아이폰은 홈 화면 추가 안내 */
+const UA=navigator.userAgent,IN_KAKAO=/KAKAOTALK/i.test(UA),IN_APP=IN_KAKAO||/NAVER\(inapp|Instagram|FBAN|FBAV|Line\//i.test(UA),IOS=/iPhone|iPad|iPod/i.test(UA)||(/Macintosh/.test(UA)&&navigator.maxTouchPoints>1);
+const fsEl=document.documentElement,FS_OK=!!(fsEl.requestFullscreen||fsEl.webkitRequestFullscreen);
+const isFS=()=>!!(document.fullscreenElement||document.webkitFullscreenElement)||matchMedia("(display-mode: fullscreen)").matches||matchMedia("(display-mode: standalone)").matches||navigator.standalone===true;
+const fsTip=$("#fsTip");let fsTipT=0;function tipFS(t,ms){fsTip.textContent=t;fsTip.style.display="block";clearTimeout(fsTipT);fsTipT=setTimeout(()=>fsTip.style.display="none",ms||4200)}
+function goFS(auto){if(isFS())return;
+  if(IN_KAKAO){if(auto)return;location.href="kakaotalk://web/openExternal?url="+encodeURIComponent(location.href);return}
+  if(IN_APP){if(!auto)tipFS(KO?"앱 안의 브라우저에서는 전체 화면이 안 돼요. 오른쪽 위 메뉴에서 '다른 브라우저로 열기'를 눌러 주세요":"Full screen isn't available in this in-app browser. Open it in Chrome or Safari.",5200);return}
+  if(FS_OK){try{const r=(fsEl.requestFullscreen||fsEl.webkitRequestFullscreen).call(fsEl,{navigationUI:"hide"});if(r&&r.catch)r.catch(()=>{})}catch(_){}return}
+  if(!auto)tipFS(IOS?(KO?"아이폰은 공유 버튼 → '홈 화면에 추가' 후 그 아이콘으로 열면 전체 화면이 돼요":"On iPhone: Share → Add to Home Screen, then open from the icon for full screen"):(KO?"이 브라우저는 전체 화면을 지원하지 않아요":"Full screen isn't supported here"),5200)}
+const fsB=$("#fsBtn");function upFSBtn(){fsB.style.display=(TOUCH&&!isFS())?"block":"none"}
+fsB.addEventListener("pointerdown",e=>{e.preventDefault();e.stopPropagation();goFS(false)});
+["fullscreenchange","webkitfullscreenchange"].forEach(ev=>document.addEventListener(ev,()=>{upFSBtn();setTimeout(resize,60)}));upFSBtn();
+let fsAuto=false;addEventListener("pointerup",e=>{if(fsAuto||!TOUCH||e.pointerType==="mouse")return;if(!e.target.closest(".btn,#pickRow button"))return;fsAuto=true;goFS(true)},true);
+if(TOUCH&&IN_KAKAO&&!isFS())setTimeout(()=>tipFS(KO?"카카오톡 안에서는 화면이 좁아요. 왼쪽 위 ⛶ 를 누르면 크롬에서 전체 화면으로 열려요":"Tap ⛶ (top-left) to open in your browser for full screen",6000),1800);
 const actB=$("#act");actB.addEventListener("pointerdown",e=>{e.preventDefault();touchAct=true;ac()});["pointerup","pointercancel","pointerleave"].forEach(ev=>actB.addEventListener(ev,()=>touchAct=false));
 function myInput(){let x=(keys.KeyD||keys.ArrowRight?1:0)-(keys.KeyA||keys.ArrowLeft?1:0),z=(keys.KeyS||keys.ArrowDown?1:0)-(keys.KeyW||keys.ArrowUp?1:0);
   if(joy.on){x=joy.x;z=joy.y}const d=Math.hypot(x,z);if(d>1){x/=d;z/=d}return [x,z,!!(keys.Space||keys.KeyJ||keys.ShiftLeft||keys.ShiftRight||keys.Enter||touchAct)]}
