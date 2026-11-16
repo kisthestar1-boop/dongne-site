@@ -246,7 +246,7 @@ function burst(x,y,z,col,n,sp,conf){for(let i=0;i<n;i++){const m=new THREE.Mesh(
 function confetti(n){cheer=Math.max(cheer,1.6);for(let i=0;i<n;i++){const m=new THREE.Mesh(fxBox,new THREE.MeshBasicMaterial({color:fpick(["#FFE066","#FF7AA8","#7AD9FF","#9BE58A","#C59BFF","#fff"]),transparent:true,side:THREE.DoubleSide}));m.position.set(frnd(-10,10),frnd(10,16),frnd(-6,8));scene.add(m);FX.push({m,vx:frnd(-1,1),vy:frnd(-2,0),vz:frnd(-1,1),life:frnd(3,5),max:5,rs:frnd(-8,8),g:3})}}
 function upFX(dt){for(let i=FX.length-1;i>=0;i--){const f=FX[i];f.life-=dt;f.vy-=(f.g||18)*dt;f.m.position.x+=f.vx*dt;f.m.position.y+=f.vy*dt;f.m.position.z+=f.vz*dt;if(f.rs){f.m.rotation.x+=f.rs*dt;f.m.rotation.y+=f.rs*dt*.7}
   f.m.material.opacity=clamp(f.life/f.max*2,0,1);if(f.life<=0){scene.remove(f.m);f.m.material.dispose();FX.splice(i,1)}}}
-let shake=0;
+let shake=0,HS=0;/* 타격감: 아주 짧게 멈칫(히트스톱) + 묵직한 소리 */function hitStop(t){HS=Math.max(HS,Math.min(.16,t))}function thwack(big){try{noise(big?.12:.07,big?.45:.3);tone(big?150:230,big?.18:.1,"square",big?.14:.1,big?50:90)}catch(_){}}
 const banner=$("#banner");let bT=0;function say(s,col,d){s=L10(s);banner.textContent=s;banner.style.color=col||"#FFE066";banner.classList.add("on");bT=d||1}
 
 /* ---------- 입력 ---------- */
@@ -670,7 +670,7 @@ const GAMES=[
     if(!p.out&&tapped(p)&&p.swc<=0){p.swc=.32;p.sw=.22;SND.dash();if(NET.mode==="guest"){}else{const dx=b.x-p.x,dz=b.z-p.z,d=Math.hypot(dx,dz);
      if(d<3.5){p.face=p._hy=Math.atan2(dx,dz);let nx=dx/(d||1),nz=dz/(d||1);let best=null,bd=1e9;for(const q of P)if(q!==p&&!q.out){const e=Math.hypot(q.x-b.x,q.z-b.z);if(e<bd){bd=e;best=q}}
       if(best){const ax=best.x-b.x,az=best.z-b.z,l=Math.hypot(ax,az)||1;nx=nx*.6+ax/l*.4;nz=nz*.6+az/l*.4;const m=Math.hypot(nx,nz)||1;nx/=m;nz/=m}
-      const sp=Math.min(17,11+Math.hypot(b.vx,b.vz)*.25);b.vx=nx*sp;b.vz=nz*sp;b.o=p;b.ht=performance.now();SND.bump();tone(620,.12,"square",.08,240);shake=Math.max(shake,.3);burst(b.x,.7,b.z,"#FFE066",14,6);popTxt({x:b.x,y:1.6,z:b.z},pick(["빵!","쾅!","뿅!"]),"#FFE066",30)}
+      const sp=Math.min(17,11+Math.hypot(b.vx,b.vz)*.25);b.vx=nx*sp;b.vz=nz*sp;b.o=p;b.ht=performance.now();SND.bump();thwack(1);hitStop(.07);tone(620,.12,"square",.08,240);shake=Math.max(shake,.3);burst(b.x,.7,b.z,"#FFE066",14,6);popTxt({x:b.x,y:1.6,z:b.z},pick(["빵!","쾅!","뿅!"]),"#FFE066",30)}
      {let fr=null,fd=2.3;for(const q of P){if(q===p||q.out||q.stun>0||q.falling)continue;const ex=q.x-p.x,ez=q.z-p.z,dd=Math.hypot(ex,ez);if(dd<fd&&(Math.sin(p.face)*ex+Math.cos(p.face)*ez)>-.2){fd=dd;fr=q}}
       if(fr&&!(d<3.5&&fd>1.6)){const ex=fr.x-p.x,ez=fr.z-p.z,l=Math.hypot(ex,ez)||1;fr.ex+=ex/l*12;fr.ez+=ez/l*12;fr.stun=.3;fr.vy=4;fr.grounded=false;SND.bump();tone(700,.14,"square",.08,220);shake=Math.max(shake,.25);burst(fr.x,1.3,fr.z,"#FFB3D1",10,5);popTxt(fr,pick(["왜 때려요~","아야!","으악!","뿅 맞았다!"]),"#FFB3D1",26)}}}}
     const u=p.sw>0?1-p.sw/.22:-1;const a=u<0?.55:u<.3?.55-(u/.3)*1.8:-1.25+Math.pow((u-.3)/.7,.6)*3.2;if(p._hy===undefined)p._hy=p.face;p._hy+=Math.atan2(Math.sin(p.face-p._hy),Math.cos(p.face-p._hy))*Math.min(1,dt*9);const hf=p._hy;p.hm.visible=!p.out;p.hm.position.set(p.x+Math.sin(hf)*.55+Math.cos(hf)*1.05,p.y+.8,p.z+Math.cos(hf)*.55-Math.sin(hf)*1.05);p.hm.rotation.y=hf;p.hm.children[0].rotation.x=a}
@@ -856,7 +856,7 @@ const GAMES=[
    ord.forEach((p,k)=>{p.team=k<2?0:1;const s=p.team?1:-1;place(p,s*5.5,k%2?-2.6:2.6);p.face=s<0?Math.PI/2:-Math.PI/2;p.score=0;p.hits=0;p.hcd=0;p.slide=0;p.home=[s*5.5,k%2?-2.6:2.6]});
    this.W=W;this.H=H;this.S=[0,0];this.b={x:0,y:-5,z:0,vx:0,vy:0,vz:0};this.last=null;this.wait=1.4;this.serveSide=-1;this.said=0;this.fx=[]},
   serve(side){const b=this.b;Object.assign(b,{x:side*5,y:7.5,z:rnd(-2,2),vx:0,vy:0,vz:0});this.last=null;this.wait=0},
-  point(team,why){this.S[team]++;P.forEach(p=>p.score=this.S[p.team]);SND.coin();confetti(6);shake=Math.max(shake,.25);
+  point(team,why){this.S[team]++;hitStop(.14);P.forEach(p=>p.score=this.S[p.team]);SND.coin();confetti(6);shake=Math.max(shake,.25);
    const mine=P.find(p=>p.you);const good=mine&&mine.team===team;say((why||"")+(good?t(" 득점! 🎉"," POINT! 🎉"):t(" 실점 ㅠㅠ"," Lost a point")),good?"#FFE066":"#FF9BB5",1.2);
    this.serveSide=team===0?1:-1;this.wait=1.3;this.b.y=-5;renderChips()},
   update(dt,T){const b=this.b,W=this.W,H=this.H;if(!this.said){this.said=1;this.wait=1.2;say(t("공 그림자 밑으로! 🏐","Get under the ball! 🏐"),"#FFE066",1.6)}
@@ -871,8 +871,8 @@ const GAMES=[
      if(Math.abs(b.x)<.6&&b.y<2.85&&b.y>0){if(Math.abs(b.vx)>0){b.x=b.vx>0?-.6:.6;b.vx*=-.45;SND.tick();popTxt({x:0,y:2.6,z:b.z},t("그물!","Net!"),"#FFFFFF",22)}}
      for(const p of P){if(p.out||p.hcd>0)continue;const hx=b.x-p.x,hz=b.z-p.z,hy=b.y-(p.y+1.4);const d=Math.hypot(hx,hz);
       const sl=p.slide>0,rr=sl?2.3:1.85;if(d<rr&&hy>(sl?-2:-1.5)&&hy<1.9){const s=p.team?-1:1;p.hcd=.45;p.hits++;this.last=p;
-       if(!p.grounded&&p.y>.5&&b.y>2.4){b.vx=s*rnd(13,15.5);b.vy=-3.5;b.vz=clamp(-p.z*.25+rnd(-3,3),-5,5);SND.boom();shake=Math.max(shake,.35);burst(b.x,b.y,b.z,"#FFE066",16,7);popTxt(p,pick([t("스파이크!","SPIKE!"),t("쾅!","BAM!"),t("받아라~!","Take that!")]),"#FFE066",30)}
-       else{b.vx=s*rnd(5,6.8);b.vy=rnd(8,9.2);b.vz=clamp((rnd(-H+1.5,H-1.5)-b.z)*.35,-4,4);SND.bump();burst(b.x,b.y,b.z,"#FFFFFF",8,4);if(R()<.35)popTxt(p,pick([t("톡!","Bump!"),t("받았다!","Got it!"),t("넘겨~","Over!")]),"#FFFFFF",20)}
+       if(!p.grounded&&p.y>.5&&b.y>2.4){b.vx=s*rnd(13,15.5);b.vy=-3.5;b.vz=clamp(-p.z*.25+rnd(-3,3),-5,5);SND.boom();thwack(1);hitStop(.11);shake=Math.max(shake,.35);burst(b.x,b.y,b.z,"#FFE066",16,7);popTxt(p,pick([t("스파이크!","SPIKE!"),t("쾅!","BAM!"),t("받아라~!","Take that!")]),"#FFE066",30)}
+       else{b.vx=s*rnd(5,6.8);b.vy=rnd(8,9.2);b.vz=clamp((rnd(-H+1.5,H-1.5)-b.z)*.35,-4,4);SND.bump();thwack(0);hitStop(.04);burst(b.x,b.y,b.z,"#FFFFFF",8,4);if(R()<.35)popTxt(p,pick([t("톡!","Bump!"),t("받았다!","Got it!"),t("넘겨~","Over!")]),"#FFFFFF",20)}
        break}}
      if(b.y<=.9){b.y=.9;burst(b.x,.3,b.z,"#FFE7B0",10,4);const inC=Math.abs(b.x)<=W+.3&&Math.abs(b.z)<=H+.3;
       if(inC)this.point(b.x<0?1:0,t("콕!","In!"));else this.point(this.last?1-this.last.team:(b.x<0?0:1),t("아웃!","Out!"))}}}
@@ -911,7 +911,7 @@ const GAMES=[
    for(let i=0;i<5;i++){const pt=mesh(new THREE.SphereGeometry(.2,8,6),"#2A2A3A");const a=i/5*6.283;pt.position.set(Math.cos(a)*.5,Math.sin(a)*.5*.6,Math.sin(a)*.45);this.bl.add(pt)}
    this.b={x:0,z:0,vx:0,vz:0,o:null};this.fin=[];this.wait=1.2;this.said=0},
   kickoff(){const b=this.b;const a=rnd(0,6.283);Object.assign(b,{x:0,z:0,vx:Math.cos(a)*3,vz:Math.sin(a)*3,o:null});this.wait=0},
-  goal(gi){const G4=this.G4[gi],own=G4.p,sc=this.b.o;if(!G4.open)return;own.con++;SND.boom();shake=Math.max(shake,.45);burst(this.b.x,1,this.b.z,own.col,24,8);confetti(8);
+  goal(gi){const G4=this.G4[gi],own=G4.p,sc=this.b.o;if(!G4.open)return;hitStop(.16);thwack(1);own.con++;SND.boom();shake=Math.max(shake,.45);burst(this.b.x,1,this.b.z,own.col,24,8);confetti(8);
    if(sc&&sc!==own){sc.goals++;sc.score=sc.goals;popTxt(sc,t("골인! ⚽","GOAL! ⚽"),"#FFE066",32);heartFx&&heartFx(sc,4)}
    G4.open=false;G4.grp.visible=false;G4.shut.visible=true;burst(own.x,1,own.z,"#FFFFFF",20,7);
    if(own.you)say(t("내 골대에 골… 탈락 ㅠㅠ","They scored on you… OUT"),"#FF9BB5",1.6);else if(sc&&sc.you)say(t("골인! "+own.name+" 탈락! 🎉","GOAL! "+own.name+" is out! 🎉"),"#FFE066",1.4);else say(t(own.name+" 탈락!",own.name+" is out!"),"#FFFFFF",1.1);
@@ -923,9 +923,9 @@ const GAMES=[
     else{
      for(const p of P){if(p.out||p.done)continue;const dx=b.x-p.x,dz=b.z-p.z,d=Math.hypot(dx,dz);
       const tp=tapped(p);if(tp&&d>=2.1&&p.tcd<=0){const nx=d>.01?dx/d:Math.sin(p.face),nz=d>.01?dz/d:Math.cos(p.face);p.ex+=nx*15;p.ez+=nz*15;p.face=Math.atan2(nx,nz);p.tk=.42;p.tcd=1;SND.dash();burst(p.x,.3,p.z,"#FFFFFF",8,3);if(R()<.5)popTxt(p,pick([t("태클~!","Tackle!"),t("내 공이야!","Mine!"),t("슬라이딩!","Slide!")]),"#FFE066",24)}
-      if(p.tk>0)for(const q of P){if(q===p||q.out||q.stun>0)continue;if(Math.hypot(q.x-p.x,q.z-p.z)<1.5){q.stun=.7;q.ex+=(q.x-p.x)*4;q.ez+=(q.z-p.z)*4;SND.bump();burst(q.x,1,q.z,"#FFB3D1",8,4);popTxt(q,pick([t("꽈당!","Oof!"),t("공 뺏겼다!","Stolen!"),t("아야~","Ow~")]),"#FFB3D1",24);p.tk=0}}
+      if(p.tk>0)for(const q of P){if(q===p||q.out||q.stun>0)continue;if(Math.hypot(q.x-p.x,q.z-p.z)<1.5){q.stun=.7;thwack(0);hitStop(.06);q.ex+=(q.x-p.x)*4;q.ez+=(q.z-p.z)*4;SND.bump();burst(q.x,1,q.z,"#FFB3D1",8,4);popTxt(q,pick([t("꽈당!","Oof!"),t("공 뺏겼다!","Stolen!"),t("아야~","Ow~")]),"#FFB3D1",24);p.tk=0}}
       if(tp&&d<2.1){const f=p.face;let nx=Math.sin(f),nz=Math.cos(f);if(d>.01){nx=nx*.55+dx/d*.45;nz=nz*.55+dz/d*.45;const m=Math.hypot(nx,nz);nx/=m;nz/=m}
-       b.vx=nx*17;b.vz=nz*17;b.o=p;SND.boom();shake=Math.max(shake,.25);burst(b.x,.6,b.z,"#FFFFFF",12,6);if(R()<.5)popTxt(p,pick([t("슛~!","Shoot!"),t("뻥!","Boom!"),t("들어가라!","Go in!")]),"#FFE066",26)}
+       b.vx=nx*17;b.vz=nz*17;b.o=p;SND.boom();thwack(1);hitStop(.07);shake=Math.max(shake,.25);burst(b.x,.6,b.z,"#FFFFFF",12,6);if(R()<.5)popTxt(p,pick([t("슛~!","Shoot!"),t("뻥!","Boom!"),t("들어가라!","Go in!")]),"#FFE066",26)}
       else if(d<BR+.75){const nx=dx/(d||1),nz=dz/(d||1),ps=Math.hypot(p.vx,p.vz),along=b.vx*nx+b.vz*nz,want=ps*1.25+2.2;if(along<want){b.vx+=nx*(want-along);b.vz+=nz*(want-along)}b.x=p.x+nx*(BR+.75);b.z=p.z+nz*(BR+.75);b.o=p}}
      const k=Math.exp(-dt*.75);b.vx*=k;b.vz*=k;b.x+=b.vx*dt;b.z+=b.vz*dt;
      for(let gi=0;gi<4;gi++){const g=this.G4[gi];const along=g.sx?b.z:b.x,depth=g.sx?b.x*g.sx:b.z*g.sz;
@@ -980,14 +980,14 @@ const GAMES=[
      if(tp){p.fs="scare";p.ft=1.1;this.splash(p.bx,p.bz,"#BFE9FF",6);popTxt(p,pick([t("앗, 너무 빨라!","Too early!"),t("물고기가 도망갔어~","It swam away~")]),"#FFB3D1",24)}
      else if(p.ft<=0){p.fs="bite";p.fish=this.pickFish();p.ft=p.fish.win;SND.coin();this.splash(p.bx,p.bz,"#FFFFFF",16);popTxt({x:p.bx,y:1.2,z:p.bz,_pt:0},"❗",p.you?"#FF4D6D":"#FFE066",p.you?40:26);if(p.you)shake=Math.max(shake,.15)}}
     else if(p.fs==="bite"){p.ft-=dt;p.bob.position.set(p.bx,-.12+Math.sin(GT*40)*.05,p.bz);
-     if(tp){p.fs="reel";p.prog=.15;p.ten=.35;SND.bump();this.splash(p.bx,p.bz,p.fish.c,10);if(p.you)say(t("걸렸다! 톡톡 감아요~","Hooked! Tap to reel!"),"#FFE066",.9)}
+     if(tp){p.fs="reel";p.prog=.15;p.ten=.35;SND.bump();if(p.you){thwack(0);hitStop(.07)}this.splash(p.bx,p.bz,p.fish.c,10);if(p.you)say(t("걸렸다! 톡톡 감아요~","Hooked! Tap to reel!"),"#FFE066",.9)}
      else if(p.ft<=0){p.fs="idle";p.cool=.4;popTxt(p,pick([t("놓쳤다~","Missed~"),t("너무 늦었어!","Too slow!")]),"#FFB3D1",22)}}
     else if(p.fs==="scare"){p.ft-=dt;p.bob.visible=false;p.ln.visible=false;if(p.ft<=0){p.fs="idle"}}
     else if(p.fs==="reel"){const f=p.fish;tilt=.35+Math.sin(GT*18)*.12*(p.ten);
      if(tp){p.prog+=f.step;p.ten+=.17;SND.tick()}p.ten=Math.max(0,p.ten-.5*dt);p.prog=Math.max(0,p.prog-f.pull*dt*(1+Math.sin(GT*2.3+p.id)*.6));
      const k=p.prog;p.bob.position.set(p.bx+(hx-p.bx)*k*.85,.12+Math.sin(GT*20)*.06*(1-k),p.bz+(hz-p.bz)*k*.85);if(R()<dt*6)this.splash(p.bob.position.x,p.bob.position.z,f.c,3);
      if(p.ten>=1){p.fs="idle";p.cool=1;SND.out();shake=Math.max(shake,.2);popTxt(p,pick([t("줄이 끊어졌어! ㅠㅠ","Line snapped!"),t("너무 세게 당겼어~","Too hard!")]),"#FF6B6B",26)}
-     else if(p.prog>=1){p.fs="idle";p.cool=.6;p.score+=f.pt;p.catches.push(f.k);SND.coin();confetti(f.k==="gold"?14:5);this.jump(p,f);
+     else if(p.prog>=1){p.fs="idle";p.cool=.6;p.score+=f.pt;if(p.you||f.k==="gold"){hitStop(.13);thwack(1)}if(p.you&&f.pt)say(f.e+" "+f.n+"!",f.k==="gold"?"#FFD700":"#FFFFFF",1.1);p.catches.push(f.k);SND.coin();confetti(f.k==="gold"?14:5);this.jump(p,f);
       popTxt(p,f.e+" "+f.n+(f.pt?" +"+f.pt:t(" 꽝!"," Junk!")),f.k==="gold"?"#FFD700":"#FFFFFF",f.k==="gold"?34:28);if(f.pt&&p.you)heartFx&&heartFx(p,f.k==="gold"?8:4);renderChips()}}
     p.rod.children[0].rotation.x=tilt;p.rod.children[0].position.set(0,1.3*Math.cos(tilt),1.3*Math.sin(tilt));
     if(p.ln.visible){const tipx=hx+Math.sin(p.face)*Math.sin(tilt)*2.6,tipz=hz+Math.cos(p.face)*Math.sin(tilt)*2.6,tipy=2.6*Math.cos(tilt);const pa=p.ln.geometry.attributes.position;pa.setXYZ(0,tipx,tipy,tipz);pa.setXYZ(1,p.bob.position.x,p.bob.position.y,p.bob.position.z);pa.needsUpdate=true}}
@@ -1006,7 +1006,60 @@ const GAMES=[
    else if(p.fs==="reel"){if(p.ten<.55+p.skill*.12&&p.aiT<=0){a=true;p.aiT=rnd(.1,.2)+(1-p.skill)*.12}}
    return [0,0,a&&!p._aiPrev?(p._aiPrev=true):(p._aiPrev=false)]},
   rank(){return P.slice().sort((a,b)=>(b.score-a.score)||((b.fs==="reel"?b.prog:0)-(a.fs==="reel"?a.prog:0)))},
-  over(T){return P.some(p=>p.score>=2)||T>this.len}}
+  over(T){return P.some(p=>p.score>=2)||T>this.len}},
+ {id:"dodge",nolag:1,camK:1.1,em:"🔥",ico:"❤️",name:t("팡팡 피구","Bonk Dodgeball"),how:t("🔥 2대2 피구! 공을 잡으면 스페이스로 던져요. 날아오는 공은 맞기 직전에 스페이스로 받기! 받을 때마다 게이지 1칸, 2칸이 차면 막을 수 없는 불꽃슛 🔥! 하트 2개가 다 없어지면 탈락","🔥 2 vs 2 dodgeball! Space to throw. Tap Space right before a ball hits to CATCH. 2 catches = unstoppable FIRE SHOT! 2 hearts each"),act:"none",actLabel:t("던지기·받기","THROW·CATCH"),keys:t("공 있을 때 스페이스 = 던지기 · 날아오는 공에 스페이스 = 받기 (이동: WASD/방향키)","Space: throw when holding · catch an incoming ball (Move: WASD/Arrows)"),tk:t("공 있으면 던지기 · 날아오는 공에 맞기 직전 눌러서 받기!","Throw when holding · tap right before a ball hits to catch!"),len:80,timed:1,sc:1,
+  netOut(){const b=this.b;return [+b.x.toFixed(2),+b.z.toFixed(2),+b.vx.toFixed(1),+b.vz.toFixed(1),b.h?b.h.id:-1,b.fire?1:0,...P.map(p=>p.lv)]},
+  netIn(a){const b=this.b;b.x=a[0];b.z=a[1];b.vx=a[2];b.vz=a[3];b.h=a[4]>=0?P[a[4]]:null;b.fire=!!a[5];P.forEach((p,i)=>{if(a[6+i]!=null)p.lv=a[6+i]})},
+  setup(){const W=9,H=6;this.W=W;this.H=H;const g=mesh(new THREE.BoxGeometry(2*W+4,1,2*H+4),"#F2C98A",false,true);g.position.y=-.5;arena.add(g);
+   for(const s of[-1,1]){const c=new THREE.Mesh(new THREE.PlaneGeometry(W,2*H),M(s<0?"#FF9F8A":"#8AC6FF"));c.rotation.x=-Math.PI/2;c.position.set(s*W/2,.01,0);c.receiveShadow=true;arena.add(c)}
+   const ln=(w,d,x,z)=>{const l=new THREE.Mesh(new THREE.PlaneGeometry(w,d),new THREE.MeshBasicMaterial({color:"#fff"}));l.rotation.x=-Math.PI/2;l.position.set(x,.02,z);arena.add(l)};ln(2*W,.2,0,H);ln(2*W,.2,0,-H);ln(.2,2*H,W,0);ln(.2,2*H,-W,0);ln(.25,2*H,0,0);
+   this.bl=mesh(new THREE.SphereGeometry(.62,20,16),"#FF5A5A",true);arena.add(this.bl);const st=mesh(new THREE.TorusGeometry(.62,.06,6,26),"#FFFFFF");st.rotation.y=Math.PI/2;this.bl.add(st);
+   this.fireM=new THREE.Mesh(new THREE.SphereGeometry(1.05,16,12),new THREE.MeshBasicMaterial({color:"#FF8A1F",transparent:true,opacity:.45}));this.bl.add(this.fireM);this.fireM.visible=false;
+   const me=Math.max(0,P.findIndex(p=>p.you)),ord=[0,1,2,3].map(k=>P[(me+k)%4]);
+   ord.forEach((p,k)=>{p.team=k<2?0:1;const s=p.team?1:-1;place(p,s*4.5,k%2?-2.5:2.5);p.face=s<0?Math.PI/2:-Math.PI/2;Object.assign(p,{lv:2,score:0,hitsN:0,gauge:0,ct:0,ccd:0,hi:0,hold:0})});
+   this.b={x:-2.5,z:0,vx:0,vz:0,h:null,th:null,fire:false,y:.62};this.said=0;
+   document.querySelectorAll(".dgauge").forEach(e=>e.remove());const gg=document.createElement("div");gg.className="mb dgauge";gg.style.cssText="position:fixed;right:max(24px,6vw);bottom:150px;z-index:30;pointer-events:none;display:flex;gap:6px;align-items:center;font-weight:900;color:#fff;text-shadow:0 2px 0 #2A1060;font-size:18px";
+   gg.innerHTML='🔥<i class="dg1" style="width:30px;height:18px;border-radius:6px;border:3px solid #2A1060;background:rgba(255,255,255,.35)"></i><i class="dg2" style="width:30px;height:18px;border-radius:6px;border:3px solid #2A1060;background:rgba(255,255,255,.35)"></i>';document.body.appendChild(gg);this.gg=gg},
+  throwB(p){const b=this.b;const foes=P.filter(q=>!q.out&&q.team!==p.team);if(!foes.length)return;let tg=foes.reduce((a,q)=>Math.hypot(q.x-p.x,q.z-p.z)<Math.hypot(a.x-p.x,a.z-p.z)?q:a,foes[0]);
+   const fire=p.gauge>=2;const sp=fire?24:15.5;const lead=Math.hypot(tg.x-p.x,tg.z-p.z)/sp*.6;const ax=tg.x+tg.vx*lead-p.x,az=tg.z+tg.vz*lead-p.z,l=Math.hypot(ax,az)||1;
+   b.h=null;b.th=p;b.fire=fire;b.vx=ax/l*sp;b.vz=az/l*sp;b.x=p.x+ax/l*1.1;b.z=p.z+az/l*1.1;p.face=Math.atan2(ax,az);p.hold=0;p.ccd=.4;
+   if(fire){p.gauge=0;SND.boom();thwack(1);hitStop(.12);shake=Math.max(shake,.4);say(t("불꽃슛!! 🔥","FIRE SHOT!! 🔥"),"#FF8A1F",1.1);burst(p.x,1.2,p.z,"#FF8A1F",22,8)}else{SND.dash();thwack(0);popTxt(p,pick([t("받아라~!","Take this!"),t("슝!","Whoosh!"),t("에잇!","Hiyah!")]),"#FFE066",22)}renderChips()},
+  update(dt,T){const b=this.b,W=this.W,H=this.H;if(!this.said){this.said=1;say(t("받기는 맞기 직전에 탁! 🔥","Catch right before it hits! 🔥"),"#FFE066",1.6)}
+   for(const p of P){p.ct-=dt;p.ccd-=dt;p.hi-=dt;if(p.out)continue;const tp=state==="play"&&tapped(p);
+    if(tp&&NET.mode!=="guest"){if(b.h===p){if(p.hold>.12)this.throwB(p)}else if(p.ccd<=0){p.ct=.32;p.ccd=.75;if(p.you)tone(520,.05,"square",.05)}}
+    if(b.h===p)p.hold+=dt;const bd=p.mesh.userData.b;}
+   if(NET.mode!=="guest"){
+    if(b.h){const p=b.h;if(p.out){b.h=null}else{b.x=p.x+Math.sin(p.face)*.9;b.z=p.z+Math.cos(p.face)*.9;b.vx=b.vz=0;b.y=1.1}}
+    else{b.x+=b.vx*dt;b.z+=b.vz*dt;const sp=Math.hypot(b.vx,b.vz);b.y=.62+(b.th?Math.min(.6,sp*.04):0);
+     if(!b.th){const k=Math.exp(-dt*2.2);b.vx*=k;b.vz*=k}
+     if(Math.abs(b.x)>W+.6){b.x=Math.sign(b.x)*(W+.6);b.vx*=-.4;b.th=null;b.fire=false}if(Math.abs(b.z)>H+1.2){b.z=Math.sign(b.z)*(H+1.2);b.vz*=-.4;b.th=null;b.fire=false}
+     if(b.th&&sp<6){b.th=null;b.fire=false}
+     for(const q of P){if(q.out)continue;const d=Math.hypot(q.x-b.x,q.z-b.z);
+      if(b.th&&b.th.team!==q.team&&d<1.25&&q.hi<=0){
+       if(q.ct>0&&!b.fire){b.h=q;b.th=null;q.hold=0;q.gauge=Math.min(2,q.gauge+1);q.ct=0;SND.coin();thwack(0);hitStop(.09);burst(q.x,1.2,q.z,"#FFE066",16,6);
+        popTxt(q,q.gauge>=2?t("나이스 캐치! 🔥 불꽃 준비!","Nice catch! 🔥 READY!"):t("나이스 캐치!","Nice catch!"),"#FFE066",q.you?32:24);if(q.you&&q.gauge>=2)say(t("불꽃슛 준비! 🔥","FIRE SHOT READY! 🔥"),"#FF8A1F",1.1);renderChips()}
+       else{const th=b.th;q.lv-=1;q.hi=1;q.stun=.5;const nx=b.vx/(sp||1),nz=b.vz/(sp||1);q.ex+=nx*(b.fire?14:8);q.ez+=nz*(b.fire?14:8);q.vy=b.fire?7:4.5;q.grounded=false;th.hitsN++;th.score=th.hitsN;
+        SND.boom();thwack(1);hitStop(b.fire?.16:.1);shake=Math.max(shake,b.fire?.55:.35);burst(q.x,1.1,q.z,b.fire?"#FF8A1F":"#FF6B6B",b.fire?26:16,8);
+        b.vx=-b.vx*.25;b.vz=-b.vz*.25+rnd(-2,2);b.th=null;b.fire=false;
+        if(q.lv<=0)eliminate(q);else{popTxt(q,"❤️".repeat(q.lv),"#FF6B6B",26);if(q.you)say(t("아야! ❤️ "+q.lv,"Ouch! ❤️ "+q.lv),"#FF9BB5",.8)}renderChips()}
+       break}
+      if(!b.th&&!b.h&&d<1.2&&q.stun<=0){b.h=q;q.hold=0;SND.tick();break}}}}
+   this.bl.position.set(b.x,b.y,b.z);this.bl.rotation.x+=dt*Math.hypot(b.vx,b.vz)*.6;this.fireM.visible=!!b.fire;if(b.fire){this.fireM.scale.setScalar(1+Math.sin(GT*30)*.12);if(R()<.7)burst(b.x,b.y,b.z,"#FF8A1F",2,2)}
+   for(const p of P){const bd=p.mesh.userData.b;if(bd&&!p.out)bd.scale.y=p.ct>0?1.12:1}
+   const me=P.find(p=>p.you);if(me&&this.gg){this.gg.querySelector(".dg1").style.background=me.gauge>=1?"#FF8A1F":"rgba(255,255,255,.35)";this.gg.querySelector(".dg2").style.background=me.gauge>=2?"#FF8A1F":"rgba(255,255,255,.35)";this.gg.style.display=me.out?"none":"flex"}},
+  ground(){return true},
+  clampP(p){const s=p.team?1:-1;p.x=s<0?clamp(p.x,-this.W,-.7):clamp(p.x,.7,this.W);p.z=clamp(p.z,-this.H,this.H)},
+  ai(p,dt){const b=this.b,s=p.team?1:-1;p.aiT=(p.aiT||0)-dt;
+   if(b.h===p){if(p.aiT<=0&&p.hold>rnd(.35,1.1)){p.aiT=.3;return [0,0,true]}const foes=P.filter(q=>!q.out&&q.team!==p.team);const f=foes[0];if(f){const dz=f.z-p.z;return [s*-.3,Math.sign(dz)*.4,false]}return [0,0,false]}
+   if(b.th&&b.th.team!==p.team){const d=Math.hypot(b.x-p.x,b.z-p.z),sp=Math.hypot(b.vx,b.vz)||1,tt=d/sp;
+    const toward=((p.x-b.x)*b.vx+(p.z-b.z)*b.vz)/(d*sp)>.6;if(toward&&!b.fire&&tt<.3&&tt>.05&&p.ccd<=0&&R()<.15+p.skill*.55)return [0,0,true];
+    if(toward){const px=-b.vz/sp,pz=b.vx/sp,sd=((p.x-b.x)*px+(p.z-b.z)*pz)>0?1:-1;if(R()<.5+p.skill*.4)return [px*sd,pz*sd,false]}}
+   if(!b.h&&!b.th&&(s<0?b.x<0:b.x>0)){const mates=P.filter(q=>q.team===p.team&&!q.out);const ch=mates.reduce((a,q)=>Math.hypot(q.x-b.x,q.z-b.z)<Math.hypot(a.x-b.x,a.z-b.z)?q:a,mates[0]);
+    if(ch===p){const dx=b.x-p.x,dz=b.z-p.z,d=Math.hypot(dx,dz)||1;return [dx/d,dz/d,false]}}
+   const hx=s*5,hz=Math.sin(GT*.7+p.id*2)*3.5,dx=hx-p.x,dz=hz-p.z,d=Math.hypot(dx,dz);return d<.4?[0,0,false]:[dx/d*.7,dz/d*.7,false]},
+  rank(){const alive=t0=>P.filter(p=>p.team===t0&&!p.out).reduce((a,p)=>a+p.lv,0);const w=alive(0)===alive(1)?null:(alive(0)>alive(1)?0:1);
+   return P.slice().sort((a,b)=>((b.team===w)-(a.team===w))||((!b.out)-(!a.out))||(b.hitsN-a.hitsN))},
+  over(T){const al=t0=>P.some(p=>p.team===t0&&!p.out);return !al(0)||!al(1)||T>this.len}}
 ];
 addEventListener("keydown",e=>{if(e.repeat||state!=="play"||!G||G.id!=="mbox")return;if(e.code==="Digit1"||e.code==="Numpad1"||e.code==="ArrowLeft")G.choose(1);if(e.code==="Digit2"||e.code==="Numpad2"||e.code==="ArrowRight")G.choose(2)});
 GAMES.find(g=>g.id==="sumo").revive=function(){return [0,0]};
@@ -1170,7 +1223,7 @@ addEventListener("pointerdown",()=>BGM.start(),{once:true});addEventListener("ke
 /* ---------- 메인 루프 ---------- */
 let FF=1;const ffB=$("#ff");ffB.onclick=()=>{FF=FF===1?1.5:FF===1.5?2:FF===2?4:1;ffB.textContent="⏩ ×"+FF};ffB.addEventListener("keydown",e=>e.stopPropagation());
 let last=performance.now(),T=0;
-function loop(now){const dt=Math.min(.033,(now-last)/1000);last=now;T+=dt;stT+=dt;
+function loop(now){const dt0=Math.min(.033,(now-last)/1000);let dt=dt0;if(HS>0&&state==="play"){HS-=dt0;dt=dt0*.05}last=now;T+=dt;stT+=dt;
  if(state==="title"){P.forEach((p,i)=>{const a=T*.6+i*1.57;p.x=Math.cos(a)*4;p.z=Math.sin(a)*4;p.vx=-Math.sin(a)*2.4;p.vz=Math.cos(a)*2.4;p.face=Math.atan2(p.vx,p.vz);if(p.grounded&&Math.random()<.01){p.vy=9;p.grounded=false}p.vy-=30*dt;p.y=Math.max(0,p.y+p.vy*dt);if(p.y===0){p.grounded=true;p.vy=0}})}
  else if(state==="intro"){const H=introHold,c=Math.ceil(H+3-stT);
   const left=Math.max(0,Math.ceil(H-stT));$("#iSkip").textContent=stT<H?t(`${left}초 뒤 시작 · 누르면 바로 시작`,`Starting in ${left}s · tap to start`):"";
