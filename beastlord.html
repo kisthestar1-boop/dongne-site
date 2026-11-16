@@ -108,7 +108,7 @@ function battle(){if(S.deck.length<4){toast("덱에 영웅을 4장 이상 넣어
 function vCastle(){return `<h2>🏰 내 성</h2><div class="panel"><div class="row"><span class="stat">🏆 트로피 ${S.tro}</span><span class="stat">🪙 ${S.gold}</span><span class="stat">영웅 ${Object.keys(S.h).length}/${H.length}</span></div>
  <p class="mut">앞으로 이곳에서 성을 꾸미고, 금광·병영 같은 건물을 업그레이드해요. (준비 중)</p><button class="btn s" id="rs">처음부터 다시 (시험용)</button></div>`}
 const isW=()=>innerWidth>=860;
-function vLeft(){return vDeck().replace(/<h2>.*?<\/h2>/,'<h2>🃏 내 덱 <small>8장까지 · 아래 영웅을 누르면 상세·강화</small></h2>')+vHero().replace(/<h2>.*?<\/h2>/,'<h2 style="margin-top:12px">🦊 내 영웅</h2>').replace(/<div class="grid">/,'<div class="grid" id="hg">')}
+function vLeft(){return vDeck().split('<div class="grid">')[0].replace(/<h2>.*?<\/h2>/,'<h2>🃏 내 덱 <small>8장까지 · 아래 영웅을 누르면 상세·강화</small></h2>')+vHero().replace(/<h2>.*?<\/h2>/,'<h2 style="margin-top:12px">🦊 내 영웅</h2>').replace(/<div class="grid">/,'<div class="grid" id="hg">')}
 function vRight(){return vBattle()+vChest()+vCastle()}
 function draw(){top();const A=$("#app");A.classList.toggle("w",isW());const m=$("#main");
  if(isW()){$("#nav").style.display="none";m.style.overflow="hidden";m.innerHTML=`<div class="cols"><section id="L"><h1>⚙ 유닛 설정</h1>${vLeft()}</section><section id="Rr"><h1>⚔ 전투</h1>${vRight()}</section></div>`;bindW()}
