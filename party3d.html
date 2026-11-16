@@ -119,6 +119,7 @@ const TOUCH=matchMedia("(pointer:coarse)").matches||"ontouchstart" in window;
 let AC=null,muted=false;try{muted=localStorage.getItem("pp3m")==="1"}catch(_){}
 function ac(){if(!AC){try{AC=new (window.AudioContext||window.webkitAudioContext)()}catch(_){}}if(AC&&AC.state==="suspended")AC.resume();return AC}
 function tone(f,d,type,v,slide){const a=ac();if(!a||muted)return;const o=a.createOscillator(),g=a.createGain();o.type=type||"sine";o.frequency.setValueAtTime(f,a.currentTime);if(slide)o.frequency.exponentialRampToValueAtTime(Math.max(30,slide),a.currentTime+d);g.gain.setValueAtTime(v||.15,a.currentTime);g.gain.exponentialRampToValueAtTime(.001,a.currentTime+d);o.connect(g);g.connect(a.destination);o.start();o.stop(a.currentTime+d)}
+function restorePose(b){const ar=b.userData.ar,ft=b.userData.ft,hd=b.userData.hd;if(ar)ar.forEach((a,k)=>{const sg=k?1:-1;a.position.x=sg*.72;a.rotation.z=sg*.9});if(ft)ft.forEach((f,k)=>{f.position.x=(k?1:-1)*.26});if(hd)hd.rotation.z=0;b.position.x=0}
 function noise(d,v){const a=ac();if(!a||muted)return;const n=a.sampleRate*d,b=a.createBuffer(1,n,a.sampleRate),c=b.getChannelData(0);for(let i=0;i<n;i++)c[i]=(Math.random()*2-1)*(1-i/n);const s=a.createBufferSource(),g=a.createGain(),f=a.createBiquadFilter();f.type="lowpass";f.frequency.value=900;s.buffer=b;g.gain.value=v||.3;s.connect(f);f.connect(g);g.connect(a.destination);s.start()}
 const SND={jump:()=>tone(420,.18,"square",.07,820),bump:()=>{tone(160,.15,"triangle",.2,70);noise(.08,.15)},coin:()=>{tone(880,.08,"square",.07);setTimeout(()=>tone(1320,.12,"square",.07),60)},
   boom:()=>{noise(.5,.5);tone(110,.4,"sawtooth",.15,40)},out:()=>tone(500,.5,"sawtooth",.12,80),tick:()=>tone(660,.08,"square",.08),go:()=>{tone(523,.1,"square",.1);setTimeout(()=>tone(784,.25,"square",.1),100)},
@@ -751,17 +752,30 @@ const GAMES=[
    this.ph="gap";this.t=1.2;this.rd=0;this.seq=[];this.lights=this.lights.slice(-14);
    P.forEach((p,i)=>{place(p,[-4.5,-1.5,1.5,4.5][i],1);p.face=0;p.ans=null;p.rel=true;p.bx=p.x})},
   DIRS:[["⬆️",0,-1],["⬇️",0,1],["⬅️",-1,0],["➡️",1,0],["👏",0,0]],
+  dancePose(p,b,T){let idx=-1,ph=0;if(p.dance>0){const q=T*2.4+p.id;idx=Math.floor(q%5);ph=q%1}else if(p.mv&&p.mv.t>0){idx=p.mv.k;ph=1-p.mv.t/.45}
+   if(idx<0){if(b.userData.dz){restorePose(b);b.userData.dz=0}return}
+   b.userData.dz=1;const w=Math.sin(ph*Math.PI),ar=b.userData.ar,ft=b.userData.ft,hd=b.userData.hd;
+   if(idx===0){ar.forEach((a,k)=>{const sg=k?1:-1;a.position.set(sg*.5,.98+w*.75,.05);a.rotation.z=sg*(.9-w*2.1)});b.position.y+=w*.35}
+   else if(idx===1){b.scale.y*=1-w*.28;ar.forEach((a,k)=>{const sg=k?1:-1;a.position.set(sg*.8,.7,.4*w);a.rotation.z=sg*(.9+w*.5)});ft.forEach((f,k)=>f.position.x=(k?1:-1)*(.26+w*.25))}
+   else if(idx===2||idx===3){const d=idx===2?-1:1;b.rotation.z=d*w*.4;b.position.x=d*w*.3;ft.forEach((f,k)=>f.position.x=d*w*.35+(k?.26:-.26));ar.forEach((a,k)=>{const sg=k?1:-1,up=sg===d;a.position.y=.98+(up?w*.6:0);a.rotation.z=sg*(.9-(up?w*1.9:0))})}
+   else{ar.forEach((a,k)=>{const sg=k?1:-1;a.position.set(sg*(.72-w*.5),1,.1+w*.45);a.rotation.z=sg*(.9-w*.9)});b.scale.y*=1+Math.sin(ph*Math.PI*4)*.05}
+   if(hd)hd.rotation.z=Math.sin(T*10)*.12},
+  music(dt){this.mt=(this.mt||0)+dt;const step=60/118/2;let n=0;while(this.mt>=step&&n++<4){this.mt-=step;const s=this.stp=((this.stp||0)+1)%16;
+   if(s%4===0)tone(130,.16,"sine",.2,45);if(s===4||s===12)tone(240,.09,"square",.05,110);tone(s%2?9000:7000,.03,"square",.012);
+   const B=[110,110,0,110,131,0,98,0,110,110,0,110,147,0,131,0][s];if(B)tone(B,.2,"triangle",.1);
+   if(s===0||s===8){const ch=s===0?[220,262,330]:[175,220,262];ch.forEach(f=>tone(f,.95,"sine",.035))}
+   if(s%2&&R()<.5)tone([440,523,587,659,784][Math.floor(R()*5)],.14,"triangle",.05)}},
   mkSeq(n){const a=[];for(let i=0;i<n;i++)a.push(n>=3&&R()<.18?4:Math.floor(R()*4));return a},
   rdr(hi,prog){const you=P.find(p=>p.you);this.arr.innerHTML=this.seq.map((k,i)=>{let o=1,sc=1,tx=this.DIRS[k][0];if(this.ph==="show"){o=i===hi?1:(i<hi?.5:.28);sc=i===hi?1.3:1}else if(i<prog){tx="✅";o=.9}return `<span style="display:inline-block;margin:0 .06em;opacity:${o};transform:scale(${sc});transition:transform .1s,opacity .1s">${tx}</span>`}).join("")},
   nextRound(){this.rd++;const n=Math.min(3,1+Math.floor((this.rd-1)/2));this.seq=this.mkSeq(n);this.ph="show";this.si=-1;this.st=.6;this.win=1.5+n*.85;this.firstN=0;
    P.forEach(p=>{p.pi=0;p.done=false;p.fail=false;p.dance=0;p.aiT=rnd(.5,.9)*(1.25-p.skill);p.aiHold=0;p.aiBad=R()<(.06+(1-p.skill)*.1)*n?Math.floor(R()*n):-1});
    this.rdr(-1,0);const rr=document.getElementById("dcRd");if(rr)rr.textContent=t("라운드 ","Round ")+this.rd+" · "+n+t("동작","moves");if(this.bar)this.bar.style.width="100%"},
   judge(p,k){if(p.done||p.fail)return;
-   if(k===this.seq[p.pi]){p.pi++;burst(p.x,1.4,p.z,p.col,4,2);if(p.you){tone([523,587,659,784,880][k],.07,"triangle",.07);this.rdr(-1,p.pi)}
+   if(k===this.seq[p.pi]){p.pi++;p.mv={k:k,t:.45};burst(p.x,1.4,p.z,p.col,4,2);if(p.you){tone([523,587,659,784,880][k],.07,"triangle",.07);this.rdr(-1,p.pi)}
     if(p.pi>=this.seq.length){p.done=true;const rem=clamp(this.t/this.win,0,1),pts=this.seq.length+(this.firstN===0?2:this.firstN===1?1:0)+(rem>.5?1:0);this.firstN++;p.score+=pts;p.dance=1.6;p.dt2=0;
      burst(p.x,1.6,p.z,p.col,14,5);popTxt(p,"+"+pts,"#FFE066",pts>4?34:26);if(p.you){SND.coin();heartFx(p,Math.min(6,pts));say(this.seq.length>=3?t("멋진 안무! 💃","Nice moves! 💃"):t("좋아요! ✨","Nice! ✨"),"#FF9BD2",.7)}renderChips()}}
    else{p.fail=true;p.stun=.5;popTxt(p,pick(["어라?","순서가 달라요~","앗 틀렸다!"]),"#FF9BB5",22);if(p.you)tone(200,.18,"sawtooth",.07,120)}},
-  update(dt,T){this.lights.forEach((l,i)=>l.position.y=.3+Math.max(0,Math.sin(T*8+i))*.35);
+  update(dt,T){this.lights.forEach((l,i)=>l.position.y=.3+Math.max(0,Math.sin(T*8+i))*.35);this.music(dt);P.forEach(p=>{if(p.mv)p.mv.t-=dt});
    if(this.ph==="gap"){this.t-=dt;if(this.t<=0)this.nextRound();return}
    if(this.ph==="show"){this.st-=dt;if(this.st<=0){this.si++;if(this.si>=this.seq.length){this.ph="input";this.t=this.win;const y=P.find(p=>p.you);this.rdr(-1,y?y.pi:0);tone(880,.1,"triangle",.07);return}this.rdr(this.si,0);tone([523,587,659,784,880][this.seq[this.si]],.12,"triangle",.08);this.st=Math.max(.38,.62-this.rd*.02)}return}
    if(this.ph==="input"){this.t-=dt;this.bar.style.width=(clamp(this.t/this.win,0,1)*100)+"%";
@@ -857,6 +871,7 @@ function animP(dt,T){for(const p of P){if(!p.mesh.visible)continue;const m=p.mes
   if(b.userData.ar)b.userData.ar.forEach((a2,k)=>{a2.position.z=.05-Math.sin(ph+(k?Math.PI:0))*.16*mvk;a2.position.y=.98+(!p.grounded&&!p.falling?.25:0)+(1-mvk)*Math.sin(T*2+k)*.02});
   p.squash=Math.max(0,(p.squash||0)-dt);const s=p.squash>0?Math.sin(p.squash/.25*Math.PI)*.25:0;const air=!p.grounded&&!p.falling?.08:0;{const K=b.userData.k||1;b.scale.set((1+s)*K,(1-s+air)*K,(1+s)*K)}
   b.rotation.x=p.stun>0?Math.sin(T*25)*.2:(p.falling||p.ko?b.rotation.x+dt*6:clamp(spd/6,0,1)*.12);if(!p.falling&&!p.ko&&p.stun<=0)b.rotation.x+=(clamp(spd/6,0,1)*.16-b.rotation.x)*Math.min(1,dt*8);if(G&&G.id==="tug"&&p._ln!==undefined)b.rotation.x=-p._ln;
+  if(G&&G.dancePose)G.dancePose(p,b,T);else if(b.userData.dz){restorePose(b);b.userData.dz=0}
   if(b.userData.eyes){const bt=(T+p.id*1.7)%3.6,bl=bt<.14?.12:1;b.userData.eyes.forEach(e=>e[0].scale.y=e[1]*bl)}
   m.userData.ring.visible=p.grounded&&!p.falling;if(m.userData.arrow){m.userData.arrow.position.y=3.0+Math.sin(T*5)*.15;m.userData.arrow.rotation.y+=dt*2}}}
 
