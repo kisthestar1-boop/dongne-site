@@ -332,7 +332,7 @@ const GAMES=[
    const l=Math.hypot(dx,dz)||1;return [dx/l,dz/l,act]},
   rank(){const alive=P.filter(p=>!p.out);return [...alive,...this.outs.slice().reverse().map(i=>P[i])]},
   over(T){return P.filter(p=>!p.out).length<=1||T>this.len}},
- {id:"redlight",camK:1.45,spd:.45,em:"🚦",name:t("무궁화 꽃이 피었습니다","Red Light, Green Light"),how:t("술래가 돌아보면 멈춰요! 움직이다 걸리면 처음으로","Freeze when the owl looks! Caught moving = back to start"),act:"jump",actLabel:t("점프","JUMP"),keys:t("이동: WASD/방향키","Move: WASD/Arrows"),len:50,
+ {id:"redlight",nolag:1,camK:1.45,spd:.45,em:"🚦",name:t("무궁화 꽃이 피었습니다","Red Light, Green Light"),how:t("술래가 돌아보면 멈춰요! 움직이다 걸리면 처음으로","Freeze when the owl looks! Caught moving = back to start"),act:"jump",actLabel:t("점프","JUMP"),keys:t("이동: WASD/방향키","Move: WASD/Arrows"),len:50,
   setup(){const g=mesh(new THREE.BoxGeometry(19,1,23),"#9BE58A",false,true);g.position.set(0,-.5,0);arena.add(g);
    for(let i=-5;i<=5;i++){const c=new THREE.Mesh(new THREE.PlaneGeometry(19,1),M(i%2?"#8ED87C":"#A7EC95"));c.rotation.x=-Math.PI/2;c.position.set(0,.01,i*2);c.receiveShadow=true;arena.add(c)}
    const st=new THREE.Mesh(new THREE.PlaneGeometry(19,.4),new THREE.MeshBasicMaterial({color:"#FFFFFF"}));st.rotation.x=-Math.PI/2;st.position.set(0,.02,9);arena.add(st);
@@ -345,7 +345,7 @@ const GAMES=[
    P.forEach((p,i)=>{place(p,-6+i*4,9);p.face=Math.PI});this.phase="green";this.pt=rnd(1.6,2.3);this.fin=[];this.redT=0;this.warn=0},
   update(dt,T){this.pt-=dt;
    if(this.phase==="green"&&this.pt<.45&&!this.warn){this.warn=1;SND.tick()}this.owl.rotation.z=this.phase==="green"&&this.pt<.45?Math.sin(T*40)*.08:0;
-   if(this.phase==="green"&&this.pt<=0){this.warn=0;this.phase="red";this.pt=rnd(1.8,3);this.redT=0;say(t("멈춰!","STOP!"),"#FF6B6B",.8);SND.tick()}
+   if(this.phase==="green"&&this.pt<=0){this.warn=0;this.phase="red";this.pid=(this.pid||0)+1;this.pt=rnd(1.8,3);this.redT=0;say(t("멈춰!","STOP!"),"#FF6B6B",.8);SND.tick()}
    else if(this.phase==="red"&&this.pt<=0){this.phase="green";this.pt=R()<.3?rnd(.8,1.2):Math.max(1.2,rnd(1.6,3.2)-T*.02);say(t("무궁화 꽃이…","GO!"),"#9BE58A",.8);SND.go()}
    if(this.phase==="red")this.redT+=dt;
    const target=this.phase==="red"?0:Math.PI;this.face.rotation.y+=(target-this.face.rotation.y)*Math.min(1,dt*12);
@@ -355,7 +355,7 @@ const GAMES=[
   ground(){return true},
   clampP(p){p.x=clamp(p.x,-8.8,8.8);p.z=clamp(p.z,-10.6,10.2)},
   ai(p,dt){if(this.phase==="green"){const near=this.pt<.25+(1-p.skill)*.2&&R()<p.skill;return near?[0,0,false]:[rnd(-.15,.15),-(.7+p.skill*.3),false]}
-   if(p.react==null)p.react=0;const rt=.12+(1-p.skill)*.55+rnd(0,.15);return this.redT<rt?[0,-.8,false]:[0,0,false]},
+   if(p._pid!==this.pid){p._pid=this.pid;p._slip=R()<(1-p.skill)*.3;p._rt=.05+(1-p.skill)*.3+rnd(0,.08)}return(this.redT<p._rt||p._slip)?[rnd(-.1,.1),-.8,false]:[0,0,false]},
   rank(){const rest=P.filter(p=>!this.fin.includes(p.id)).sort((a,b)=>a.z-b.z);return [...this.fin.map(i=>P[i]),...rest]},
   over(T){return this.fin.length>=3||T>this.len}},
  {id:"lava",em:"🌋",name:t("용암 바닥","Lava Floor"),how:t("빛나는 바닥은 곧 용암이 돼요! 점프로 피할 수도 있어요","Glowing tiles turn to lava! Jump or run"),act:"jump",actLabel:t("점프","JUMP"),keys:t("이동: WASD/방향키 · 점프: 스페이스","Move: WASD/Arrows · Jump: Space"),len:55,
