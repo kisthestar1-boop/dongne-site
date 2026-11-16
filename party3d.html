@@ -262,7 +262,7 @@ function mkHam(p){const h=new THREE.Group(),k=p.tr;const hy=1.55;
  else if(k==="soft"){for(const[x,y,z,r]of[[0,0,0,.4],[-.4,.1,0,.3],[.4,.1,0,.3],[0,.35,.1,.28],[0,-.3,.1,.27],[.1,.05,.35,.28],[.1,.05,-.35,.28]]){const c=mesh(new THREE.SphereGeometry(r,12,10),"#FFFFFF",true);c.position.set(x,hy+y,z);h.add(c)}const hr=mesh(new THREE.SphereGeometry(.16,10,8),"#FF8FB8");hr.position.set(0,hy,.42);h.add(hr)}
  else if(k==="dash"){const c=mesh(new THREE.CylinderGeometry(.4,.4,.95,16),"#6FD6A0",true);c.rotation.z=Math.PI/2;c.position.y=hy;h.add(c);for(const x of[-.3,0,.3]){const sp=mesh(new THREE.ConeGeometry(.15,.32,8),"#FFB347",true);sp.position.set(x,hy+.55,0);h.add(sp)}for(const sx of[-1,1]){const cp=mesh(new THREE.CylinderGeometry(.33,.33,.08,16),"#FFF3A0");cp.rotation.z=Math.PI/2;cp.position.set(sx*.5,hy,0);h.add(cp)}}
  else{const c=mesh(new THREE.SphereGeometry(.5,16,12),"#FF7DB0",true);c.position.y=hy;h.add(c);const rg=mesh(new THREE.TorusGeometry(.5,.07,8,20),"#FFFFFF");rg.rotation.y=Math.PI/2;rg.position.y=hy;h.add(rg);for(const sz of[-1,1]){const e=mesh(new THREE.SphereGeometry(.07,8,6),"#2A1060");e.position.set(.2*sz,hy+.1,.45);h.add(e)}const sm=mesh(new THREE.TorusGeometry(.14,.025,6,10,Math.PI),"#2A1060");sm.rotation.z=Math.PI;sm.position.set(0,hy-.02,.5);h.add(sm)}
- h.scale.setScalar(1.3);return h}
+ h.scale.setScalar(1.12);return h}
 const GAMES=[
  {id:"sumo",em:"🥊",name:t("밀어내기 왕","Bump King"),how:t("부딪혀서 다른 친구를 떨어뜨려요! 바닥이 점점 작아져요","Bump others off! The arena keeps shrinking"),act:"dash",actLabel:t("돌진","DASH"),keys:t("이동: WASD/방향키 · 돌진: 스페이스","Move: WASD/Arrows · Dash: Space"),len:45,
   setup(){this.R=9;this.d=platformDisc(9,"#8E6CEB");this.d.add(stripes(9,12,"#A58BF5"));arena.add(this.d);spawnRing(5.5)},
@@ -458,6 +458,7 @@ const GAMES=[
    const rb=mesh(new THREE.BoxGeometry(.12,.35,14),"#FFE066");rb.position.set(13.45,2.8,0);arena.add(rb);
    P.forEach((p,i)=>{place(p,-13.2,LANES[3-i]);p.face=Math.PI/2;p.sp=0;p.lz=LANES[3-i]});this.fin=[];this.said=0},
   update(dt,T){if(!this.said){this.said=1;say(t("연타! 연타!","TAP TAP TAP!"),"#FFE066",1.1)}
+   for(const p of P){if(p.out||p.done)continue;p._st=(p._st===undefined?rnd(.4,1.6):p._st)-dt;if(p._st<=0){p._st=rnd(1.1,2.1);popTxt(p,pick(["달려라~!","후다닥!","헉헉…","내가 1등!","비켜~!","조금만 더!","으랏차차!","콩콩콩!"]),p.you?"#FFE066":"#FFFFFF",p.you?28:20)}}
    if(NET.mode==="guest"){for(const p of P){p.sp=0}return}
    for(const p of P){if(p.done){p.sp=Math.max(0,p.sp-9*dt);continue}
     if(tapped(p)){p.sp=Math.min(7.5,p.sp+.85);if(p.you)burst(p.x-.6,.15,p.z,"#fff",2,2)}
@@ -566,32 +567,36 @@ const GAMES=[
   ai(p,dt){if(p.ts!==0)return [0,0,false];if(p.aiTarget==null)p.aiTarget=clamp(.5+p.skill*.35+rnd(-.2,.12),.3,1);return [0,0,p.tt>0&&p.m>=p.aiTarget]},
   rank(){return [...P].sort((a,b)=>b.score-a.score)},
   over(T){return P.every(p=>p.tn>=3)||T>this.len}},
- {id:"road",nolag:1,camK:1.28,spd:.9,em:"🐔",name:t("닭 길 건너기","Chicken Road"),how:t("자동차를 피해서 길을 건너요! 치이면 안전한 곳으로 돌아가요. 먼저 도착해요","Dodge the cars and cross! If hit you go back to a safe spot. First to the other side wins"),act:"none",actLabel:"",keys:t("이동: WASD/방향키","Move: WASD/Arrows"),tk:t("왼쪽을 드래그해서 이동해요","Drag the left side to move"),len:60,timed:1,sc:0,
+ {id:"road",nolag:1,camK:1.5,jv:8,spd:.9,em:"🐔",name:t("닭 길 건너기","Chicken Road"),how:t("자동차를 피해서 길을 건너요! 치이면 안전한 곳으로 돌아가요. 먼저 도착해요","Dodge the cars and cross! If hit you go back to a safe spot. First to the other side wins"),act:"jump",actLabel:t("콩!","HOP"),keys:t("이동: WASD/방향키 · 콩! 작은 점프: 스페이스","Move: WASD/Arrows · Small hop: Space"),tk:t("왼쪽 드래그로 이동 · 오른쪽 버튼으로 콩! 점프","Drag left to move · tap right to hop"),len:60,timed:1,sc:0,
   netOut(){return this.C.map(c=>+c.z.toFixed(2))},netIn(a){this.C.forEach((c,i)=>{if(a[i]!=null)c.z=a[i]})},
-  setup(){this.RX=[-9,-4.5,0,4.5,9];this.SX=this.RX.map(x=>x-2.3);const g=mesh(new THREE.BoxGeometry(35,1,15),"#B7E4A0",false,true);g.position.y=-.5;arena.add(g);
+  setup(){this.RX=[-11,-6.5,-2,2.5,7,11.5];this.SX=this.RX.map(x=>x-2.3);const g=mesh(new THREE.BoxGeometry(41,1,15),"#B7E4A0",false,true);g.position.y=-.5;arena.add(g);
    this.C=[];const cols=["#FF6B6B","#FFD23F","#7AD9FF","#C59BFF","#FF9F6B","#6BE5A0"];
    this.RX.forEach((rx,r)=>{const rd=new THREE.Mesh(new THREE.PlaneGeometry(2.8,16),new THREE.MeshBasicMaterial({color:"#5A5470"}));rd.rotation.x=-Math.PI/2;rd.position.set(rx,.015,0);arena.add(rd);
     for(let k=-3;k<=3;k++){const d=new THREE.Mesh(new THREE.PlaneGeometry(.12,.9),new THREE.MeshBasicMaterial({color:"#FFF3B0"}));d.rotation.x=-Math.PI/2;d.position.set(rx,.02,k*2.2);arena.add(d)}
-    const dir=r%2?1:-1,v=[4,5,4.4,5.4,4.8][r]*dir,n=3;
-    for(let k=0;k<n;k++){const c=new THREE.Group(),col=cols[(r*2+k)%6];const b=mesh(new THREE.BoxGeometry(1.5,.6,2.3),col,true);b.position.y=.55;c.add(b);const cab=mesh(new THREE.BoxGeometry(1.3,.5,1.2),col,true);cab.position.set(0,1.05,-.1);c.add(cab);
-     for(const sx of[-.78,.78])for(const sz of[-.75,.75]){const w=mesh(new THREE.CylinderGeometry(.28,.28,.2,10),"#2A2438");w.rotation.z=Math.PI/2;w.position.set(sx,.28,sz);c.add(w)}
-     const hl=new THREE.Mesh(new THREE.BoxGeometry(1.1,.18,.05),new THREE.MeshBasicMaterial({color:"#FFFFC0"}));hl.position.set(0,.6,dir>0?1.17:-1.17);c.add(hl);
+    const dir=r%2?1:-1,v=[4,5,4.4,5.4,4.8,4.6][r]*dir,n=3;
+    for(let k=0;k<n;k++){const c=new THREE.Group(),col=cols[(r*2+k)%6],ty=(r+k*2)%4;const b=mesh(new THREE.BoxGeometry(1.5,.7,2.2),col,true);b.position.y=.6;c.add(b);const rf=mesh(new THREE.SphereGeometry(.7,14,10),col,true);rf.scale.set(1.05,.55,1.2);rf.position.set(0,1.0,-.35);c.add(rf);
+     for(const sx of[-.78,.78])for(const sz of[-.7,.7]){const w=mesh(new THREE.CylinderGeometry(.3,.3,.2,12),"#2A2438");w.rotation.z=Math.PI/2;w.position.set(sx,.3,sz);c.add(w)}
+     const hc=["#FFFFFF","#B98A5A","#FFB36B","#FFB3C8"][ty],hd=mesh(new THREE.SphereGeometry(.62,16,12),hc,true);hd.position.set(0,1.2,.7);c.add(hd);
+     const ear=(x,y,z,sc,rz,col2)=>{const e=mesh(new THREE.SphereGeometry(.2,10,8),col2||hc,true);e.scale.set(sc[0],sc[1],sc[2]);e.position.set(x,y,z);e.rotation.z=rz;c.add(e)};
+     if(ty===0){ear(-.28,1.95,.62,[.7,2.4,.6],.15);ear(.28,1.95,.62,[.7,2.4,.6],-.15)}else if(ty===1){ear(-.45,1.7,.62,[1.2,1.2,.8]);ear(.45,1.7,.62,[1.2,1.2,.8])}else if(ty===2){for(const sx of[-1,1]){const e=mesh(new THREE.ConeGeometry(.2,.4,4),hc,true);e.position.set(sx*.38,1.75,.62);e.rotation.z=-sx*.25;c.add(e)}}else{ear(-.42,1.7,.62,[1.1,.9,.6]);ear(.42,1.7,.62,[1.1,.9,.6]);const sn=mesh(new THREE.CylinderGeometry(.2,.2,.14,12),"#FF8FB0");sn.rotation.x=Math.PI/2;sn.position.set(0,1.1,1.3);c.add(sn)}
+     for(const sx of[-1,1]){const e=new THREE.Mesh(new THREE.SphereGeometry(.09,8,6),new THREE.MeshBasicMaterial({color:"#1B1230"}));e.position.set(sx*.22,1.3,1.25);c.add(e);const ch=new THREE.Mesh(new THREE.SphereGeometry(.1,8,6),new THREE.MeshBasicMaterial({color:"#FF9BB5"}));ch.position.set(sx*.4,1.12,1.15);ch.scale.z=.4;c.add(ch)}
+     if(ty!==3){const ns=new THREE.Mesh(new THREE.SphereGeometry(.08,8,6),new THREE.MeshBasicMaterial({color:"#FF7A9C"}));ns.position.set(0,1.18,1.31);c.add(ns)}
      c.rotation.y=dir>0?0:Math.PI;const z=-8+k*(16/n)+rnd(-.6,.6);c.position.set(rx,0,z);arena.add(c);this.C.push({m:c,x:rx,z,v,r})}});
-   checker(12.4,-7,14,.5);
-   P.forEach((p,i)=>{place(p,-13,LANES[3-i]*.8);p.mesh.scale.setScalar(.72);p.face=Math.PI/2;p.lz=LANES[3-i]*.8});this.fin=[];this.said=0},
+   checker(14.3,-7,14,.5);
+   P.forEach((p,i)=>{place(p,-15,LANES[3-i]*.8);p.mesh.scale.setScalar(.72);p.face=Math.PI/2;p.lz=LANES[3-i]*.8});this.fin=[];this.said=0},
   update(dt,T){if(!this.said){this.said=1;say(t("자동차를 조심! 오른쪽 끝까지 가요","Watch the cars! Run to the right side"),"#FFE066",2)}
    for(const c of this.C){c.z+=c.v*dt;if(c.z>9)c.z-=18;if(c.z<-9)c.z+=18;c.m.position.z=c.z}
    if(NET.mode==="guest")return;
    for(const p of P){if(p.out||p.done)continue;
-    if(p.x>=12.3){p.done=1;p.frozen=1;this.fin.push(p.id);SND.coin();confetti(8);if(p.you)say(t("도착!","FINISH!"),"#FFE066",1);else popTxt(p,String(this.fin.length)+t("등","st"),"#FFE066");continue}
-    if(p.inv>0)continue;
-    for(const c of this.C){if(Math.abs(c.x-p.x)<1&&Math.abs(c.z-p.z)<1.3){let k=0;for(let i=0;i<5;i++)if(p.x>this.RX[i]-1.6)k=i;
+    if(p.x>=14.2){p.done=1;p.frozen=1;this.fin.push(p.id);SND.coin();confetti(8);if(p.you)say(t("도착!","FINISH!"),"#FFE066",1);else popTxt(p,String(this.fin.length)+t("등","st"),"#FFE066");continue}
+    if(p.inv>0||p.y>.7)continue;
+    for(const c of this.C){if(Math.abs(c.x-p.x)<1&&Math.abs(c.z-p.z)<1.3){let k=0;for(let i=0;i<6;i++)if(p.x>this.RX[i]-1.6)k=i;
      SND.bump();shake=Math.max(shake,.3);burst(p.x,.8,p.z,"#fff",12,5);popTxt(p,"앗! 💫","#FF9BB5");if(p.you)say(t("앗! 다시 도전","Ouch! Try again"),"#FF9BB5",.9);
      p.x=this.SX[k];p.ex=p.ez=0;p.vx=p.vz=0;p.stun=.6;p.vy=7;p.grounded=false;p.inv=1;break}}}},
   ground(){return true},
-  clampP(p){p.x=clamp(p.x,-14.3,14.3);p.z=clamp(p.z,-7,7)},
+  clampP(p){p.x=clamp(p.x,-16.3,16.3);p.z=clamp(p.z,-7,7)},
   ai(p,dt){if(p.done)return [0,0,false];let dx=1,dz=clamp((p.lz-p.z)*1.2,-.5,.5);
-   for(let r=0;r<5;r++){const rx=this.RX[r];if(p.x<rx-1.4-.35&&p.x>rx-4.6){
+   for(let r=0;r<6;r++){const rx=this.RX[r];if(p.x<rx-1.4-.35&&p.x>rx-4.6){
      if(R()<(1-p.skill)*.03)break;let bad=false;for(const c of this.C){if(c.r!==r)continue;for(let t2=0;t2<=.7;t2+=.15){let zc=c.z+c.v*t2;if(zc>9)zc-=18;if(zc<-9)zc+=18;if(Math.abs(zc-p.z)<1.5+(1-p.skill)*.3){bad=true;break}}if(bad)break}
      if(bad){dx=p.x<rx-1.4-1.1?.6:0}break}}
    return [dx,dz,false]},
@@ -608,9 +613,11 @@ const GAMES=[
   update(dt,T){const b=this.b;if(!this.said){this.said=1;say(t("공 가까이서 쾅! 🔨","Get near the ball and WHACK! 🔨"),"#FFE066",2)}
    for(const p of P){p.swc-=dt;p.hi-=dt;if(p.sw>0)p.sw-=dt;p.score=Math.max(0,p.lv);
     if(!p.out&&tapped(p)&&p.swc<=0){p.swc=.5;p.sw=.35;SND.dash();if(NET.mode==="guest"){}else{const dx=b.x-p.x,dz=b.z-p.z,d=Math.hypot(dx,dz);
-     if(d<2.6){let nx=dx/(d||1),nz=dz/(d||1);let best=null,bd=1e9;for(const q of P)if(q!==p&&!q.out){const e=Math.hypot(q.x-b.x,q.z-b.z);if(e<bd){bd=e;best=q}}
+     if(d<3.5){let nx=dx/(d||1),nz=dz/(d||1);let best=null,bd=1e9;for(const q of P)if(q!==p&&!q.out){const e=Math.hypot(q.x-b.x,q.z-b.z);if(e<bd){bd=e;best=q}}
       if(best){const ax=best.x-b.x,az=best.z-b.z,l=Math.hypot(ax,az)||1;nx=nx*.6+ax/l*.4;nz=nz*.6+az/l*.4;const m=Math.hypot(nx,nz)||1;nx/=m;nz/=m}
-      const sp=Math.min(17,11+Math.hypot(b.vx,b.vz)*.25);b.vx=nx*sp;b.vz=nz*sp;b.o=p;SND.bump();shake=Math.max(shake,.25);burst(b.x,.7,b.z,"#FFE066",10,5)}}}
+      const sp=Math.min(17,11+Math.hypot(b.vx,b.vz)*.25);b.vx=nx*sp;b.vz=nz*sp;b.o=p;SND.bump();tone(620,.12,"square",.08,240);shake=Math.max(shake,.3);burst(b.x,.7,b.z,"#FFE066",14,6);popTxt({x:b.x,y:1.6,z:b.z},pick(["빵!","쾅!","뿅!"]),"#FFE066",30)}
+     {let fr=null,fd=2.3;for(const q of P){if(q===p||q.out||q.stun>0||q.falling)continue;const ex=q.x-p.x,ez=q.z-p.z,dd=Math.hypot(ex,ez);if(dd<fd&&(Math.sin(p.face)*ex+Math.cos(p.face)*ez)>-.2){fd=dd;fr=q}}
+      if(fr&&!(d<3.5&&fd>1.6)){const ex=fr.x-p.x,ez=fr.z-p.z,l=Math.hypot(ex,ez)||1;fr.ex+=ex/l*12;fr.ez+=ez/l*12;fr.stun=.5;fr.vy=4;fr.grounded=false;SND.bump();tone(700,.14,"square",.08,220);shake=Math.max(shake,.25);burst(fr.x,1.3,fr.z,"#FFB3D1",10,5);popTxt(fr,pick(["왜 때려요~","아야!","으악!","뿅 맞았다!"]),"#FFB3D1",26)}}}}
     const u=p.sw>0?1-p.sw/.35:-1;const a=u<0?.55:u<.3?.55-(u/.3)*1.8:-1.25+Math.pow((u-.3)/.7,.6)*3.2;p.hm.visible=!p.out;p.hm.position.set(p.x+Math.sin(p.face)*.55+Math.cos(p.face)*1.05,p.y+.8,p.z+Math.cos(p.face)*.55-Math.sin(p.face)*1.05);p.hm.rotation.y=p.face;p.hm.children[0].rotation.x=a}
    const sp0=Math.hypot(b.vx,b.vz);if(sp0>0){let k=Math.exp(-dt*.1);b.vx*=k;b.vz*=k;const s2=Math.hypot(b.vx,b.vz);if(b.o&&s2<4.5){b.vx*=4.5/s2;b.vz*=4.5/s2}}
    b.x+=b.vx*dt;b.z+=b.vz*dt;const r=Math.hypot(b.x,b.z);if(r>8.8){const nx=b.x/r,nz=b.z/r,dot=b.vx*nx+b.vz*nz;if(dot>0){b.vx-=2*dot*nx;b.vz-=2*dot*nz;SND.tick()}b.x=nx*8.8;b.z=nz*8.8}
@@ -695,7 +702,7 @@ function physics(dt){
   if(p.ko||p.falling){ix=iz=0;act=false}if(G.drive){ix=iz=0}
   const sp=6.2*(G.spd||1)*(p.tr==="spd"?1.1:1),k=Math.min(1,dt*(p.grounded?11:3.5));p.vx+=(ix*sp-p.vx)*k;p.vz+=(iz*sp-p.vz)*k;if(G.drive)G.drive(p,dt);
   const ed=Math.exp(-dt*(p.grounded?3.2:.6));p.ex*=ed;p.ez*=ed;p.cd-=dt;p.dashT-=dt;if(p.inv>0)p.inv-=dt;
-  if(act){if(G.act==="jump"&&p.grounded){p.vy=p.tr==="jmp"?12.2:10.5;p.grounded=false;SND.jump();if(p.you)burst(p.x,.2,p.z,"#fff",5,2)}
+  if(act){if(G.act==="jump"&&p.grounded){p.vy=G.jv?(p.tr==="jmp"?G.jv*1.12:G.jv):(p.tr==="jmp"?12.2:10.5);p.grounded=false;SND.jump();if(p.you)burst(p.x,.2,p.z,"#fff",5,2)}
    else if(G.act==="dash"&&p.cd<=0){const f=p.face;{const dd=p.tr==="dash"?15:12;p.ex+=Math.sin(f)*dd;p.ez+=Math.cos(f)*dd}p.cd=1.1;p.dashT=.3;SND.dash();burst(p.x,.4,p.z,"#fff",6,3)}}
   p.x+=(p.vx+p.ex)*dt;p.z+=(p.vz+p.ez)*dt;
   if(G.clampP&&!p.falling)G.clampP(p);
