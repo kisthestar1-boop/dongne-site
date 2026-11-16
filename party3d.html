@@ -31,7 +31,7 @@ canvas{display:block}
 #ovIntro .gem{font-size:clamp(60px,11vw,92px);line-height:1.1}
 #ovIntro .gname{font-size:clamp(34px,7.5vw,62px);color:#FF6FA5;-webkit-text-stroke:8px #fff;paint-order:stroke fill;text-shadow:0 5px 0 rgba(150,70,170,.45);line-height:1.15}
 #ovIntro .how{font-size:clamp(20px,4vw,30px);font-weight:800;color:#6A3FA0;line-height:1.5;margin:12px 0 12px;word-break:keep-all}
-#ovIntro .keys{display:inline-block;font-size:clamp(16px,3vw,21px);font-weight:800;color:#8A4B00;background:#FFE066;border-radius:22px;padding:6px 18px;opacity:1}
+#ovIntro .how::before{content:"💗 "}#ovIntro .how::after{content:" 💗"}#ovIntro .gem{animation:pkc 1.6s ease-in-out infinite;filter:drop-shadow(0 6px 0 rgba(180,90,170,.25))}#ovIntro .card{background:radial-gradient(circle at 20% 15%,#FFF 0,#FFF6F9 35%,#FFE0EE 100%);outline:4px dotted #FFB3D6;outline-offset:-14px}#iCheer{display:flex;justify-content:center;gap:4px;margin-top:8px}@keyframes iHop{0%,100%{transform:translateY(0) scale(1.05,.95)}50%{transform:translateY(-9px) scale(.97,1.04)}}#iCheer img{width:78px;height:78px;margin-top:-6px;animation:iHop 1.1s ease-in-out infinite;transform-origin:50% 100%}#iCheer img:nth-child(2){animation-delay:-.45s}#iCheer img:nth-child(3){animation-delay:-.9s}#iCheer img:nth-child(4){animation-delay:-1.35s}#ovIntro .keys{display:inline-block;font-size:clamp(16px,3vw,21px);font-weight:800;color:#8A4B00;background:#FFE066;border-radius:22px;padding:6px 18px;opacity:1}
 #ovIntro .keys::before{content:"👉 "}
 #ovIntro #iRound{display:inline-block;margin:12px 0 0!important;background:#FFD1E6;color:#C23A78;font-weight:900;border-radius:16px;padding:3px 14px;font-size:clamp(14px,2.6vw,18px)}
 #ovIntro #iSkip{color:#9A7BC0;font-weight:700;background:none;font-size:15px;padding:0}#ovIntro #iSkip::before{content:""}
@@ -96,7 +96,7 @@ canvas{display:block}
 <div id="howBox"></div><div class="ov" id="ovPick"><div><div style="font-size:44px;font-weight:900;color:#FFE066;-webkit-text-stroke:6px #5B2A86;paint-order:stroke fill;text-shadow:0 4px 0 #5B2A86;margin-bottom:4px">💕 누구로 할까요? 💕</div><div class="sub" style="margin-bottom:22px;font-size:19px">나와 함께할 친구를 골라 주세요 💛</div><div id="pickRow"></div><button class="btn b2" id="pickBack" style="margin-top:14px;font-size:15px;padding:8px 18px">← 뒤로</button></div></div><div class="ov on" id="ovTitle"><div><div class="ttl" id="tTitle">팡팡 파티!</div><div class="sub" id="tSub"></div><button class="btn" id="bPlay">PLAY</button><div class="row"><button class="btn b2" id="bHost">친구랑 방 만들기</button><button class="btn b3" id="bJoin">방 코드로 들어가기</button></div><div class="sub" id="tBest" style="margin-top:14px;font-size:14px"></div></div></div>
 <div class="ov" id="ovRoom"><div class="card" id="roomCard"></div></div>
 <div id="emo"><button>😂</button><button>👍</button><button>😮</button><button>🔥</button></div><div id="netMsg"></div>
-<div class="ov" id="ovIntro"><div class="card"><div id="iTag">✨ 오늘의 게임 ✨</div><div class="gem" id="iEm"></div><div class="gname" id="iName"></div><div class="how" id="iHow"></div><div class="keys" id="iKeys"></div><div class="sub" id="iRound" style="margin:10px 0 0"></div><div class="keys" id="iSkip" style="margin-top:6px;opacity:.7"></div></div></div>
+<div class="ov" id="ovIntro"><div class="card"><div id="iTag">💖 오늘의 게임 💖</div><div class="gem" id="iEm"></div><div class="gname" id="iName"></div><div class="how" id="iHow"></div><div class="keys" id="iKeys"></div><div class="sub" id="iRound" style="margin:10px 0 0"></div><div class="keys" id="iSkip" style="margin-top:6px;opacity:.7"></div><div id="iCheer"></div></div></div>
 <div class="ov" id="ovRes"><div class="card"><div class="gname" id="rTitle"></div><div class="rank" id="rList"></div></div></div>
 <div class="ov" id="ovEnd" style="background:transparent;align-items:flex-end;padding-bottom:6vh"><div><div class="ttl" id="eTitle" style="font-size:clamp(36px,7vw,72px)"></div><div class="rank" id="eList" style="margin:12px auto 16px;max-width:340px"></div><button class="btn" id="bAgain"></button></div></div>
 <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
@@ -276,7 +276,7 @@ function mkHam(p){const h=new THREE.Group(),k=p.tr;const hy=1.55;
  else{const c=mesh(new THREE.SphereGeometry(.5,16,12),"#FF7DB0",true);c.position.y=hy;h.add(c);const rg=mesh(new THREE.TorusGeometry(.5,.07,8,20),"#FFFFFF");rg.rotation.y=Math.PI/2;rg.position.y=hy;h.add(rg);for(const sz of[-1,1]){const e=mesh(new THREE.SphereGeometry(.07,8,6),"#2A1060");e.position.set(.2*sz,hy+.1,.45);h.add(e)}const sm=mesh(new THREE.TorusGeometry(.14,.025,6,10,Math.PI),"#2A1060");sm.rotation.z=Math.PI;sm.position.set(0,hy-.02,.5);h.add(sm)}
  h.scale.setScalar(1.12);return h}
 const GAMES=[
- {id:"sumo",em:"🥊",name:t("밀어내기 왕","Bump King"),how:t("부딪혀서 다른 친구를 떨어뜨려요! 바닥이 점점 작아져요","Bump others off! The arena keeps shrinking"),act:"dash",actLabel:t("돌진","DASH"),keys:t("이동: WASD/방향키 · 돌진: 스페이스","Move: WASD/Arrows · Dash: Space"),len:45,
+ {id:"sumo",em:"🥊",name:t("밀어내기 왕","Bump King"),how:t("친구를 쿵! 밀어서 퐁당 시켜요 💕 마지막까지 남으면 1등!","Bump others off! The arena keeps shrinking"),act:"dash",actLabel:t("돌진","DASH"),keys:t("이동: WASD/방향키 · 돌진: 스페이스","Move: WASD/Arrows · Dash: Space"),len:45,
   setup(){this.R=9;this.d=platformDisc(9,"#8E6CEB");this.d.add(stripes(9,12,"#A58BF5"));arena.add(this.d);spawnRing(5.5)},
   update(dt,T){this.R=Math.max(3.8,9-Math.max(0,T-4)*.16);const s=this.R/9;this.d.scale.set(s,1,s)},
   ground(p){return Math.hypot(p.x,p.z)<this.R+.15},
@@ -286,7 +286,7 @@ const GAMES=[
    return [dx,dz,act]},
   rank(){const alive=P.filter(p=>!p.out).sort((a,b)=>Math.hypot(a.x,a.z)-Math.hypot(b.x,b.z));return [...alive,...this.outs.slice().reverse().map(i=>P[i])]},
   over(T){return P.filter(p=>!p.out).length<=1||T>this.len}},
- {id:"tiles",em:"🧊",name:t("무너지는 바닥","Crumble Floor"),how:t("밟은 바닥은 무너져요! 끝까지 살아남아요","Tiles fall after you step! Be the last one standing"),act:"jump",actLabel:t("점프","JUMP"),keys:t("이동: WASD/방향키 · 점프: 스페이스","Move: WASD/Arrows · Jump: Space"),len:70,
+ {id:"tiles",em:"🧊",name:t("무너지는 바닥","Crumble Floor"),how:t("밟은 바닥이 사르르 사라져요~ 끝까지 폴짝폴짝 살아남아요 ✨","Tiles fall after you step! Be the last one standing"),act:"jump",actLabel:t("점프","JUMP"),keys:t("이동: WASD/방향키 · 점프: 스페이스","Move: WASD/Arrows · Jump: Space"),len:70,
   setup(){this.N=9;this.T=[];const cols=["#7AD9FF","#B9ECFF"];for(let i=0;i<this.N;i++)for(let j=0;j<this.N;j++){const m=mesh(new THREE.BoxGeometry(1.9,.7,1.9),cols[(i+j)%2],false,true);m.position.set((i-4)*2,-.35,(j-4)*2);arena.add(m);this.T.push({m,i,j,st:0,mt:0,vy:0,base:new THREE.Color(cols[(i+j)%2])})}
    P.forEach((p,k)=>place(p,[-6,6,-6,6][k],[6,6,-6,-6][k]))},
   tile(x,z){const i=Math.round(x/2)+4,j=Math.round(z/2)+4;if(i<0||j<0||i>=this.N||j>=this.N)return null;return this.T[i*this.N+j]},
@@ -302,7 +302,7 @@ const GAMES=[
    return [dx/l,dz/l,jump]},
   rank(){const alive=P.filter(p=>!p.out);return [...alive,...this.outs.slice().reverse().map(i=>P[i])]},
   over(T){return P.filter(p=>!p.out).length<=1||T>this.len}},
- {id:"stars",em:"⭐",name:t("별똥별 줍기","Star Rush"),how:t("떨어지는 별을 가장 많이 주워요! 폭탄은 피해요 💣","Grab the most falling stars! Dodge the bombs 💣"),act:"dash",actLabel:t("돌진","DASH"),keys:t("이동: WASD/방향키 · 돌진: 스페이스","Move: WASD/Arrows · Dash: Space"),len:30,timed:1,
+ {id:"stars",em:"⭐",name:t("별똥별 줍기","Star Rush"),how:t("하늘에서 별이 반짝반짝! 많이 모을수록 좋아요 ⭐ 💣 폭탄은 살짝 피해요~","Grab the most falling stars! Dodge the bombs 💣"),act:"dash",actLabel:t("돌진","DASH"),keys:t("이동: WASD/방향키 · 돌진: 스페이스","Move: WASD/Arrows · Dash: Space"),len:30,timed:1,
   setup(){const g=mesh(new THREE.BoxGeometry(20,1,20),"#9BE58A",false,true);g.position.y=-.5;arena.add(g);
    for(let i=-4;i<=4;i++)for(let j=-4;j<=4;j++)if((i+j)%2===0){const c=new THREE.Mesh(new THREE.PlaneGeometry(2.2,2.2),M("#8ED87C"));c.rotation.x=-Math.PI/2;c.position.set(i*2.2,.01,j*2.2);c.receiveShadow=true;arena.add(c)}
    for(const[x,z,w,d]of[[0,-10.4,21.6,.8],[0,10.4,21.6,.8],[-10.4,0,.8,20],[10.4,0,.8,20]]){const b=mesh(new THREE.BoxGeometry(w,1,d),"#FFB3C7",true,true);b.position.set(x,.2,z);arena.add(b)}
@@ -330,7 +330,7 @@ const GAMES=[
    const l=Math.hypot(dx,dz)||1;return [dx/l,dz/l,false]},
   rank(){return [...P].sort((a,b)=>b.score-a.score)},
   over(T){return T>this.len}},
- {id:"sweep",nolag:1,em:"🌀",name:t("빙글빙글 막대","Spin Sweeper"),how:t("돌아가는 막대를 점프로 피해요! 점점 빨라져요","Jump over the spinning bar! It speeds up"),act:"jump",actLabel:t("점프","JUMP"),keys:t("이동: WASD/방향키 · 점프: 스페이스","Move: WASD/Arrows · Jump: Space"),len:60,
+ {id:"sweep",nolag:1,em:"🌀",name:t("빙글빙글 막대","Spin Sweeper"),how:t("빙글빙글 막대를 콩! 뛰어서 피해요 🌀 점점 빨라지니까 조심조심~","Jump over the spinning bar! It speeds up"),act:"jump",actLabel:t("점프","JUMP"),keys:t("이동: WASD/방향키 · 점프: 스페이스","Move: WASD/Arrows · Jump: Space"),len:60,
   setup(){this.R=8;const d=platformDisc(8,"#FF9EBB","#FFFFFF");d.add(stripes(8,16,"#FFB8CC"));arena.add(d);
    const pil=mesh(new THREE.CylinderGeometry(.75,.9,1.6,24),"#6B4FD8",true);pil.position.y=.6;arena.add(pil);const cap=mesh(new THREE.SphereGeometry(.8,20,12),"#FFE066",true);cap.position.y=1.45;cap.scale.y=.6;arena.add(cap);
    this.bar=new THREE.Group();const b=mesh(new THREE.BoxGeometry(16.6,.42,.42),"#FF4D6D",true);b.position.y=.42;this.bar.add(b);
@@ -352,7 +352,7 @@ const GAMES=[
    return [dx,dz,jump]},
   rank(){const alive=P.filter(p=>!p.out);return [...alive,...this.outs.slice().reverse().map(i=>P[i])]},
   over(T){return P.filter(p=>!p.out).length<=1||T>this.len}},
- {id:"hot",em:"💣",name:t("폭탄 돌리기","Hot Potato"),how:t("폭탄을 가진 사람에게 닿으면 넘어와요! 터질 때 들고 있으면 탈락","Touch to pass the bomb! Don't hold it when it blows"),act:"dash",actLabel:t("돌진","DASH"),keys:t("이동: WASD/방향키 · 돌진: 스페이스","Move: WASD/Arrows · Dash: Space"),len:90,
+ {id:"hot",em:"💣",name:t("폭탄 돌리기","Hot Potato"),how:t("💣 폭탄이 두근두근! 친구에게 닿으면 폭탄이 넘어가요. 펑! 터질 때 들고 있으면 탈락이에요 ㅠㅠ","Touch to pass the bomb! Don't hold it when it blows"),act:"dash",actLabel:t("돌진","DASH"),keys:t("이동: WASD/방향키 · 돌진: 스페이스","Move: WASD/Arrows · Dash: Space"),len:90,
   setup(){const g=mesh(new THREE.CylinderGeometry(10,10,1,64),"#FFCF7A",false,true);g.position.y=-.5;arena.add(g);arena.add(stripes(10,10,"#FFDB97"));
    for(let i=0;i<18;i++){const a=i/18*6.283;const b=mesh(new THREE.CylinderGeometry(.35,.35,1,10),i%2?"#FF7AA8":"#7AD9FF",true);b.position.set(Math.cos(a)*10.2,.3,Math.sin(a)*10.2);arena.add(b)}
    this.bomb=new THREE.Group();{const bd=mesh(new THREE.SphereGeometry(.62,24,18),"#3A2F5E",true);this.bomb.add(bd);const sh=new THREE.Mesh(new THREE.SphereGeometry(.14,10,8),new THREE.MeshBasicMaterial({color:"#FFFFFF",transparent:true,opacity:.85}));sh.position.set(-.26,.3,.46);sh.scale.set(1.3,.8,.5);this.bomb.add(sh);
@@ -365,7 +365,7 @@ const GAMES=[
    spawnRing(5);this.round();},
   round(){const alive=P.filter(p=>!p.out);this.holder=pick(alive);this.fuse=rnd(7,11);this.passCd=0;this.fuse0=this.fuse},
   update(dt,T){if(!this.holder)return;this.fuse-=dt;this.passCd-=dt;const h=this.holder;
-   {const f=h.face||0,wb=Math.sin(T*16)*.14;this.bomb.position.set(h.x+Math.sin(f)*.75+Math.cos(f)*(.55+wb),h.y+1.55+Math.abs(Math.sin(T*9))*.15,h.z+Math.cos(f)*.75-Math.sin(f)*(.55+wb));h._ft=(h._ft||0)-dt;if(h._ft<=0){h._ft=rnd(1.1,1.8);popTxt(h,pick(["앗 뜨거!","어떡해~","허둥지둥!","누가 받아줘!","으아~"]),"#FFB3A0",h.you?28:22)}}const k=1-this.fuse/this.fuse0;this.bomb.scale.setScalar(1+k*.4+Math.sin(T*(8+k*30))*.06*k);this.spark.visible=Math.sin(T*40)>0;
+   {const f=h.face||0,wb=Math.sin(T*16)*.14;this.bomb.position.set(h.x+Math.sin(f)*.5+Math.cos(f)*(1.05+wb),h.y+1.45+Math.abs(Math.sin(T*9))*.15,h.z+Math.cos(f)*.5-Math.sin(f)*(1.05+wb));h._ft=(h._ft||0)-dt;if(h._ft<=0){h._ft=rnd(1.1,1.8);popTxt(h,pick(["앗 뜨거!","어떡해~","허둥지둥!","누가 받아줘!","으아~"]),"#FFB3A0",h.you?28:22)}}const k=1-this.fuse/this.fuse0;this.bomb.scale.setScalar(1.15+k*.4+Math.sin(T*(8+k*30))*.06*k);this.spark.visible=Math.sin(T*40)>0;
    if(Math.floor(this.fuse*(k>.7?4:2))!==this._tk){this._tk=Math.floor(this.fuse*(k>.7?4:2));SND.tick()}
    if(this.passCd<=0)for(const q of P){if(q===h||q.out||q.falling)continue;if(Math.hypot(q.x-h.x,q.z-h.z)<1.55){this.holder=q;this.passCd=.45;SND.dash();burst(q.x,2,q.z,"#FFE066",8,4);if(q.you)say(t("받았다!","YOU GOT IT!"),"#FF6B6B",.7);break}}
    if(this.fuse<=0){SND.boom();shake=.7;const x=h.x,z=h.z;burst(x,1,z,"#FF7A2A",34,10);burst(x,1,z,"#3A2F55",16,7);
@@ -380,7 +380,7 @@ const GAMES=[
    const l=Math.hypot(dx,dz)||1;return [dx/l,dz/l,act]},
   rank(){const alive=P.filter(p=>!p.out);return [...alive,...this.outs.slice().reverse().map(i=>P[i])]},
   over(T){return P.filter(p=>!p.out).length<=1||T>this.len}},
- {id:"redlight",nolag:1,camK:1.45,spd:.45,em:"🚦",name:t("무궁화 꽃이 피었습니다","Red Light, Green Light"),how:t("술래가 돌아보면 멈춰요! 움직이다 걸리면 처음으로","Freeze when the owl looks! Caught moving = back to start"),act:"jump",actLabel:t("점프","JUMP"),keys:t("이동: WASD/방향키","Move: WASD/Arrows"),len:50,
+ {id:"redlight",nolag:1,camK:1.45,spd:.45,em:"🚦",name:t("무궁화 꽃이 피었습니다","Red Light, Green Light"),how:t("올빼미가 돌아보면 얼음! 🧊 움직이면 처음으로 돌아가요. 살금살금 도착해요~","Freeze when the owl looks! Caught moving = back to start"),act:"jump",actLabel:t("점프","JUMP"),keys:t("이동: WASD/방향키","Move: WASD/Arrows"),len:50,
   setup(){const g=mesh(new THREE.BoxGeometry(19,1,23),"#9BE58A",false,true);g.position.set(0,-.5,0);arena.add(g);
    for(let i=-5;i<=5;i++){const c=new THREE.Mesh(new THREE.PlaneGeometry(19,1),M(i%2?"#8ED87C":"#A7EC95"));c.rotation.x=-Math.PI/2;c.position.set(0,.01,i*2);c.receiveShadow=true;arena.add(c)}
    const st=new THREE.Mesh(new THREE.PlaneGeometry(19,.4),new THREE.MeshBasicMaterial({color:"#FFFFFF"}));st.rotation.x=-Math.PI/2;st.position.set(0,.02,9);arena.add(st);
@@ -406,7 +406,7 @@ const GAMES=[
    if(p._pid!==this.pid){p._pid=this.pid;p._slip=R()<(1-p.skill)*.18;p._rt=.04+(1-p.skill)*.15+rnd(0,.06)}return(this.redT<p._rt||p._slip)?[rnd(-.1,.1),-.8,false]:[0,0,false]},
   rank(){const rest=P.filter(p=>!this.fin.includes(p.id)).sort((a,b)=>a.z-b.z);return [...this.fin.map(i=>P[i]),...rest]},
   over(T){return this.fin.length>=3||T>this.len}},
- {id:"lava",em:"🌋",name:t("용암 바닥","Lava Floor"),how:t("빛나는 바닥은 곧 용암이 돼요! 점프로 피할 수도 있어요","Glowing tiles turn to lava! Jump or run"),act:"jump",actLabel:t("점프","JUMP"),keys:t("이동: WASD/방향키 · 점프: 스페이스","Move: WASD/Arrows · Jump: Space"),len:55,
+ {id:"lava",em:"🌋",name:t("용암 바닥","Lava Floor"),how:t("반짝이는 바닥은 곧 뜨거운 용암이에요 🔥 콩! 점프로 피해요~","Glowing tiles turn to lava! Jump or run"),act:"jump",actLabel:t("점프","JUMP"),keys:t("이동: WASD/방향키 · 점프: 스페이스","Move: WASD/Arrows · Jump: Space"),len:55,
   setup(){this.N=9;this.T=[];const cols=["#E9D8C4","#F4E6D3"];for(let i=0;i<9;i++)for(let j=0;j<9;j++){const m=mesh(new THREE.BoxGeometry(1.94,.6,1.94),cols[(i+j)%2],false,true);m.material=m.material.clone();m.position.set((i-4)*2,-.3,(j-4)*2);arena.add(m);this.T.push({m,i,j,st:0,t:0,base:new THREE.Color(cols[(i+j)%2])})}
    const rim=mesh(new THREE.BoxGeometry(19,1.2,19),"#6B4FD8");rim.position.y=-1.05;arena.add(rim);this.sp=1.2;spawnRing(4,Math.PI/4)},
   tile(x,z){const i=Math.round(x/2)+4,j=Math.round(z/2)+4;if(i<0||j<0||i>8||j>8)return null;return this.T[i*9+j]},
@@ -425,7 +425,7 @@ const GAMES=[
    const jump=cur&&cur.st===1&&cur.t>.9&&p.grounded&&R()<p.skill*.5;return [dx/l,dz/l,jump]},
   rank(){const alive=P.filter(p=>!p.out);return [...alive,...this.outs.slice().reverse().map(i=>P[i])]},
   over(T){return P.filter(p=>!p.out).length<=1||T>this.len}},
- {id:"circle",rare:1,em:"⭕",name:t("동그라미 따라가기","Safe Circle"),how:t("움직이는 초록 동그라미 안에 있어요! 밖에 오래 있으면 탈락","Stay inside the moving green circle!"),act:"dash",actLabel:t("돌진","DASH"),keys:t("이동: WASD/방향키 · 돌진(밀치기): 스페이스","Move: WASD/Arrows · Dash: Space"),len:60,
+ {id:"circle",rare:1,em:"⭕",name:t("동그라미 따라가기","Safe Circle"),how:t("초록 동그라미를 졸졸 따라가요 💚 밖에 오래 있으면 탈락이에요~","Stay inside the moving green circle!"),act:"dash",actLabel:t("돌진","DASH"),keys:t("이동: WASD/방향키 · 돌진(밀치기): 스페이스","Move: WASD/Arrows · Dash: Space"),len:60,
   setup(){const d=platformDisc(10,"#7A5FC9","#FFE066");d.add(stripes(10,20,"#6A4FB8"));arena.add(d);
    this.cR=3.2;this.cx=0;this.cz=0;this.tx=0;this.tz=0;const g=new THREE.Group();
    this.disc=new THREE.Mesh(new THREE.CircleGeometry(1,40),new THREE.MeshBasicMaterial({color:"#7CFF9B",transparent:true,opacity:.45}));this.disc.rotation.x=-Math.PI/2;this.disc.position.y=.03;g.add(this.disc);
@@ -444,7 +444,7 @@ const GAMES=[
    if(l<.6)return [0,0,act];const m=Math.hypot(dx,dz)||1;return [dx/m,dz/m,act]},
   rank(){const alive=P.filter(p=>!p.out).sort((a,b)=>b.hp-a.hp);return [...alive,...this.outs.slice().reverse().map(i=>P[i])]},
   over(T){return P.filter(p=>!p.out).length<=1||T>this.len}},
- {id:"sheep",camK:1.1,em:"🐑",name:t("양떼 대이동","Sheep Stampede"),how:t("몰려오는 양떼를 빈틈으로 피하거나 점프로 넘어요!","Dodge the flock through the gaps, or jump over!"),act:"jump",actLabel:t("점프","JUMP"),keys:t("이동: WASD/방향키 · 점프: 스페이스","Move: WASD/Arrows · Jump: Space"),len:55,
+ {id:"sheep",camK:1.1,em:"🐑",name:t("양떼 대이동","Sheep Stampede"),how:t("🐑 메에~ 양떼가 몰려와요! 빈틈으로 쏙 피하거나 콩! 넘어가요","Dodge the flock through the gaps, or jump over!"),act:"jump",actLabel:t("점프","JUMP"),keys:t("이동: WASD/방향키 · 점프: 스페이스","Move: WASD/Arrows · Jump: Space"),len:55,
   setup(){const g=mesh(new THREE.BoxGeometry(22,1,16),"#A7E07F",false,true);g.position.y=-.5;arena.add(g);
    for(let i=0;i<14;i++){const f=mesh(new THREE.SphereGeometry(rnd(.15,.3),8,6),pick(["#FFFFFF","#FFE066","#FF9BB5"]));f.position.set(rnd(-10,10),.05,pick([-7.6,7.6]));arena.add(f)}
    for(const z of[-8.2,8.2]){const fe=mesh(new THREE.BoxGeometry(22,.6,.25),"#C98F5A",true);fe.position.set(0,.3,z);arena.add(fe)}
@@ -468,7 +468,7 @@ const GAMES=[
    const dz=bz-p.z,need=bt<2.2;const dx=(-bestS.dir)*.2-p.x*.04;return [dx,need?Math.sign(dz)*Math.min(1,Math.abs(dz)):0,jump]},
   rank(){const alive=P.filter(p=>!p.out);return [...alive,...this.outs.slice().reverse().map(i=>P[i])]},
   over(T){return P.filter(p=>!p.out).length<=1||T>this.len}},
- {id:"dash100",nolag:1,camK:1.2,em:"🏃",name:t("달려라 달려!","Run Run Run!"),how:t("버튼을 빠르게 연타해서 달려요! 가장 먼저 도착해요","Tap the button fast to run! First to the finish wins"),act:"none",actLabel:t("연타!","TAP!"),keys:t("스페이스를 빠르게 연타!","Tap Space fast!"),tk:t("오른쪽 버튼을 빠르게 연타!","Tap the right button fast!"),len:32,timed:1,sc:0,
+ {id:"dash100",nolag:1,camK:1.2,em:"🏃",name:t("달려라 달려!","Run Run Run!"),how:t("버튼을 따다다닥 연타! 🏃 제일 먼저 도착하면 1등이에요~","Tap the button fast to run! First to the finish wins"),act:"none",actLabel:t("연타!","TAP!"),keys:t("스페이스를 빠르게 연타!","Tap Space fast!"),tk:t("오른쪽 버튼을 빠르게 연타!","Tap the right button fast!"),len:32,timed:1,sc:0,
   setup(){const g=mesh(new THREE.BoxGeometry(34,1,14),"#FFC77A",false,true);g.position.y=-.5;arena.add(g);
    for(let i=0;i<4;i++){const l=new THREE.Mesh(new THREE.PlaneGeometry(32,2.8),M(i%2?"#FF9A6B":"#FFB27F"));l.rotation.x=-Math.PI/2;l.position.set(0,.01,LANES[i]);l.receiveShadow=true;arena.add(l)}
    const st=new THREE.Mesh(new THREE.PlaneGeometry(.4,13),new THREE.MeshBasicMaterial({color:"#fff"}));st.rotation.x=-Math.PI/2;st.position.set(-13.4,.02,0);arena.add(st);
@@ -488,7 +488,7 @@ const GAMES=[
   ai(p,dt){return tapAI(p,dt,4.6+p.skill*3.4)},
   rank(){const rest=P.filter(p=>!this.fin.includes(p.id)).sort((a,b)=>b.x-a.x);return [...this.fin.map(i=>P[i]),...rest]},
   over(T){return this.fin.length>=3||T>this.len}},
- {id:"tug",nolag:1,em:"🪢",name:t("줄다리기","Tug of War"),how:t("나는 왼쪽 팀(화살표가 나예요)! 짝꿍과 버튼을 연타해서 줄을 끌어와요","You are on the left team (see the arrow)! Tap fast to pull the rope"),act:"none",actLabel:t("연타!","TAP!"),keys:t("스페이스를 빠르게 연타!","Tap Space fast!"),tk:t("오른쪽 버튼을 빠르게 연타!","Tap the right button fast!"),len:25,timed:1,sc:0,
+ {id:"tug",nolag:1,em:"🪢",name:t("줄다리기","Tug of War"),how:t("나는 왼쪽 팀이에요 💛 짝꿍과 함께 따다닥 연타해서 영차영차 줄을 끌어와요!","You are on the left team (see the arrow)! Tap fast to pull the rope"),act:"none",actLabel:t("연타!","TAP!"),keys:t("스페이스를 빠르게 연타!","Tap Space fast!"),tk:t("오른쪽 버튼을 빠르게 연타!","Tap the right button fast!"),len:25,timed:1,sc:0,
   setup(){const g=mesh(new THREE.BoxGeometry(22,1,10),"#9BE58A",false,true);g.position.y=-.5;arena.add(g);
    for(const[x,c]of[[-3.6,"#7AD9FF"],[3.6,"#FF7AA8"]]){const l=new THREE.Mesh(new THREE.PlaneGeometry(.35,9),new THREE.MeshBasicMaterial({color:c}));l.rotation.x=-Math.PI/2;l.position.set(x,.02,0);arena.add(l)}
    const pit=new THREE.Mesh(new THREE.CircleGeometry(1.2,24),new THREE.MeshBasicMaterial({color:"#8B5E3C"}));pit.rotation.x=-Math.PI/2;pit.position.set(0,.015,0);arena.add(pit);
@@ -508,7 +508,7 @@ const GAMES=[
   ai(p,dt){return tapAI(p,dt,3.2+p.skill*1.4)},
   rank(){const aw=this.r<=0,w=P.filter(p=>(p.id<2)===aw),l=P.filter(p=>(p.id<2)!==aw),by=(a,b)=>b.score-a.score;return [...w.sort(by),...l.sort(by)]},
   over(T){return Math.abs(this.r)>=3.5||T>this.len}},
- {id:"bridge",off:1,spd:.46,em:"🌬",name:t("바람 부는 다리","Windy Bridge"),how:t("바람에 밀리지 않게 균형을 잡고 끝까지 걸어가요! 떨어져도 조금만 뒤로 가요","Cross without being blown off! Falling only sends you back a bit"),act:"none",actLabel:"",keys:t("이동: WASD/방향키","Move: WASD/Arrows"),tk:t("화면 왼쪽을 드래그해서 걸어가요","Drag on the left to walk"),len:45,timed:1,sc:0,
+ {id:"bridge",off:1,spd:.46,em:"🌬",name:t("바람 부는 다리","Windy Bridge"),how:t("바람이 휘잉~ 균형을 잡고 끝까지 살금살금 걸어가요 🌬️","Cross without being blown off! Falling only sends you back a bit"),act:"none",actLabel:"",keys:t("이동: WASD/방향키","Move: WASD/Arrows"),tk:t("화면 왼쪽을 드래그해서 걸어가요","Drag on the left to walk"),len:45,timed:1,sc:0,
   setup(){this.lz=[-4.2,-1.4,1.4,4.2];const sea=new THREE.Mesh(new THREE.PlaneGeometry(44,28),new THREE.MeshBasicMaterial({color:"#BDEBFF"}));sea.rotation.x=-Math.PI/2;sea.position.y=-2.5;arena.add(sea);
    for(let i=0;i<10;i++){const c=mesh(new THREE.SphereGeometry(rnd(.8,1.6),10,8),"#FFFFFF");c.scale.y=.5;c.position.set(rnd(-12,12),-2.1,rnd(-7,7));arena.add(c)}
    for(const z of this.lz){const b=mesh(new THREE.BoxGeometry(22,.4,2.0),"#F0BE7E",false,true);b.position.set(0,-.2,z);arena.add(b);
@@ -531,7 +531,7 @@ const GAMES=[
    const w=(1-p.skill)*.6;let iz=p.dist>0?0:clamp((p.lz-p.z)*2.2+rnd(-w,w),-1,1);if(p.dist>0)p.dist-=dt;return [.9,iz,false]},
   rank(){const rest=P.filter(p=>!this.fin.includes(p.id)).sort((a,b)=>b.x-a.x);return [...this.fin.map(i=>P[i]),...rest]},
   over(T){return this.fin.length>=3||T>this.len}},
- {id:"mole",nolag:1,em:"🔨",name:t("뿅망치 두더지","Squeaky Mole Whack"),how:t("두더지를 뿅망치로 뿅! 밟아도 점수! 친구를 뿅 하면 밀려나요","Bonk moles with the squeaky hammer or step on them! Bonk friends to push them!"),act:"none",actLabel:t("뿅!","POW!"),keys:t("이동: WASD/방향키 · 뿅망치: 스페이스","Move: WASD/Arrows · Hammer: Space"),tk:t("왼쪽 드래그로 이동 · 오른쪽 뿅망치 버튼으로 뿅!","Drag left to move · tap the right hammer button!"),len:30,timed:1,
+ {id:"mole",nolag:1,em:"🔨",name:t("뿅망치 두더지","Squeaky Mole Whack"),how:t("🔨 뿅망치로 두더지를 뿅! 밟아도 점수예요. 친구를 뿅 하면 살짝 밀려나요~","Bonk moles with the squeaky hammer or step on them! Bonk friends to push them!"),act:"none",actLabel:t("뿅!","POW!"),keys:t("이동: WASD/방향키 · 뿅망치: 스페이스","Move: WASD/Arrows · Hammer: Space"),tk:t("왼쪽 드래그로 이동 · 오른쪽 뿅망치 버튼으로 뿅!","Drag left to move · tap the right hammer button!"),len:30,timed:1,
   mkMole(gold){const g=new THREE.Group(),c=gold?"#FFD23F":"#A9743F";const b=mesh(new THREE.SphereGeometry(.85,20,14),c,true);b.scale.set(1,1.05,1);g.add(b);
    const nose=mesh(new THREE.SphereGeometry(.22,12,8),"#FF8FB1");nose.position.set(0,.05,.8);g.add(nose);
    for(const s of[-1,1]){const e=new THREE.Mesh(new THREE.SphereGeometry(.12,8,6),new THREE.MeshBasicMaterial({color:"#1B1230"}));e.position.set(s*.3,.3,.7);g.add(e);const ch=new THREE.Mesh(new THREE.SphereGeometry(.15,8,6),new THREE.MeshBasicMaterial({color:"#FF9BB5"}));ch.position.set(s*.52,0,.6);ch.scale.z=.4;g.add(ch);const ear=mesh(new THREE.SphereGeometry(.2,8,6),c);ear.position.set(s*.55,.65,0);g.add(ear)}
@@ -564,7 +564,7 @@ const GAMES=[
    return [dx,dz,act]},
   rank(){return [...P].sort((a,b)=>b.score-a.score)},
   over(T){return T>this.len}},
- {id:"toss",nolag:1,solo:1,em:"🍉",name:t("수박 멀리 던지기","Melon Toss"),how:t("게이지가 오른쪽 끝일 때 눌러요! 세 번 던져서 가장 멀리 보내요","Tap when the gauge is at the far right! 3 throws, farthest total wins"),act:"none",actLabel:t("던져!","THROW!"),keys:t("스페이스로 던지기","Space to throw"),tk:t("오른쪽 버튼을 눌러 던져요","Tap the right button to throw"),len:50,timed:1,
+ {id:"toss",nolag:1,solo:1,em:"🍉",name:t("수박 멀리 던지기","Melon Toss"),how:t("🍉 게이지가 오른쪽 끝일 때 딱! 세 번 던져서 가장 멀리 보내요~","Tap when the gauge is at the far right! 3 throws, farthest total wins"),act:"none",actLabel:t("던져!","THROW!"),keys:t("스페이스로 던지기","Space to throw"),tk:t("오른쪽 버튼을 눌러 던져요","Tap the right button to throw"),len:50,timed:1,
   setup(){const g=mesh(new THREE.BoxGeometry(26,1,15),"#B7E4A0",false,true);g.position.y=-.5;arena.add(g);
    for(let k=0;k<8;k++){const b=new THREE.Mesh(new THREE.PlaneGeometry(2.2,13.4),M(k%2?"#A9DC92":"#C3EBAE"));b.rotation.x=-Math.PI/2;b.position.set(-8+k*2.2+1.1,.01,0);b.receiveShadow=true;arena.add(b)}
    P.forEach((p,i)=>{place(p,-9.3,LANES[3-i]);p.face=Math.PI/2;p.lz=LANES[3-i];const z=p.lz+1.15;
@@ -586,7 +586,7 @@ const GAMES=[
   ai(p,dt){if(p.ts!==0)return [0,0,false];if(p.aiTarget==null)p.aiTarget=clamp(.5+p.skill*.35+rnd(-.2,.12),.3,1);return [0,0,p.tt>0&&p.m>=p.aiTarget]},
   rank(){return [...P].sort((a,b)=>b.score-a.score)},
   over(T){return P.every(p=>p.tn>=3)||T>this.len}},
- {id:"road",nolag:1,camK:1.5,jv:8,spd:.9,em:"🐔",name:t("닭 길 건너기","Chicken Road"),how:t("자동차를 피해서 길을 건너요! 치이면 안전한 곳으로 돌아가요. 먼저 도착해요","Dodge the cars and cross! If hit you go back to a safe spot. First to the other side wins"),act:"jump",actLabel:t("콩!","HOP"),keys:t("이동: WASD/방향키 · 콩! 작은 점프: 스페이스","Move: WASD/Arrows · Small hop: Space"),tk:t("왼쪽 드래그로 이동 · 오른쪽 버튼으로 콩! 점프","Drag left to move · tap right to hop"),len:60,timed:1,sc:0,
+ {id:"road",nolag:1,camK:1.5,jv:8,spd:.9,em:"🐔",name:t("닭 길 건너기","Chicken Road"),how:t("🐔 부릉부릉 동물 자동차를 피해서 길을 건너요! 치여도 괜찮아요, 다시 도전~","Dodge the cars and cross! If hit you go back to a safe spot. First to the other side wins"),act:"jump",actLabel:t("콩!","HOP"),keys:t("이동: WASD/방향키 · 콩! 작은 점프: 스페이스","Move: WASD/Arrows · Small hop: Space"),tk:t("왼쪽 드래그로 이동 · 오른쪽 버튼으로 콩! 점프","Drag left to move · tap right to hop"),len:60,timed:1,sc:0,
   netOut(){return this.C.map(c=>+c.z.toFixed(2))},netIn(a){this.C.forEach((c,i)=>{if(a[i]!=null)c.z=a[i]})},
   setup(){this.RX=[-11,-6.5,-2,2.5,7,11.5];this.SX=this.RX.map(x=>x-2.3);const g=mesh(new THREE.BoxGeometry(41,1,15),"#B7E4A0",false,true);g.position.y=-.5;arena.add(g);
    this.C=[];const cols=["#FF6B6B","#FFD23F","#7AD9FF","#C59BFF","#FF9F6B","#6BE5A0"];
@@ -622,7 +622,7 @@ const GAMES=[
   revive(p){return [p.x,p.z]},
   rank(){const rest=P.filter(p=>!this.fin.includes(p.id)).sort((a,b)=>b.x-a.x);return [...this.fin.map(i=>P[i]),...rest]},
   over(T){return this.fin.length>=3||T>this.len}},
- {id:"hball",nolag:1,em:"🔨",ico:"❤️",name:t("망치 공 대결","Hammer Ball"),how:t("🔨 망치로 공을 쳐서 친구들을 맞혀요! 공에 맞으면 ❤️가 줄고, 마지막까지 남으면 이겨요","Whack the ball at friends with your hammer! Getting hit costs a ❤️. Last one standing wins"),act:"none",actLabel:t("쾅!","WHACK!"),keys:t("공 가까이 가서 스페이스로 쾅! (이동: WASD/방향키)","Go near the ball, press Space to whack! (Move: WASD/Arrows)"),tk:t("공 가까이 가서 오른쪽 버튼을 눌러 쳐요","Go near the ball, tap the right button to whack"),len:45,timed:1,sc:1,
+ {id:"hball",nolag:1,em:"🔨",ico:"❤️",name:t("망치 공 대결","Hammer Ball"),how:t("🔨 뿅망치로 공을 빵! 쳐서 친구를 맞혀요. 하트 ❤️❤️❤️ 3개가 다 없어지면 탈락이에요","Whack the ball at friends with your hammer! Getting hit costs a ❤️. Last one standing wins"),act:"none",actLabel:t("쾅!","WHACK!"),keys:t("공 가까이 가서 스페이스로 쾅! (이동: WASD/방향키)","Go near the ball, press Space to whack! (Move: WASD/Arrows)"),tk:t("공 가까이 가서 오른쪽 버튼을 눌러 쳐요","Go near the ball, tap the right button to whack"),len:45,timed:1,sc:1,
   netOut(){const b=this.b;return [+b.x.toFixed(2),+b.z.toFixed(2),+b.vx.toFixed(1),+b.vz.toFixed(1),b.o?b.o.id:-1,...P.map(p=>p.lv)]},netIn(a){const b=this.b;b.x=a[0];b.z=a[1];b.vx=a[2];b.vz=a[3];b.o=a[4]>=0?P[a[4]]:null;P.forEach((p,i)=>{if(a[5+i]!=null)p.lv=a[5+i]})},
   setup(){this.d=platformDisc(10,"#FFB86B");this.d.add(stripes(10,12,"#FFC98A"));arena.add(this.d);
    for(let i=0;i<24;i++){const a=i/24*6.283;const f=mesh(new THREE.CylinderGeometry(.3,.3,1.1,8),i%2?"#FF7AA8":"#7AD9FF",true);f.position.set(Math.cos(a)*9.6,.5,Math.sin(a)*9.6);arena.add(f)}
@@ -655,7 +655,7 @@ const GAMES=[
    const m=Math.hypot(dx,dz)||1;return [dx/m,dz/m,act]},
   rank(){const alive=P.filter(p=>!p.out).sort((a,b)=>b.lv-a.lv);return [...alive,...this.outs.slice().reverse().map(i=>P[i])]},
   over(T){return P.filter(p=>!p.out).length<=1||T>this.len}},
- {id:"mbox",nolag:1,em:"🎁",name:t("미스터리 상자","Mystery Box"),how:t("🎁 상자 숫자에서 1이나 2를 빼고 옆 친구에게 넘겨요! 0이 된 상자를 받는 친구는 펑! 탈락","🎁 Subtract 1 or 2 and pass the box on! Whoever receives 0 goes BOOM"),act:"none",actLabel:"",keys:t("← 왼쪽 -1 · 오른쪽 -2 → (키보드 ← →)","← -1 · -2 → (keys ← →)"),tk:t("⬅️ 왼쪽은 -1, 오른쪽은 -2 ➡️ 버튼을 눌러요","Tap ⬅️ -1 or -2 ➡️"),len:90,timed:1,sc:0,
+ {id:"mbox",nolag:1,em:"🎁",name:t("미스터리 상자","Mystery Box"),how:t("🎁 상자 숫자에서 1이나 2를 빼서 옆 친구에게 넘겨요. 0이 된 상자를 받으면 펑! 탈락이에요 ㅠㅠ","🎁 Subtract 1 or 2 and pass the box on! Whoever receives 0 goes BOOM"),act:"none",actLabel:"",keys:t("← 왼쪽 -1 · 오른쪽 -2 → (키보드 ← →)","← -1 · -2 → (keys ← →)"),tk:t("⬅️ 왼쪽은 -1, 오른쪽은 -2 ➡️ 버튼을 눌러요","Tap ⬅️ -1 or -2 ➡️"),len:90,timed:1,sc:0,
   setup(){const d=platformDisc(9,"#FF9F6B");d.add(stripes(9,12,"#FFB285"));arena.add(d);const tb=mesh(new THREE.CylinderGeometry(2.1,2.1,.5,32),"#8B5E3C",false,true);tb.position.y=.25;arena.add(tb);
    this.box=new THREE.Group();const bx=mesh(new THREE.BoxGeometry(1,.9,1),"#FF5A8A",true);this.box.add(bx);const r1=mesh(new THREE.BoxGeometry(1.05,.92,.2),"#FFE066");this.box.add(r1);const r2=mesh(new THREE.BoxGeometry(.2,.92,1.05),"#FFE066");this.box.add(r2);arena.add(this.box);
    spawnRing(5.2);this.cnt=0;this.h=null;this.ph="start";this.t=1.8;this.rd=0;this.pos={x:0,z:0};
@@ -755,7 +755,7 @@ const ov=id=>{["#ovTitle","#ovRoom","#ovIntro","#ovRes","#ovEnd","#ovPick"].forE
 function setCam(T){const por=innerWidth<innerHeight*1.05,k=(por?1.55:1)*(state!=="title"&&state!=="end"&&G&&G.camK||1);const base=state==="end"?[Math.sin(T*.3)*9,7*k,13*k]:[0,10.5*k,19.5*k*(por?.85:1)];cam.position.set(base[0]+(shake>0?rnd(-shake,shake):0),base[1]+(shake>0?rnd(-shake,shake):0),base[2]);cam.lookAt(0,state==="end"?1.5:-1.2,state==="end"?0:1.2)}
 function startParty(){ac();if(NET.mode==="guest")return;srand((Math.random()*1e9)|0);P.forEach(p=>p.pts=0);{let sn={};try{sn=JSON.parse(localStorage.getItem("ppSeen")||"{}")}catch(_){}order=shuffle(GAMES.filter(g=>!g.off&&!(g.solo&&NET.mode)&&(!g.rare||Math.random()<.2))).sort((a,b)=>(sn[a.id]||0)-(sn[b.id]||0)).slice(0,5)}{const EASY=["stars","dash100","tug","mole","toss","road"].filter(id=>!(id==="toss"&&NET.mode));if(!EASY.includes(order[0].id)){const k=order.findIndex(g=>EASY.includes(g.id));if(k>0)[order[0],order[k]]=[order[k],order[0]];else order[0]=GAMES.find(g=>g.id===pick(EASY))}}{const fg=new URLSearchParams(location.search).get("g");const fgm=GAMES.find(x=>x.id===fg);if(fgm)order=[fgm,...order.filter(x=>x!==fgm)].slice(0,5)}round=0;nextRound()}
 function nextRound(){P.forEach((p,i)=>{if(p.ai)p.skill=clamp([0,.38,.44,.5][i]*(.85+Math.random()*.3),.25,.7)});if(NET.mode==="host"){const sd=(Math.random()*1e9)|0;NET.send({t:"round",r:round,g:order.map(x=>x.id),seed:sd});srand(sd)}G=order[round];introHold=2.5;try{const sn=JSON.parse(localStorage.getItem("ppSeen")||"{}");if(!sn[G.id])introHold=5;sn[G.id]=(sn[G.id]||0)+1;localStorage.setItem("ppSeen",JSON.stringify(sn))}catch(_){}G.outs=[];G.rev=0;G._aff=0;G._dd=0;FF=1;ffB.textContent="⏩ ×1";clearArena();stageFor(G);FX.splice(0).forEach(f=>scene.remove(f.m));G.setup();GT=0;state="intro";stT=0;lastCount=4;
- $("#iEm").textContent=G.em;$("#iName").textContent=G.name;$("#iHow").textContent=G.how;$("#iKeys").textContent=TOUCH?(G.tk||(t("왼쪽 드래그로 이동 · 오른쪽 버튼: ","Drag left side to move · Button: ")+G.actLabel)):G.keys;
+ $("#iCheer").innerHTML=BASE.map((d,i)=>`<img src="${charThumb(i)}" alt="">`).join("");$("#iEm").textContent=G.em;$("#iName").textContent=G.name;$("#iHow").textContent=G.how;$("#iKeys").textContent=TOUCH?(G.tk||(t("왼쪽 드래그로 이동 · 오른쪽 버튼: ","Drag left side to move · Button: ")+G.actLabel)):G.keys;
  $("#iRound").textContent=t(`라운드 ${round+1} / ${order.length}`,`ROUND ${round+1} / ${order.length}`);$("#act").textContent=G.actLabel;$("#act").style.visibility=G.actLabel?"visible":"hidden";$("#hint").textContent=G.keys;ov("#ovIntro");renderChips();SND.go()}
 function finishRound(forced){document.querySelectorAll(".mb").forEach(e=>e.remove());state="result";stT=0;const R=forced||G.rank(),pts=[5,3,1,0];R.forEach((p,i)=>p.pts+=pts[i]);if(NET.mode==="host")NET.send({t:"fin",rk:R.map(p=>p.id),sc:P.map(p=>p.score)});
  const me=R.findIndex(p=>p.you);if(me===0){SND.win();confetti(60)}
