@@ -2,7 +2,7 @@
 <html lang="ko"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <link rel="manifest" href="pp-manifest.json"><meta name="theme-color" content="#6C3FD1"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><link rel="apple-touch-icon" href="pp-icon-192.png">
-<title>Party Pop! 3D · 팡팡 파티</title>
+<title>Pang Pang Party</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{width:100%;height:100%;overflow:hidden;background:#2B1B5E;font-family:system-ui,-apple-system,"Segoe UI","Apple SD Gothic Neo","Malgun Gothic",sans-serif;user-select:none;-webkit-user-select:none;touch-action:none}
@@ -873,7 +873,7 @@ function endParty(){if(NET.mode==="host")NET.send({t:"end"});state="end";stT=0;c
  $("#bAgain").textContent=t("한 판 더!","PLAY AGAIN");ov("#ovEnd");confetti(120);SND.win();
  try{const me=P.find(p=>p.you).pts,best=+(localStorage.getItem("pp3best")||0);if(me>best)localStorage.setItem("pp3best",String(me))}catch(_){}renderChips()}
 $("#bPlay").onclick=()=>{if(NET.mode)startParty();else showPick()};$("#pickBack").onclick=()=>ov("#ovTitle");$("#ovIntro").addEventListener("pointerdown",()=>{if(NET.mode==="guest")return;if(state==="intro"&&stT<introHold){stT=introHold;NET.send({t:"skip"})}});addEventListener("keydown",e=>{if(state==="intro"&&stT<introHold&&(e.code==="Space"||e.code==="Enter"))stT=introHold});$("#bAgain").onclick=()=>{if(NET.mode==="guest"){say(t("방장이 다시 시작할 거예요","Waiting for host"),"#fff",1.5);return}startParty()};
-$("#tTitle").textContent=t("팡팡 파티!","Party Pop!");$("#tSub").textContent=t("동물 친구들과 미니게임 대결! 5판 중 최고 점수를 노려요","Mini-game battle with animal friends! Win the most points in 5 rounds");$("#bPlay").textContent=t("플레이!","PLAY!");
+$("#tTitle").textContent=t("팡팡 파티!","Pang Pang Party!");$("#tSub").textContent=t("동물 친구들과 미니게임 대결! 5판 중 최고 점수를 노려요","Mini-game battle with animal friends! Win the most points in 5 rounds");$("#bPlay").textContent=t("플레이!","PLAY!");
 try{const b=+(localStorage.getItem("pp3best")||0);if(b)$("#tBest").textContent=t("내 최고 점수: ","Your best: ")+b}catch(_){}
 /* 타이틀 화면: 캐릭터들이 뛰어노는 모습 */
 clearArena();{const fl=platformDisc(9,"#8E6CEB");fl.add(stripes(9,12,"#A58BF5"));arena.add(fl)}spawnRing(3.5);G={ground:()=>true,act:"jump",outs:[]};
