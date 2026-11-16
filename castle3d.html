@@ -80,12 +80,12 @@ const OUTM=new THREE.MeshBasicMaterial({color:"#2A1A44",side:THREE.BackSide});
 function mesh(g,c,out,shadow){const m=new THREE.Mesh(g,typeof c==="string"?mat(c):c);m.castShadow=shadow!==false;if(out){const o=new THREE.Mesh(g,OUTM);o.scale.setScalar(1.07);m.add(o)}return m}
 /* ground & set dressing */
 const gnd=new THREE.Mesh(new THREE.PlaneGeometry(400,260),toon("#8CD16A"));gnd.rotation.x=-Math.PI/2;gnd.receiveShadow=true;scene.add(gnd);
-const path=new THREE.Mesh(new THREE.PlaneGeometry(70,9),toon("#E9CF93"));path.rotation.x=-Math.PI/2;path.position.y=.02;path.receiveShadow=true;scene.add(path);
+const path=new THREE.Mesh(new THREE.PlaneGeometry(80,12),toon("#E9CF93"));path.rotation.x=-Math.PI/2;path.position.y=.02;path.receiveShadow=true;scene.add(path);
 for(let i=0;i<46;i++){const m=new THREE.Mesh(new THREE.CircleGeometry(rnd(.1,.3),6),toon(R()<.5?"#D6B97A":"#F3E3B8"));m.rotation.x=-Math.PI/2;m.position.set(rnd(-30,30),.03,rnd(-4,4));scene.add(m)}
 function tree(x,z,s){const g=new THREE.Group();const tr=mesh(new THREE.CylinderGeometry(.25,.35,1.4,6),"#8A5A33");tr.position.y=.7;g.add(tr);const cs=["#4FBF6B","#3FAE5E","#6AD07A"];for(let i=0;i<3;i++){const c=mesh(new THREE.ConeGeometry(1.5-i*.3,1.8,7),cs[i%3],true);c.position.y=1.9+i*.9;g.add(c)}g.position.set(x,0,z);g.scale.setScalar(s);scene.add(g)}
 for(let i=0;i<60;i++){const x=rnd(-70,70),z=-rnd(9,45);tree(x,z,rnd(.8,1.7))}
 for(let i=0;i<9;i++){const m=mesh(new THREE.ConeGeometry(rnd(14,26),rnd(16,30),6),i%2?"#8CA3D9":"#9AB4E8");m.position.set(-90+i*24,6,-70-rnd(0,12));m.castShadow=false;scene.add(m)}
-const clouds=[];for(let i=0;i<9;i++){const g=new THREE.Group();for(let j=0;j<4;j++){const s=mesh(new THREE.SphereGeometry(rnd(2,3.4),10,8),"#FFFFFF",false,false);s.position.set(j*2.4-3,rnd(-.3,.4),rnd(-1,1));s.scale.y=.7;g.add(s)}g.position.set(rnd(-70,70),rnd(16,26),rnd(-50,-12));scene.add(g);clouds.push(g)}
+const clouds=[];for(let i=0;i<9;i++){const g=new THREE.Group();for(let j=0;j<4;j++){const s=mesh(new THREE.SphereGeometry(rnd(2,3.4),10,8),"#FFFFFF",false,false);s.position.set(j*2.4-3,rnd(-.3,.4),rnd(-1,1));s.scale.y=.7;g.add(s)}g.position.set(rnd(-70,70),rnd(30,40),rnd(-70,-40));scene.add(g);clouds.push(g)}
 /* ---------- castles ---------- */
 const CX=26,castles=[];
 function mkCastle(side){const g=new THREE.Group();const c=side<0?"#6FB5FF":"#FF8A7A",c2=side<0?"#3E7BD6":"#D6504A";
@@ -139,7 +139,7 @@ function buildAnimal(u,team){const g=new THREE.Group(),body=new THREE.Group();g.
  g.scale.setScalar(u.sz);g.userData=parts;return g}
 /* ---------- units ---------- */
 const units=[],projs=[],fx=[],floats=[];let uid=0;
-function spawn(side,ty){const u=U[ty],a=buildAnimal(u,side);const lane=rnd(-3.2,3.2);const c=side<0?CP:CE;
+function spawn(side,ty){const u=U[ty],a=buildAnimal(u,side);const lane=rnd(-4.2,4.2);const c=side<0?CP:CE;
  const o={id:uid++,side,ty,u,g:a,x:c.gate.x,z:lane,hp:u.hp,max:u.hp,cd:rnd(0,.4),t:rnd(0,9),state:"walk",dead:0,hit:0,pop:0,atkA:0,spd:u.spd*(.94+R()*.12)};
  a.position.set(o.x,0,o.z);a.rotation.y=side<0?Math.PI/2:-Math.PI/2;a.scale.setScalar(.01);scene.add(a);units.push(o);
  const bg=new THREE.Mesh(new THREE.PlaneGeometry(1.3,.16),new THREE.MeshBasicMaterial({color:"#000",transparent:true,opacity:.55,depthTest:false}));const fg=new THREE.Mesh(new THREE.PlaneGeometry(1.24,.1),new THREE.MeshBasicMaterial({color:side<0?"#59D7FF":"#FF6B6B",depthTest:false}));fg.position.z=.001;bg.add(fg);bg.renderOrder=10;fg.renderOrder=11;bg.visible=false;scene.add(bg);o.bar=bg;o.fg=fg;
@@ -238,7 +238,7 @@ $("#tip").textContent=t("골드로 친구를 불러 적의 성을 부수세요! 
 const dv=$("#dif");DIFF.forEach((d,i)=>{const b=document.createElement("b");b.textContent=d.n;b.onclick=()=>{diff=i;[...dv.children].forEach((x,j)=>x.classList.toggle("on",j===i))};dv.appendChild(b)});dv.children[1].classList.add("on");
 $("#bStart").onclick=start;$("#bAgain").onclick=start;$("#bMenu").onclick=()=>{$("#ovEnd").classList.remove("on");$("#ovTitle").classList.add("on");G.state="title"};
 /* ---------- loop ---------- */
-function resize(){const w=innerWidth,h=innerHeight;renderer.setSize(w,h,false);cam.aspect=w/h;cam.updateProjectionMatrix()}addEventListener("resize",resize);resize();
+function resize(){const w=innerWidth,h=innerHeight;renderer.setSize(w,h,false);cam.aspect=w/h;cam.fov=w/h<1?60:38;cam.updateProjectionMatrix()}addEventListener("resize",resize);resize();
 let camX=0,last=performance.now(),acc=0;
 function frame(now){requestAnimationFrame(frame);let dt=Math.min(.05,(now-last)/1000);last=now;dt*=G.speed;
  clouds.forEach((c,i)=>{c.position.x+=dt*(.4+i*.05);if(c.position.x>90)c.position.x=-90});
@@ -248,7 +248,7 @@ function frame(now){requestAnimationFrame(frame);let dt=Math.min(.05,(now-last)/
  updFx(dt);
  /* camera follows the front line */
  let fx_=0,n=0;for(const u of units){if(!u.dead){fx_+=u.x;n++}}const tx=G.state==="title"?0:(n?clamp(fx_/n,-8,8):0);camX+=(tx-camX)*Math.min(1,dt*1.6);
- const asp=cam.aspect,dist=asp<1?92:asp<1.4?72:58;G.shake*=.88;const sh=G.shake;
+ const asp=cam.aspect,dist=asp<1?60:asp<1.4?66:58;G.shake*=.88;const sh=G.shake;
  cam.position.set(camX+rnd(-sh,sh),dist*.42,dist*.78+rnd(-sh,sh));cam.lookAt(camX,1.2,0);
  renderer.render(scene,cam);ui()}
 G.state="title";requestAnimationFrame(frame);
