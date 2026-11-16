@@ -803,6 +803,7 @@ function loop(now){const dt=Math.min(.033,(now-last)/1000);last=now;T+=dt;stT+=d
  shake=Math.max(0,shake-dt*1.4);bT-=dt;if(bT<=0)banner.classList.remove("on");
  NET.tick(dt);setCam(T);R3.render(scene,cam);requestAnimationFrame(loop)}
 requestAnimationFrame(loop);
+try{if(new URLSearchParams(location.search).get("auto"))setTimeout(()=>{try{startParty()}catch(_){}},700)}catch(_){}
 window.__pp={get state(){return state},get P(){return P},get act(){return touchAct}};
 })();
 </script>
