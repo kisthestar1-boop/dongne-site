@@ -839,6 +839,110 @@ const GAMES=[
   ai(p,dt){if(this.ph!=="ask")return [0,0,false];let side=p.aiOk?this.ans:1-this.ans;if(p.aiFlip&&this.t<p.aiFlip)side=1-side;const tx=side?-5.4+((p.id%2)?1.4:-1.4):5.4+((p.id%2)?1.4:-1.4),dx=tx-p.x,dz=p.aiZ-p.z,l=Math.hypot(dx,dz);return l<.6?[0,0,R()<.01]:[dx/l,dz/l,false]},
   rank(){return [...P].sort((a,b)=>b.score-a.score)},
   over(T){return this.ph==="done"||T>this.len}},
+ {id:"volley",nolag:1,camK:1.1,em:"🏐",ico:"🏐",name:t("팡팡 배구","Bonk Volleyball"),how:t("🏐 2대2 배구! 공 밑으로 가면 자동으로 톡! 높이 뜬 공은 점프해서 쾅! 스파이크~ 상대 코트에 떨어뜨리면 1점, 5점 먼저 내면 승리!","🏐 2 vs 2! Stand under the ball to bump it. Jump for a SPIKE! First team to 5 wins"),act:"jump",jv:11.5,actLabel:t("점프!","JUMP!"),keys:t("이동: WASD/방향키 · 스페이스로 점프 스파이크","Move: WASD/Arrows · Space to jump & spike"),tk:t("공 그림자 밑으로 가요 · 오른쪽 버튼은 점프 스파이크!","Get under the ball's shadow · right button to jump & spike!"),len:70,timed:1,sc:1,
+  netOut(){const b=this.b;return [+b.x.toFixed(2),+b.y.toFixed(2),+b.z.toFixed(2),+b.vx.toFixed(1),+b.vy.toFixed(1),+b.vz.toFixed(1),this.S[0],this.S[1]]},
+  netIn(a){const b=this.b;b.x=a[0];b.y=a[1];b.z=a[2];b.vx=a[3];b.vy=a[4];b.vz=a[5];this.S[0]=a[6];this.S[1]=a[7];P.forEach(p=>p.score=this.S[p.team])},
+  setup(){const W=10,H=6.5;const g=mesh(new THREE.BoxGeometry(2*W+3,1,2*H+3),"#FFD9A0",false,true);g.position.y=-.5;arena.add(g);
+   for(const s of[-1,1]){const c=new THREE.Mesh(new THREE.PlaneGeometry(W,2*H),M(s<0?"#FFB27F":"#8FD0FF"));c.rotation.x=-Math.PI/2;c.position.set(s*W/2,.01,0);c.receiveShadow=true;arena.add(c)}
+   const ln=(w,d,x,z)=>{const l=new THREE.Mesh(new THREE.PlaneGeometry(w,d),new THREE.MeshBasicMaterial({color:"#fff"}));l.rotation.x=-Math.PI/2;l.position.set(x,.02,z);arena.add(l)};
+   ln(2*W,.18,0,H);ln(2*W,.18,0,-H);ln(.18,2*H,W,0);ln(.18,2*H,-W,0);ln(.18,2*H,0,0);
+   for(const z of[-H-.3,H+.3]){const po=mesh(new THREE.CylinderGeometry(.13,.13,2.6,10),"#7A5AF8",true);po.position.set(0,1.3,z);arena.add(po)}
+   const net=new THREE.Mesh(new THREE.PlaneGeometry(2*H+.6,1.1),new THREE.MeshBasicMaterial({color:"#FFFFFF",transparent:true,opacity:.55,side:THREE.DoubleSide}));net.rotation.y=Math.PI/2;net.position.set(0,1.95,0);arena.add(net);
+   const tp=mesh(new THREE.BoxGeometry(.12,.14,2*H+.6),"#FFFFFF");tp.position.set(0,2.5,0);arena.add(tp);
+   this.bl=mesh(new THREE.SphereGeometry(.55,20,16),"#FFF7E0",true);arena.add(this.bl);
+   for(let i=0;i<3;i++){const st=mesh(new THREE.TorusGeometry(.55,.05,6,24),i===1?"#FF6B9A":"#4FB6FF");st.rotation.y=i*Math.PI/3;this.bl.add(st)}
+   this.sh=new THREE.Mesh(new THREE.CircleGeometry(.6,24),new THREE.MeshBasicMaterial({color:"#2A1060",transparent:true,opacity:.35}));this.sh.rotation.x=-Math.PI/2;this.sh.position.y=.03;arena.add(this.sh);
+   const me=Math.max(0,P.findIndex(p=>p.you)),ord=[0,1,2,3].map(k=>P[(me+k)%4]);
+   ord.forEach((p,k)=>{p.team=k<2?0:1;const s=p.team?1:-1;place(p,s*5.5,k%2?-2.6:2.6);p.face=s<0?Math.PI/2:-Math.PI/2;p.score=0;p.hits=0;p.hcd=0;p.home=[s*5.5,k%2?-2.6:2.6]});
+   this.W=W;this.H=H;this.S=[0,0];this.b={x:0,y:-5,z:0,vx:0,vy:0,vz:0};this.last=null;this.wait=1.4;this.serveSide=-1;this.said=0;this.fx=[]},
+  serve(side){const b=this.b;Object.assign(b,{x:side*5,y:7.5,z:rnd(-2,2),vx:0,vy:0,vz:0});this.last=null;this.wait=0},
+  point(team,why){this.S[team]++;P.forEach(p=>p.score=this.S[p.team]);SND.coin();confetti(6);shake=Math.max(shake,.25);
+   const mine=P.find(p=>p.you);const good=mine&&mine.team===team;say((why||"")+(good?t(" 득점! 🎉"," POINT! 🎉"):t(" 실점 ㅠㅠ"," Lost a point")),good?"#FFE066":"#FF9BB5",1.2);
+   this.serveSide=team===0?1:-1;this.wait=1.3;this.b.y=-5;renderChips()},
+  update(dt,T){const b=this.b,W=this.W,H=this.H;if(!this.said){this.said=1;this.wait=1.2;say(t("공 그림자 밑으로! 🏐","Get under the ball! 🏐"),"#FFE066",1.6)}
+   for(const p of P)p.hcd-=dt;
+   if(NET.mode!=="guest"){
+    if(this.wait>0){this.wait-=dt;if(this.wait<=0)this.serve(this.serveSide)}
+    else{b.vy-=12*dt;b.x+=b.vx*dt;b.y+=b.vy*dt;b.z+=b.vz*dt;
+     if(Math.abs(b.z)>H+2.5){b.vz*=-.6;b.z=Math.sign(b.z)*(H+2.5)}
+     if(Math.abs(b.x)<.6&&b.y<2.55&&b.y>0){if(Math.abs(b.vx)>0){b.x=b.vx>0?-.6:.6;b.vx*=-.45;SND.tick();popTxt({x:0,y:2.6,z:b.z},t("그물!","Net!"),"#FFFFFF",22)}}
+     for(const p of P){if(p.out||p.hcd>0)continue;const hx=b.x-p.x,hz=b.z-p.z,hy=b.y-(p.y+1.4);const d=Math.hypot(hx,hz);
+      if(d<1.25&&hy>-1.1&&hy<1.6){const s=p.team?-1:1;p.hcd=.45;p.hits++;this.last=p;
+       if(!p.grounded&&p.y>.5&&b.y>2.4){b.vx=s*rnd(13,15.5);b.vy=-3.5;b.vz=clamp(-p.z*.25+rnd(-3,3),-5,5);SND.boom();shake=Math.max(shake,.35);burst(b.x,b.y,b.z,"#FFE066",16,7);popTxt(p,pick([t("스파이크!","SPIKE!"),t("쾅!","BAM!"),t("받아라~!","Take that!")]),"#FFE066",30)}
+       else{b.vx=s*rnd(5.2,7.4);b.vy=rnd(9.5,11);b.vz=clamp((rnd(-H+1.5,H-1.5)-b.z)*.35,-4,4);SND.bump();burst(b.x,b.y,b.z,"#FFFFFF",8,4);if(R()<.35)popTxt(p,pick([t("톡!","Bump!"),t("받았다!","Got it!"),t("넘겨~","Over!")]),"#FFFFFF",20)}
+       break}}
+     if(b.y<=.55){b.y=.55;burst(b.x,.3,b.z,"#FFE7B0",10,4);const inC=Math.abs(b.x)<=W+.3&&Math.abs(b.z)<=H+.3;
+      if(inC)this.point(b.x<0?1:0,t("콕!","In!"));else this.point(this.last?1-this.last.team:(b.x<0?0:1),t("아웃!","Out!"))}}}
+   const vis=b.y>-1;this.bl.visible=this.sh.visible=vis;this.bl.position.set(b.x,b.y,b.z);this.bl.rotation.x+=dt*4;this.bl.rotation.z+=dt*3;
+   if(vis){this.sh.position.set(b.x,.03,b.z);const s=clamp(1.4-b.y*.08,.6,1.4);this.sh.scale.set(s,s,s)}},
+  ground(){return true},
+  clampP(p){const s=p.team?1:-1;p.x=s<0?clamp(p.x,-this.W-1.5,-.8):clamp(p.x,.8,this.W+1.5);p.z=clamp(p.z,-this.H-1.5,this.H+1.5)},
+  ai(p,dt){const b=this.b,s=p.team?1:-1;if(b.y<0)return this.goTo(p,p.home[0],p.home[1],false);
+   let tx=b.x,tz=b.z;if(b.vy!==0){const A=-6,Bv=b.vy,C=b.y-2.2,disc=Bv*Bv-4*A*C;if(disc>=0){const tt=(-Bv-Math.sqrt(disc))/(2*A);if(tt>0){tx=b.x+b.vx*tt;tz=b.z+b.vz*tt}}}
+   const mySide=s<0?tx<0:tx>0;const mates=P.filter(q=>q.team===p.team&&!q.out);
+   const chaser=mates.reduce((a,q)=>Math.hypot(q.x-tx,q.z-tz)<Math.hypot(a.x-tx,a.z-tz)?q:a,mates[0]);
+   if(!mySide||chaser!==p){const hx=p.home[0],hz=chaser===p?0:p.home[1];return this.goTo(p,hx,hz,false)}
+   const err=(1-p.skill)*1.4;const gx=tx+Math.sin(GT*1.3+p.id)*err-s*.2,gz=tz+Math.cos(GT*1.1+p.id)*err;
+   const hd=Math.hypot(b.x-p.x,b.z-p.z);const jump=b.vy<0&&b.y>2.6&&b.y<4.6&&hd<1.4&&Math.abs(p.x)<6&&R()<.25+p.skill*.5;
+   return this.goTo(p,gx,gz,jump)},
+  goTo(p,x,z,a){const dx=x-p.x,dz=z-p.z,d=Math.hypot(dx,dz);if(d<.25)return [0,0,a];const k=Math.min(1,d/1.2);return [dx/d*k,dz/d*k,a]},
+  rank(){const w=this.S[0]===this.S[1]?null:(this.S[0]>this.S[1]?0:1);return P.slice().sort((a,b)=>((b.team===w)-(a.team===w))||(b.hits-a.hits))},
+  over(T){return this.S[0]>=5||this.S[1]>=5||T>this.len}},
+ {id:"soccer",nolag:1,camK:1.05,em:"⚽",ico:"⚽",name:t("골대 지키기 축구","Four-Goal Soccer"),how:t("⚽ 4명 모두 내 골대가 있어요! 공을 몰고 가서 친구 골대에 골인하면 그 순간 통과! 🎉 내 골대는 꼭 지켜요~","⚽ Everyone has a goal! Score in a friend's goal to qualify instantly 🎉 Guard your own!"),act:"none",actLabel:t("슛!","SHOOT!"),keys:t("공에 닿으면 드리블 · 스페이스로 강슛! (이동: WASD/방향키)","Touch the ball to dribble · Space to shoot! (Move: WASD/Arrows)"),tk:t("공에 닿으면 드리블 · 오른쪽 버튼으로 강슛!","Touch the ball to dribble · right button to shoot!"),len:75,timed:1,sc:1,
+  netOut(){const b=this.b;return [+b.x.toFixed(2),+b.z.toFixed(2),+b.vx.toFixed(1),+b.vz.toFixed(1),b.o?b.o.id:-1,...this.fin]},
+  netIn(a){const b=this.b;b.x=a[0];b.z=a[1];b.vx=a[2];b.vz=a[3];b.o=a[4]>=0?P[a[4]]:null},
+  setup(){const L=9,GW=2.6;this.L=L;this.GW=GW;const g=mesh(new THREE.BoxGeometry(2*L+4,1,2*L+4),"#7BCB6A",false,true);g.position.y=-.5;arena.add(g);
+   for(let i=0;i<6;i++){const s=new THREE.Mesh(new THREE.PlaneGeometry(2*L,2*L/6),M(i%2?"#8FDA7B":"#7FCF6C"));s.rotation.x=-Math.PI/2;s.position.set(0,.01,-L+L/6+i*2*L/6);s.receiveShadow=true;arena.add(s)}
+   const ring=new THREE.Mesh(new THREE.RingGeometry(2.4,2.6,48),new THREE.MeshBasicMaterial({color:"#fff"}));ring.rotation.x=-Math.PI/2;ring.position.y=.02;arena.add(ring);
+   const me=Math.max(0,P.findIndex(p=>p.you));this.G4=[];const SIDES=[[0,1],[1,0],[0,-1],[-1,0]];
+   [0,1,2,3].forEach(k=>{const p=P[(me+k)%4],[sx,sz]=SIDES[k];p.gs=[sx,sz];p.goals=0;p.con=0;p.done=0;p.score=0;
+    const gx=sx*L,gz=sz*L,grp=new THREE.Group();grp.position.set(gx,0,gz);grp.rotation.y=Math.atan2(sx,sz);
+    for(const o of[-GW,GW]){const po=mesh(new THREE.CylinderGeometry(.16,.16,2.2,10),p.col,true);po.position.set(o,1.1,0);grp.add(po)}
+    const bar=mesh(new THREE.BoxGeometry(2*GW+.3,.26,.26),p.col,true);bar.position.set(0,2.2,0);grp.add(bar);
+    const nt=new THREE.Mesh(new THREE.BoxGeometry(2*GW,2.1,1.4),new THREE.MeshBasicMaterial({color:p.col,transparent:true,opacity:.22}));nt.position.set(0,1.05,.75);grp.add(nt);
+    const shut=mesh(new THREE.BoxGeometry(2*GW,1.2,.35),"#BBA6FF",true);shut.position.set(0,.6,0);shut.visible=false;grp.add(shut);
+    arena.add(grp);this.G4.push({p,sx,sz,shut,open:true});place(p,sx*(L-2.4),sz*(L-2.4));p.face=Math.atan2(-sx,-sz)});
+   for(const [x,z,w,d] of[[0,L+.35,2*L+.7,.4],[0,-L-.35,2*L+.7,.4],[L+.35,0,.4,2*L+.7],[-L-.35,0,.4,2*L+.7]]){for(const s of[-1,1]){const len=(w>1?w:d)/2-GW;const seg=mesh(new THREE.BoxGeometry(w>1?len:.4,.7,w>1?.4:len),"#FFFFFF",true);
+     if(w>1)seg.position.set(s*(GW+len/2),.35,z);else seg.position.set(x,.35,s*(GW+len/2));arena.add(seg)}}
+   this.bl=mesh(new THREE.SphereGeometry(.62,20,16),"#FFFFFF",true);arena.add(this.bl);
+   for(let i=0;i<5;i++){const pt=mesh(new THREE.SphereGeometry(.2,8,6),"#2A2A3A");const a=i/5*6.283;pt.position.set(Math.cos(a)*.5,Math.sin(a)*.5*.6,Math.sin(a)*.45);this.bl.add(pt)}
+   this.b={x:0,z:0,vx:0,vz:0,o:null};this.fin=[];this.wait=1.2;this.said=0},
+  kickoff(){const b=this.b;const a=rnd(0,6.283);Object.assign(b,{x:0,z:0,vx:Math.cos(a)*3,vz:Math.sin(a)*3,o:null});this.wait=0},
+  goal(gi){const G4=this.G4[gi],own=G4.p,sc=this.b.o;own.con++;SND.boom();shake=Math.max(shake,.4);burst(this.b.x,1,this.b.z,own.col,22,8);confetti(10);
+   if(sc&&sc!==own&&!sc.done){sc.goals++;sc.score=sc.goals;sc.done=1;this.fin.push(sc.id);SND.coin();
+    popTxt(sc,t("골인! 통과! 🎉","GOAL! Qualified! 🎉"),"#FFE066",34);heartFx&&heartFx(sc,6);
+    if(sc.you)say(t("골인! 통과~ 🎉","GOAL! You qualified! 🎉"),"#FFE066",1.6);else if(own.you)say(t("앗, 내 골대에 골! ㅠㅠ","They scored on you!"),"#FF9BB5",1.3);else say(t(sc.name+" 통과!",sc.name+" qualified!"),"#FFFFFF",1.1);
+    const g2=this.G4.find(x=>x.p===sc);if(g2){g2.open=false;g2.shut.visible=true}}
+   else{if(own.you)say(t("자책골~ ㅠㅠ","Own goal!"),"#FF9BB5",1.2);popTxt(own,t("앗 자책골!","Own goal!"),"#FF9BB5",26)}
+   renderChips();this.b.x=0;this.b.z=0;this.b.vx=this.b.vz=0;this.b.o=null;this.wait=1.2;this.bl.visible=false},
+  update(dt,T){const b=this.b,L=this.L,GW=this.GW,BR=.62;if(!this.said){this.said=1;say(t("친구 골대에 골인하면 통과! ⚽","Score to qualify! ⚽"),"#FFE066",1.6)}
+   for(const p of P){if(p.done&&p.mesh.visible){p.mesh.visible=false;burst(p.x,1,p.z,"#FFE066",16,6)}}
+   if(NET.mode!=="guest"){
+    if(this.wait>0){this.wait-=dt;if(this.wait<=0){this.kickoff();this.bl.visible=true}}
+    else{
+     for(const p of P){if(p.out||p.done)continue;const dx=b.x-p.x,dz=b.z-p.z,d=Math.hypot(dx,dz);
+      if(tapped(p)&&d<2.1){const f=p.face;let nx=Math.sin(f),nz=Math.cos(f);if(d>.01){nx=nx*.55+dx/d*.45;nz=nz*.55+dz/d*.45;const m=Math.hypot(nx,nz);nx/=m;nz/=m}
+       b.vx=nx*17;b.vz=nz*17;b.o=p;SND.boom();shake=Math.max(shake,.25);burst(b.x,.6,b.z,"#FFFFFF",12,6);if(R()<.5)popTxt(p,pick([t("슛~!","Shoot!"),t("뻥!","Boom!"),t("들어가라!","Go in!")]),"#FFE066",26)}
+      else if(d<BR+.75){const nx=dx/(d||1),nz=dz/(d||1),ps=Math.hypot(p.vx,p.vz),along=b.vx*nx+b.vz*nz,want=ps*1.25+2.2;if(along<want){b.vx+=nx*(want-along);b.vz+=nz*(want-along)}b.x=p.x+nx*(BR+.75);b.z=p.z+nz*(BR+.75);b.o=p}}
+     const k=Math.exp(-dt*.75);b.vx*=k;b.vz*=k;b.x+=b.vx*dt;b.z+=b.vz*dt;
+     for(let gi=0;gi<4;gi++){const g=this.G4[gi];const along=g.sx?b.z:b.x,depth=g.sx?b.x*g.sx:b.z*g.sz;
+      if(depth>L-BR){if(g.open&&Math.abs(along)<GW-.15){if(depth>L+.6){this.goal(gi);return}}
+       else{if(g.sx){b.x=g.sx*(L-BR);b.vx=-b.vx*.75}else{b.z=g.sz*(L-BR);b.vz=-b.vz*.75}SND.tick()}}}}}
+   this.bl.position.set(b.x,BR,b.z);const sp=Math.hypot(b.vx,b.vz);this.bl.rotation.x+=b.vz*dt*1.4;this.bl.rotation.z-=b.vx*dt*1.4},
+  ground(){return true},
+  clampP(p){if(p.done){p.x=0;p.z=-30;return}const L=this.L-.6;p.x=clamp(p.x,-L,L);p.z=clamp(p.z,-L,L)},
+  ai(p,dt){if(p.done)return [0,0,false];const b=this.b,L=this.L,[sx,sz]=p.gs;
+   const myG=[sx*L,sz*L],toMine=Math.hypot(b.x-myG[0],b.z-myG[1]),bvToMe=(b.vx*sx+b.vz*sz);
+   if(toMine<7&&bvToMe>2&&b.o!==p){const gx=myG[0]*.8+b.x*.2,gz=myG[1]*.8+b.z*.2;const dx=gx-p.x,dz=gz-p.z,d=Math.hypot(dx,dz)||1;return [dx/d,dz/d,false]}
+   const tg=this.G4.filter(g=>g.open&&g.p!==p).sort((a,c)=>Math.hypot(b.x-a.sx*L,b.z-a.sz*L)-Math.hypot(b.x-c.sx*L,b.z-c.sz*L))[0];
+   if(!tg){const dx=b.x-p.x,dz=b.z-p.z,d=Math.hypot(dx,dz)||1;return [dx/d,dz/d,false]}
+   const ax=tg.sx*(L+1)-b.x,az=tg.sz*(L+1)-b.z,al=Math.hypot(ax,az)||1;const off=1.1+(1-p.skill)*.6;
+   const sx2=b.x-ax/al*off,sz2=b.z-az/al*off;const dx=sx2-p.x,dz=sz2-p.z,d=Math.hypot(dx,dz);
+   const aligned=d<.9;let shoot=false;if(aligned&&al<11){p.rt=(p.rt||0)+dt;if(p.rt>.15+(1-p.skill)*.5){shoot=true;p.rt=0}}
+   if(aligned){p.face=Math.atan2(ax,az);return [ax/al,az/al,shoot]}
+   return [dx/(d||1),dz/(d||1),false]},
+  rank(){const rest=P.filter(p=>!this.fin.includes(p.id)).sort((a,b)=>(a.con-b.con)||(b.goals-a.goals));return [...this.fin.map(i=>P[i]),...rest]},
+  over(T){return this.fin.length>=3||T>this.len}}
 ];
 addEventListener("keydown",e=>{if(e.repeat||state!=="play"||!G||G.id!=="mbox")return;if(e.code==="Digit1"||e.code==="Numpad1"||e.code==="ArrowLeft")G.choose(1);if(e.code==="Digit2"||e.code==="Numpad2"||e.code==="ArrowRight")G.choose(2)});
 GAMES.find(g=>g.id==="sumo").revive=function(){return [0,0]};
