@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Beastlord (야수 군주)</title>
+<style>
+:root{--bg:#14102B;--pn:#241C4A;--pn2:#2E2560;--ln:#4B3E8F;--tx:#F4EFFF;--sub:#B7ABE0;--gold:#FFD24A;--c0:#9AA3B5;--c1:#4FA3FF;--c2:#B36BFF;--c3:#FFB13D}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--tx);font-family:"Noto Sans KR","Apple SD Gothic Neo",system-ui,sans-serif;overflow:hidden}
+#app{display:flex;flex-direction:column;height:100%;max-width:760px;margin:0 auto}
+#top{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:var(--pn);border-bottom:2px solid var(--ln);font-weight:800}
+#top b{color:var(--gold)}#main{flex:1;overflow:auto;padding:12px 14px 16px}
+#nav{display:flex;background:var(--pn);border-top:2px solid var(--ln)}
+#nav button{flex:1;border:0;background:none;color:var(--sub);padding:9px 0 11px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit}
+#nav button i{display:block;font-style:normal;font-size:21px}#nav button.on{color:var(--gold);background:var(--pn2)}
+h2{margin:2px 0 10px;font-size:17px}h2 small{font-weight:400;color:var(--sub);font-size:12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:8px}
+.card{position:relative;background:var(--pn);border:2px solid var(--ln);border-radius:14px;padding:8px 4px 8px;text-align:center;cursor:pointer}
+.card .em{font-size:38px;line-height:1.1}.card .nm{font-size:12px;font-weight:800;margin-top:2px}.card .lv{font-size:11px;color:var(--sub)}
+.card .el{position:absolute;left:5px;top:5px;background:#9B4DFF;border-radius:50%;width:22px;height:22px;font-size:12px;font-weight:900;display:flex;align-items:center;justify-content:center}
+.card.r0{border-color:var(--c0)}.card.r1{border-color:var(--c1)}.card.r2{border-color:var(--c2)}.card.r3{border-color:var(--c3);box-shadow:0 0 12px rgba(255,177,61,.5)}
+.card.lock{opacity:.4;filter:grayscale(1)}.card.in{outline:3px solid var(--gold)}
+.bar{height:6px;background:#0007;border-radius:4px;margin:4px 8px 0;overflow:hidden}.bar i{display:block;height:100%;background:#7AE582}
+.rar{position:absolute;right:5px;top:5px;font-size:10px;font-weight:900;padding:1px 5px;border-radius:7px;color:#111}
+.panel{background:var(--pn);border:2px solid var(--ln);border-radius:16px;padding:12px;margin-bottom:10px}
+.btn{border:0;border-radius:12px;background:linear-gradient(#FFD23F,#FF9F1C);color:#2A1060;font-weight:900;font-size:14px;padding:9px 16px;cursor:pointer;font-family:inherit;box-shadow:0 3px 0 #B25E00}
+.btn.s{background:linear-gradient(#7AD9FF,#3E8BFF);box-shadow:0 3px 0 #1F4FA8;color:#fff}.btn.off{filter:grayscale(1) brightness(.7);cursor:default}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.stat{background:#0005;border-radius:10px;padding:5px 10px;font-size:13px}
+.tr{display:flex;gap:8px;margin-top:8px}.tr div{flex:1;border:2px solid var(--ln);border-radius:12px;padding:8px;font-size:12px;cursor:pointer;background:#0003}
+.tr div.on{border-color:var(--gold);background:#FFD24A22}.tr div.lk{opacity:.45;cursor:default}
+.deck{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px}.slot{aspect-ratio:3/4;border:2px dashed var(--ln);border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:12px;color:var(--sub);cursor:pointer}
+.slot .em{font-size:30px}.toast{position:fixed;left:50%;bottom:78px;transform:translateX(-50%);background:#000c;padding:8px 16px;border-radius:14px;font-size:13px;opacity:0;transition:opacity .3s;pointer-events:none}
+.ov{position:fixed;inset:0;background:#0009;display:none;align-items:center;justify-content:center;z-index:9}.ov.on{display:flex}.ov .panel{width:min(420px,92vw)}
+.big{font-size:60px;text-align:center}.mut{color:var(--sub);font-size:12px}
+</style></head><body>
+<div id="app"><div id="top"><span>🏰 <span id="nm">Beastlord</span></span><span>🏆 <b id="tro">0</b> &nbsp; 🪙 <b id="gld">0</b></span></div>
+<div id="main"></div>
+<div id="nav"></div></div>
+<div class="toast" id="toast"></div><div class="ov" id="ov"><div class="panel" id="ovp"></div></div>
+<script>
+(()=>{
+const $=s=>document.querySelector(s),R=Math.random;
+/* 등급 */
+const RAR=[{n:"일반",c:"#9AA3B5",max:9,sh:[2,4,10,20,50,100,200,400]},{n:"희귀",c:"#4FA3FF",max:7,sh:[2,4,10,20,50,100]},{n:"영웅",c:"#B36BFF",max:5,sh:[2,4,10,20]},{n:"전설",c:"#FFB13D",max:3,sh:[2,4]}];
+/* 영웅 16종: id,이모지,이름,등급,엘릭서,hp,공격,역할,특성A,특성B */
+const H=[
+["fox","🦊","여우 궁수",0,3,70,13,"원거리",["연사형","공격 속도 +25%"],["저격형","사거리 +30%, 공격 -10%"]],
+["boar","🐗","멧돼지 돌격병",0,3,130,16,"돌격",["광폭","처음 돌진 데미지 2배"],["강철 엄니","방어 +20%"]],
+["turtle","🐢","거북 수호병",0,4,300,8,"방어",["철벽","원거리 피해 -30%"],["가시 등딱지","맞을 때 반사 5"]],
+["bunny","🐇","토끼 힐러",1,4,60,0,"치유",["축복","치유량 +30%"],["부활 약초","쓰러진 아군 1회 회복"]],
+["owl","🦉","부엉이 마법사",1,5,75,20,"광역",["폭발 구슬","범위 +25%"],["번개","단일 대상 데미지 2배"]],
+["bear","🐻","곰 거인",1,6,480,28,"탱커",["대지 강타","주변 기절 0.5초"],["포효","주변 아군 공격 +15%"]],
+["wolf","🐺","늑대 사냥꾼",0,3,95,15,"추격",["무리 사냥","같은 영웅 곁에서 공격 +15%"],["그림자","처음 공격 은신"]],
+["hawk","🦅","매 척후병",0,2,45,9,"정찰",["급강하","첫 공격 데미지 2배"],["날카로운 눈","사거리 +40%"]],
+["croc","🐊","악어 투사",1,5,260,24,"근접",["죽음의 회전","주변 전체 공격"],["가죽 갑옷","방어 +25%"]],
+["snake","🐍","독사 암살자",1,3,55,12,"독",["맹독","3초 지속 피해"],["마비 독","적 이동 -40%"]],
+["rhino","🦏","코뿔소 파괴자",2,6,520,34,"공성",["성벽 파괴","타워 피해 2배"],["돌진","맞은 적 밀어냄"]],
+["panther","🐆","흑표범 자객",2,4,85,32,"암살",["급소 공격","원거리 우선 공격"],["연속 베기","2회 연속 공격"]],
+["elephant","🐘","코끼리 전차",2,7,720,30,"성장",["거대화","시간이 지나면 체력 +30%"],["군기","주변 아군 방어 +15%"]],
+["phoenix","🔥","불사조 현자",3,6,150,38,"부활",["불꽃 재탄생","1회 부활"],["화염 폭풍","범위 불길"]],
+["dragon","🐲","용왕",3,8,640,52,"전설",["용의 숨결","직선 관통 화염"],["수호룡","타워에 방패 부여"]],
+["lion","🦁","사자왕",3,7,560,44,"지휘",["왕의 위엄","아군 전체 공격 +10%"],["심판","낮은 체력 적 즉사"]]
+].map(a=>({id:a[0],em:a[1],nm:a[2],r:a[3],el:a[4],hp:a[5],atk:a[6],role:a[7],tr:[a[8],a[9]]}));
+const byId=Object.fromEntries(H.map(h=>[h.id,h]));
+/* 저장 */
+let S;const KEY="beastlord_v1";
+function fresh(){return{nm:"Beastlord",gold:300,tro:0,h:{fox:{lv:1,sh:0,tr:0},boar:{lv:1,sh:0,tr:0},turtle:{lv:1,sh:0,tr:0},wolf:{lv:1,sh:0,tr:0},hawk:{lv:1,sh:0,tr:0},bunny:{lv:1,sh:0,tr:0}},deck:["fox","boar","turtle","wolf","hawk","bunny"],chests:[{k:0,t:0},{k:0,t:0}],log:[]}}
+try{S=JSON.parse(localStorage.getItem(KEY))}catch(_){}if(!S||!S.h)S=fresh();
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(_){}};
+const toast=m=>{const t=$("#toast");t.textContent=m;t.style.opacity=1;clearTimeout(toast.t);toast.t=setTimeout(()=>t.style.opacity=0,1500)};
+/* 계산 */
+const lvMul=l=>1+(l-1)*.1;const stat=(h,l)=>({hp:Math.round(h.hp*lvMul(l)),atk:Math.round(h.atk*lvMul(l))});
+const needSh=(h,l)=>RAR[h.r].sh[l-1];const needGold=l=>l*l*40;
+const pow=h=>{const o=S.h[h.id];if(!o)return 0;const s=stat(h,o.lv);return s.hp*.4+s.atk*8};
+const deckPow=()=>S.deck.reduce((a,id)=>a+pow(byId[id]),0);
+/* 화면 */
+let tab="hero",sel=null,pick=null;
+const TABS=[["hero","🦊","영웅"],["deck","🃏","덱"],["chest","📦","상자"],["battle","🏆","대전"],["castle","🏰","내 성"]];
+function nav(){$("#nav").innerHTML=TABS.map(t=>`<button data-t="${t[0]}" class="${tab===t[0]?"on":""}"><i>${t[1]}</i>${t[2]}</button>`).join("");$("#nav").querySelectorAll("button").forEach(b=>b.onclick=()=>{tab=b.dataset.t;sel=null;pick=null;draw()})}
+function top(){$("#tro").textContent=S.tro;$("#gld").textContent=S.gold;$("#nm").textContent=S.nm}
+function cardH(h,extra){const o=S.h[h.id];const rr=RAR[h.r];return `<div class="card r${h.r} ${o?"":"lock"} ${extra||""}" data-id="${h.id}"><span class="el">${h.el}</span><span class="rar" style="background:${rr.c}">${rr.n}</span><div class="em">${h.em}</div><div class="nm">${h.nm}</div><div class="lv">${o?"Lv "+o.lv+(o.lv>=rr.max?" MAX":""):"미보유"}</div>${o&&o.lv<rr.max?`<div class="bar"><i style="width:${Math.min(100,o.sh/needSh(h,o.lv)*100)}%"></i></div>`:""}</div>`}
+function vHero(){let h=`<h2>🦊 내 영웅 <small>${Object.keys(S.h).length}/${H.length}종 · 누르면 강화와 특성</small></h2><div class="grid">${H.map(x=>cardH(x)).join("")}</div>`;
+ if(sel){const x=byId[sel],o=S.h[sel],rr=RAR[x.r];if(o){const s=stat(x,o.lv),max=o.lv>=rr.max,ns=max?0:needSh(x,o.lv),ng=needGold(o.lv),can=!max&&o.sh>=ns&&S.gold>=ng;
+ h+=`<div class="ov on" id="hv"><div class="panel"><div class="big">${x.em}</div><h2 style="text-align:center">${x.nm} <small>${rr.n} · ${x.role} · 엘릭서 ${x.el}</small></h2>
+ <div class="row" style="justify-content:center"><span class="stat">❤️ ${s.hp}</span><span class="stat">⚔️ ${s.atk}</span><span class="stat">Lv ${o.lv}/${rr.max}</span></div>
+ <p class="mut" style="text-align:center">${max?"최고 레벨이에요":`강화: 카드 ${o.sh}/${ns}장 + 🪙${ng}`}</p>
+ <div class="tr">${x.tr.map((t,i)=>{const lk=o.lv<3;return `<div class="${o.tr===i&&!lk?"on":""} ${lk?"lk":""}" data-tr="${i}"><b>${t[0]}</b><br>${t[1]}${lk?"<br>🔒 Lv3에 열려요":""}</div>`}).join("")}</div>
+ <div class="row" style="margin-top:12px;justify-content:center"><button class="btn ${can?"":"off"}" id="up">⬆ 강화</button><button class="btn s" id="cl">닫기</button></div></div></div>`}}
+ return h}
+function vDeck(){const d=S.deck;let h=`<h2>🃏 덱 <small>8장까지 · 평균 엘릭서 ${(d.reduce((a,i)=>a+byId[i].el,0)/Math.max(1,d.length)).toFixed(1)}</small></h2><div class="deck">${Array.from({length:8},(_,i)=>{const id=d[i];return id?`<div class="slot" data-rm="${i}" style="border-style:solid"><div class="em">${byId[id].em}</div>${byId[id].nm}<span class="mut">✕ 빼기</span></div>`:`<div class="slot">＋</div>`}).join("")}</div>
+ <div class="panel row"><span class="stat">덱 전투력 ${Math.round(deckPow())}</span><span class="mut">영웅을 눌러 덱에 넣어요 · 레벨이 높을수록 강해요</span></div><div class="grid">${H.filter(x=>S.h[x.id]).map(x=>cardH(x,d.includes(x.id)?"in":"")).join("")}</div>`;return h}
+const CH=[{n:"나무 상자",e:"📦",s:20,cards:4,gold:40,rar:[80,17,3,0]},{n:"은 상자",e:"🎁",s:60,cards:8,gold:90,rar:[60,30,9,1]},{n:"금 상자",e:"👑",s:120,cards:14,gold:180,rar:[40,38,18,4]}];
+function vChest(){let h=`<h2>📦 상자 <small>이기면 얻어요 · 시간이 지나면 열려요 (시험용: 몇 초)</small></h2><div class="grid">`;
+ h+=S.chests.map((c,i)=>{const k=CH[c.k];if(!c.t)return `<div class="card" style="opacity:.5"><div class="em">⬜</div><div class="nm">빈 칸</div><div class="lv">대전에서 이기면</div></div>`;const left=Math.max(0,Math.ceil((c.t-Date.now())/1000));return `<div class="card" data-ch="${i}"><div class="em">${k.e}</div><div class="nm">${k.n}</div><div class="lv">${left>0?`⏳ ${left}초`:"✅ 열기!"}</div></div>`}).join("")+`</div>`;return h}
+function openChest(i){const c=S.chests[i],k=CH[c.k];const got={};let g=k.gold+Math.floor(R()*k.gold*.5);for(let n=0;n<k.cards;n++){let r=R()*100,t=0,rr=0;for(;rr<3;rr++){t+=k.rar[rr];if(r<t)break}const pool=H.filter(x=>x.r===rr);const x=pool[Math.floor(R()*pool.length)];got[x.id]=(got[x.id]||0)+1}
+ S.gold+=g;const lines=[];for(const id in got){if(!S.h[id])S.h[id]={lv:1,sh:0,tr:0},lines.push(`🆕 ${byId[id].em} ${byId[id].nm} 획득!`);else{S.h[id].sh+=got[id];lines.push(`${byId[id].em} ${byId[id].nm} 카드 +${got[id]}`)}}
+ S.chests[i]={k:0,t:0};save();$("#ov").classList.add("on");$("#ovp").innerHTML=`<div class="big">${k.e}</div><h2 style="text-align:center">${k.n} 열었어요!</h2><div style="text-align:center;font-size:14px;line-height:1.8">🪙 +${g}<br>${lines.join("<br>")}</div><div style="text-align:center;margin-top:12px"><button class="btn" id="ok">확인</button></div>`;$("#ok").onclick=()=>{$("#ov").classList.remove("on");draw()}}
+function vBattle(){const pw=Math.round(deckPow());return `<h2>🏆 대전 <small>트로피 ${S.tro}</small></h2>
+ <div class="panel"><b>🤖 컴퓨터와 대전</b><p class="mut">내 덱 전투력 ${pw} · 상대는 내 트로피에 맞춰 나와요 (한 판 약 3분 — 전투 화면은 만드는 중, 지금은 자동 계산)</p><button class="btn" id="go">⚔ 대전 시작</button> <a class="btn s" style="text-decoration:none;display:inline-block" href="castle3d.html">시험 전투 화면 ▶</a></div>
+ <div class="panel" style="opacity:.6"><b>👥 유저 덱과 대전</b><p class="mut">다른 유저가 저장한 덱과 싸워요 · 준비 중</p></div>
+ <div class="panel" style="opacity:.6"><b>🤝 친구 대전</b><p class="mut">링크를 보내 바로 붙어요 · 준비 중</p></div>
+ <div class="panel"><b>최근 기록</b><div class="mut" style="margin-top:6px;line-height:1.7">${S.log.slice(-6).reverse().join("<br>")||"아직 없어요"}</div></div>`}
+function battle(){if(S.deck.length<4){toast("덱에 영웅을 4장 이상 넣어 주세요");return}
+ const my=deckPow()*(.85+R()*.3),en=(120+S.tro*2.2)*(5+S.deck.length*.8)*(.85+R()*.3)/2;const win=my>en;
+ let msg;if(win){const d=25+Math.floor(R()*6);S.tro+=d;const slot=S.chests.findIndex(c=>!c.t);const kind=S.tro>400?2:S.tro>150?1:0;if(slot>=0)S.chests[slot]={k:kind,t:Date.now()+CH[kind].s*1000};S.gold+=30;msg=`🎉 승리! 🏆+${d} · 🪙+30${slot>=0?" · 📦 상자 획득":" · 상자 칸이 가득 찼어요"}`}
+ else{const d=18+Math.floor(R()*6);S.tro=Math.max(0,S.tro-d);msg=`😢 패배… 🏆-${d} · 영웅을 키워서 다시!`}
+ S.log.push(new Date().toLocaleTimeString("ko-KR",{hour:"2-digit",minute:"2-digit"})+" "+msg);save();toast(msg);draw()}
+function vCastle(){return `<h2>🏰 내 성</h2><div class="panel"><div class="row"><span class="stat">🏆 트로피 ${S.tro}</span><span class="stat">🪙 ${S.gold}</span><span class="stat">영웅 ${Object.keys(S.h).length}/${H.length}</span></div>
+ <p class="mut">앞으로 이곳에서 성을 꾸미고, 금광·병영 같은 건물을 업그레이드해요. (준비 중)</p><button class="btn s" id="rs">처음부터 다시 (시험용)</button></div>`}
+function draw(){top();nav();const m=$("#main");m.innerHTML=({hero:vHero,deck:vDeck,chest:vChest,battle:vBattle,castle:vCastle})[tab]();bind()}
+function bind(){const m=$("#main");
+ if(tab==="hero")m.querySelectorAll(".card").forEach(c=>c.onclick=()=>{if(S.h[c.dataset.id]){sel=c.dataset.id;draw()}else toast("아직 없는 영웅이에요 · 상자에서 나와요")});
+ if(tab==="hero"&&sel){$("#cl").onclick=()=>{sel=null;draw()};const x=byId[sel],o=S.h[sel];$("#up").onclick=()=>{const rr=RAR[x.r];if(o.lv>=rr.max)return;const ns=needSh(x,o.lv),ng=needGold(o.lv);if(o.sh<ns||S.gold<ng){toast(o.sh<ns?"카드가 모자라요":"골드가 모자라요");return}o.sh-=ns;S.gold-=ng;o.lv++;save();toast(`${x.nm} Lv ${o.lv}!`);draw()};
+  document.querySelectorAll("[data-tr]").forEach(t=>t.onclick=()=>{if(o.lv<3)return;o.tr=+t.dataset.tr;save();draw()})}
+ if(tab==="deck"){m.querySelectorAll("[data-rm]").forEach(s=>s.onclick=()=>{S.deck.splice(+s.dataset.rm,1);save();draw()});m.querySelectorAll(".card").forEach(c=>c.onclick=()=>{const id=c.dataset.id;const i=S.deck.indexOf(id);if(i>=0)S.deck.splice(i,1);else if(S.deck.length<8)S.deck.push(id);else toast("덱은 8장까지예요");save();draw()})}
+ if(tab==="chest")m.querySelectorAll("[data-ch]").forEach(c=>c.onclick=()=>{const i=+c.dataset.ch,k=S.chests[i];if(k.t&&Date.now()>=k.t)openChest(i);else toast("아직 열리는 중이에요")});
+ if(tab==="battle"){$("#go").onclick=battle}
+ if(tab==="castle"){$("#rs").onclick=()=>{S=fresh();save();draw()}}}
+setInterval(()=>{if(tab==="chest")draw()},1000);
+draw();window.__bl={S:()=>S,H};
+})();
+</script></body></html>
