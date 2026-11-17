@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>동물 성 대전 · 카드 대결</title>
+<style>
+:root{--bg1:#2a1c10;--bg2:#120c07;--gold:#FFD66B;--wood:#6b4423;--txt:#fff7e6}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;user-select:none}
+html,body{height:100%;overflow:hidden;background:#120c07;color:var(--txt);font-family:system-ui,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif}
+#app{position:fixed;inset:0;display:flex;flex-direction:column;background:radial-gradient(1200px 700px at 50% 50%,#5a3a1c 0%,#2a1c10 55%,#120c07 100%)}
+.side{flex:none;display:flex;align-items:center;gap:10px;padding:8px 12px}
+.hero{position:relative;width:74px;height:74px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#ffe9b0,#c98a3a 60%,#6b4423);border:3px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:2.2rem;box-shadow:0 4px 14px rgba(0,0,0,.5);flex:none;cursor:pointer}
+.hero .hp{position:absolute;right:-6px;bottom:-6px;min-width:30px;height:30px;border-radius:50%;background:#d6363b;border:2px solid #fff;font-weight:900;font-size:.95rem;display:flex;align-items:center;justify-content:center;color:#fff}
+.hero.tg{box-shadow:0 0 0 4px #ff5a5a,0 0 22px #ff5a5a}
+.info{display:flex;flex-direction:column;gap:3px;min-width:0}
+.info b{font-size:.92rem}.info small{font-size:.72rem;color:#e8d4b0}
+.mana{display:flex;gap:3px;flex-wrap:wrap}
+.mana i{width:13px;height:13px;transform:rotate(45deg);border-radius:3px;background:#2a3a66;border:1px solid #5b7bd5}
+.mana i.on{background:linear-gradient(135deg,#7fc3ff,#2f6be0);border-color:#bfe0ff;box-shadow:0 0 6px #5aa8ff}
+.power{margin-left:auto;width:56px;height:56px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#9fd0ff,#2f5fb5);border:3px solid #c9e2ff;font-size:1.5rem;display:flex;align-items:center;justify-content:center;position:relative;cursor:pointer;flex:none}
+.power .c{position:absolute;top:-6px;left:-6px;width:22px;height:22px;border-radius:50%;background:#2f6be0;border:2px solid #fff;font-size:.72rem;font-weight:900;display:flex;align-items:center;justify-content:center}
+.power.off{filter:grayscale(.85) brightness(.6);cursor:default}
+.power.sel{box-shadow:0 0 0 4px #7dff9a,0 0 18px #7dff9a}
+.ehand{display:flex;gap:4px;margin-left:8px}
+.ehand i{width:22px;height:30px;border-radius:4px;background:linear-gradient(135deg,#7a4b23,#3b2410);border:1px solid #c9965a}
+.board{flex:1;display:flex;align-items:stretch;justify-content:center;gap:10px;padding:6px 8px;min-height:0}
+.field{flex:1;display:flex;flex-direction:column;justify-content:center;gap:4px;background:linear-gradient(#7a5a32,#5b3f20);margin:0 8px;border-radius:22px;border:3px solid #a57a44;box-shadow:inset 0 0 40px rgba(0,0,0,.45);min-height:0;position:relative}
+.row{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;min-height:0;padding:4px}
+.mid{height:2px;background:rgba(255,230,170,.25);margin:0 20px}
+.mn{position:relative;width:76px;height:96px;border-radius:40px 40px 14px 14px;background:linear-gradient(#fff3d6,#e6c690);border:3px solid #8a5a2a;display:flex;align-items:center;justify-content:center;font-size:2.3rem;box-shadow:0 4px 10px rgba(0,0,0,.45);cursor:pointer;transition:transform .15s}
+.mn .a,.mn .h{position:absolute;bottom:-8px;width:28px;height:28px;border-radius:50%;font-weight:900;font-size:.95rem;display:flex;align-items:center;justify-content:center;color:#fff;border:2px solid #fff}
+.mn .a{left:-6px;background:#e0a21a}.mn .h{right:-6px;background:#d6363b}
+.mn .h.hurt{color:#ffb3b3}.mn .h.buff,.mn .a.buff{color:#b8ffb8}
+.mn.taunt{border-radius:14px;border:4px solid #b9b9b9;box-shadow:0 0 0 3px #6f6f6f,0 4px 10px rgba(0,0,0,.45)}
+.mn.shield::after{content:"";position:absolute;inset:-6px;border-radius:inherit;border:3px solid #ffe36b;box-shadow:0 0 12px #ffe36b}
+.mn.stealth{opacity:.55;filter:saturate(.5)}
+.mn.ready{box-shadow:0 0 0 4px #7dff9a,0 0 18px #7dff9a}
+.mn.sel{transform:translateY(-8px);box-shadow:0 0 0 4px #fff,0 0 22px #fff}
+.mn.tg{box-shadow:0 0 0 4px #ff5a5a,0 0 22px #ff5a5a}
+.mn .kw{position:absolute;top:-10px;left:50%;transform:translateX(-50%);font-size:.7rem;background:rgba(0,0,0,.65);border-radius:8px;padding:1px 5px;white-space:nowrap}
+.hand{flex:none;display:flex;justify-content:center;gap:6px;padding:8px 8px 10px;min-height:150px;align-items:flex-end}
+.card{position:relative;width:96px;height:136px;border-radius:12px;background:linear-gradient(#fff7e2,#ead2a0);border:3px solid var(--rc,#9AA3B5);box-shadow:0 6px 14px rgba(0,0,0,.5);color:#3a2410;display:flex;flex-direction:column;align-items:center;padding:16px 6px 6px;cursor:pointer;transition:transform .15s,box-shadow .15s;flex:none}
+.card .em{font-size:2.2rem;line-height:1}
+.card .nm{font-size:.72rem;font-weight:900;margin-top:4px;text-align:center}
+.card .tx{font-size:.6rem;line-height:1.25;text-align:center;margin-top:3px;color:#5a3a1a}
+.card .co{position:absolute;top:-10px;left:-10px;width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#7fc3ff,#2f6be0);border:2px solid #fff;color:#fff;font-weight:900;display:flex;align-items:center;justify-content:center}
+.card .a,.card .h{position:absolute;bottom:-9px;width:26px;height:26px;border-radius:50%;font-weight:900;font-size:.85rem;display:flex;align-items:center;justify-content:center;color:#fff;border:2px solid #fff}
+.card .a{left:-8px;background:#e0a21a}.card .h{right:-8px;background:#d6363b}
+.card .lv{position:absolute;top:3px;right:6px;font-size:.58rem;font-weight:900;color:#8a5a2a}
+.card.can{box-shadow:0 0 0 3px #7dff9a,0 6px 16px rgba(0,0,0,.5)}
+.card.can:hover{transform:translateY(-10px)}
+.card.sel{transform:translateY(-16px);box-shadow:0 0 0 4px #fff,0 0 20px #fff}
+.card.no{filter:brightness(.7)}
+.end{position:absolute;right:10px;top:50%;transform:translateY(-50%);z-index:3;background:linear-gradient(#ffd66b,#e0a21a);border:3px solid #fff3c4;color:#3a2410;font-weight:900;border-radius:14px;padding:12px 14px;font-size:.95rem;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.5)}
+.end.done{background:linear-gradient(#7dff9a,#2e9e5b);color:#06260f}
+.end.wait{filter:grayscale(1) brightness(.7);cursor:default}
+#tip{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:4;background:rgba(20,12,6,.88);border:2px solid var(--gold);border-radius:14px;padding:10px 16px;font-weight:800;font-size:.95rem;pointer-events:none;opacity:0;transition:opacity .3s;text-align:center;max-width:86vw}
+.fl{position:fixed;z-index:20;font-weight:900;font-size:1.6rem;color:#ff5050;-webkit-text-stroke:2px #fff;paint-order:stroke fill;pointer-events:none;animation:fl 1s forwards}
+.fl.g{color:#38d46a}
+@keyframes fl{0%{opacity:0;transform:translate(-50%,-30%) scale(.8)}20%{opacity:1;transform:translate(-50%,-50%) scale(1.15)}100%{opacity:0;transform:translate(-50%,-90%) scale(1)}}
+.hit{animation:hit .35s}
+@keyframes hit{0%,100%{transform:none}30%{transform:translateX(-5px)}60%{transform:translateX(5px)}}
+#ov{position:fixed;inset:0;z-index:30;background:rgba(10,6,2,.78);display:flex;align-items:center;justify-content:center;padding:16px}
+.box{width:min(520px,94vw);background:linear-gradient(#4a2f17,#2a1a0c);border:3px solid var(--gold);border-radius:20px;padding:20px;text-align:center;box-shadow:0 14px 40px rgba(0,0,0,.6)}
+.box h1{font-size:1.5rem;color:var(--gold);margin-bottom:6px}.box p{font-size:.9rem;line-height:1.55;color:#f3e1bf}
+.btn{display:inline-block;margin:10px 6px 0;background:linear-gradient(#ffd66b,#e0a21a);border:2px solid #fff3c4;color:#3a2410;font-weight:900;border-radius:12px;padding:10px 18px;font-size:.95rem;cursor:pointer}
+.btn.s{background:#3b2a18;color:#f3e1bf;border-color:#a57a44}
+.rules{text-align:left;font-size:.82rem;line-height:1.6;margin-top:10px;background:rgba(0,0,0,.25);border-radius:12px;padding:10px 12px}
+.rules b{color:var(--gold)}
+.back{position:absolute;left:10px;top:50%;transform:translateY(-50%);z-index:3;font-size:.75rem;color:#e8d4b0;text-decoration:none;background:rgba(0,0,0,.35);border-radius:10px;padding:6px 8px}
+#log{position:absolute;left:10px;bottom:6px;font-size:.66rem;color:#e8d4b0;opacity:.8;max-width:40%;pointer-events:none}
+@media (max-width:640px){.hero{width:58px;height:58px;font-size:1.8rem}.power{width:46px;height:46px;font-size:1.2rem}.mn{width:56px;height:74px;font-size:1.7rem}.mn .a,.mn .h{width:22px;height:22px;font-size:.78rem}.card{width:70px;height:104px;padding-top:12px}.card .em{font-size:1.6rem}.card .tx{display:none}.card .nm{font-size:.62rem}.hand{min-height:116px;gap:3px}.end{padding:9px 8px;font-size:.78rem}.row{gap:4px}.field{margin:0 4px}.back{display:none}}
+@media (max-height:520px){.hand{min-height:110px}.card{height:100px;width:72px;padding-top:10px}.card .tx{display:none}.mn{height:70px;width:56px;font-size:1.6rem}.hero{width:52px;height:52px;font-size:1.6rem}.side{padding:4px 10px}}
+</style></head><body>
+<div id="app">
+ <div class="side" id="eSide"></div>
+ <div class="board"><div class="field" id="field">
+  <a class="back" href="beastlord.html">← 영웅 본부</a>
+  <div class="row" id="eRow"></div><div class="mid"></div><div class="row" id="pRow"></div>
+  <button class="end" id="endB">턴 종료</button><div id="tip"></div><div id="log"></div></div></div>
+ <div class="side" id="pSide"></div>
+ <div class="hand" id="hand"></div>
+</div>
+<div id="ov"></div>
+<script>
+const $=s=>document.querySelector(s);
+const R=Math.random,pick=a=>a[Math.floor(R()*a.length)],sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const AUTO=/auto=1/.test(location.search);
+const RAR=[["일반","#9AA3B5"],["희귀","#4FA3FF"],["영웅","#B36BFF"],["전설","#FFB13D"]];
+/* 카드: id, 이모지, 이름, 희귀, 비용, 공, 체, 키워드, 설명 */
+const CARDS=[
+ ["hawk","🦅","매 척후병",0,1,2,1,{charge:1},"돌진: 바로 공격"],
+ ["fox","🦊","여우 궁수",0,2,2,2,{bc:"ping"},"함성: 적 하나에 1 피해"],
+ ["wolf","🐺","늑대 사냥꾼",0,2,2,3,{pack:1},"아군이 있으면 공격 +1"],
+ ["bunny","🐇","토끼 힐러",1,2,1,3,{heal:2},"내 턴 끝: 다친 아군 2 회복"],
+ ["snake","🐍","독사 암살자",1,2,1,2,{poison:1},"독: 때린 하수인 처치"],
+ ["boar","🐗","멧돼지 돌격병",0,3,3,2,{charge:1},"돌진: 바로 공격"],
+ ["turtle","🐢","거북 수호병",0,3,1,6,{taunt:1},"도발: 먼저 맞아야 해요"],
+ ["panther","🐆","흑표범 자객",2,4,4,3,{stealth:1},"은신: 공격 전까진 못 노려요"],
+ ["owl","🦉","부엉이 마법사",1,4,3,3,{bc:"aoe1"},"함성: 적 하수인 모두 1 피해"],
+ ["croc","🐊","악어 투사",1,4,3,5,{taunt:1},"도발"],
+ ["bear","🐻","곰 거인",1,5,5,6,{taunt:1},"도발"],
+ ["rhino","🦏","코뿔소 파괴자",2,5,5,4,{charge:1,siege:1},"돌진 · 성을 치면 2배"],
+ ["phoenix","🔥","불사조 현자",3,5,4,3,{rebirth:1,shield:1},"보호막 · 죽으면 한 번 부활"],
+ ["lion","🦁","사자왕",3,6,5,5,{bc:"rally"},"함성: 다른 아군 +1/+1"],
+ ["elephant","🐘","코끼리 전차",2,6,4,8,{taunt:1,grow:1},"도발 · 내 턴마다 체력 +1"],
+ ["dragon","🐲","용왕",3,7,6,6,{bc:"aoe2"},"함성: 적 하수인 모두 2 피해"]
+].map(a=>({id:a[0],em:a[1],nm:a[2],r:a[3],cost:a[4],atk:a[5],hp:a[6],kw:a[7],tx:a[8]}));
+const C=Object.fromEntries(CARDS.map(c=>[c.id,c]));
+/* 영웅 본부 저장 연동 */
+let BL=null;try{BL=JSON.parse(localStorage.getItem("beastlord_v1"))}catch(_){}
+const owned=BL&&BL.h?Object.keys(BL.h).filter(k=>C[k]):["fox","boar","turtle","wolf","hawk","bunny"];
+const lvOf=id=>BL&&BL.h&&BL.h[id]?BL.h[id].lv||1:1;
+function buildDeck(ids,lvf){const d=[];ids.forEach(id=>{d.push(id,id)});while(d.length<20)d.push(pick(ids));return shuffle(d.slice(0,20)).map(id=>mk(id,lvf(id)))}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(R()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+let uid=0;function mk(id,lv){const c=C[id];const b=Math.floor((lv-1)/2);return{u:++uid,id,em:c.em,nm:c.nm,r:c.r,cost:c.cost,atk:c.atk+b,hp:c.hp+b,kw:{...c.kw},tx:c.tx,lv}}
+/* 상대 덱: 보유 영웅 수에 맞춰 조금씩 강해짐 */
+const tro=BL?BL.tro||0:0;
+const aiIds=shuffle(CARDS.filter(c=>c.r<=Math.min(3,1+Math.floor(tro/60))).map(c=>c.id)).slice(0,8);
+let G;
+function newGame(){uid=0;const P={k:"p",hp:30,max:0,mana:0,deck:buildDeck(owned,lvOf),hand:[],board:[],pw:0,fat:0,em:"🦁",nm:BL&&BL.nm||"나의 성"};
+ const E={k:"e",hp:30,max:0,mana:0,deck:buildDeck(aiIds,()=>1+Math.floor(tro/80)),hand:[],board:[],pw:0,fat:0,em:"🐺",nm:"늑대 성주"};
+ G={P,E,turn:"p",sel:null,selCard:null,pend:null,over:false,n:0,busy:false,tipN:0};
+ for(let i=0;i<3;i++){draw(P);draw(E)}draw(E);E.hand.push(coin());startTurn(P,true)}
+function coin(){return{u:++uid,id:"coin",em:"🪙",nm:"행운의 동전",r:0,cost:0,spell:"coin",tx:"이번 턴 마나 +1"}}
+const foe=s=>s===G.P?G.E:G.P;
+function draw(s){if(!s.deck.length){s.fat++;dmgHero(s,s.fat);log(s.nm+" 덱이 비어 "+s.fat+" 피해");return}const c=s.deck.pop();if(s.hand.length>=7){log("손패가 가득 차 "+c.nm+" 버려짐");return}s.hand.push(c)}
+function startTurn(s,first){G.turn=s.k;s.max=Math.min(7,s.max+1);s.mana=s.max;s.pw=0;draw(s);s.board.forEach(m=>{m.sick=false;m.att=0;if(m.kw.grow){m.hp++;m.mhp++}});render();
+ if(s===G.P){tip(G.n<2?"카드를 눌러 내보내요 · 초록 테두리 하수인으로 공격!":s.max>=2&&G.n<4?"💡 오른쪽 위 파란 원 = 2마나로 적에게 1 피해":"내 차례!",1400)}else aiTurn()}
+function endTurn(){if(G.over||G.turn!=="p"||G.busy)return;const s=G.P;eot(s);G.n++;startTurn(G.E)}
+function eot(s){s.board.forEach(m=>{if(m.kw.heal){const t=s.board.filter(x=>x.hp<x.mhp).sort((a,b)=>(a.hp-a.mhp)-(b.hp-b.mhp))[0];if(t){t.hp=Math.min(t.mhp,t.hp+m.kw.heal);float(t,"+"+m.kw.heal,1)}}});G.sel=null;G.selCard=null;G.pend=null}
+/* 내보내기 */
+function needsTarget(c){return c.kw&&c.kw.bc==="ping"}
+function play(s,c,target){if(c.cost>s.mana)return false;if(!c.spell&&s.board.length>=5)return false;s.mana-=c.cost;s.hand=s.hand.filter(x=>x!==c);
+ if(c.spell==="coin"){s.mana++;log(s.nm+": 행운의 동전 (+1 마나)");render();return true}
+ const m={...c,mhp:c.hp,sick:!c.kw.charge,att:0};s.board.push(m);log(s.nm+": "+c.nm+" 소환");SND.play();
+ const o=foe(s),bc=c.kw.bc;
+ if(bc==="ping"){if(target)hitTarget(o,target,1)}
+ if(bc==="aoe1"||bc==="aoe2"){const d=bc==="aoe1"?1:2;o.board.slice().forEach(x=>dmgMin(o,x,d));shake()}
+ if(bc==="rally"){s.board.forEach(x=>{if(x!==m){x.atk++;x.hp++;x.mhp++;x.buff=1;float(x,"+1",1)}})}
+ cleanup();render();return true}
+function hitTarget(o,t,d){if(t==="hero")dmgHero(o,d);else dmgMin(o,t,d)}
+function power(s,t){if(s.pw||s.mana<2)return false;s.mana-=2;s.pw=1;hitTarget(foe(s),t,1);SND.hit();log(s.nm+": 성벽 화살");cleanup();render();return true}
+/* 공격 */
+const atkOf=(s,m)=>m.atk+(m.kw.pack&&s.board.length>1?1:0);
+function canAttack(m){return !m.sick&&!m.att&&atkOf(G.turn==="p"?G.P:G.E,m)>0}
+function taunts(o){return o.board.filter(x=>x.kw.taunt&&!x.kw.stealth)}
+function legal(o,t){const T=taunts(o);if(t==="hero")return !T.length;if(t.kw.stealth)return false;return !T.length||T.includes(t)}
+async function attack(s,m,t){const o=foe(s);if(!legal(o,t)||!canAttack(m))return false;G.busy=true;m.att=1;if(m.kw.stealth)delete m.kw.stealth;
+ await lunge(m,t);const a=atkOf(s,m);
+ if(t==="hero"){dmgHero(o,m.kw.siege?a*2:a);log(s.nm+": "+m.nm+" → 성 "+(m.kw.siege?a*2:a))}
+ else{const ta=t.atk;dmgMin(o,t,a,m.kw.poison);dmgMin(s,m,ta,t.kw.poison);log(s.nm+": "+m.nm+" ⚔ "+t.nm)}
+ SND.hit();cleanup();G.busy=false;render();return true}
+function dmgMin(owner,m,d,poison){if(d<=0)return;if(m.kw.shield){delete m.kw.shield;float(m,"막음!",1);return}m.hp-=d;float(m,"-"+d);bump(m);if(poison&&m.hp>0){m.hp=0;float(m,"☠️")}}
+function dmgHero(s,d){s.hp-=d;floatHero(s,"-"+d);bumpHero(s);if(s.hp<=0)setTimeout(()=>finish(),500)}
+function cleanup(){[G.P,G.E].forEach(s=>{const dead=s.board.filter(m=>m.hp<=0);s.board=s.board.filter(m=>m.hp>0);dead.forEach(m=>{log(m.nm+" 쓰러짐");if(m.kw.rebirth){const r=mk(m.id,1);r.atk=2;r.hp=1;r.mhp=1;r.kw={};r.sick=true;r.nm=m.nm+"(부활)";if(s.board.length<5)s.board.push(r)}})});if(G.P.hp<=0||G.E.hp<=0)finish()}
+/* AI */
+async function aiTurn(){const s=G.E,o=G.P;G.busy=true;await sleep(AUTO?60:700);
+ let loop=0;while(loop++<12&&!G.over){const opts=s.hand.filter(c=>c.cost<=s.mana&&(c.spell||s.board.length<5));if(!opts.length)break;
+  const coinC=opts.find(c=>c.spell==="coin");const big=opts.filter(c=>!c.spell).sort((a,b)=>b.cost-a.cost)[0];
+  if(coinC&&!s.hand.some(c=>!c.spell&&c.cost===s.mana)&&s.hand.some(c=>!c.spell&&c.cost===s.mana+1)){play(s,coinC);await sleep(AUTO?20:400);continue}
+  if(!big)break;let tg=null;if(needsTarget(big)){tg=o.board.filter(m=>!m.kw.stealth&&m.hp<=1).sort((a,b)=>b.atk-a.atk)[0]||"hero"}play(s,big,tg);await sleep(AUTO?30:650)}
+ if(!G.over&&!s.pw&&s.mana>=2){const t=o.board.filter(m=>!m.kw.stealth&&m.hp===1&&!m.kw.shield)[0]||"hero";power(s,t);await sleep(AUTO?20:500)}
+ G.busy=false;for(const m of s.board.slice()){if(G.over)break;if(!canAttack(m)||!s.board.includes(m))continue;const T=taunts(o);let t=null;
+  const tr=o.board.filter(x=>legal(o,x)&&x.hp<=atkOf(s,m)&&(x.atk<m.hp||x.atk>=m.atk+2));
+  if(T.length)t=T.sort((a,b)=>a.hp-b.hp)[0];else if(o.hp<=s.board.reduce((a,x)=>a+(canAttack(x)?atkOf(s,x):0),0))t="hero";else if(tr.length)t=tr.sort((a,b)=>b.atk-a.atk)[0];else t="hero";
+  await attack(s,m,t);await sleep(AUTO?20:450)}
+ if(G.over)return;eot(s);G.n++;startTurn(G.P);if(AUTO)autoPlayer()}
+async function autoPlayer(){/* 테스트용: 나도 AI처럼 */const save=[G.P,G.E];G.P.k="p";const s=G.P,o=G.E;await sleep(30);
+ for(const c of s.hand.slice().sort((a,b)=>b.cost-a.cost)){if(c.cost<=s.mana&&!c.spell&&s.board.length<5)play(s,c,needsTarget(c)?"hero":null)}
+ if(!s.pw&&s.mana>=2)power(s,"hero");
+ for(const m of s.board.slice()){if(G.over)return;if(!canAttack(m))continue;const T=taunts(o);await attack(s,m,T.length?T[0]:"hero")}
+ if(!G.over)endTurn()}
+/* 화면 */
+function render(){const P=G.P,E=G.E,my=G.turn==="p"&&!G.over;
+ $("#eSide").innerHTML=heroHTML(E,"e")+`<div class="ehand">${E.hand.map(()=>"<i></i>").join("")}</div><small style="margin-left:6px;color:#e8d4b0">🂠 ${E.deck.length}</small>`;
+ $("#pSide").innerHTML=heroHTML(P,"p")+`<small style="color:#e8d4b0">🂠 ${P.deck.length}</small><div class="power ${my&&!P.pw&&P.mana>=2?"":"off"} ${G.pend==="power"?"sel":""}" id="pwB" title="성벽 화살: 2마나 · 적 하나에 1 피해"><span class="c">2</span>🏹</div>`;
+ const tgOn=G.sel||G.pend;
+ $("#eRow").innerHTML=E.board.map(m=>minHTML(m,"e",tgOn&&(G.pend?(!m.kw.stealth):legal(E,m)))).join("");
+ $("#pRow").innerHTML=P.board.map(m=>minHTML(m,"p",false,my&&canAttack(m))).join("");
+ $("#hand").innerHTML=P.hand.map(c=>cardHTML(c,my&&c.cost<=P.mana&&(c.spell||P.board.length<5))).join("");
+ const eh=$("#eSide .hero");if(eh&&tgOn&&(G.pend||legal(E,"hero")))eh.classList.add("tg");
+ const anyMove=my&&(P.hand.some(c=>c.cost<=P.mana&&(c.spell||P.board.length<5))||P.board.some(canAttack)||(!P.pw&&P.mana>=2));
+ const eb=$("#endB");eb.className="end"+(my?(anyMove?"":" done"):" wait");eb.textContent=my?"턴 종료":"상대 차례…"}
+function heroHTML(s,k){return `<div class="hero" data-hero="${k}">${s.em}<span class="hp">${Math.max(0,s.hp)}</span></div><div class="info"><b>${s.nm}</b><div class="mana">${Array.from({length:7},(_,i)=>`<i class="${i<s.mana?"on":""}" style="${i<s.max?"":"opacity:.25"}"></i>`).join("")}</div><small>💎 ${s.mana}/${s.max}</small></div>`}
+function kwTxt(m){const k=m.kw;return k.taunt?"🛡 도발":k.charge?"⚡ 돌진":k.stealth?"👻 은신":k.poison?"☠️ 독":k.heal?"💚 치유":k.rebirth?"🔥 부활":k.pack?"🐾 무리":k.grow?"🌱 성장":""}
+function minHTML(m,side,tg,ready){const cls=["mn",m.kw.taunt?"taunt":"",m.kw.shield?"shield":"",m.kw.stealth?"stealth":"",tg?"tg":"",ready?"ready":"",G.sel===m?"sel":""].join(" ");const k=kwTxt(m);
+ return `<div class="${cls}" data-m="${m.u}" data-side="${side}">${k?`<span class="kw">${k}</span>`:""}${m.em}<span class="a ${m.buff?"buff":""}">${atkOf(side==="p"?G.P:G.E,m)}</span><span class="h ${m.hp<m.mhp?"hurt":m.mhp>C[m.id].hp+Math.floor((m.lv-1)/2)?"buff":""}">${m.hp}</span></div>`}
+function cardHTML(c,can){return `<div class="card ${can?"can":"no"} ${G.selCard===c?"sel":""}" data-c="${c.u}" style="--rc:${RAR[c.r][1]}"><span class="co">${c.cost}</span>${c.lv>1?`<span class="lv">Lv${c.lv}</span>`:""}<div class="em">${c.em}</div><div class="nm">${c.nm}</div><div class="tx">${c.tx}</div>${c.spell?"":`<span class="a">${c.atk}</span><span class="h">${c.hp}</span>`}</div>`}
+/* 입력 */
+document.addEventListener("click",async e=>{if(!G||G.over||G.turn!=="p"||G.busy)return;const P=G.P,E=G.E;
+ if(e.target.closest("#endB")){endTurn();return}
+ if(e.target.closest("#pwB")){if(P.pw||P.mana<2)return;G.pend=G.pend==="power"?null:"power";G.sel=null;G.selCard=null;render();if(G.pend)tip("🏹 누구를 쏠까요? (적 하수인이나 성)",1200);return}
+ const cd=e.target.closest(".card");if(cd){const c=P.hand.find(x=>x.u==cd.dataset.c);if(!c)return;if(c.cost>P.mana){tip("💎 마나가 모자라요",900);return}if(!c.spell&&P.board.length>=5){tip("판이 가득 찼어요 (최대 5)",900);return}
+  G.sel=null;if(needsTarget(c)&&(E.board.length||true)){G.selCard=c;G.pend="card";render();tip("🎯 1 피해를 줄 적을 골라요",1100);return}play(P,c);return}
+ const mn=e.target.closest(".mn");const hero=e.target.closest(".hero[data-hero=e]");
+ if(G.pend&&(mn&&mn.dataset.side==="e"||hero)){const t=hero?"hero":E.board.find(x=>x.u==mn.dataset.m);if(t!=="hero"&&t.kw.stealth){tip("👻 은신 중이라 못 노려요",900);return}
+  if(G.pend==="power")power(P,t);else{const c=G.selCard;G.selCard=null;play(P,c,t)}G.pend=null;render();return}
+ if(mn&&mn.dataset.side==="p"){const m=P.board.find(x=>x.u==mn.dataset.m);G.pend=null;G.selCard=null;if(!canAttack(m)){tip(m.sick?"💤 이번 턴엔 쉬어요 (다음 턴부터 공격)":"이미 공격했어요",900);return}G.sel=G.sel===m?null:m;render();if(G.sel)tip("⚔️ 공격할 대상을 골라요",900);return}
+ if(G.sel&&(mn&&mn.dataset.side==="e"||hero)){const t=hero?"hero":E.board.find(x=>x.u==mn.dataset.m);if(!legal(E,t)){tip(t!=="hero"&&t.kw.stealth?"👻 은신 중이라 못 노려요":"🛡 도발 하수인을 먼저 쓰러뜨려야 해요",1100);return}const m=G.sel;G.sel=null;await attack(P,m,t);return}
+ if(G.sel||G.pend){G.sel=null;G.pend=null;G.selCard=null;render()}});
+/* 효과 */
+function el(x){if(x==="hero")return null;return document.querySelector(`.mn[data-m="${x.u}"]`)}
+function float(m,t,g){const e=el(m);if(!e)return;const r=e.getBoundingClientRect();floatAt(r.left+r.width/2,r.top+r.height/2,t,g)}
+function floatHero(s,t){const e=$(`.hero[data-hero=${s.k}]`);if(!e)return;const r=e.getBoundingClientRect();floatAt(r.left+r.width/2,r.top+r.height/2,t)}
+function floatAt(x,y,t,g){const f=document.createElement("div");f.className="fl"+(g?" g":"");f.textContent=t;f.style.left=x+"px";f.style.top=y+"px";document.body.appendChild(f);setTimeout(()=>f.remove(),1000)}
+function bump(m){const e=el(m);if(e){e.classList.remove("hit");void e.offsetWidth;e.classList.add("hit")}}
+function bumpHero(s){const e=$(`.hero[data-hero=${s.k}]`);if(e){e.classList.remove("hit");void e.offsetWidth;e.classList.add("hit")}}
+function shake(){const f=$("#field");f.classList.remove("hit");void f.offsetWidth;f.classList.add("hit")}
+async function lunge(m,t){const a=el(m),b=t==="hero"?$(`.hero[data-hero=${G.turn==="p"?"e":"p"}]`):el(t);if(!a||!b||AUTO)return;const ra=a.getBoundingClientRect(),rb=b.getBoundingClientRect();a.style.transition="transform .18s";a.style.zIndex=5;a.style.transform=`translate(${(rb.left-ra.left)*.7}px,${(rb.top-ra.top)*.7}px)`;await sleep(180);a.style.transform="";await sleep(120)}
+function tip(t,ms){const e=$("#tip");e.textContent=t;e.style.opacity=1;clearTimeout(tip.h);tip.h=setTimeout(()=>e.style.opacity=0,ms||1200)}
+const LOG=[];function log(t){LOG.push(t);if(LOG.length>3)LOG.shift();const e=$("#log");if(e)e.innerHTML=LOG.map(x=>"· "+x).join("<br>")}
+let AC;const tone=(f,d,ty,v)=>{try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();const o=AC.createOscillator(),g=AC.createGain();o.type=ty||"triangle";o.frequency.value=f;g.gain.setValueAtTime(v||.08,AC.currentTime);g.gain.exponentialRampToValueAtTime(.001,AC.currentTime+d);o.connect(g).connect(AC.destination);o.start();o.stop(AC.currentTime+d)}catch(_){}};
+const SND={play:()=>{tone(520,.12);setTimeout(()=>tone(780,.12),70)},hit:()=>tone(160,.15,"square",.06),win:()=>[523,659,784,1047].forEach((f,i)=>setTimeout(()=>tone(f,.25),i*120))};
+/* 끝 · 보상 */
+function finish(){if(G.over)return;G.over=true;render();const win=G.E.hp<=0&&G.P.hp>0;let msg="";
+ if(BL){if(win){BL.gold=(BL.gold||0)+40;BL.tro=(BL.tro||0)+20;msg="🪙 금화 +40 · 🏆 트로피 +20"}else{BL.gold=(BL.gold||0)+10;msg="🪙 금화 +10 (위로금)"}(BL.log=BL.log||[]).unshift({t:Date.now(),w:win?1:0,m:"카드 대결"});try{localStorage.setItem("beastlord_v1",JSON.stringify(BL))}catch(_){}}
+ if(win)SND.win();window.__result=win?"win":"lose";
+ $("#ov").style.display="flex";$("#ov").innerHTML=`<div class="box"><h1>${win?"🏆 승리!":"💥 패배…"}</h1><p>${win?"늑대 성주의 성을 무너뜨렸어요!":"다음엔 도발 하수인을 먼저 깔아 보세요"}</p>${msg?`<p style="margin-top:6px;color:#FFD66B;font-weight:800">${msg}</p>`:""}<div><span class="btn" id="again">한 판 더</span><a class="btn s" href="beastlord.html">영웅 본부로</a></div></div>`;
+ $("#again").onclick=()=>{$("#ov").style.display="none";newGame()}}
+function intro(){$("#ov").style.display="flex";$("#ov").innerHTML=`<div class="box"><h1>⚔️ 동물 성 대전 · 카드 대결</h1><p>내가 모은 동물 영웅 카드로 덱을 만들어<br>상대 성의 체력 30을 먼저 0으로 만들면 승리!</p>
+ <div class="rules"><b>① 내보내기</b> 손패 카드를 누르면 💎마나를 써서 판에 나와요 (마나는 턴마다 +1, 최대 7)<br><b>② 공격</b> 초록 테두리 하수인 → 적 하수인이나 성을 눌러요<br><b>③ 성벽 화살 🏹</b> 2마나로 적 하나에 1 피해 (턴마다 1번)<br><b>🛡 도발</b> 먼저 쓰러뜨려야 다른 곳을 칠 수 있어요 · <b>⚡ 돌진</b> 나오자마자 공격 · <b>👻 은신</b> 공격 전까지 못 노려요</div>
+ <p style="margin-top:8px;font-size:.78rem;color:#d9c39b">내 덱: 보유 영웅 ${owned.length}종 (영웅 본부의 레벨이 강해질수록 카드도 강해져요)</p><span class="btn" id="go">대결 시작!</span></div>`;$("#go").onclick=()=>{$("#ov").style.display="none";newGame()}}
+if(AUTO){newGame();autoPlayer()}else intro();
+</script></body></html>
