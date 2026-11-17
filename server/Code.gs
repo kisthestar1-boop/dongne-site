@@ -1,7 +1,7 @@
 // 찰칵상세 AI 서버 (Google Apps Script) — 키는 스크립트 속성 GEMINI_KEY 에만 둔다
 const TXT = ["gemini-3.5-flash", "gemini-flash-latest", "gemini-2.5-flash", "gemini-3.1-flash-lite"];
 const IMG = ["gemini-3.1-flash-image", "gemini-2.5-flash-image", "gemini-3.1-flash-lite-image"];
-const LIMIT = { copy: 150, scene: 600 }; // 하루 최대 (요금 폭주 방지)
+const LIMIT = { copy: 40, scene: 80 }; // 하루 최대 (요금 폭주 방지)
 
 function doGet() { return out({ ok: true, service: "chalkak-ai" }); }
 
