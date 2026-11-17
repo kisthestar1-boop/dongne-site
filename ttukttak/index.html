@@ -467,20 +467,20 @@ JSON만 출력:
 {"name":"상품 이름 18자 이내","cat":"jewel/beauty/food/living/fashion/etc","brand":"영문 대문자 2단어 이하","hook":"대표 문구 2줄(\\n), 줄당 11자 이내",
 "palette":"English: one consistent design system for all sections — background color (hex), accent color (hex), mood, photo lighting; chosen to flatter this product",
 "tone":"warm/clean/bold","spec":[["항목","값"]],
-"sections":[{"en":"짧은 영어 필기체 문구 5단어 이내","h":"한국어 큰 제목 2줄(\\n), 줄당 11자 이내","b":"한국어 설명 한 줄 26자 이내","photo":"English: the main photo of this section in detail (scene, model or props, angle, light). People: face cropped or out of frame","layout":"English: how the small items are shown (e.g. 4 circle close-up photos / 4 thin line icons / 3 numbered steps)","items":[["한국어 라벨 6자 이내","한국어 설명 14자 이내"]]}]}
+"sections":[{"en":"짧은 영어 필기체 문구 5단어 이내","h":"한국어 큰 제목 2줄(\\n), 줄당 11자 이내, 가장 중요한 단어 하나를 **로 감싸기","b":"한국어 설명 한 줄 26자 이내","photo":"English: the main photo of this section in detail (scene, model or props, angle, light). People: face cropped or out of frame","layout":"English: how the small items are shown (e.g. 4 circle close-up photos / 4 thin line icons / 3 numbered steps)","items":[["한국어 라벨 6자 이내","한국어 설명 14자 이내"]]}]}
 spec은 이 종류 상품에서 흔히 쓰는 표준 규격 5~7줄(소재·크기·용량·구성·원산지·관리 등). 사진에서 보이는 건 그대로, 안 보이는 건 가장 일반적인 값.
 sections는 정확히 8개, items는 섹션마다 3~4개.`;
  const j=await gem(TXT_MODELS,{contents:[{parts:[{inline_data:{mime_type:"image/jpeg",data}},{text:prompt}]}],generationConfig:{responseMimeType:"application/json",temperature:.85}},key);
  const t=j.candidates?.[0]?.content?.parts?.map(p=>p.text||"").join("")||"{}";const o=JSON.parse(t.replace(/^```json|```$/g,"").trim());if(!Array.isArray(o.sections)||o.sections.length<4)throw new Error("기획이 비었어요");return o}
 function secPrompt(sec,i,n,name,palette,styled,extra){
- const L=String(sec.h||"").split("\n").map(x=>`"${x.trim()}"`).join(" / ");const it=(sec.items||[]).map(x=>Array.isArray(x)?`"${x[0]}"${x[1]?` with caption "${x[1]}"`:""}`:`"${x}"`).join(", ");
+ const hl=(String(sec.h||"").match(/\*\*([^*]+)\*\*/)||[])[1];const L=String(sec.h||"").replace(/\*\*/g,"").split("\n").map(x=>`"${x.trim()}"`).join(" / ");const it=(sec.items||[]).map(x=>Array.isArray(x)?`"${x[0]}"${x[1]?` with caption "${x[1]}"`:""}`:`"${x}"`).join(", ");
  return `Design ONE complete section (${i+1} of ${n}) of a premium Korean e-commerce product detail page, the quality of top-selling Coupang and Naver pages. Vertical 2:3 poster.
 Product: ${name} — the product in the FIRST reference image. Reproduce it EXACTLY: same shape, color, material, proportions and details. Do not redesign it.${styled?" The SECOND reference image is section 1 of this same page: match its background color, typography, margins, icon style and photo grading exactly so all sections look like one continuous design.":""}
 Show the product used correctly and realistically for what it is (e.g. a necklace is worn around the neck, never on a wrist).${i===0?" This is the FIRST section: the main photo must be very large and immersive, about 70% of the height.":""}
-Design system: ${palette}. Elegant Korean serif headline, small clean Korean sans-serif body text, thin line icons, generous margins, luxury minimal magazine layout, professional commercial photography.
+Design system: ${palette}.${i%3===1?" For rhythm, this section uses a slightly deeper tint of the background color.":""}${i===4?" This section may use a rich deep accent-colored background with light text for contrast.":""} Use the accent color for small English line, key word, icons and thin divider lines. Elegant Korean serif headline, small clean Korean sans-serif body text, thin line icons, generous margins, luxury minimal magazine layout, professional commercial photography.
 Layout, top to bottom:
 1) small italic English script line: "${sec.en||""}"
-2) big Korean headline: ${L}
+2) big Korean headline: ${L}${hl?` — render the word "${hl}" in the accent color (bolder), the rest in the main text color`:""}
 3) one short Korean body line: "${sec.b||""}"
 4) main photo: ${sec.photo||"the product beautifully styled"}
 5) ${sec.layout||"small items row"}: ${it}
