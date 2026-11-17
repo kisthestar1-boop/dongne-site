@@ -66,9 +66,9 @@ body.lit #moon{filter:drop-shadow(0 0 70px rgba(220,227,234,.45)) drop-shadow(0 
 /* 수집 */
 .hg{margin:14px 0 6px;font-weight:900;font-size:14px;display:flex;align-items:center;gap:8px}
 .hg i{font-style:normal;color:var(--sub);font-weight:500;font-size:12px}
-.cg{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:10px}
+.hw{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:4px 18px}.hb{min-width:0}.cg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
 .cd{position:relative;aspect-ratio:3/4.2;border-radius:12px;background:linear-gradient(170deg,#2B2620,#14110E);border:2px solid var(--rc);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;padding:8px 4px}
-.cd .e{font-size:40px}.cd .n{font-size:12px;font-weight:900;text-align:center}.cd .l{font-size:11px;color:var(--gold)}
+.cd .e{font-size:40px}.cd .e img{border:1px solid rgba(255,255,255,.15)}.cd .n{font-size:12px;font-weight:900;text-align:center}.cd .l{font-size:11px;color:var(--gold)}
 .cd .k{position:absolute;top:6px;left:6px;width:22px;height:22px;border-radius:50%;background:#2F6BE0;font-size:12px;font-weight:900;display:flex;align-items:center;justify-content:center}
 .cd.no{filter:grayscale(1) brightness(.45)}
 .lore{max-width:520px;margin:0 auto;text-align:center}
@@ -109,6 +109,13 @@ body.lit #moon{filter:drop-shadow(0 0 70px rgba(220,227,234,.45)) drop-shadow(0 
 .qi .pg{margin-left:auto;font-weight:900;font-size:13px;white-space:nowrap}
 @media (max-width:600px){.banners{top:38%}.bn{opacity:.6}.corner i{width:52px;height:52px;font-size:26px}.altar{margin-bottom:15vh}}
 body.art #moon,body.art #wall,body.art #tower,body.art .banners{display:none}body.art #sky .fog{height:30%;background:linear-gradient(transparent,rgba(5,5,8,.7))}body.art .altar::before{opacity:.35}
+body.art .sh{color:#F4F1EA;text-shadow:0 2px 8px rgba(0,0,0,.85);filter:drop-shadow(0 0 14px rgba(200,215,235,.45))}
+body.art .sh small{color:#D8DEE8}
+body.art .sh.big{background:linear-gradient(160deg,rgba(225,234,245,.38),rgba(120,138,160,.30) 55%,rgba(60,70,88,.45));backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
+body.art .sh.sm{background:linear-gradient(160deg,rgba(215,225,238,.30),rgba(100,115,135,.30) 60%,rgba(50,58,72,.45));backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
+body.art .sh::before{content:"";position:absolute;inset:0;clip-path:inherit;box-shadow:inset 0 0 0 2px rgba(235,242,250,.55);pointer-events:none}
+body.art .sh:hover{filter:drop-shadow(0 0 26px rgba(230,240,255,.85))}
+body.art .sh.big::after{opacity:1;width:3px;background:linear-gradient(#FF4A3A,transparent);box-shadow:0 0 8px #FF3A2A}
 </style></head><body>
 <div id="sky"><img id="bgimg" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 40%;opacity:0;transition:opacity 1.2s" onload="document.body.classList.add('art');this.style.opacity=1" src="store/sixth_menu.jpg"><svg id="moon" viewBox="0 0 200 200"><defs><radialGradient id="mg" cx="42%" cy="38%"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".55" stop-color="#D5DDE5"/><stop offset="1" stop-color="#8E9AA8"/></radialGradient><filter id="gl"><feGaussianBlur stdDeviation="2.4"/></filter></defs>
 <circle cx="100" cy="100" r="92" fill="url(#mg)"/><circle cx="70" cy="70" r="12" fill="#B9C3CD" opacity=".5"/><circle cx="128" cy="122" r="16" fill="#B3BDC8" opacity=".45"/><circle cx="118" cy="58" r="7" fill="#BCC6D0" opacity=".5"/>
@@ -205,12 +212,12 @@ function go(hid){location.href="sixthfight.html?foe="+hid}
 function fight(){const open=HOUSES.filter((h,i)=>i===0||S.camp[HOUSES[i-1].id]);const h=open[Math.floor(R()*open.length)];toast(`${h.ic} ${h.n}의 ${h.lord[1]}와 대결!`);setTimeout(()=>go(h.id),700)}
 /* ===== 수집 ===== */
 function coll(){const own=id=>S.h[id];
- const grp=(h,ids)=>`<div class="hg" style="color:${h.c==="#6A6F7C"?"#C9CED8":h.c}">${h.ic} ${h.n} <i>${h.m?'"'+h.m+'"':"당신의 성"}</i></div><div class="cg">${ids.map(id=>{const c=CARDS[id],o=own(id);return `<div class="cd ${o?"":"no"}" style="--rc:${RAR[c[2]][1]}" data-c="${id}"><span class="k">${c[3]}</span><div class="e">${c[0]}</div><div class="n">${c[1]}</div><div class="l">${o?"Lv "+o.lv+(o.sh?" · 조각 "+o.sh:""):"미보유"}</div></div>`}).join("")}</div>`;
+ const grp=(h,ids)=>`<div class="hb"><div class="hg" style="color:${h.c==="#6A6F7C"?"#C9CED8":h.c}">${h.ic} ${h.n} <i>${h.m?'"'+h.m+'"':"당신의 성"}</i></div><div class="cg">${ids.map(id=>{const c=CARDS[id],o=own(id);return `<div class="cd ${o?"":"no"}" style="--rc:${RAR[c[2]][1]}" data-c="${id}"><span class="k">${c[3]}</span><div class="e" style="width:84%"><img src="store/heroes/${id}.jpg" alt="" style="width:100%;aspect-ratio:1;object-fit:cover;border-radius:10px;display:block"></div><div class="n">${c[1]}</div><div class="l">${o?"Lv "+o.lv+(o.sh?" · 조각 "+o.sh:""):"미보유"}</div></div>`}).join("")}</div></div>`;
  const n=IDS.filter(own).length;
- panel("수집",`영웅 ${n} / ${IDS.length} · 누르면 이야기`,grp(HOME,["bunny"])+HOUSES.map(h=>grp(h,h.cards)).join(""));
+ panel("수집",`영웅 ${n} / ${IDS.length} · 누르면 이야기`,`<div class="hw">${grp(HOME,["bunny"])+HOUSES.map(h=>grp(h,h.cards)).join("")}</div>`);
  document.querySelectorAll(".cd").forEach(x=>x.onclick=()=>{click();lore(x.dataset.c)})}
 function lore(id){const c=CARDS[id],h=houseOf(id),o=S.h[id];
- panel(c[1],h.n,`<div class="lore"><div class="e">${c[0]}</div><h3>${c[1]}</h3><div class="tg" style="color:${RAR[c[2]][1]}">${RAR[c[2]][0]} · ${h.ic} ${h.n} · ${c[4]}</div><div class="stat"><span>💎 비용 ${c[3]}</span><span>${o?"⭐ Lv "+o.lv:"🔒 미보유"}</span></div><p>${c[6]}</p><p>${c[7]}</p>${h.m?`<p class="q">"${h.m}"</p>`:""}</div>`);
+ panel(c[1],h.n,`<div class="lore"><div class="e" style="width:180px;margin:0 auto"><img src="store/heroes/${id}.jpg" alt="" style="width:100%;aspect-ratio:1;object-fit:cover;border-radius:16px;display:block;box-shadow:0 0 30px ${RAR[c[2]][1]}"></div><h3>${c[1]}</h3><div class="tg" style="color:${RAR[c[2]][1]}">${RAR[c[2]][0]} · ${h.ic} ${h.n} · ${c[4]}</div><div class="stat"><span>💎 비용 ${c[3]}</span><span>${o?"⭐ Lv "+o.lv:"🔒 미보유"}</span></div><p>${c[6]}</p><p>${c[7]}</p>${h.m?`<p class="q">"${h.m}"</p>`:""}</div>`);
  $("#px").onclick=()=>{click();coll()}}
 /* ===== 달 조각 상점: 3장 뽑기 ===== */
 const PRICE=100;
@@ -218,7 +225,7 @@ function shop(){panel("달 조각 상점","조각 하나에 영웅 3명이 깨�
  const open=()=>{if(S.gold<PRICE){toast("금화가 모자라요 · 대결에서 이기면 얻어요");return}S.gold-=PRICE;
   const roll=()=>{const r=R();const rr=r<.04?3:r<.16?2:r<.45?1:0;const pool=IDS.filter(i=>CARDS[i][2]===rr);return pool[Math.floor(R()*pool.length)]};
   const got=[roll(),roll(),roll()];got.forEach(id=>{const o=S.h[id];if(o)o.sh=(o.sh||0)+1;else S.h[id]={lv:1,sh:0,tr:0,nw:1}});save();
-  $("#rv").innerHTML=got.map(id=>{const c=CARDS[id];return `<div class="flip" style="--rc:${RAR[c[2]][1]}"><div class="in"><div class="b">🌑</div><div class="f"><div class="e">${c[0]}</div><div class="n">${c[1]}</div><div class="t">${RAR[c[2]][0]}${S.h[id].nw?" · NEW!":" · 조각 +1"}</div></div></div></div>`}).join("");
+  $("#rv").innerHTML=got.map(id=>{const c=CARDS[id];return `<div class="flip" style="--rc:${RAR[c[2]][1]}"><div class="in"><div class="b">🌑</div><div class="f"><div class="e" style="width:80%"><img src="store/heroes/${id}.jpg" alt="" style="width:100%;aspect-ratio:1;object-fit:cover;border-radius:10px;display:block"></div><div class="n">${c[1]}</div><div class="t">${RAR[c[2]][0]}${S.h[id].nw?" · NEW!":" · 조각 +1"}</div></div></div></div>`}).join("");
   got.forEach(id=>delete S.h[id].nw);save();$("#buy").disabled=S.gold<PRICE;$("#buy").nextElementSibling.textContent=`가진 금화 ${S.gold} · 카드를 눌러 뒤집어요`;
   document.querySelectorAll(".flip").forEach((f,i)=>f.onclick=()=>{if(f.classList.contains("on"))return;f.classList.add("on");const r=IDS.indexOf(got[i])>=0?CARDS[got[i]][2]:0;tone(440+r*110,.35,"sine",.06);if(r>=2)setTimeout(chime,250)})};
  $("#buy").onclick=open;$("#pack").onclick=open}
