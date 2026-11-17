@@ -71,8 +71,24 @@ public class SixthLordGame : MonoBehaviour
     enum Scr { Title, Menu, Camp, Coll, Battle }
     Scr scr = Scr.Title;
     Lord foe; bool over, win; float resultT;
-    const float L = 1000, W = 400;
-    static Vector3 WP(float x, float y) => new Vector3((x - 500) / 50f, (200 - y) / 50f, 0);
+    const float L = 2000, W = 400;
+    static Vector3 WP(float x, float y) => new Vector3((x - L / 2) / 50f, (200 - y) / 50f, 0);
+
+    // ===== 지형 (워크3 캐슬파이트처럼 긴 전장 + 길목) =====
+    // 강: 가운데를 가로지름, 다리 두 곳으로만 건넘 · 숲: 느려지지만 원거리 피해 30% 덜 받음 · 언덕: 원거리 사거리 +35%
+    const float RX = L / 2, RHW = 34, BHW = 30;
+    static readonly float[] BRIDGES = { 110, 290 };
+    class Zone { public float x, y, rx, ry; public bool forest; }
+    static readonly Zone[] ZONES = {
+        new Zone{ x = 640, y = 82, rx = 120, ry = 52, forest = true }, new Zone{ x = L - 640, y = W - 82, rx = 120, ry = 52, forest = true },
+        new Zone{ x = 1240, y = 200, rx = 70, ry = 46, forest = true }, new Zone{ x = L - 1240, y = 200, rx = 70, ry = 46, forest = true },
+        new Zone{ x = 430, y = 300, rx = 80, ry = 62 }, new Zone{ x = L - 430, y = W - 300, rx = 80, ry = 62 },
+    };
+    static bool In(Zone z, float x, float y) { float a = (x - z.x) / z.rx, b = (y - z.y) / z.ry; return a * a + b * b <= 1; }
+    static bool InForest(float x, float y) { foreach (var z in ZONES) if (z.forest && In(z, x, y)) return true; return false; }
+    static bool OnHill(float x, float y) { foreach (var z in ZONES) if (!z.forest && In(z, x, y)) return true; return false; }
+    static float NearBridge(float y) { float b = BRIDGES[0]; foreach (var v in BRIDGES) if (Mathf.Abs(v - y) < Mathf.Abs(b - y)) b = v; return b; }
+    static bool OnBridge(float y) { foreach (var v in BRIDGES) if (Mathf.Abs(v - y) <= BHW) return true; return false; }
 
     class Ent
     {
@@ -86,6 +102,7 @@ public class SixthLordGame : MonoBehaviour
     float[] gold = new float[2], inc = new float[2]; int[] kills = new int[2];
     float tm, aiT, spd = 1, shake; List<string> aiCards; List<string> myCards;
     Transform world; Camera cam;
+    float camX, camHalf; bool dragging; Vector2 pressAt, lastAt; float dragDist;
 
     void Awake()
     {
@@ -108,16 +125,22 @@ public class SixthLordGame : MonoBehaviour
         var f = T("field");
         if (f != null)
         {
-            var fs = new GameObject("Field").AddComponent<SpriteRenderer>(); fs.transform.SetParent(world);
-            fs.sprite = Sprite.Create(f, new Rect(0, 0, f.width, f.height), new Vector2(.5f, .5f), f.width / 22f);
-            fs.sortingOrder = -10; fs.color = new Color(.85f, .85f, .85f);
+            var fsp = Sprite.Create(f, new Rect(0, 0, f.width, f.height), new Vector2(.5f, .5f), f.width / 21f);
+            for (int k = 0; k < 2; k++)
+            {
+                var fs = new GameObject("Field" + k).AddComponent<SpriteRenderer>(); fs.transform.SetParent(world);
+                fs.sprite = fsp; fs.flipX = k == 1; fs.transform.position = new Vector3(k == 0 ? -10.25f : 10.25f, 0, 0);
+                fs.sortingOrder = -10; fs.color = new Color(.85f, .85f, .85f);
+            }
         }
+        DrawTerrain();
         gold[0] = 120; gold[1] = 120 + l.idx * 25; kills[0] = kills[1] = 0;
         inc[0] = 6; inc[1] = 5 * (l.idx == 0 ? .55f : .8f + l.idx * .08f);
         for (int t = 0; t < 2; t++)
         {
             cast[t] = MakeEnt(2, t, t == 0 ? "lords/me" : "lords/" + l.id, t == 0 ? 40 : L - 40, W / 2, 3000, 34, 2.4f);
-            var xs = t == 0 ? new[] { 120f, 185f } : new[] { 880f, 815f };
+            camX = -99; // 내 성 쪽에서 시작 (Update에서 끝으로 맞춤)
+            var xs = t == 0 ? new[] { 120f, 185f } : new[] { L - 120f, L - 185f };
             var list = new List<Plot>(); foreach (var y in new[] { 120f, 200f, 280f }) foreach (var x in xs) list.Add(new Plot { x = x, y = y });
             plots[t] = list.ToArray();
         }
@@ -125,6 +148,52 @@ public class SixthLordGame : MonoBehaviour
         myCards = new List<string> { "hawk", "fox", "boar", "wolf", "turtle", "bunny" };
         foreach (var lo in LORDS) if (PlayerPrefs.GetInt("camp_" + lo.id) == 1) foreach (var c in lo.cards) if (!myCards.Contains(c) && myCards.Count < 8) myCards.Add(c);
         aiT = 1;
+    }
+
+    Sprite soft;
+    Sprite Soft()
+    {
+        if (soft != null) return soft; const int N = 64; var t = new Texture2D(N, N, TextureFormat.RGBA32, false); var px = new Color[N * N];
+        for (int y = 0; y < N; y++) for (int x = 0; x < N; x++) { float d = Vector2.Distance(new Vector2(x, y), new Vector2(31.5f, 31.5f)) / 31.5f; px[y * N + x] = new Color(1, 1, 1, Mathf.Clamp01((1 - d) * 3f)); }
+        t.SetPixels(px); t.Apply(); soft = Sprite.Create(t, new Rect(0, 0, N, N), new Vector2(.5f, .5f), N); return soft;
+    }
+    SpriteRenderer Blob(Sprite sp, float x, float y, float sx, float sy, Color c, int order)
+    {
+        var s = new GameObject("terrain").AddComponent<SpriteRenderer>(); s.sprite = sp; s.color = c; s.sortingOrder = order;
+        s.transform.SetParent(world); s.transform.position = WP(x, y); s.transform.localScale = new Vector3(sx / 50f, sy / 50f, 1); return s;
+    }
+    void DrawTerrain()
+    {
+        // 강
+        Blob(white, RX, W / 2, RHW * 2, W + 40, new Color(.12f, .22f, .34f, .9f), -6);
+        Blob(white, RX - RHW, W / 2, 3, W + 40, new Color(.5f, .7f, .85f, .5f), -5); Blob(white, RX + RHW, W / 2, 3, W + 40, new Color(.5f, .7f, .85f, .5f), -5);
+        // 다리 (나무 판자)
+        foreach (var by in BRIDGES)
+        {
+            Blob(white, RX, by, RHW * 2 + 26, BHW * 2, new Color(.36f, .25f, .16f), -4);
+            for (int i = -4; i <= 4; i++) Blob(white, RX + i * 10, by, 2, BHW * 2, new Color(.22f, .15f, .09f, .8f), -3);
+            Blob(white, RX, by - BHW, RHW * 2 + 26, 3, new Color(.6f, .45f, .3f), -3); Blob(white, RX, by + BHW, RHW * 2 + 26, 3, new Color(.6f, .45f, .3f), -3);
+        }
+        // 숲 · 언덕
+        foreach (var z in ZONES)
+        {
+            if (z.forest)
+            {
+                Blob(Soft(), z.x, z.y, z.rx * 2.2f, z.ry * 2.2f, new Color(.05f, .16f, .08f, .55f), -5);
+                var rnd = new System.Random((int)(z.x * 7 + z.y));
+                for (int i = 0; i < 14; i++)
+                {
+                    float a = (float)rnd.NextDouble() * 6.283f, rr = Mathf.Sqrt((float)rnd.NextDouble()) * .85f;
+                    float tx = z.x + Mathf.Cos(a) * z.rx * rr, ty = z.y + Mathf.Sin(a) * z.ry * rr, sz = 26 + (float)rnd.NextDouble() * 18;
+                    Blob(Soft(), tx, ty, sz, sz, new Color(.1f, .28f + (float)rnd.NextDouble() * .1f, .12f, .85f), -4);
+                }
+            }
+            else
+            {
+                Blob(Soft(), z.x, z.y, z.rx * 2.3f, z.ry * 2.3f, new Color(.62f, .52f, .36f, .45f), -5);
+                Blob(Soft(), z.x, z.y, z.rx * 1.3f, z.ry * 1.3f, new Color(.75f, .65f, .46f, .35f), -5);
+            }
+        }
     }
 
     Ent MakeEnt(int kind, int t, string img, float x, float y, float hp, float r, float size)
@@ -178,6 +247,7 @@ public class SixthLordGame : MonoBehaviour
     {
         if (tg.hp <= 0) return;
         if (src != null && src.sp.Contains("siege") && tg.kind != 0) d *= 3;
+        if (src != null && src.rng > 60 && tg.kind == 0 && InForest(tg.x, tg.y)) d *= .7f; // 숲 엄폐
         tg.hp -= d; tg.fl = .12f; tg.punch = .15f; if (tg.kind == 0 && src != null && src.rng < 60) tg.x += (tg.t == 0 ? -1 : 1) * 5;
         if (d >= 1) Txt(tg.x, tg.y - tg.r, "-" + Mathf.RoundToInt(d), tg.t == 1 ? new Color(1f, .88f, .55f) : new Color(1f, .55f, .48f), d >= 40);
         if (src != null && src.sp.Contains("poison") && tg.kind == 0) { tg.dot = 6; tg.dotT = 3; }
@@ -245,7 +315,8 @@ public class SixthLordGame : MonoBehaviour
                 else
                 {
                     Ent lead = null; foreach (var a in units) if (a.t == u.t && a != u && a.hp > 0 && (lead == null || dir * (a.x - lead.x) > 0)) lead = a;
-                    float gx = lead != null ? lead.x - dir * 40 : u.x + dir * 20; u.x += Mathf.Sign(gx - u.x) * Mathf.Min(Mathf.Abs(gx - u.x), u.spd * dt);
+                    float gx = lead != null ? lead.x - dir * 40 : u.x + dir * 20, gy = lead != null ? lead.y : u.y; Route(u, ref gx, ref gy);
+                    float dd = Mathf.Max(.01f, Mathf.Sqrt((gx - u.x) * (gx - u.x) + (gy - u.y) * (gy - u.y))); if (dd > 2) { u.x += (gx - u.x) / dd * u.spd * dt; u.y += (gy - u.y) / dd * u.spd * dt; } KeepDry(u);
                 }
                 continue;
             }
@@ -254,7 +325,8 @@ public class SixthLordGame : MonoBehaviour
             Ent tg = null; float bdist = 1e9f;
             foreach (var f in F) { float d = Dist(f, u) - (f.kind == 0 ? 0 : f.r * .6f); if (d < bdist && (d < 170 || f.kind != 0)) { bdist = d; tg = f; } }
             if (tg != null && tg.kind != 0 && bdist > 170 && bdist >= 260) tg = null;
-            float reach = u.rng + (tg != null ? tg.r : 0);
+            float urng = u.rng > 60 && OnHill(u.x, u.y) ? u.rng * 1.35f : u.rng; // 언덕 위 원거리
+            float reach = urng + (tg != null ? tg.r : 0);
             if (tg != null && Dist(tg, u) <= reach)
             {
                 u.moving = false;
@@ -273,11 +345,13 @@ public class SixthLordGame : MonoBehaviour
             else
             {
                 float gx = tg != null ? tg.x : u.x + dir * 50, gy = tg != null ? tg.y : u.y + (W / 2 - u.y) * .02f;
+                Route(u, ref gx, ref gy);
                 float d = Mathf.Max(.01f, Mathf.Sqrt((gx - u.x) * (gx - u.x) + (gy - u.y) * (gy - u.y)));
-                u.moving = true; float sp = u.spd * (u.sp == "charge" && u.used == 0 ? 1.4f : 1);
+                u.moving = true; float sp = u.spd * (u.sp == "charge" && u.used == 0 ? 1.4f : 1) * (InForest(u.x, u.y) ? .65f : 1);
                 u.x += (gx - u.x) / d * sp * dt; u.y += (gy - u.y) / d * sp * dt * .8f;
             }
             u.y = Mathf.Clamp(u.y, 40, W - 40);
+            KeepDry(u);
         }
         // 겹침 풀기
         for (int i = 0; i < units.Count; i++) for (int j = i + 1; j < units.Count; j++)
@@ -286,6 +360,7 @@ public class SixthLordGame : MonoBehaviour
             float d = Dist(a, b), m = a.r + b.r - 4;
             if (d < m && d > 0) { float p = (m - d) / 2, nx = (a.x - b.x) / d, ny = (a.y - b.y) / d; a.x += nx * p; a.y += ny * p; b.x -= nx * p; b.y -= ny * p; }
         }
+        foreach (var u in units) KeepDry(u);
         units.RemoveAll(u => u.hp <= 0);
         // 상대 AI
         aiT -= dt;
@@ -295,6 +370,28 @@ public class SixthLordGame : MonoBehaviour
             string want = aiCards[Random.Range(0, aiCards.Count)];
             if (free && gold[1] >= Cost(want)) Build(1, want);
             else if (!free || gold[1] > 260) { Ent low = null; foreach (var p in plots[1]) if (p.b != null && p.b.lv < 3 && (low == null || p.b.lv < low.lv)) low = p.b; if (low != null) Upgrade(1, low); }
+        }
+    }
+
+    // 강을 건너야 하면 가까운 다리로 돌아가기
+    static void Route(Ent u, ref float gx, ref float gy)
+    {
+        float side = Mathf.Sign(u.x - RX), gside = Mathf.Sign(gx - RX);
+        bool inBand = Mathf.Abs(u.x - RX) <= RHW + 6;
+        if ((side != gside || inBand) && Mathf.Abs(u.x - RX) < 260)
+        {
+            float by = NearBridge(u.y);
+            if (Mathf.Abs(u.y - by) > BHW - 8) { gy = by; if (!inBand) gx = RX + side * (RHW + 16); else gx = u.x; }
+            else gy = Mathf.Clamp(gy, by - BHW + 8, by + BHW - 8);
+        }
+    }
+    static void KeepDry(Ent u)
+    {
+        if (Mathf.Abs(u.x - RX) < RHW + 4 && !OnBridge(u.y))
+        {
+            float by = NearBridge(u.y);
+            if (Mathf.Abs(u.x - RX) > RHW - 10) u.x = RX + Mathf.Sign(u.x - RX + .01f) * (RHW + 4);
+            else u.y = by + Mathf.Sign(u.y - by) * (BHW - 1);
         }
     }
 
@@ -376,16 +473,30 @@ public class SixthLordGame : MonoBehaviour
             }
         }
         shake *= .9f;
-        cam.transform.position = new Vector3(Random.Range(-shake, shake), -0.6f + Random.Range(-shake, shake), -10);
+        camHalf = Mathf.Max(0, L / 100f - cam.orthographicSize * asp);
+        if (camX < -50) camX = -camHalf;
+        camX = Mathf.Clamp(camX, -camHalf, camHalf);
+        cam.transform.position = new Vector3(camX + Random.Range(-shake, shake), -0.6f + Random.Range(-shake, shake), -10);
         // 막사 누르면 강화
-        Vector2 mp = Vector2.zero; bool down = false;
+        // 화면을 끌면 카메라 이동(손으로 움직일 때만 · 자동으로 흔들리지 않음), 짧게 누르면 막사 강화
+        Vector2 mp = Vector2.zero; bool down = false, held = false, up = false;
 #if ENABLE_INPUT_SYSTEM
-        var ms = UnityEngine.InputSystem.Mouse.current; if (ms != null) { down = ms.leftButton.wasPressedThisFrame; mp = ms.position.ReadValue(); }
-        var ts = UnityEngine.InputSystem.Touchscreen.current; if (!down && ts != null && ts.primaryTouch.press.wasPressedThisFrame) { down = true; mp = ts.primaryTouch.position.ReadValue(); }
+        var ms = UnityEngine.InputSystem.Mouse.current; if (ms != null) { down = ms.leftButton.wasPressedThisFrame; held = ms.leftButton.isPressed; up = ms.leftButton.wasReleasedThisFrame; mp = ms.position.ReadValue(); }
+        var ts = UnityEngine.InputSystem.Touchscreen.current;
+        if (ts != null && (ts.primaryTouch.press.isPressed || ts.primaryTouch.press.wasReleasedThisFrame)) { down = ts.primaryTouch.press.wasPressedThisFrame; held = ts.primaryTouch.press.isPressed; up = ts.primaryTouch.press.wasReleasedThisFrame; mp = ts.primaryTouch.position.ReadValue(); }
 #else
-        down = Input.GetMouseButtonDown(0); mp = Input.mousePosition;
+        down = Input.GetMouseButtonDown(0); held = Input.GetMouseButton(0); up = Input.GetMouseButtonUp(0); mp = Input.mousePosition;
 #endif
-        if (!over && down && mp.y > Screen.height * .2f && mp.y < Screen.height * .88f)
+        bool inField = mp.y > Screen.height * .22f && mp.y < Screen.height * .91f;
+        if (down && inField) { dragging = true; pressAt = lastAt = mp; dragDist = 0; }
+        if (dragging && held)
+        {
+            float dx = mp.x - lastAt.x; dragDist += Mathf.Abs(dx) + Mathf.Abs(mp.y - lastAt.y); lastAt = mp;
+            if (dragDist > 12) camX -= dx * (2 * cam.orthographicSize / Screen.height);
+        }
+        bool tap = false;
+        if (dragging && up) { dragging = false; tap = dragDist <= 12; mp = pressAt; }
+        if (!over && tap)
         {
             var wp = cam.ScreenToWorldPoint(new Vector3(mp.x, mp.y, 10)); Ent best = null; float bd = .8f;
             foreach (var p in plots[0]) if (p.b != null) { float d = Vector2.Distance(wp, WP(p.b.x, p.b.y)); if (d < bd) { bd = d; best = p.b; } }
@@ -486,6 +597,22 @@ public class SixthLordGame : MonoBehaviour
         GUI.Label(new Rect(VW / 2 - 90, 4, 180, 30), "금화 " + Mathf.FloorToInt(gold[0]), Sty(22, gold1));
         if (GUI.Button(new Rect(VW / 2 - 40, 36, 80, 24), spd < 2 ? "▶ 1배" : "⏩ 2배")) spd = spd < 2 ? 2 : 1;
         if (GUI.Button(new Rect(10, 70, 90, 28), "← 성으로")) { scr = Scr.Menu; Destroy(world.gameObject); world = null; return; }
+        // 미니맵 (누르면 그곳으로 이동)
+        {
+            float mw = Mathf.Min(560, VW - 40), mx = VW / 2 - mw / 2, my = 566, mh = 28; float k = mw / L;
+            GUI.color = new Color(.05f, .06f, .08f, .85f); GUI.DrawTexture(new Rect(mx - 2, my - 2, mw + 4, mh + 4), Texture2D.whiteTexture);
+            GUI.color = new Color(.2f, .32f, .46f); GUI.DrawTexture(new Rect(mx + (RX - RHW) * k, my, RHW * 2 * k, mh), Texture2D.whiteTexture);
+            GUI.color = new Color(.45f, .32f, .2f); foreach (var by in BRIDGES) GUI.DrawTexture(new Rect(mx + (RX - RHW - 6) * k, my + (by - BHW) / W * mh, (RHW * 2 + 12) * k, BHW * 2 / W * mh), Texture2D.whiteTexture);
+            foreach (var u in units) { GUI.color = u.t == 0 ? new Color(.4f, 1f, .55f) : new Color(1f, .45f, .4f); GUI.DrawTexture(new Rect(mx + u.x * k - 1.5f, my + u.y / W * mh - 1.5f, 3, 3), Texture2D.whiteTexture); }
+            for (int t = 0; t < 2; t++) { GUI.color = t == 0 ? new Color(.25f, .75f, .42f) : new Color(.88f, .35f, .29f); GUI.DrawTexture(new Rect(mx + cast[t].x * k - 4, my + mh / 2 - 6, 8, 12), Texture2D.whiteTexture); }
+            float vw = Mathf.Min(mw, (L - camHalf * 100) * k); float vx = mx + (camX * 50 + L / 2) * k - vw / 2;
+            GUI.color = new Color(1f, .9f, .6f, .9f);
+            GUI.DrawTexture(new Rect(vx, my - 2, vw, 2), Texture2D.whiteTexture); GUI.DrawTexture(new Rect(vx, my + mh, vw, 2), Texture2D.whiteTexture);
+            GUI.DrawTexture(new Rect(vx, my, 2, mh), Texture2D.whiteTexture); GUI.DrawTexture(new Rect(vx + vw - 2, my, 2, mh), Texture2D.whiteTexture);
+            GUI.color = Color.white;
+            var ev = Event.current; var mr = new Rect(mx, my - 4, mw, mh + 8);
+            if ((ev.type == EventType.MouseDown || ev.type == EventType.MouseDrag) && mr.Contains(ev.mousePosition)) { camX = ((ev.mousePosition.x - mx) / k - L / 2) / 50f; ev.Use(); }
+        }
         // 카드
         float cw2 = 92, total = myCards.Count * (cw2 + 8), x0 = VW / 2 - total / 2;
         bool freeSlot = false; foreach (var p in plots[0]) if (p.b == null) freeSlot = true;
@@ -507,6 +634,7 @@ public class SixthLordGame : MonoBehaviour
         }
         if (toastT > 0) GUI.Label(new Rect(VW / 2 - 300, 110, 600, 34), toast, Sty(18, gold1));
         if (tm < 6 && !over) GUI.Label(new Rect(VW / 2 - 400, 150, 800, 30), "아래 카드를 누르면 막사가 지어지고, 병사가 저절로 나와 싸워요. 막사를 누르면 강화!", Sty(16, ink, FontStyle.Normal));
+        if (tm < 12 && !over) GUI.Label(new Rect(VW / 2 - 420, 180, 840, 30), "화면을 끌어 전장을 둘러보세요 · 강은 다리로만 건너요 · 숲은 느리지만 화살을 덜 맞고, 언덕 위 궁수는 더 멀리 쏴요", Sty(14, new Color(.8f, .85f, .75f), FontStyle.Normal));
         if (over && resultT <= 0)
         {
             GUI.color = new Color(0, 0, 0, .8f); GUI.DrawTexture(new Rect(0, 0, VW, 720), Texture2D.whiteTexture); GUI.color = Color.white;
