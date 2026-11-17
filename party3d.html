@@ -947,95 +947,95 @@ const GAMES=[
    return [dx/(d||1),dz/(d||1),false]},
   rank(){const alive=P.filter(p=>!p.out).sort((a,b)=>b.goals-a.goals);return [...alive,...this.outs.slice().reverse().map(i=>P[i])]},
   over(T){return P.filter(p=>!p.out).length<=1||T>this.len}},
- {id:"fish",nolag:1,camK:1.05,em:"🎣",ico:"🐟",name:t("팡팡 낚시","Bonk Fishing"),how:t("🎣 물속 물고기가 보여요! 가운데 모인 물고기 중 좋은 물고기를 방향키로 겨눠 던지고, 끌어와서 잡아요! 찌가 살짝 흔들리는 건 가짜 입질~ ❗가 뜨면 탁! 톡톡 감되 줄이 빨개지면 쉬어요. 점수를 가장 많이 모으면 우승! (붕어1·열대어2·복어3·황금5·큰 그림자는 ??)","🎣 Fish are visible! Aim at a good one and tap to cast. Wait for ❗, then reel by tapping (avoid red). Most points wins! (1·2·3·gold 5·big shadow ??)"),act:"none",actLabel:t("던지기·당기기","CAST·REEL"),keys:t("방향키로 겨누기 · 스페이스: 던지기 → ❗에 탁! → 톡톡 감기","Arrows to aim · Space: cast → tap on ❗ → tap to reel"),tk:t("조이스틱으로 겨누고 버튼: 던지기 → ❗에 탁! → 톡톡 감기","Aim with the stick · button: cast → ❗ → tap to reel"),len:70,timed:1,sc:1,
-  FT:{small:{e:"🐟",n:t("붕어","Carp"),c:"#7EC8FF",v:1,sz:.5,pull:.05,step:.11,win:.8,spd:1.5,bite:[.8,2]},mid:{e:"🐠",n:t("열대어","Tropical"),c:"#FFB84D",v:2,sz:.62,pull:.1,step:.085,win:.65,spd:1.9,bite:[1.2,2.6]},big:{e:"🐡",n:t("복어 대장","Big Puffer"),c:"#FF8FB8",v:3,sz:.85,pull:.16,step:.068,win:.58,spd:1.2,bite:[1.6,3.2]},gold:{e:"✨",n:t("황금 물고기","Golden Fish"),c:"#FFD700",v:5,sz:.55,pull:.2,step:.07,win:.45,spd:2.8,bite:[2,3.6]},
-   myst:{e:"❓",n:t("큰 그림자","Big Shadow"),c:"#24324F",v:0,sz:1.15,pull:.18,step:.06,win:.5,spd:1,bite:[1.8,3.4]}},
-  MIX:["small","small","small","small","mid","mid","mid","big","big","gold","myst"],
+ {id:"fish",nolag:1,camK:1.05,em:"🎣",ico:"🐟",name:t("팡팡 낚시","Bonk Fishing"),how:t("🎣 방향키로 겨누고 스페이스로 던져요. 원하는 물고기가 찌 옆을 지나가면 스페이스로 탁! 그다음 스페이스 연타로 빨리 끌어와요. 놓치는 일은 없어요~ 점수 높은 물고기를 많이 잡으면 우승!","🎣 Aim and cast. When the fish you want swims by the bobber, tap to hook it, then mash to reel it in. No escapes! Most points wins"),act:"none",actLabel:t("던지기·연타","CAST·MASH"),keys:t("방향키 겨누기 · 스페이스: 던지기 → 물고기 지나갈 때 탁! → 연타","Arrows aim · Space: cast → tap as a fish passes → mash"),tk:t("조이스틱 겨누기 · 버튼: 던지기 → 지나갈 때 탁! → 연타!","Aim · button: cast → tap as it passes → mash!"),len:60,timed:1,sc:1,
+  FT:{min:{e:"🐟",n:t("피라미","Minnow"),c:"#9FD8FF",v:1,sz:.38,tap:4,spd:2.2},carp:{e:"🐟",n:t("붕어","Carp"),c:"#7EC8FF",v:2,sz:.5,tap:6,spd:1.7},gold:{e:"🐠",n:t("금붕어","Goldfish"),c:"#FF9F4D",v:3,sz:.48,tap:7,spd:1.9},trop:{e:"🐠",n:t("열대어","Tropical"),c:"#FF7FB0",v:4,sz:.56,tap:8,spd:2},
+   puff:{e:"🐡",n:t("복어 대장","Big Puffer"),c:"#FFD35A",v:5,sz:.8,tap:10,spd:1.3},blue:{e:"🐬",n:t("돌고래 아기","Baby Dolphin"),c:"#5A8CFF",v:7,sz:.78,tap:12,spd:2.1},shark:{e:"🦈",n:t("아기 상어","Baby Shark"),c:"#9AAAC8",v:9,sz:.95,tap:14,spd:1.9},king:{e:"👑",n:t("황금 왕 물고기","Golden King"),c:"#FFD700",v:15,sz:.62,tap:16,spd:2.9}},
+  MIX:["min","min","min","carp","carp","carp","gold","gold","trop","trop","puff","puff","blue","shark","king"],
   netOut(){return P.map(p=>p.score)},netIn(a){P.forEach((p,i)=>{if(a[i]!=null)p.score=a[i]})},
   setup(){const g=mesh(new THREE.CylinderGeometry(12,12,1,48),"#9BE58A",false,true);g.position.y=-.5;arena.add(g);
    const w=new THREE.Mesh(new THREE.CircleGeometry(7.2,48),new THREE.MeshBasicMaterial({color:"#6CCBF5"}));w.rotation.x=-Math.PI/2;w.position.y=.04;arena.add(w);
-   const deep=new THREE.Mesh(new THREE.CircleGeometry(4.2,40),new THREE.MeshBasicMaterial({color:"#55B8E8"}));deep.rotation.x=-Math.PI/2;deep.position.y=.045;arena.add(deep);
+   const deep=new THREE.Mesh(new THREE.CircleGeometry(4.4,40),new THREE.MeshBasicMaterial({color:"#55B8E8"}));deep.rotation.x=-Math.PI/2;deep.position.y=.045;arena.add(deep);
    const rim=mesh(new THREE.TorusGeometry(7.25,.28,8,48),"#E8D2A6");rim.rotation.x=Math.PI/2;rim.position.y=.05;arena.add(rim);
-   for(let i=0;i<6;i++){const a=rnd(0,6.283),r=rnd(2,6.2);const lp=mesh(new THREE.CylinderGeometry(rnd(.4,.6),rnd(.4,.6),.04,16),"#6FD66F");lp.position.set(Math.cos(a)*r,.09,Math.sin(a)*r);arena.add(lp)}
+   for(let i=0;i<6;i++){const a=rnd(0,6.283),r=rnd(4.8,6.6);const lp=mesh(new THREE.CylinderGeometry(rnd(.4,.6),rnd(.4,.6),.04,16),"#6FD66F");lp.position.set(Math.cos(a)*r,.09,Math.sin(a)*r);arena.add(lp)}
    this.F=[];this.MIX.forEach(k=>this.addFish(k));this.fx=[];
    const me=Math.max(0,P.findIndex(p=>p.you));const A=[Math.PI,-Math.PI/2,0,Math.PI/2];
    [0,1,2,3].forEach(k=>{const p=P[(me+k)%4],a=A[k],x=Math.cos(a)*8.6,z=Math.sin(a)*8.6;place(p,x,z);p.face=Math.atan2(-x,-z);p.base=p.face;
     const dk=mesh(new THREE.BoxGeometry(2.6,.3,2.6),"#C9955A",true,true);dk.position.set(x,-.05,z);dk.rotation.y=p.face;arena.add(dk);
     const rod=new THREE.Group(),st=mesh(new THREE.CylinderGeometry(.05,.07,2.6,8),"#7A4A22",true);st.position.y=1.3;rod.add(st);arena.add(rod);p.rod=rod;
     const bob=new THREE.Group(),b1=mesh(new THREE.SphereGeometry(.22,14,10),"#FF4D6D",true);bob.add(b1);const b2=mesh(new THREE.SphereGeometry(.2,14,10),"#FFFFFF");b2.position.y=-.12;bob.add(b2);bob.visible=false;arena.add(bob);p.bob=bob;
+    const zone=new THREE.Mesh(new THREE.RingGeometry(1.15,1.3,32),new THREE.MeshBasicMaterial({color:p.col,transparent:true,opacity:.55}));zone.rotation.x=-Math.PI/2;zone.position.y=.1;zone.visible=false;arena.add(zone);p.zone=zone;
     const aim=new THREE.Mesh(new THREE.RingGeometry(.5,.68,24),new THREE.MeshBasicMaterial({color:p.col,transparent:true,opacity:.8}));aim.rotation.x=-Math.PI/2;aim.position.y=.1;aim.visible=false;arena.add(aim);p.aim=aim;
     const lg=new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(),new THREE.Vector3()]);const ln=new THREE.Line(lg,new THREE.LineBasicMaterial({color:"#FFFFFF"}));ln.visible=false;arena.add(ln);p.ln=ln;
-    Object.assign(p,{score:0,fs:"idle",ft:0,fish:null,fo:null,prog:0,ten:0,nib:0,nibs:0,bx:0,bz:0,cool:0,aiT:rnd(.3,1),aimA:0})});
+    Object.assign(p,{score:0,fs:"idle",ft:0,fish:null,fo:null,near:null,prog:0,taps:0,bx:0,bz:0,cool:0,aiT:rnd(.3,1),aimA:0,want:0})});
    document.querySelectorAll(".fgauge").forEach(e=>e.remove());const gg=document.createElement("div");gg.className="mb fgauge";
-   gg.style.cssText="position:fixed;left:50%;bottom:150px;transform:translateX(-50%);width:min(70vw,360px);display:none;flex-direction:column;gap:5px;z-index:30;pointer-events:none;font-weight:900;color:#fff;text-shadow:0 2px 0 #2A1060;text-align:center";
-   gg.innerHTML='<div class="fg-t" style="font-size:18px">🎣</div><div style="position:relative;height:22px;border-radius:12px;background:linear-gradient(90deg,#8FE3B0 0 62%,#FFE066 62% 82%,#FF6B6B 82%);border:3px solid #2A1060;overflow:hidden"><i class="fg-n" style="position:absolute;top:0;bottom:0;width:6px;background:#2A1060;left:0"></i></div><div style="height:12px;border-radius:8px;background:rgba(255,255,255,.35);border:2px solid #2A1060;overflow:hidden"><i class="fg-p" style="display:block;height:100%;width:0;background:#5EC8FF"></i></div>';
+   gg.style.cssText="position:fixed;left:50%;bottom:150px;transform:translateX(-50%);width:min(70vw,340px);display:none;flex-direction:column;gap:5px;z-index:30;pointer-events:none;font-weight:900;color:#fff;text-shadow:0 2px 0 #2A1060;text-align:center";
+   gg.innerHTML='<div class="fg-t" style="font-size:20px">🎣</div><div style="height:18px;border-radius:10px;background:rgba(255,255,255,.35);border:3px solid #2A1060;overflow:hidden"><i class="fg-p" style="display:block;height:100%;width:0;background:linear-gradient(90deg,#5EC8FF,#8FE3B0)"></i></div>';
    document.body.appendChild(gg);this.gg=gg;this.said=0},
   addFish(k){const f=this.FT[k],m=new THREE.Group(),my=k==="myst",z=f.sz;
    const body=mesh(new THREE.SphereGeometry(z,20,16),f.c,true);body.scale.set(1.25,.62,.8);m.add(body);
    if(!my){const belly=mesh(new THREE.SphereGeometry(z*.8,16,12),"#FFFFFF");belly.scale.set(1.1,.35,.7);belly.position.set(z*.15,-z*.18,0);m.add(belly)}
+   if(k==="shark"){const df=mesh(new THREE.ConeGeometry(z*.35,z*.9,8),"#7F95B8",true);df.position.set(0,z*.75,0);df.scale.z=.3;m.add(df)}
    const tl=mesh(new THREE.ConeGeometry(z*.55,z*.75,10),f.c,true);tl.rotation.z=Math.PI/2;tl.position.x=-z*1.4;tl.scale.z=.35;m.add(tl);
    const fin=mesh(new THREE.ConeGeometry(z*.28,z*.5,8),f.c,true);fin.position.set(-z*.1,z*.55,0);fin.scale.z=.3;fin.rotation.z=.3;m.add(fin);
    for(const sd of[-1,1]){const ew=mesh(new THREE.SphereGeometry(z*.26,12,10),my?"#FFF7A0":"#FFFFFF");ew.position.set(z*.7,z*.22,sd*z*.5);m.add(ew);
     if(!my){const pu=mesh(new THREE.SphereGeometry(z*.15,10,8),"#2A1060");pu.position.set(z*.82,z*.24,sd*z*.62);m.add(pu);const sh=mesh(new THREE.SphereGeometry(z*.05,6,6),"#FFFFFF");sh.position.set(z*.9,z*.32,sd*z*.7);m.add(sh);
      const ck=new THREE.Mesh(new THREE.CircleGeometry(z*.13,12),new THREE.MeshBasicMaterial({color:"#FF7FAA",transparent:true,opacity:.8}));ck.position.set(z*.75,-z*.02,sd*z*.66);ck.rotation.y=sd>0?0:Math.PI;m.add(ck)}}
-   if(k==="gold"){const cr=mesh(new THREE.ConeGeometry(z*.3,z*.4,5),"#FFF3A0");cr.position.set(z*.3,z*.75,0);m.add(cr);const gl=new THREE.Mesh(new THREE.SphereGeometry(z*1.8,12,8),new THREE.MeshBasicMaterial({color:"#FFF3A0",transparent:true,opacity:.22}));gl.scale.y=.3;m.add(gl)}
-   if(k==="big"){for(let q=0;q<6;q++){const sp=mesh(new THREE.ConeGeometry(z*.08,z*.25,6),"#FFE0EC");const a=q/6*6.283;sp.position.set(Math.cos(a)*z*.9,Math.sin(a)*z*.45,0);sp.rotation.z=a-Math.PI/2;m.add(sp)}}
-   m.scale.setScalar(1);const a=rnd(0,6.283),r=rnd(0,3.2);m.position.set(Math.cos(a)*r,.12,Math.sin(a)*r);arena.add(m);this.F.push({k,m,x:m.position.x,z:m.position.z,h:rnd(0,6.283),sp:f.spd,tgt:null,tt:rnd(1,3),gone:0,tail:tl})},
+   if(k==="gold"||k==="king"){const cr=mesh(new THREE.ConeGeometry(z*.3,z*.4,5),"#FFF3A0");cr.position.set(z*.3,z*.75,0);m.add(cr);const gl=new THREE.Mesh(new THREE.SphereGeometry(z*1.8,12,8),new THREE.MeshBasicMaterial({color:"#FFF3A0",transparent:true,opacity:.22}));gl.scale.y=.3;m.add(gl)}
+   if(k==="puff"){for(let q=0;q<6;q++){const sp=mesh(new THREE.ConeGeometry(z*.08,z*.25,6),"#FFE0EC");const a=q/6*6.283;sp.position.set(Math.cos(a)*z*.9,Math.sin(a)*z*.45,0);sp.rotation.z=a-Math.PI/2;m.add(sp)}}
+   m.scale.setScalar(1);const a=rnd(0,6.283),r=rnd(0,3.4);m.position.set(Math.cos(a)*r,.12,Math.sin(a)*r);arena.add(m);this.F.push({k,m,x:m.position.x,z:m.position.z,h:rnd(0,6.283),sp:f.spd,tgt:null,tt:rnd(1,3),gone:0,tail:tl})},
   splash(x,z,c,n){burst(x,.2,z,c||"#FFFFFF",n||10,4)},
-  update(dt,T){if(!this.said){this.said=1;say(t("좋은 물고기를 겨눠요! 🎣","Aim at a good fish! 🎣"),"#FFE066",1.4)}
-   for(const o of this.F){if(o.gone>0){o.gone-=dt;o.m.visible=false;if(o.gone<=0){const a=rnd(0,6.283),r=rnd(0,3);o.x=Math.cos(a)*r;o.z=Math.sin(a)*r;o.m.visible=true;o.tgt=null}continue}
-    let tx,tz,sp=o.sp;if(o.tgt){const p=o.tgt;tx=p.bx;tz=p.bz;sp=o.sp*.6;if(p.fs!=="wait"&&p.fs!=="bite"&&p.fs!=="reel"){o.tgt=null}}
-    if(o.tgt&&o.tgt.fs==="reel"){continue}
-    if(!o.tgt){o.tt-=dt;if(o.tt<=0){o.h+=rnd(-1.4,1.4);o.tt=rnd(.8,2.4)}tx=o.x+Math.cos(o.h);tz=o.z+Math.sin(o.h);const r=Math.hypot(o.x,o.z);if(r>3.6){o.h=Math.atan2(-o.z,-o.x)+rnd(-.5,.5)}}
-    const dx=tx-o.x,dz=tz-o.z,d=Math.hypot(dx,dz);if(d>.35||!o.tgt){const m=Math.min(sp*dt,d);o.x+=dx/(d||1)*m;o.z+=dz/(d||1)*m;o.m.rotation.y=-Math.atan2(dz,dx)}
-    o.m.position.set(o.x,.12+Math.sin(GT*3+o.h)*.03,o.z);o.tail.rotation.y=Math.sin(GT*10+o.h)*.5}
+  nearFish(p){let best=null,bd=1.3;for(const o of this.F){if(o.gone>0||o.hooked)continue;const d=Math.hypot(o.x-p.bx,o.z-p.bz);if(d<bd){bd=d;best=o}}return best},
+  update(dt,T){if(!this.said){this.said=1;say(t("겨누고 던져요! 🎣","Aim and cast! 🎣"),"#FFE066",1.4)}
+   for(const o of this.F){if(o.gone>0){o.gone-=dt;o.m.visible=false;if(o.gone<=0){const a=rnd(0,6.283),r=rnd(0,3);o.x=Math.cos(a)*r;o.z=Math.sin(a)*r;o.m.visible=true;o.hooked=null}continue}
+    if(o.hooked)continue;
+    o.tt-=dt;if(o.tt<=0){o.h+=rnd(-1.4,1.4);o.tt=rnd(.8,2.4)}const r=Math.hypot(o.x,o.z);if(r>3.8){o.h=Math.atan2(-o.z,-o.x)+rnd(-.5,.5)}
+    o.x+=Math.cos(o.h)*o.sp*dt;o.z+=Math.sin(o.h)*o.sp*dt;o.m.rotation.y=-o.h;o.m.position.set(o.x,.12+Math.sin(GT*3+o.h)*.03,o.z);o.tail.rotation.y=Math.sin(GT*10+o.h)*.5}
    const me=P.find(p=>p.you);
    for(const p of P){const tp=state==="play"&&!p.out&&tapped(p);p.cool-=dt;
-    const inp=p.lastIn||[0,0];if(p.fs==="idle"&&state==="play"&&Math.hypot(inp[0],inp[1])>.3){const want=Math.atan2(inp[0],inp[1]);let da=Math.atan2(Math.sin(want-p.base),Math.cos(want-p.base));p.aimA=clamp(da,-.55,.55)}
+    const inp=p.lastIn||[0,0];if((p.fs==="idle"||p.fs==="wait")&&state==="play"&&Math.hypot(inp[0],inp[1])>.3){const want=Math.atan2(inp[0],inp[1]);let da=Math.atan2(Math.sin(want-p.base),Math.cos(want-p.base));p.aimA=clamp(da,-.55,.55)}
     p.face=p.base+p.aimA;
     const hx=p.x+Math.sin(p.face)*.7,hz=p.z+Math.cos(p.face)*.7;p.rod.position.set(hx,0,hz);p.rod.rotation.set(0,p.face,0);
-    const ax=p.x+Math.sin(p.face)*7.4,az=p.z+Math.cos(p.face)*7.4;p.aim.position.set(ax,.1,az);p.aim.visible=p.fs==="idle"&&(p.you||!!NET.mode);
-    let tilt=-.5;
-    if(p.fs==="idle"){p.bob.visible=false;p.ln.visible=false;if(tp&&p.cool<=0){p.fs="cast";p.ft=.35;SND.dash()}}
-    else if(p.fs==="cast"){p.ft-=dt;tilt=-.5+(.35-p.ft)*3;if(p.ft<=0){p.fs="wait";p.bx=ax;p.bz=az;p.fo=null;p.ft=0;p.bob.visible=true;p.ln.visible=true;this.splash(ax,az,"#FFFFFF",8);SND.tick();
-      let best=null,bd=3.4;for(const o of this.F){if(o.gone>0||o.tgt)continue;const d=Math.hypot(o.x-ax,o.z-az);if(d<bd){bd=d;best=o}}if(best){best.tgt=p;p.fo=best}else{p.ft=rnd(2,3.5)}}}
-    else if(p.fs==="wait"){let dip=0;
-     if(!p.fo){p.ft-=dt;if(p.ft<=0){let best=null,bd=4.5;for(const o of this.F){if(o.gone>0||o.tgt)continue;const d=Math.hypot(o.x-p.bx,o.z-p.bz);if(d<bd){bd=d;best=o}}if(best){best.tgt=p;p.fo=best}else p.ft=1}}
-     else{const o=p.fo,d=Math.hypot(o.x-p.bx,o.z-p.bz);if(d<.5){if(!p.nibs){const f=this.FT[o.k];p.nibs=1+Math.floor(R()*3);p.nib=rnd(.5,1.1);p.ft=rnd(f.bite[0],f.bite[1])}
-       p.nib-=dt;p.ft-=dt;if(p.nib<0&&p.nib>-.3)dip=Math.sin(-p.nib*30)*.08;else if(p.nib<=-.3&&p.nibs>0){p.nibs--;p.nib=rnd(.5,1.1);if(p.you)tone(900,.04,"sine",.04)}
-       if(p.ft<=0){p.fs="bite";p.fish=Object.assign({k:o.k},this.FT[o.k]);p.ft=p.fish.win;SND.coin();this.splash(p.bx,p.bz,"#FFFFFF",16);popTxt({x:p.bx,y:1.2,z:p.bz},"❗",p.you?"#FF4D6D":"#FFE066",p.you?40:26);if(p.you)shake=Math.max(shake,.15)}}}
-     p.bob.position.set(p.bx,.12+Math.sin(GT*3+p.id)*.03-dip,p.bz);
-     if(tp){p.fs="scare";p.ft=1;if(p.fo){p.fo.tgt=null;p.fo.h+=Math.PI;p.fo=null}p.nibs=0;this.splash(p.bx,p.bz,"#BFE9FF",6);popTxt(p,pick([t("앗, 너무 빨라!","Too early!"),t("물고기가 도망갔어~","It swam away~")]),"#FFB3D1",24)}}
-    else if(p.fs==="bite"){p.ft-=dt;p.bob.position.set(p.bx,-.12+Math.sin(GT*40)*.05,p.bz);
-     if(tp){p.fs="reel";p.prog=.15;p.ten=.35;SND.bump();this.splash(p.bx,p.bz,p.fish.c,10);if(p.you){thwack(0);hitStop(.07);say(t("걸렸다! 톡톡 감아요~","Hooked! Tap to reel!"),"#FFE066",.9)}}
-     else if(p.ft<=0){p.fs="idle";p.cool=.4;p.nibs=0;if(p.fo){p.fo.tgt=null;p.fo=null}popTxt(p,pick([t("놓쳤다~","Missed~"),t("너무 늦었어!","Too slow!")]),"#FFB3D1",22)}}
-    else if(p.fs==="scare"){p.ft-=dt;p.bob.visible=false;p.ln.visible=false;if(p.ft<=0)p.fs="idle"}
-    else if(p.fs==="reel"){const f=p.fish;tilt=.35+Math.sin(GT*18)*.12*p.ten;
-     if(tp){p.prog+=f.step;p.ten+=.17;SND.tick()}p.ten=Math.max(0,p.ten-.5*dt);p.prog=Math.max(0,p.prog-f.pull*dt*(1+Math.sin(GT*2.3+p.id)*.6));
-     const k=p.prog,bx=p.bx+(hx-p.bx)*k*.85,bz=p.bz+(hz-p.bz)*k*.85;p.bob.position.set(bx,.12+Math.sin(GT*20)*.06*(1-k),bz);if(p.fo){p.fo.x=bx+Math.sin(GT*9)*.3;p.fo.z=bz+Math.cos(GT*7)*.3;p.fo.m.position.set(p.fo.x,.14+Math.abs(Math.sin(GT*12))*.15,p.fo.z);p.fo.m.rotation.y=-Math.atan2(hz-bz,hx-bx);p.fo.tail.rotation.y=Math.sin(GT*25)*.7}if(R()<dt*6)this.splash(bx,bz,f.c,3);
-     if(p.ten>=1){p.fs="idle";p.cool=1;p.nibs=0;if(p.fo){p.fo.tgt=null;p.fo=null}SND.out();shake=Math.max(shake,.2);popTxt(p,pick([t("줄이 끊어졌어! ㅠㅠ","Line snapped!"),t("너무 세게 당겼어~","Too hard!")]),"#FF6B6B",26)}
-     else if(p.prog>=1){p.fs="idle";p.cool=.6;p.nibs=0;let v=f.v,e=f.e,n=f.n;if(f.k==="myst"){if(R()<.5){v=7;e="🐋";n=t("전설의 고래","Legend Whale")}else{v=0;e="👢";n=t("헌 장화","Old Boot")}}
-      p.score+=v;SND.coin();confetti(v>=5?14:v?5:0);this.jump(p,f.k==="myst"&&v===0?"boot":f.k,v);if(p.fo){p.fo.gone=2.5;p.fo.tgt=null;p.fo=null}
-      if(p.you||v>=5){hitStop(.13);thwack(1)}if(p.you)say(e+" "+n+(v?" +"+v:t(" 꽝!"," Junk!")),v>=5?"#FFD700":"#FFFFFF",1.2);else popTxt(p,e+" +"+v,v>=5?"#FFD700":"#FFFFFF",v>=5?30:22);if(v&&p.you)heartFx&&heartFx(p,v>=5?8:3);renderChips()}}
+    const ax=p.x+Math.sin(p.face)*7.4,az=p.z+Math.cos(p.face)*7.4;p.aim.position.set(ax,.1,az);p.aim.visible=(p.fs==="idle"||p.fs==="wait")&&(p.you||!!NET.mode);
+    let tilt=-.5;p.near=null;
+    if(p.fs==="idle"){p.bob.visible=false;p.ln.visible=false;p.zone.visible=false;if(tp&&p.cool<=0){p.fs="cast";p.ft=.3;SND.dash()}}
+    else if(p.fs==="cast"){p.ft-=dt;tilt=-.5+(.3-p.ft)*3;if(p.ft<=0){p.fs="wait";p.bx=ax;p.bz=az;p.bob.visible=true;p.ln.visible=true;this.splash(ax,az,"#FFFFFF",8);SND.tick()}}
+    else if(p.fs==="wait"){p.bob.position.set(p.bx,.12+Math.sin(GT*3+p.id)*.03,p.bz);p.zone.position.set(p.bx,.1,p.bz);p.zone.visible=p.you||!!NET.mode;
+     const o=this.nearFish(p);p.near=o;
+     if(tp){if(o){o.hooked=p;p.fo=o;p.fish=Object.assign({k:o.k},this.FT[o.k]);p.fs="reel";p.prog=0;p.taps=0;SND.bump();thwack(0);if(p.you)hitStop(.06);this.splash(p.bx,p.bz,p.fish.c,12);popTxt({x:p.bx,y:1.2,z:p.bz},"❗",p.you?"#FF4D6D":"#FFE066",p.you?36:24);if(p.you)say(t("걸렸다! 연타~!","Hooked! Mash!"),"#FFE066",.8)}
+      else{p.fs="cast";p.ft=.3;SND.dash()}}}
+    else if(p.fs==="reel"){const f=p.fish;tilt=.35+Math.sin(GT*20)*.12;p.zone.visible=false;
+     if(tp){p.taps++;p.prog=Math.min(1,p.taps/f.tap);SND.tick();if(p.you&&R()<.5)burst(p.bob.position.x,.3,p.bob.position.z,"#FFFFFF",3,2)}
+     const k=p.prog,bx=p.bx+(hx-p.bx)*k*.85,bz=p.bz+(hz-p.bz)*k*.85;p.bob.position.set(bx,.12+Math.sin(GT*20)*.06*(1-k),bz);
+     if(p.fo){const o=p.fo;o.x=bx+Math.sin(GT*9)*.25;o.z=bz+Math.cos(GT*7)*.25;o.m.position.set(o.x,.14+Math.abs(Math.sin(GT*12))*.15,o.z);o.m.rotation.y=-Math.atan2(hz-bz,hx-bx);o.tail.rotation.y=Math.sin(GT*25)*.7}
+     if(R()<dt*6)this.splash(bx,bz,f.c,3);
+     if(p.prog>=1){p.fs="idle";p.cool=.35;p.score+=f.v;SND.coin();confetti(f.v>=9?14:f.v>=5?7:3);this.jump(p,f.k,f.v);if(p.fo){p.fo.gone=2;p.fo.hooked=null;p.fo=null}
+      if(p.you||f.v>=9){hitStop(f.v>=9?.15:.1);thwack(1)}if(p.you){this.card(p,f);heartFx&&heartFx(p,Math.min(8,1+Math.floor(f.v/2)))}else popTxt(p,f.e+" +"+f.v,f.v>=9?"#FFD700":"#FFFFFF",f.v>=9?30:22);renderChips()}}
     p.rod.children[0].rotation.x=tilt;p.rod.children[0].position.set(0,1.3*Math.cos(tilt),1.3*Math.sin(tilt));
     if(p.ln.visible){const tipx=hx+Math.sin(p.face)*Math.sin(tilt)*2.6,tipz=hz+Math.cos(p.face)*Math.sin(tilt)*2.6,tipy=2.6*Math.cos(tilt);const pa=p.ln.geometry.attributes.position;pa.setXYZ(0,tipx,tipy,tipz);pa.setXYZ(1,p.bob.position.x,p.bob.position.y,p.bob.position.z);pa.needsUpdate=true}}
-   for(let i=this.fx.length-1;i>=0;i--){const o=this.fx[i];o.t+=dt;const u=Math.min(1,o.t/.8);o.m.position.set(o.x0+(o.x1-o.x0)*u,.3+Math.sin(u*Math.PI)*3.2,o.z0+(o.z1-o.z0)*u);o.m.rotation.z+=dt*8;if(u>=1){arena.remove(o.m);this.fx.splice(i,1)}}
-   if(me&&this.gg){const on=me.fs==="reel";this.gg.style.display=on?"flex":"none";if(on){this.gg.querySelector(".fg-n").style.left=Math.min(97,me.ten*100)+"%";this.gg.querySelector(".fg-p").style.width=Math.min(100,me.prog*100)+"%";this.gg.querySelector(".fg-t").textContent=me.ten>.82?t("⚠️ 줄이 끊어질 것 같아요! 잠깐 쉬어요","⚠️ Line is about to snap! Wait"):t("🎣 톡톡! 초록색을 유지해요","🎣 Tap tap! Stay in green")}}},
-  restyle(o){const f=this.FT[o.k];o.sp=f.spd;o.m.children.forEach(c=>{c.material.color.set(f.c)});o.m.scale.setScalar(f.sz/.6)},
-  jump(p,k,v){const c=k==="boot"?"#8B6B4A":(this.FT[k]||this.FT.small).c,m=new THREE.Group();
-   if(k==="boot"){const b=mesh(new THREE.BoxGeometry(.5,.8,.35),c,true);m.add(b);const s=mesh(new THREE.BoxGeometry(.75,.25,.36),c,true);s.position.set(.12,-.3,0);m.add(s)}
-   else if(v<7&&p.fo){const c2=p.fo.m.clone();c2.visible=true;c2.scale.setScalar(1.3);m.add(c2)}
-   else{const sz=v>=7?1.1:.45,bd=mesh(new THREE.SphereGeometry(sz,14,10),v>=7?"#5A7BD8":c,true);bd.scale.set(1.3,.8,.7);m.add(bd);const tl=mesh(new THREE.ConeGeometry(sz*.65,sz*1.1,8),v>=7?"#5A7BD8":c,true);tl.rotation.z=Math.PI/2;tl.position.x=-sz*1.6;m.add(tl)}
+   for(const o of this.F){if(o.ring){o.ring.visible=false}}
+   if(me&&me.near){const o=me.near;if(!o.ring){o.ring=new THREE.Mesh(new THREE.RingGeometry(.9,1.1,28),new THREE.MeshBasicMaterial({color:"#FFE066",transparent:true,opacity:.9}));o.ring.rotation.x=-Math.PI/2;arena.add(o.ring)}o.ring.visible=true;o.ring.position.set(o.x,.11,o.z);const sc=1+Math.sin(GT*10)*.08;o.ring.scale.set(sc,sc,sc)}
+   for(let i=this.fx.length-1;i>=0;i--){const o=this.fx[i];o.t+=dt;const u=Math.min(1,o.t/.8);o.m.position.set(o.x0+(o.x1-o.x0)*u,.3+Math.sin(u*Math.PI)*3.2,o.z0+(o.z1-o.z0)*u);if(!o.hold)o.m.rotation.z+=dt*8;if(u>=1&&!o.hold){o.hold=1;o.t2=0}if(o.hold){o.t2+=dt;o.m.position.set(o.x1,2.9+Math.min(.4,o.t2),o.z1);o.m.rotation.z=0;o.m.rotation.y+=dt*2;if(o.t2>1.1){arena.remove(o.m);this.fx.splice(i,1)}}}
+   if(me&&this.gg){const on=me.fs==="reel"||(me.fs==="wait"&&me.near);this.gg.style.display=on?"flex":"none";
+    if(me.fs==="reel"){this.gg.querySelector(".fg-p").style.width=Math.min(100,me.prog*100)+"%";this.gg.querySelector(".fg-t").textContent=t("🎣 연타! 연타! ","🎣 MASH! ")+me.fish.e+" "+me.fish.n+" ("+me.fish.v+t("점)","pt)")}
+    else if(on){const f=this.FT[me.near.k];this.gg.querySelector(".fg-p").style.width="0%";this.gg.querySelector(".fg-t").textContent=t("지금 탁! → ","Tap now! → ")+f.e+" "+f.n+" ("+f.v+t("점)","pt)")}}},
+  card(p,f){const tier=f.v>=9?3:f.v>=5?2:1;p.catches=(p.catches||0)+1;const best=f.v>(this.best||0);if(best)this.best=f.v;
+   const notes=tier===3?[523,659,784,1047,1319]:tier===2?[523,659,784,1047]:[659,784,988];notes.forEach((n,k)=>setTimeout(()=>tone(n,.16,"square",.07),k*95));
+   document.querySelectorAll(".fcard").forEach(e=>e.remove());const c=document.createElement("div");c.className="mb fcard";
+   const bg=tier===3?"linear-gradient(#FFF6C2,#FFD34D)":tier===2?"linear-gradient(#FFE9F3,#FFB3D1)":"linear-gradient(#EAF7FF,#B8E4FF)";
+   c.style.cssText="position:fixed;left:50%;top:34%;transform:translate(-50%,-50%) scale(.85);opacity:0;transition:opacity .25s,transform .25s;z-index:40;pointer-events:none;text-align:center;padding:14px 26px 12px;border-radius:22px;border:4px solid #2A1060;box-shadow:0 6px 0 #2A1060;font-weight:900;color:#2A1060;background:"+bg;
+   c.innerHTML='<div style="font-size:15px">'+(tier===3?t("✨ 대어 낚았다! ✨","✨ HUGE CATCH! ✨"):t("잡았다!","Caught it!"))+'</div><div style="font-size:54px;line-height:1.1">'+f.e+'</div><div style="font-size:20px">'+f.n+'</div><div style="font-size:30px;color:#E0457B">+'+f.v+t("점","pts")+'</div><div style="font-size:12px;opacity:.8">'+t("총 ","Total ")+p.score+t("점 · ","pts · ")+p.catches+t("마리","fish")+(best&&p.catches>1?t(" · 최고 기록!"," · BEST!"):"")+'</div>';
+   document.body.appendChild(c);requestAnimationFrame(()=>{c.style.opacity="1";c.style.transform="translate(-50%,-50%) scale(1)"});setTimeout(()=>{c.style.opacity="0"},tier===3?1700:1200);setTimeout(()=>c.remove(),tier===3?2000:1500)},
+  jump(p,k,v){const m=new THREE.Group();if(p.fo){const c2=p.fo.m.clone();c2.visible=true;c2.scale.setScalar(1.3);m.add(c2)}
    arena.add(m);this.fx.push({m,t:0,x0:p.bob.position.x,z0:p.bob.position.z,x1:p.x,z1:p.z})},
   drive(p){p.vx=p.vz=0},
   ground(){return true},
   clampP(p){},
   ai(p,dt){p.aiT-=dt;let a=false,ix=0,iz=0;
-   if(p.fs==="idle"){let best=null,bs=-1;for(const o of this.F){if(o.gone>0||o.tgt)continue;const da=Math.atan2(Math.sin(Math.atan2(o.x-p.x,o.z-p.z)-p.base),Math.cos(Math.atan2(o.x-p.x,o.z-p.z)-p.base));if(Math.abs(da)>.6)continue;const val=this.FT[o.k].v+(o.k==="myst"?3.5:0);const sc=val*(.4+p.skill)-Math.abs(Math.hypot(o.x-p.x,o.z-p.z)-7.4)*.6;if(sc>bs){bs=sc;best=o}}
-    if(best){const w=Math.atan2(best.x-p.x,best.z-p.z);ix=Math.sin(w);iz=Math.cos(w);const da=Math.atan2(Math.sin(w-p.face),Math.cos(w-p.face));if(Math.abs(da)<.12&&p.cool<=0&&p.aiT<=0){a=true;p.aiT=rnd(.3,.8)}}else if(p.cool<=0&&p.aiT<=0){a=true;p.aiT=1}}
-   else if(p.fs==="wait"){if(p.nib<0&&p.nib>-.3&&R()<dt*(1-p.skill)*.8)a=true}
-   else if(p.fs==="bite"){const react=.18+(1-p.skill)*.35;if(p.fish&&p.fish.win-p.ft>react)a=true}
-   else if(p.fs==="reel"){if(p.ten<.55+p.skill*.12&&p.aiT<=0){a=true;p.aiT=rnd(.1,.2)+(1-p.skill)*.12}}
+   if(p.fs==="idle"||p.fs==="wait"){let best=null,bs=-1;for(const o of this.F){if(o.gone>0||o.hooked)continue;const ang=Math.atan2(o.x-p.x,o.z-p.z),da=Math.atan2(Math.sin(ang-p.base),Math.cos(ang-p.base));if(Math.abs(da)>.6)continue;const v=this.FT[o.k].v;const sc=v*(.3+p.skill)-Math.abs(Math.hypot(o.x-p.x,o.z-p.z)-7.4)*.8;if(sc>bs){bs=sc;best=o}}
+    if(best){const w=Math.atan2(best.x-p.x,best.z-p.z);ix=Math.sin(w);iz=Math.cos(w)}
+    if(p.fs==="idle"){if(p.cool<=0&&p.aiT<=0){a=true;p.aiT=rnd(.4,.9)}}
+    else{const o=p.near;if(o){const v=this.FT[o.k].v;if(v>=4||p.aiT<-3||R()<dt*(1.4-p.skill)){a=true}}else if(p.aiT<-4.5){a=true;p.aiT=0}}}
+   else if(p.fs==="reel"){if(p.aiT<=0){a=true;p.aiT=.09+(1-p.skill)*.1+rnd(0,.05)}}
    const out=a&&!p._aiPrev;p._aiPrev=a&&!p._aiPrev;return [ix,iz,out]},
   rank(){return P.slice().sort((a,b)=>b.score-a.score)},
   over(T){return T>this.len}},
