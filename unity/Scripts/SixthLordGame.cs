@@ -77,7 +77,7 @@ public class SixthLordGame : MonoBehaviour
     class Ent
     {
         public int kind, t; public string id; public float x, y, hp, mhp, atk, rng, spd, acd, cd, r, dot, dotT, fl, lunge; public string sp = "";
-        public int reb, used, lv = 1, ulv = 1; public GameObject go; public SpriteRenderer sr; public Transform bar, barBg;
+        public int reb, used, lv = 1, ulv = 1; public float punch, baseSize; public bool moving; public GameObject go; public SpriteRenderer sr; public Transform bar, barBg;
     }
     class Plot { public float x, y; public Ent b; }
     class Fx { public GameObject go; public Vector3 v; public float life, max; public bool ring; public float rr; }
@@ -160,7 +160,7 @@ public class SixthLordGame : MonoBehaviour
         var d = Get(b.id); float m = (1 + (b.ulv - 1) * .1f) * (1 + (b.lv - 1) * .25f);
         for (int i = 0; i < d.n; i++)
         {
-            var u = MakeEnt(0, b.t, "heroes/" + b.id, b.x + (b.t == 1 ? -24 : 24), b.y + (i > 0 ? 14 : 0) + Random.Range(-5f, 5f), d.hp * m, d.hp > 400 ? 15 : 11, d.hp > 400 ? .8f : .6f);
+            var u = MakeEnt(0, b.t, "heroes/" + b.id, b.x + (b.t == 1 ? -24 : 24) - (b.t == 1 ? -1 : 1) * i * 10, b.y + (i - (d.n - 1) / 2f) * 22 + Random.Range(-4f, 4f), d.hp * m, d.hp > 400 ? 19 : 14, d.hp > 400 ? 1.3f : .95f); u.baseSize = d.hp > 400 ? 1.3f : .95f;
             u.id = b.id; u.atk = d.atk * m; u.rng = d.rng; u.spd = d.spd * Random.Range(.95f, 1.05f); u.acd = d.acd; u.cd = .3f; u.sp = d.sp; u.reb = d.sp.Contains("rebirth") ? 1 : 0;
             units.Add(u);
         }
@@ -178,7 +178,7 @@ public class SixthLordGame : MonoBehaviour
     {
         if (tg.hp <= 0) return;
         if (src != null && src.sp.Contains("siege") && tg.kind != 0) d *= 3;
-        tg.hp -= d; tg.fl = .12f;
+        tg.hp -= d; tg.fl = .12f; tg.punch = .15f; if (tg.kind == 0 && src != null && src.rng < 60) tg.x += (tg.t == 0 ? -1 : 1) * 5;
         if (d >= 1) Txt(tg.x, tg.y - tg.r, "-" + Mathf.RoundToInt(d), tg.t == 1 ? new Color(1f, .88f, .55f) : new Color(1f, .55f, .48f), d >= 40);
         if (src != null && src.sp.Contains("poison") && tg.kind == 0) { tg.dot = 6; tg.dotT = 3; }
         if (tg.kind == 2) shake = Mathf.Max(shake, tg.t == 1 ? .08f : .12f);
@@ -201,7 +201,8 @@ public class SixthLordGame : MonoBehaviour
             for (int i = 0; i < 3; i++) Ring(e.x, e.y, new Color(1f, .88f, .55f), .6f + i * .25f, 2.4f + i * 1.2f);
             shake = .3f; over = true; win = e.t == 1; resultT = 1.4f; Save();
         }
-        if (e.go != null && e.kind != 2) { Destroy(e.go); Destroy(e.bar.gameObject); Destroy(e.barBg.gameObject); }
+        if (e.go != null && e.kind == 0) { Destroy(e.bar.gameObject); Destroy(e.barBg.gameObject); fxs.Add(new Fx { go = e.go, v = new Vector3(0, .4f, 0), life = .45f, max = .45f }); }
+        else if (e.go != null && e.kind == 1) { Destroy(e.go); Destroy(e.bar.gameObject); Destroy(e.barBg.gameObject); }
     }
     void Save()
     {
@@ -256,13 +257,14 @@ public class SixthLordGame : MonoBehaviour
             float reach = u.rng + (tg != null ? tg.r : 0);
             if (tg != null && Dist(tg, u) <= reach)
             {
+                u.moving = false;
                 if (u.cd <= 0)
                 {
                     float a = u.atk;
                     if (u.sp == "pack") foreach (var o in units) if (o != u && o.id == u.id && o.t == u.t && Dist(o, u) < 60) { a *= 1.3f; break; }
                     foreach (var l in lions) if (l.t == u.t && Dist(l, u) < 120) { a *= 1.15f; break; }
                     u.cd = u.acd;
-                    if (u.rng > 60) Shot(u.x, u.y, tg.x, tg.y, u.sp.Contains("splash") ? new Color(.75f, .55f, 1f) : new Color(1f, .92f, .65f)); else u.lunge = .12f;
+                    if (u.rng > 60) Arrow(u.x, u.y, tg.x, tg.y, u.sp.Contains("splash") ? new Color(.75f, .55f, 1f) : new Color(1f, .92f, .65f), u.sp.Contains("splash")); else { u.lunge = .15f; Slash(tg.x, tg.y, u.t); }
                     if (u.sp.Contains("splash")) { foreach (var f in F) if (f.kind == 0 && f != tg && Dist(f, tg) < 44) Dmg(f, a * .6f, u); Ring(tg.x, tg.y, new Color(.75f, .55f, 1f), .3f, .9f); }
                     if (u.sp == "charge" && u.used == 0) { a *= 2; u.used = 1; }
                     Dmg(tg, a, u);
@@ -272,7 +274,7 @@ public class SixthLordGame : MonoBehaviour
             {
                 float gx = tg != null ? tg.x : u.x + dir * 50, gy = tg != null ? tg.y : u.y + (W / 2 - u.y) * .02f;
                 float d = Mathf.Max(.01f, Mathf.Sqrt((gx - u.x) * (gx - u.x) + (gy - u.y) * (gy - u.y)));
-                float sp = u.spd * (u.sp == "charge" && u.used == 0 ? 1.4f : 1);
+                u.moving = true; float sp = u.spd * (u.sp == "charge" && u.used == 0 ? 1.4f : 1);
                 u.x += (gx - u.x) / d * sp * dt; u.y += (gy - u.y) / d * sp * dt * .8f;
             }
             u.y = Mathf.Clamp(u.y, 40, W - 40);
@@ -322,6 +324,24 @@ public class SixthLordGame : MonoBehaviour
         for (int i = 0; i < 32; i++) { float a = i / 32f * Mathf.PI * 2; lr.SetPosition(i, new Vector3(Mathf.Cos(a), Mathf.Sin(a)) * .1f); }
         fxs.Add(new Fx { go = go, life = life, max = life, ring = true, rr = rr });
     }
+    void Slash(float x, float y, int byTeam)
+    {
+        var go = new GameObject("slash"); go.transform.SetParent(world); go.transform.position = WP(x, y);
+        var lr = go.AddComponent<LineRenderer>(); lr.material = lineMat; lr.positionCount = 8; lr.useWorldSpace = false; lr.sortingOrder = 36;
+        lr.startColor = lr.endColor = new Color(1f, 1f, 1f, .95f); lr.startWidth = .09f; lr.endWidth = .01f;
+        float a0 = Random.Range(0f, 3f);
+        for (int i = 0; i < 8; i++) { float a = a0 + i * .22f; lr.SetPosition(i, new Vector3(Mathf.Cos(a), Mathf.Sin(a)) * .35f); }
+        fxs.Add(new Fx { go = go, life = .18f, max = .18f });
+        Burst(x, y, new Color(1f, .9f, .7f), 4, 1.6f);
+    }
+    void Arrow(float x, float y, float tx, float ty, Color c, bool orb)
+    {
+        var s = new GameObject("arrow").AddComponent<SpriteRenderer>(); s.sprite = white; s.color = c; s.sortingOrder = 37; s.transform.SetParent(world);
+        Vector3 a = WP(x, y), b = WP(tx, ty); var d = b - a; float len = d.magnitude;
+        s.transform.position = a; s.transform.localScale = orb ? new Vector3(.18f, .18f, 1) : new Vector3(.32f, .05f, 1);
+        s.transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(d.y, d.x) * Mathf.Rad2Deg);
+        float sp = 14f; fxs.Add(new Fx { go = s.gameObject, v = d.normalized * sp, life = Mathf.Max(.05f, len / sp), max = 99f });
+    }
     void Shot(float x, float y, float tx, float ty, Color c)
     {
         var go = new GameObject("shot"); go.transform.SetParent(world);
@@ -341,7 +361,7 @@ public class SixthLordGame : MonoBehaviour
         if (over) resultT -= Time.deltaTime;
         // 그리기
         foreach (var t in new[] { 0, 1 }) foreach (var p in plots[t]) if (p.b != null) Place(p.b, 1.15f);
-        foreach (var u in units) Place(u, u.go.transform.localScale.x);
+        foreach (var u in units) Place(u, u.baseSize);
         foreach (var c in cast) if (c.hp > 0) Place(c, 2.4f); else if (c.go.activeSelf) { c.go.SetActive(false); c.bar.gameObject.SetActive(false); c.barBg.gameObject.SetActive(false); }
         for (int i = fxs.Count - 1; i >= 0; i--)
         {
@@ -351,7 +371,7 @@ public class SixthLordGame : MonoBehaviour
             else
             {
                 f.go.transform.position += f.v * Time.deltaTime * k;
-                var sr = f.go.GetComponent<SpriteRenderer>(); if (sr != null) { var col = sr.color; col.a = f.life / f.max; sr.color = col; }
+                var sr = f.go.GetComponent<SpriteRenderer>(); if (sr != null) { var col = sr.color; col.a = f.max > 50 ? 1 : f.life / f.max; sr.color = col; }
                 var tmx = f.go.GetComponent<TextMesh>(); if (tmx != null) { var col = tmx.color; col.a = Mathf.Min(1, f.life / f.max * 2); tmx.color = col; }
             }
         }
@@ -377,8 +397,11 @@ public class SixthLordGame : MonoBehaviour
     void Place(Ent e, float size)
     {
         int dir = e.t == 1 ? -1 : 1;
-        var p = WP(e.x + dir * e.lunge * 60, e.y); e.go.transform.position = p;
-        e.sr.color = e.fl > 0 ? new Color(1, 1, 1, 1) * 1.6f : Color.white;
+        e.punch = Mathf.Max(0, e.punch - Time.deltaTime);
+        float bob = e.kind == 0 && e.moving ? Mathf.Abs(Mathf.Sin(Time.time * 9f + e.x * .1f)) * .08f : 0;
+        var p = WP(e.x + dir * e.lunge * 220, e.y) + new Vector3(0, bob, 0); e.go.transform.position = p;
+        if (e.kind == 0) e.go.transform.localScale = Vector3.one * e.baseSize * (1 + e.punch * 1.6f);
+        e.sr.color = e.fl > 0 ? new Color(1f, .55f, .5f) : Color.white;
         float r = size * .5f, w = size * .9f, f = Mathf.Clamp01(e.hp / e.mhp);
         bool show = e.hp < e.mhp || e.kind == 2;
         e.barBg.gameObject.SetActive(show); e.bar.gameObject.SetActive(show);
