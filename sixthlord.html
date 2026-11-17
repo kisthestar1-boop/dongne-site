@@ -200,7 +200,7 @@ function camp(){const beat=k=>S.camp[k];
  <div class="hs lock" style="--c:#3A3A48;margin-top:6px"><div class="ic">👁</div><div><b>??? 그림자</b><div class="m">"…"</div><div class="s">다섯 가문을 모두 꺾으면 열려요</div></div><div class="st">🔒</div></div></div>`);
  document.querySelectorAll(".hs[data-h]").forEach(x=>x.onclick=()=>{if(x.classList.contains("lock")){toast("앞 가문을 먼저 꺾어야 해요");return}const h=HOUSES.find(z=>z.id===x.dataset.h);
   talk(h.say.map(t=>[h.lord[0],h.lord[1],t]),b=>{if(b==="go")go(h.id)},`<button class="sbtn" data-b="no">나중에</button><button class="gbtn" data-b="go">⚔ 대결 시작</button>`)})}
-function go(hid){location.href="beastduel.html?foe="+hid+"&from=sixth"}
+function go(hid){location.href="sixthfight.html?foe="+hid}
 function fight(){const open=HOUSES.filter((h,i)=>i===0||S.camp[HOUSES[i-1].id]);const h=open[Math.floor(R()*open.length)];toast(`${h.ic} ${h.n}의 ${h.lord[1]}와 대결!`);setTimeout(()=>go(h.id),700)}
 /* ===== 수집 ===== */
 function coll(){const own=id=>S.h[id];
