@@ -340,7 +340,7 @@ nav .lk{color:#333!important}
    <ul><li>가입 없이 바로 사용</li><li>사진 한 장 → 섹션 12장 상세페이지</li><li>섹션 눌러서 고치기 · 다시 그리기</li><li>쇼핑몰 9곳 규격 · 섹션별 저장</li><li>검색 대표 이미지 · 인스타 광고 이미지</li></ul>
    <a class="btn pr go" href="#make" style="align-self:flex-start">무료로 시작하기 →</a></div>
   <div class="pc"><h3>크레딧 충전</h3><div class="pp" style="font-size:1.5rem">12월 공개</div>
-   <ul><li>쓴 만큼만 내는 충전식</li><li>구글·카카오로 간편 로그인</li><li>만든 상세페이지 보관함</li><li>여러 상품 한 번에 만들기</li></ul>
+   <ul><li>쓴 만큼만 내는 충전식 (1크레딧 = ₩100)</li><li>고치기 1회 2크레딧 — 원가 그대로</li><li>구글·카카오로 간편 로그인</li><li>만든 상세페이지 보관함</li><li>여러 상품 한 번에 만들기</li></ul>
    <span class="note" style="margin:0">정식 출시 때 이 자리에서 알려 드려요.</span></div>
  </div>
 </div></section>
@@ -778,7 +778,7 @@ $("#cv").addEventListener("click",e=>{const cv=$("#cv"),rc=cv.getBoundingClientR
    <div class="fg"><label>이렇게 바꾸기</label><textarea id="spTo" rows="2" placeholder="바꿀 글자를 적어 주세요"></textarea></div>
    <div class="fg"><label>바라는 점 <small>예) 이 사진 배경을 더 밝게, 이 사람 빼기</small></label><textarea id="spReq" rows="2"></textarea></div>
    <button type="button" class="btn gh" id="spPhoto" style="justify-content:center">🖼 이 자리 사진을 내 사진으로 바꾸기</button>
-   <button type="button" class="btn pr" id="edFix" style="justify-content:center">✏️ 누른 부분만 고치기 (약 15초)</button>
+   <button type="button" class="btn pr" id="edFix" style="justify-content:center">✏️ 누른 부분만 고치기 (약 15초)</button><small class="mu2" style="text-align:center">고치기 1회 = <b>2크레딧</b> (원가 약 ₩200) · 지금은 베타라 무료</small>
    <button type="button" class="btn gh" id="edRe" style="justify-content:center">🔄 이 장 통째로 새로 그리기</button>${(q._hist&&q._hist.length)?`<button type="button" class="btn gh" id="edUndo" style="justify-content:center">↩ 이전 그림으로 되돌리기</button>`:""}
    <small class="mu2">💡 나머지는 그대로 두고, 누른 곳만 고쳐요. 다른 곳을 고치려면 미리보기에서 그 곳을 다시 눌러 주세요.</small>`;
   ed.classList.add("on");
