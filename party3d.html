@@ -1026,9 +1026,9 @@ const GAMES=[
    const notes=tier===3?[523,659,784,1047,1319]:tier===2?[523,659,784,1047]:[659,784,988];notes.forEach((n,k)=>setTimeout(()=>tone(n,.16,"square",.07),k*95));
    document.querySelectorAll(".fcard").forEach(e=>e.remove());const c=document.createElement("div");c.className="mb fcard";
    const bg=tier===3?"linear-gradient(#FFF6C2,#FFD34D)":tier===2?"linear-gradient(#FFE9F3,#FFB3D1)":"linear-gradient(#EAF7FF,#B8E4FF)";
-   c.style.cssText="position:fixed;left:50%;top:34%;transform:translate(-50%,-50%) scale(.85);opacity:0;transition:opacity .25s,transform .25s;z-index:40;pointer-events:none;text-align:center;padding:14px 26px 12px;border-radius:22px;border:4px solid #2A1060;box-shadow:0 6px 0 #2A1060;font-weight:900;color:#2A1060;background:"+bg;
-   c.innerHTML='<div style="font-size:15px">'+(tier===3?t("✨ 대어 낚았다! ✨","✨ HUGE CATCH! ✨"):t("잡았다!","Caught it!"))+'</div><div style="font-size:54px;line-height:1.1">'+f.e+'</div><div style="font-size:20px">'+f.n+'</div><div style="font-size:30px;color:#E0457B">+'+f.v+t("점","pts")+'</div><div style="font-size:12px;opacity:.8">'+t("총 ","Total ")+p.score+t("점 · ","pts · ")+p.catches+t("마리","fish")+(best&&p.catches>1?t(" · 최고 기록!"," · BEST!"):"")+'</div>';
-   document.body.appendChild(c);requestAnimationFrame(()=>{c.style.opacity="1";c.style.transform="translate(-50%,-50%) scale(1)"});setTimeout(()=>{c.style.opacity="0"},tier===3?1700:1200);setTimeout(()=>c.remove(),tier===3?2000:1500)},
+   const pv=new THREE.Vector3(p.x,p.y+4.3,p.z).project(cam),sx=(pv.x+1)/2*innerWidth,sy=(1-pv.y)/2*innerHeight;c.style.cssText="position:fixed;left:"+Math.max(70,Math.min(innerWidth-70,sx))+"px;top:"+Math.max(110,sy)+"px;transform:translate(-50%,-100%) scale(.85);opacity:0;transition:opacity .25s,transform .25s;z-index:40;pointer-events:none;text-align:center;padding:6px 14px 6px;border-radius:16px;border:3px solid #2A1060;box-shadow:0 4px 0 #2A1060;font-weight:900;color:#2A1060;background:"+bg;
+   c.innerHTML='<div style="font-size:12px">'+(tier===3?t("✨ 대어 낚았다! ✨","✨ HUGE CATCH! ✨"):t("잡았다!","Caught it!"))+'</div><div style="font-size:34px;line-height:1.1">'+f.e+'</div><div style="font-size:15px">'+f.n+'</div><div style="font-size:21px;color:#E0457B">+'+f.v+t("점","pts")+'</div><div style="font-size:10px;opacity:.8">'+t("총 ","Total ")+p.score+t("점 · ","pts · ")+p.catches+t("마리","fish")+(best&&p.catches>1?t(" · 최고 기록!"," · BEST!"):"")+'</div>';
+   document.body.appendChild(c);requestAnimationFrame(()=>{c.style.opacity="1";c.style.transform="translate(-50%,-100%) scale(1)"});setTimeout(()=>{c.style.opacity="0"},tier===3?1700:1200);setTimeout(()=>c.remove(),tier===3?2000:1500)},
   jump(p,k,v){const m=new THREE.Group();if(p.fo){const c2=p.fo.m.clone();c2.visible=true;c2.scale.setScalar(1.3);m.add(c2)}
    arena.add(m);this.fx.push({m,t:0,x0:p.bob.position.x,z0:p.bob.position.z,x1:p.x,z1:p.z})},
   drive(p){p.vx=p.vz=0},
@@ -1101,7 +1101,7 @@ const GAMES=[
   rank(){const alive=t0=>P.filter(p=>p.team===t0&&!p.out).reduce((a,p)=>a+p.lv,0);const w=alive(0)===alive(1)?null:(alive(0)>alive(1)?0:1);
    return P.slice().sort((a,b)=>((b.team===w)-(a.team===w))||((!b.out)-(!a.out))||(b.hitsN-a.hitsN))},
   over(T){const al=t0=>P.some(p=>p.team===t0&&!p.out);return !al(0)||!al(1)||T>this.len}},
- {id:"badm",nolag:1,camK:1.1,em:"🏸",ico:"🏸",name:t("팡팡 배드민턴","Bonk Badminton"),how:t("🏸 2대2 배드민턴! 셔틀콕이 가까이 오면 스페이스로 휘둘러 쳐요. 안 치면 떨어져서 실점! 높은 공은 스매시 💥, 네트 앞에선 살짝 드롭샷~ 3점 먼저 내면 승리!","🏸 2 vs 2! Swing with Space when the shuttle comes close — miss it and you lose the point! High = SMASH, near the net = drop shot. First to 3 wins!"),act:"none",actLabel:t("휘두르기!","SWING!"),keys:t("이동: WASD/방향키 · 스페이스로 휘두르기 (높은 공 = 스매시)","Move: WASD/Arrows · Space to swing (high = smash)"),tk:t("셔틀콕 그림자로 가서 버튼으로 휘둘러요!","Go to the shuttle's shadow and tap to swing!"),len:75,timed:1,sc:1,
+ {id:"badm",nolag:1,camK:1.1,em:"🏸",ico:"🏸",name:t("팡팡 배드민턴","Bonk Badminton"),how:t("🏸 2대2 배드민턴! 셔틀콕이 가까이 오면 스페이스로 휘둘러 쳐요. 안 치면 떨어져서 실점! 두 번 주고받으면 세 번째는 점프 스매시 ⚡! 높은 공은 스매시 💥, 네트 앞은 드롭샷~ 5점 먼저 내면 승리!","🏸 2 vs 2! Swing with Space when the shuttle comes close — miss it and you lose the point! High = SMASH, near the net = drop shot. First to 5 wins!"),act:"none",actLabel:t("휘두르기!","SWING!"),keys:t("이동: WASD/방향키 · 스페이스로 휘두르기 (높은 공 = 스매시)","Move: WASD/Arrows · Space to swing (high = smash)"),tk:t("셔틀콕 그림자로 가서 버튼으로 휘둘러요!","Go to the shuttle's shadow and tap to swing!"),len:150,timed:1,sc:1,
   netOut(){const b=this.b;return [+b.x.toFixed(2),+b.y.toFixed(2),+b.z.toFixed(2),+b.vx.toFixed(1),+b.vy.toFixed(1),+b.vz.toFixed(1),this.S[0],this.S[1]]},
   netIn(a){const b=this.b;b.x=a[0];b.y=a[1];b.z=a[2];b.vx=a[3];b.vy=a[4];b.vz=a[5];this.S[0]=a[6];this.S[1]=a[7];P.forEach(p=>p.score=this.S[p.team])},
   setup(){const W=9,H=5.6;this.W=W;this.H=H;const g=mesh(new THREE.BoxGeometry(2*W+4,1,2*H+4),"#BFE6A8",false,true);g.position.y=-.5;arena.add(g);
@@ -1119,27 +1119,34 @@ const GAMES=[
     const rk=new THREE.Group(),hd=mesh(new THREE.CylinderGeometry(.09,.1,.85,10),"#2A1060",true);hd.position.y=.42;rk.add(hd);const sf=mesh(new THREE.CylinderGeometry(.045,.045,.55,8),"#C9C9D6",true);sf.position.y=1.1;rk.add(sf);
     const fr=mesh(new THREE.TorusGeometry(.62,.11,10,28),p.col,true);fr.position.y=1.95;fr.scale.y=1.25;rk.add(fr);const fo=mesh(new THREE.TorusGeometry(.75,.035,6,28),"#FFFFFF");fo.position.y=1.95;fo.scale.y=1.2;rk.add(fo);
     const st=new THREE.Mesh(new THREE.CircleGeometry(.6,24),new THREE.MeshBasicMaterial({color:"#FFFFFF",transparent:true,opacity:.7,side:THREE.DoubleSide}));st.position.y=1.95;st.scale.y=1.25;rk.add(st);
-    for(let q=-2;q<=2;q++){const a1=mesh(new THREE.BoxGeometry(.02,1.4,.02),"#B8B8D0");a1.position.set(q*.22,1.95,.01);rk.add(a1);const a2=mesh(new THREE.BoxGeometry(1.15,.02,.02),"#B8B8D0");a2.position.set(0,1.95+q*.27,.01);rk.add(a2)}
-    arena.add(rk);p.rk=rk});
+    for(let q=-2;q<=2;q++){const fx=Math.sqrt(1-Math.pow(q*.22/.6,2)),fy=Math.sqrt(1-Math.pow(q*.27/.75,2));const a1=mesh(new THREE.BoxGeometry(.02,1.5*fx,.02),"#B8B8D0");a1.position.set(q*.22,1.95,.01);rk.add(a1);const a2=mesh(new THREE.BoxGeometry(1.2*fy,.02,.02),"#B8B8D0");a2.position.set(0,1.95+q*.27,.01);rk.add(a2)}
+    rk.rotation.y=Math.PI/2;rk.scale.setScalar(.85);const pv=new THREE.Group();pv.add(rk);arena.add(pv);p.rk=pv;this.pose(p,-1)});
    this.S=[0,0];this.b={x:0,y:-5,z:0,vx:0,vy:0,vz:0};this.last=null;this.wait=1.4;this.serveSide=-1;this.said=0},
-  serve(side){Object.assign(this.b,{x:side*4.5,y:6.5,z:rnd(-2,2),vx:-side*1.2,vy:0,vz:0});this.last=null;this.wait=0},
-  point(team,why){this.S[team]++;hitStop(.14);P.forEach(p=>p.score=this.S[p.team]);SND.coin();confetti(6);
+  clear(b){/* 친 공은 무조건 네트를 넘어가게 */const ax=Math.abs(b.x),avx=Math.abs(b.vx)||1;let tt=ax/avx*1.2;if(Math.sign(b.vx)===Math.sign(b.x))return;for(let k=0;k<30;k++){let y=b.y,vy=b.vy,vx=b.vx;const st=tt/20;let x=b.x;for(let n=0;n<20;n++){vy-=8.5*st;if(vy<-7)vy=-7;y+=vy*st}if(y>2.3)break;b.vy+=.6}},
+  flash(){const f=document.createElement("div");f.className="mb";f.style.cssText="position:fixed;inset:0;background:radial-gradient(circle,rgba(255,240,150,.55),rgba(255,200,80,0) 70%);z-index:35;pointer-events:none;transition:opacity .35s;opacity:1";document.body.appendChild(f);setTimeout(()=>f.style.opacity="0",60);setTimeout(()=>f.remove(),450)},
+  pose(p,u){const m=p.mesh;m.updateMatrixWorld();const q=m.quaternion.clone();if(state!=="play"){q.setFromAxisAngle(new THREE.Vector3(0,1,0),p.face)}
+   const hand=new THREE.Vector3(.72,.85+Math.sin(GT*7+p.id)*(Math.hypot(p.vx,p.vz)>.5?.08:.02),.2).applyQuaternion(q).add(new THREE.Vector3(p.x,p.y,p.z));p.rk.position.copy(hand);
+   const sw=u<0?-.25-(Math.hypot(p.vx,p.vz)>.5?Math.sin(GT*9+p.id)*.12:0):-.25+Math.sin(u*Math.PI)*1.9;p.rk.quaternion.copy(q).multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1,0,0),sw)).multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,0,1),-.25));p.rk.visible=!p.out},
+  serve(side){Object.assign(this.b,{x:side*4.5,y:6.5,z:rnd(-2,2),vx:-side*1.2,vy:0,vz:0});this.last=null;this.wait=0;this.rally=0},
+  point(team,why){this.S[team]++;this.rally=0;hitStop(.14);P.forEach(p=>p.score=this.S[p.team]);SND.coin();confetti(6);
    const mine=P.find(p=>p.you);const good=mine&&mine.team===team;say((why||"")+(good?t(" 득점! 🎉"," POINT! 🎉"):t(" 실점 ㅠㅠ"," Lost a point")),good?"#FFE066":"#FF9BB5",1.2);
    this.serveSide=team===0?1:-1;this.wait=1.3;this.b.y=-5;renderChips()},
   update(dt,T){const b=this.b,W=this.W,H=this.H;if(!this.said){this.said=1;say(t("셔틀콕이 오면 휘둘러요! 🏸","Swing when it comes! 🏸"),"#FFE066",1.6)}
    for(const p of P){p.sw-=dt;p.swc-=dt;if(!p.out&&state==="play"&&tapped(p)&&p.swc<=0){p.sw=.32;p.swc=.42;p.swHit=0;SND.dash()}
-    const s=p.team?-1:1,u=p.sw>0?1-p.sw/.32:-1;
-    p.rk.position.set(p.x+s*.6,p.y+.85,p.z+.45);const tiltZ=-s*(u<0?.55:.55+Math.sin(u*Math.PI)*1.5);p.rk.rotation.set(0,0,tiltZ);p.rk.visible=!p.out}
+    const u=p.sw>0?1-p.sw/.32:-1;this.pose(p,u)}
    if(NET.mode!=="guest"){
     if(this.wait>0){this.wait-=dt;if(this.wait<=0)this.serve(this.serveSide)}
     else{b.vy-=8.5*dt;const k=Math.exp(-dt*.55);b.vx*=k;b.vz*=k;if(b.vy<-7)b.vy=-7;b.x+=b.vx*dt;b.y+=b.vy*dt;b.z+=b.vz*dt;
      if(Math.abs(b.z)>H+2.5){b.vz*=-.5;b.z=Math.sign(b.z)*(H+2.5)}
      if(Math.abs(b.x)<.5&&b.y<1.9&&b.y>0&&Math.abs(b.vx)>0){b.x=b.vx>0?-.5:.5;b.vx*=-.3;SND.tick();popTxt({x:0,y:2,z:b.z},t("네트!","Net!"),"#FFFFFF",22)}
      for(const p of P){if(p.out||p.sw<=0||p.swHit)continue;const d=Math.hypot(b.x-p.x,b.z-p.z);if(d<2.7&&b.y>.25&&b.y<4.6&&(p.team?b.x>-.3:b.x<.3)){
-       const s=p.team?-1:1,early=p.sw>.18;p.swHit=1;p.hits++;this.last=p;const tz=clamp(rnd(-H+1,H-1)-b.z,-6,6);
-       if(b.y>2.5){const sp=early?15:12.5;b.vx=s*sp;b.vy=-2.2;b.vz=tz*.25;SND.boom();thwack(1);hitStop(early?.13:.09);shake=Math.max(shake,.3);burst(b.x,b.y,b.z,"#FFE066",early?20:12,7);popTxt(p,early?t("퍼펙트 스매시!","PERFECT SMASH!"):t("스매시!","SMASH!"),"#FFE066",early?32:26)}
-       else if(Math.abs(p.x)<3){b.vx=s*3.4;b.vy=6;b.vz=tz*.15;SND.bump();thwack(0);hitStop(.04);burst(b.x,b.y,b.z,"#FFFFFF",8,4);if(R()<.5)popTxt(p,t("드롭샷~","Drop shot~"),"#FFFFFF",20)}
+       const s=p.team?-1:1,early=p.sw>.18;p.swHit=1;p.hits++;this.last=p;this.rally=(this.rally||0)+1;const tz=clamp(rnd(-H+1,H-1)-b.z,-6,6);const sup=this.rally%3===0;
+       if(sup){p.vy=11.5;p.grounded=false;const sp=17.5;b.vx=s*sp;b.vy=-1.5;b.vz=tz*.28;SND.boom();thwack(1);hitStop(.2);shake=Math.max(shake,.6);burst(b.x,b.y,b.z,"#FFD700",34,10);burst(p.x,1.5,p.z,"#FF8FC0",18,7);confetti(10);
+        [523,784,1047,1568].forEach((n,k)=>setTimeout(()=>tone(n,.12,"square",.07),k*55));say(t("팡팡 점프 스매시!! ⚡","JUMP SMASH!! ⚡"),"#FFD700",1.1);popTxt(p,t("받아라!!","TAKE THAT!!"),"#FFD700",34);this.flash()}
+       else if(b.y>2.5){const sp=early?15:12.5;b.vx=s*sp;b.vy=-2.2;b.vz=tz*.25;SND.boom();thwack(1);hitStop(early?.13:.09);shake=Math.max(shake,.3);burst(b.x,b.y,b.z,"#FFE066",early?20:12,7);popTxt(p,early?t("퍼펙트 스매시!","PERFECT SMASH!"):t("스매시!","SMASH!"),"#FFE066",early?32:26)}
+       else if(Math.abs(p.x)<3){b.vx=s*3.6;b.vy=6.2;b.vz=tz*.15;SND.bump();thwack(0);hitStop(.04);burst(b.x,b.y,b.z,"#FFFFFF",8,4);if(R()<.5)popTxt(p,t("드롭샷~","Drop shot~"),"#FFFFFF",20)}
        else{b.vx=s*rnd(6.6,7.6);b.vy=rnd(8.5,9.5);b.vz=tz*.2;SND.bump();thwack(0);hitStop(.05);burst(b.x,b.y,b.z,"#FFFFFF",10,4);if(R()<.35)popTxt(p,pick([t("탁!","Tok!"),t("넘겨~","Over!"),t("받아라!","Take it!")]),"#FFFFFF",20)}
+       this.clear(b);b.sup=sup;if(this.rally%3===2){const rc=P.filter(q=>q.team!==p.team&&!q.out);if(rc.some(q=>q.you))say(t("다음에 치면 점프 스매시! ⚡","Next hit = JUMP SMASH! ⚡"),"#FFE066",.9);else popTxt({x:-s*4,y:2.5,z:0},t("다음은 점프 스매시 ⚡","Jump smash next ⚡"),"#FFE066",22)}
        break}}
      if(b.y<=.35){b.y=.35;burst(b.x,.3,b.z,"#FFFFFF",10,4);const inC=Math.abs(b.x)<=W+.3&&Math.abs(b.z)<=H+.3;
       if(inC)this.point(b.x<0?1:0,t("콕!","In!"));else this.point(this.last?1-this.last.team:(b.x<0?0:1),t("아웃!","Out!"))}}}
@@ -1156,7 +1163,7 @@ const GAMES=[
    return this.goTo(p,gx,gz,swing)},
   goTo(p,x,z,a){const dx=x-p.x,dz=z-p.z,d=Math.hypot(dx,dz);if(d<.25)return [0,0,a];const k=Math.min(1,d/1.2);return [dx/d*k,dz/d*k,a]},
   rank(){const w=this.S[0]===this.S[1]?null:(this.S[0]>this.S[1]?0:1);return P.slice().sort((a,b)=>((b.team===w)-(a.team===w))||(b.hits-a.hits))},
-  over(T){return this.S[0]>=3||this.S[1]>=3||T>this.len}}
+  over(T){return this.S[0]>=5||this.S[1]>=5||T>this.len}}
 ];
 addEventListener("keydown",e=>{if(e.repeat||state!=="play"||!G||G.id!=="mbox")return;if(e.code==="Digit1"||e.code==="Numpad1"||e.code==="ArrowLeft")G.choose(1);if(e.code==="Digit2"||e.code==="Numpad2"||e.code==="ArrowRight")G.choose(2)});
 GAMES.find(g=>g.id==="sumo").revive=function(){return [0,0]};
