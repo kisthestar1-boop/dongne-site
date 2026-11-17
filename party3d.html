@@ -435,23 +435,24 @@ const GAMES=[
    if(p._pid!==this.pid){p._pid=this.pid;p._slip=R()<(1-p.skill)*.18;p._rt=.04+(1-p.skill)*.15+rnd(0,.06)}return(this.redT<p._rt||p._slip)?[rnd(-.1,.1),-.8,false]:[0,0,false]},
   rank(){const rest=P.filter(p=>!this.fin.includes(p.id)).sort((a,b)=>a.z-b.z);return [...this.fin.map(i=>P[i]),...rest]},
   over(T){return this.fin.length>=3||T>this.len}},
- {id:"lava",em:"🌋",name:t("용암 바닥","Lava Floor"),how:t("반짝이는 바닥은 곧 뜨거운 용암이에요 🔥 콩! 점프로 피해요~","Glowing tiles turn to lava! Jump or run"),act:"jump",actLabel:t("점프","JUMP"),keys:t("이동: WASD/방향키 · 점프: 스페이스","Move: WASD/Arrows · Jump: Space"),len:55,
+ {id:"lava",em:"🌋",name:t("용암 바닥","Lava Floor"),how:t("반짝이는 바닥은 곧 뜨거운 용암이에요 🔥 콩! 점프로 피해요~","Glowing tiles turn to lava! Jump or run"),act:"jump",actLabel:t("점프","JUMP"),keys:t("이동: WASD/방향키 · 점프: 스페이스","Move: WASD/Arrows · Jump: Space"),len:35,
   setup(){this.N=9;this.T=[];const cols=["#E9D8C4","#F4E6D3"];for(let i=0;i<9;i++)for(let j=0;j<9;j++){const m=mesh(new THREE.BoxGeometry(1.94,.6,1.94),cols[(i+j)%2],false,true);m.material=m.material.clone();m.position.set((i-4)*2,-.3,(j-4)*2);arena.add(m);this.T.push({m,i,j,st:0,t:0,base:new THREE.Color(cols[(i+j)%2])})}
-   const rim=mesh(new THREE.BoxGeometry(19,1.2,19),"#6B4FD8");rim.position.y=-1.05;arena.add(rim);this.sp=1.2;spawnRing(4,Math.PI/4)},
+   const rim=mesh(new THREE.BoxGeometry(19,1.2,19),"#6B4FD8");rim.position.y=-1.05;arena.add(rim);this.sp=.6;this.wv=9;spawnRing(4,Math.PI/4)},
   tile(x,z){const i=Math.round(x/2)+4,j=Math.round(z/2)+4;if(i<0||j<0||i>8||j>8)return null;return this.T[i*9+j]},
-  update(dt,T){this.sp-=dt;if(this.sp<=0){this.sp=Math.max(.35,.9-T*.012);const k=1+Math.floor(T/9);for(let n=0;n<k;n++){const free=this.T.filter(x=>x.st===0);if(!free.length)break;
+  update(dt,T){this.wv-=dt;if(this.wv<=0){this.wv=Math.max(4,7-T*.1);const row=R()<.5,ix=Math.floor(R()*9);for(const tl of this.T){if((row?tl.i:tl.j)===ix&&tl.st===0){tl.st=1;tl.t=.3}}say(t("🌋 용암 파도!","🌋 LAVA WAVE!"),"#FF5A2A",.9);shake=Math.max(shake,.25);try{SND.boom()}catch(_){}}
+   this.sp-=dt;if(this.sp<=0){this.sp=Math.max(.22,.6-T*.015);const k=1+Math.floor(T/5);for(let n=0;n<k;n++){const free=this.T.filter(x=>x.st===0);if(!free.length)break;
      let tl=pick(free);if(R()<.35){const al=P.filter(p=>!p.out);if(al.length){const q=pick(al),u=this.tile(q.x,q.z);if(u&&u.st===0)tl=u}}tl.st=1;tl.t=0}}
    const warn=new THREE.Color("#FF9A3C"),lava=new THREE.Color("#FF3D1F");
    for(const tl of this.T){if(tl.st===0)continue;tl.t+=dt;
-    if(tl.st===1){const k=clamp(tl.t/1.1,0,1);tl.m.material.color.copy(tl.base).lerp(warn,k*(.6+.4*Math.abs(Math.sin(tl.t*14))));if(tl.t>1.1){tl.st=2;tl.t=0;SND.crack();burst((tl.i-4)*2,.4,(tl.j-4)*2,"#FF7A2A",5,3)}}
-    else if(tl.st===2){tl.m.material.color.copy(lava).lerp(new THREE.Color("#FFD23F"),Math.abs(Math.sin(tl.t*6))*.35);tl.m.position.y=-.3+Math.sin(tl.t*8)*.05;if(tl.t>2.2){tl.st=0;tl.m.material.color.copy(tl.base);tl.m.position.y=-.3}}}
-   for(const p of P){if(p.out||p.y>.25||p.inv>0)continue;const tl=this.tile(p.x,p.z);if(tl&&tl.st===2){burst(p.x,.6,p.z,"#FF5A2A",18,6);shake=.3;eliminate(p)}}},
+    if(tl.st===1){const k=clamp(tl.t/.85,0,1);tl.m.material.color.copy(tl.base).lerp(warn,k*(.6+.4*Math.abs(Math.sin(tl.t*14))));if(tl.t>.85){tl.st=2;tl.t=0;SND.crack();burst((tl.i-4)*2,.4,(tl.j-4)*2,"#FF7A2A",5,3)}}
+    else if(tl.st===2){tl.m.material.color.copy(lava).lerp(new THREE.Color("#FFD23F"),Math.abs(Math.sin(tl.t*6))*.35);tl.m.position.y=-.3+Math.sin(tl.t*8)*.05;if(tl.t>3){tl.st=0;tl.m.material.color.copy(tl.base);tl.m.position.y=-.3}}}
+   for(const p of P){if(p.out||p.y>.25||p.inv>0)continue;const tl=this.tile(p.x,p.z);if(tl&&tl.st===2){burst(p.x,.6,p.z,"#FF5A2A",22,7);shake=.4;hitStop(.12);thwack(1);eliminate(p)}}},
   ground(){return true},
   clampP(p){p.x=clamp(p.x,-8.9,8.9);p.z=clamp(p.z,-8.9,8.9)},
   ai(p,dt){const cur=this.tile(p.x,p.z);p.aiT-=dt;
    if(cur&&cur.st>0||p.aiT<=0){p.aiT=rnd(.4,1);let best=null,bd=1e9;for(const tl of this.T){if(tl.st!==0)continue;const x=(tl.i-4)*2,z=(tl.j-4)*2,d=Math.hypot(x-p.x,z-p.z)+rnd(0,2)*(1-p.skill)+(Math.abs(x)+Math.abs(z))*.05;if(d<bd){bd=d;best=[x,z]}}if(best){p.tx=best[0];p.tz=best[1]}}
    let dx=p.tx-p.x,dz=p.tz-p.z;const l=Math.hypot(dx,dz);if(l<.3)return [0,0,false];
-   const jump=cur&&cur.st===1&&cur.t>.9&&p.grounded&&R()<p.skill*.5;return [dx/l,dz/l,jump]},
+   const jump=cur&&cur.st===1&&cur.t>.6&&p.grounded&&R()<p.skill*.5;return [dx/l,dz/l,jump]},
   rank(){const alive=P.filter(p=>!p.out);return [...alive,...this.outs.slice().reverse().map(i=>P[i])]},
   over(T){return P.filter(p=>!p.out).length<=1||T>this.len}},
  {id:"circle",rare:1,em:"⭕",name:t("동그라미 따라가기","Safe Circle"),how:t("초록 동그라미를 졸졸 따라가요 💚 밖에 오래 있으면 탈락이에요~","Stay inside the moving green circle!"),act:"dash",actLabel:t("돌진","DASH"),keys:t("이동: WASD/방향키 · 돌진(밀치기): 스페이스","Move: WASD/Arrows · Dash: Space"),len:60,
