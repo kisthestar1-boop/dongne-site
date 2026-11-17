@@ -142,6 +142,9 @@ body.studio .out{border-radius:0;border:0;top:56px;max-height:calc(100vh - 56px)
 body.studio .pv{height:calc(100vh - 200px)}
 body.studio:not(.edit) #f{display:none}body.studio:not(.edit) .mk{grid-template-columns:1fr 240px}body.studio .pv canvas{max-width:540px}
 .pv canvas{cursor:pointer}
+body:not(.studio) #make .mk{display:none}.mkcta{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;text-decoration:none;color:var(--ink);border:2px dashed color-mix(in srgb,var(--p2) 45%,var(--ln));border-radius:24px;padding:48px 20px;background:linear-gradient(140deg,#FFF5FA,#F3EEFF);margin-top:18px;transition:transform .2s,box-shadow .2s}.mkcta:hover{transform:translateY(-3px);box-shadow:0 16px 40px rgba(123,108,255,.18)}.mkcta .ic{font-size:3rem}.mkcta b{font-size:1.35rem}.mkcta small{color:var(--mu)}body.studio .mkcta{display:none}
+.pbar{height:6px;border-radius:3px;background:#EEE9F7;overflow:hidden;margin:4px 0}.pbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--p1),var(--p2),var(--p3));transition:width .6s}
+.thg{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.thc{display:flex;flex-direction:column;gap:8px;font-size:.85rem}.thi{aspect-ratio:4/5;border-radius:14px;background:#F4F2F8;display:grid;place-items:center;overflow:hidden;font-size:.75rem;color:var(--mu);padding:0}.thi img{width:100%;height:100%;object-fit:contain;background:#fff}@media(max-width:700px){.thg{grid-template-columns:1fr}}
 .ed{position:fixed;right:20px;top:90px;width:min(380px,calc(100vw - 32px));max-height:calc(100vh - 120px);overflow:auto;background:var(--card,#fff);border:1px solid var(--ln);border-radius:18px;box-shadow:0 20px 60px rgba(0,0,0,.18);padding:16px;display:none;flex-direction:column;gap:10px;z-index:60}.ed.on{display:flex}.ed #edB{display:flex;flex-direction:column;gap:10px}
 body.studio .side3{display:flex;flex-direction:column;gap:8px;padding:16px;background:#fff;border-left:1px solid var(--ln);position:sticky;top:56px;max-height:calc(100vh - 56px);overflow:auto}
 .side3 b{font-size:.9rem;margin-bottom:4px}
@@ -182,6 +185,7 @@ footer{padding:40px 0 60px;color:var(--mu);font-size:.8rem;text-align:center}
 .pgb b{font-size:1.05rem}.pgs{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:7px;font-size:.88rem}
 .pgs li{display:flex;gap:8px;align-items:center;color:var(--mu)}.pgs li.on{color:var(--ink);font-weight:700}.pgs li.ok{color:#2D7F52}
 .pgs li i{font-style:normal;width:20px;text-align:center}
+body.studio .prog{inset:auto 20px 20px auto;background:none;padding:0}body.studio .pgb{box-shadow:0 20px 60px rgba(40,20,80,.28);border:1px solid var(--ln)}body.studio .pgs{display:grid;grid-template-columns:1fr 1fr;gap:5px 12px;font-size:.8rem}
 .spin{width:14px;height:14px;border:2px solid var(--ln);border-top-color:var(--acc);border-radius:50%;animation:sp 1s linear infinite;display:inline-block}@keyframes sp{to{transform:rotate(360deg)}}
 .made{animation:none;outline:3px solid color-mix(in srgb,var(--acc) 50%,transparent);outline-offset:4px;border-radius:24px}
 .lb{position:fixed;inset:0;background:rgba(10,5,20,.82);z-index:50;display:none;justify-content:center;overflow:auto;padding:30px 12px}
@@ -200,39 +204,39 @@ footer{padding:40px 0 60px;color:var(--mu);font-size:.8rem;text-align:center}
  <div class="in">
   <span class="badge">✦ 가입 없이 바로 · 지금은 베타 무료</span>
   <h1>사진 한 장이면,<br><em>상세페이지 완성</em></h1>
-  <p class="sub">상품 사진을 올리면 AI가 문구를 쓰고, 장면 사진 8장을 새로 그려 쿠팡·스마트스토어 규격 상세페이지로 완성해요.</p>
+  <p class="sub">상품 사진 <b>한 장</b>만 올리세요. AI가 페이지를 기획하고 섹션 12장을 통째로 디자인해, 쿠팡·스마트스토어에 바로 올리는 상세페이지를 약 2분 만에 완성해요.</p>
   <div class="cta"><a class="btn pr go" href="#make">📸 사진 넣고 바로 만들기 →</a><a class="btn gh" href="#ex">결과물 보기</a></div>
-  <div class="facts"><span>⚡ 사진 1장부터</span><span>🛡 광고 표현 자동 검사</span><span>🏷 AI 연출 컷은 표시</span><span>🛒 쇼핑몰 9곳 규격</span></div>
+  <div class="facts"><span>📸 사진 1장이면 끝</span><span>⏱ 약 2분</span><span>🎨 섹션 12장 AI 디자인</span><span>✏️ 눌러서 바로 고치기</span><span>🛒 쇼핑몰 9곳 규격</span></div>
   <div class="demo" aria-label="만들기 화면 미리보기"><div class="tb"><i></i><i></i><i></i><span style="margin-left:8px">찰칵상세 · 작업 화면</span></div>
-   <div class="bd"><div class="pn"><b>상품 정보</b><img id="dmPic" alt=""><div class="f">상품명 · <span id="dmName"></span></div><div class="f">카테고리 · 주얼리</div><div class="f">✨ AI 장면 사진 8장</div></div>
+   <div class="bd"><div class="pn"><b>상품 정보</b><img id="dmPic" alt=""><div class="f">상품명 · <span id="dmName"></span></div><div class="f">입력 · 사진 1장</div><div class="f">✨ AI 기획 → 섹션 12장 디자인</div></div>
    <div class="cv"><img id="phImg" alt="자동으로 만든 상세페이지 예시"></div>
-   <div class="pn rt"><b>AI에게 고쳐 달라고 하기</b><div class="chat me">첫 문장을 더 감성적으로 바꿔 줘</div><div class="chat">“매일 하고 싶은 작은 반짝임”으로 바꿨어요 ✓</div><div class="chat me">쿠팡용으로 저장</div><div class="chat">780px 폭으로 3장 나눠 저장했어요 ✓</div><small style="margin-top:auto">※ 화면 예시예요. 대화로 고치기는 출시 때 열려요.</small></div></div></div>
+   <div class="pn rt"><b>눌러서 고치기</b><div class="chat me">3번째 장 배경을 더 밝게</div><div class="chat">3번째 장만 다시 그렸어요 ✓</div><div class="chat me">쿠팡용 섹션별로 저장</div><div class="chat">780px 폭으로 섹션별 저장했어요 ✓</div><small style="margin-top:auto">섹션을 누르면 그 장만 고쳐서 다시 그려요</small></div></div></div>
  </div>
 </header>
 
 <section id="ex"><div class="in">
  <div class="eb">Examples</div>
  <h2>이렇게 만들어져요</h2>
- <p class="lead">아래 네 장은 <b>이 페이지의 만들기 도구로 방금 그린 결과물</b>이에요. 눌러서 끝까지 내려 보세요.</p>
+ <p class="lead">아래 네 개는 <b>사진 한 장씩만 넣고 이 도구로 만든 결과 그대로</b>예요. 눌러서 끝까지 내려 보세요.</p>
  <div class="gal" id="gal"></div>
  <p class="note">※ 예시 상품과 사진은 설명용으로 AI가 그린 가상의 상품이에요. 실제 판매할 때는 직접 찍은 상품 사진을 넣어 주세요.</p>
 </div></section>
 
 <section id="how" style="padding-top:20px"><div class="in">
  <div class="eb">How it works</div>
- <h2>3단계면 끝</h2>
- <p class="lead">어려운 디자인 도구 없이, 칸을 채우면 오른쪽에서 바로 완성본이 그려져요.</p>
+ <h2>사진 올리고, 기다리고, 저장</h2>
+ <p class="lead">적을 칸이 없어요. 상품 이름·카테고리·문구·규격까지 AI가 사진을 보고 알아서 채워요.</p>
  <div class="steps">
-  <div class="st"><div class="ill">📸✍️</div><div class="n">01 · 넣기</div><h3>사진과 특징 넣기</h3><p>상품 사진(1~6장)과 이름, 첫 화면 한 줄, 특징 3개만 적으면 돼요. <b>문구 추천</b> 버튼이 카테고리에 맞는 문장을 골라 줘요.</p></div>
-  <div class="st"><div class="ill">🎨👀</div><div class="n">02 · 고르기</div><h3>스타일 고르고 바로 고치기</h3><p>깔끔·감성·고급 3가지 틀과 포인트 색을 고르면 즉시 바뀌어요. 글자를 고치면 미리보기도 함께 바뀌어요.</p></div>
-  <div class="st"><div class="ill">⬇️🛒</div><div class="n">03 · 저장</div><h3>규격대로 저장</h3><p>쿠팡·스마트스토어·11번가·무신사 등 쇼핑몰을 고르면 그 폭에 맞춰, 한 장 또는 여러 장으로 나눠 JPG로 저장돼요.</p></div>
+  <div class="st"><div class="ill">📸✍️</div><div class="n">01 · 올리기</div><h3>상품 사진 한 장</h3><p>흰 배경에 상품이 크게 나온 사진이면 가장 좋아요. 휴대폰으로 찍은 사진도 괜찮아요.</p></div>
+  <div class="st"><div class="ill">🎨👀</div><div class="n">02 · 약 2분</div><h3>AI가 기획하고 디자인</h3><p>잘 팔리는 페이지 순서대로 섹션 12장을 기획하고, 상품을 그대로 살린 착용·연출 사진과 한글 디자인을 한 장씩 그려요.</p></div>
+  <div class="st"><div class="ill">⬇️🛒</div><div class="n">03 · 고치고 저장</div><h3>눌러서 고치고, 규격대로 저장</h3><p>마음에 안 드는 장은 눌러서 글을 고치거나 "배경 더 밝게"처럼 요청해 다시 그려요. 쿠팡·스마트스토어 등 9곳 폭에 맞춰 통으로 또는 섹션별로 저장해요.</p></div>
  </div>
 </div></section>
 
 <section id="why" style="padding-top:20px"><div class="in">
  <div class="eb">Why it sells</div>
  <h2>잘 팔리는 상세페이지 순서를<br>그대로 담았어요</h2>
- <p class="lead">상세페이지는 꾸미기가 아니라 <span class="hl">설득하는 순서</span>예요. 판매 상위 페이지들이 공통으로 쓰는 흐름을 학습해 틀로 만들었어요.</p>
+ <p class="lead">상세페이지는 꾸미기가 아니라 <span class="hl">설득하는 순서</span>예요. 판매 상위 페이지들이 공통으로 쓰는 흐름을 학습해, AI가 이 순서대로 섹션을 기획해요.</p>
  <div class="why">
   <div class="wy"><b>첫 3초 후킹</b><small>첫 화면에 짧은 한두 줄 + 큰 상품 사진. 상품 이름보다 "나한테 왜 필요한지"가 먼저.</small></div>
   <div class="wy"><b>이런 분께</b><small>누가, 어떤 상황에서 쓰는지 3가지로 공감시키기.</small></div>
@@ -248,7 +252,8 @@ footer{padding:40px 0 60px;color:var(--mu);font-size:.8rem;text-align:center}
 <div class="in">
  <div class="eb">Make</div>
  <h2>지금 바로 만들어 보세요</h2>
- <p class="lead">왼쪽 칸을 채우면 오른쪽에 완성본이 그려져요. 처음엔 목걸이 예시가 채워져 있어요.</p>
+ <p class="lead">적을 칸은 없어요. 상품 사진 한 장만 올리면 새 창에서 약 2분 만에 완성돼요.</p>
+ <a class="mkcta go" href="#make"><span class="ic">📸</span><b>상품 사진 한 장 올리기</b><small>흰 배경에 상품이 크게 나온 사진이면 가장 좋아요 · JPG·PNG</small><span class="btn pr" style="margin-top:6px">사진 고르고 바로 만들기 →</span></a>
  <div class="mk">
   <form class="form" id="f" onsubmit="return false">
    <div class="fg"><label>카테고리</label><div class="chips" id="cats"></div></div>
@@ -270,7 +275,7 @@ footer{padding:40px 0 60px;color:var(--mu);font-size:.8rem;text-align:center}
    <div class="hd"><b>미리보기</b><small id="sz"></small><span class="sp"></span>
     <div class="dl"><select id="wsel" aria-label="쇼핑몰 규격"><option value="780">쿠팡 · 780px</option><option value="860" selected>네이버 스마트스토어 · 860px</option><option value="831">11번가 · 831px</option><option value="860">지마켓 · 860px</option><option value="860">지그재그 · 860px</option><option value="880">에이블리 · 880px</option><option value="890">카카오 선물하기 · 890px</option><option value="1000">무신사 · 1000px</option><option value="1000">토스쇼핑 · 1000px</option></select>
     <select id="split" aria-label="나누기"><option value="0">한 장으로</option><option value="1200">1200px씩 나누기</option><option value="2000">2000px씩 나누기</option><option value="-1">섹션별로 나누기</option></select>
-    <button class="btn pr sm" id="save" type="button">⬇ JPG 저장</button><button class="btn gh sm" id="mkt" type="button">📣 썸네일·인스타 이미지</button></div></div>
+    <button class="btn pr sm" id="save" type="button">⬇ JPG 저장</button><button class="btn gh sm" id="mkt" type="button">📣 썸네일·광고 이미지 (AI)</button></div></div>
    <div class="law" id="law"></div>
    <div class="pv"><canvas id="cv"></canvas></div>
    <div class="ok" id="ok"></div>
@@ -306,11 +311,11 @@ footer{padding:40px 0 60px;color:var(--mu);font-size:.8rem;text-align:center}
 
 <section id="faq" style="padding-top:20px"><div class="in" style="max-width:820px">
  <div class="eb">FAQ</div><h2>자주 묻는 질문</h2>
- <details><summary>사진이 1장뿐이어도 되나요?</summary><p>네. 사진이 모자라면 대표 사진을 확대한 디테일 컷을 자동으로 만들어 빈칸을 채워요. 그래도 실제로 찍은 사진이 많을수록 좋아요.</p></details>
+ <details><summary>사진이 1장뿐이어도 되나요?</summary><p>네, 한 장이면 충분해요. AI가 그 사진 속 상품을 그대로 살려 착용·연출·디테일 사진을 새로 그려요. 상품이 크고 선명하게 나온 사진일수록 결과가 좋아요.</p></details>
  <details><summary>올린 사진은 어디에 저장되나요?</summary><p>AI가 장면 사진과 문구를 만드는 동안에만 쓰고, 따로 저장하지 않아요. 완성된 상세페이지는 내 기기에 JPG로 저장돼요.</p></details>
  <details><summary>쿠팡·스마트스토어에 바로 올릴 수 있나요?</summary><p>세로로 긴 JPG로 저장되니 상세 설명에 이미지로 올리면 돼요. 마켓마다 권장 크기와 용량이 바뀔 수 있으니 올리기 전에 판매자 센터 안내를 한 번 확인해 주세요. 길면 "나눠 저장"을 쓰세요.</p></details>
- <details><summary>후기나 인증 문구도 넣어 주나요?</summary><p>지어낸 후기·수치는 넣지 않아요. 실제로 받은 후기나 시험 성적이 있을 때만 특징 칸에 사실대로 적어 주세요.</p></details>
- <details><summary>상업적으로 써도 되나요?</summary><p>직접 찍은 사진과 직접 쓴 문구로 만든 결과물은 자유롭게 판매에 쓰셔도 돼요. 예시 페이지의 AI 사진은 설명용이라 판매에는 쓰지 말아 주세요.</p></details>
+ <details><summary>후기나 인증 문구도 넣어 주나요?</summary><p>아니요. 지어낸 후기·별점·수치, 사진으로 확인할 수 없는 인증·효능·소재 주장은 넣지 않아요. 상품 정보표는 흔히 쓰는 규격으로 채워 드리니, 실제 값과 다르면 눌러서 고쳐 주세요.</p></details>
+ <details><summary>상업적으로 써도 되나요?</summary><p>네, 만든 상세페이지는 판매에 쓰셔도 돼요. 다만 AI가 그린 연출 사진이 실제 상품과 다르게 보이지 않는지 올리기 전에 꼭 확인해 주세요. 페이지 맨 아래에 AI 연출 안내 문구가 자동으로 들어가요.</p></details>
 </div></section>
 
 <div class="end"><h2>오늘 올릴 상품, 지금 찰칵</h2><p style="opacity:.9;margin:0 0 22px">사진 한 장이면 충분해요.</p><a class="btn go" href="#make">📸 사진 넣고 만들기 →</a></div>
@@ -325,8 +330,9 @@ footer{padding:40px 0 60px;color:var(--mu);font-size:.8rem;text-align:center}
  <button type="button" class="btn pr" id="qsGo" style="justify-content:center">✦ 상세페이지 만들기</button>
  <small class="mu2">문구는 카테고리에 맞춰 먼저 채워 드려요. 만든 뒤 아래에서 마음껏 고칠 수 있어요.</small>
 </div></div>
+<div class="qs" id="th"><div class="qb" style="width:min(860px,100%)"><div class="qh"><b>📣 썸네일 · 광고 이미지</b><button type="button" class="qx" onclick="$('#th').classList.remove('on')" aria-label="닫기">✕</button></div><small class="mu2">쇼핑 검색에서 눈길을 끄는 건 첫 사진이에요. 대표 이미지는 흰 배경이 쿠팡·네이버 기준에 가장 안전해요.</small><div id="thG" class="thg"></div></div></div>
 <div class="ed" id="ed"><div class="qh"><b>✏️ 이 부분 고치기</b><button type="button" class="qx" id="edX" aria-label="닫기">✕</button></div><div id="edB"></div><small class="mu2">고치는 대로 바로 그려져요</small></div>
-<div class="prog" id="prog"><div class="pgb"><b>✨ AI가 상세페이지를 만드는 중이에요</b><small class="mu2">사진 장면은 1장에 10~20초쯤 걸려요. 창을 닫지 말아 주세요.</small><ul class="pgs" id="pgs"></ul></div></div>
+<div class="prog" id="prog"><div class="pgb"><b>📸 찰칵상세가 상세페이지를 만드는 중이에요</b><small class="mu2">약 2분 걸려요. 완성된 장부터 뒤에 바로 보여요. 창을 닫지 말아 주세요.</small><div class="pbar"><i id="pbarI"></i></div><ul class="pgs" id="pgs"></ul></div></div>
 <div class="lb" id="lb"><button aria-label="닫기" onclick="lb.classList.remove('on')">✕</button><img id="lbImg" alt="상세페이지 크게 보기"></div>
 
 <script>
@@ -341,10 +347,10 @@ const CAT={
  etc:{n:"기타",hook:["매일이 조금 편해지는 물건","써 보면 다시 찾게 되는","작지만 확실한 변화"],who:["불편함을 간단히 해결하고 싶은 분\n선물을 고민 중인 분\n오래 쓸 물건을 찾는 분"],pts:["핵심 기능 | 가장 중요한 장점 하나를 구체적으로\n편한 사용 | 어떻게 쓰는지 한 줄로\n믿을 수 있는 정보 | 소재·인증 등 사실만"]}};
 /* ===== 예시 4종 (가상 상품) ===== */
 const EX=[
- {cat:"jewel",img:"store/dd/necklace.jpg",story:"작은 큐빅 하나가 목선에 은은한 빛을 더해요. 출근길 셔츠에도, 주말 니트에도 자연스럽게 어울려 매일 손이 가는 목걸이예요.",brand:"LUMI SILVER",name:"데일리 큐빅 실버 목걸이",hook:"매일 하고 싶은\n작은 **반짝임**",who:CAT.jewel.who[0],pts:CAT.jewel.pts[0],spec:"소재 | 925 실버 (예시)\n체인 길이 | 45cm (예시)\n펜던트 | 약 0.6cm (예시)\n구성 | 목걸이 1개 + 선물 상자",ship:"오후 2시 전 주문 시 당일 출고 (예시)\n착용 후 교환·반품은 어려워요",tpl:"warm",col:0,focus:[.53,.66]},
- {cat:"beauty",img:"store/dd/serum.jpg",brand:"DEW LAB",name:"데일리 수분 세럼 30ml",hook:"아침 30초,\n피부결이 **정돈**되는 습관",who:CAT.beauty.who[0],pts:CAT.beauty.pts[0],spec:"용량 | 30ml (예시)\n사용법 | 세안 후 2~3방울\n보관 | 직사광선을 피해 서늘한 곳",ship:"개봉 후에는 교환·반품이 어려워요",tpl:"clean",col:1},
- {cat:"food",img:"store/dd/coffee.jpg",brand:"ROASTERY 12",name:"오늘 볶은 원두 200g",hook:"집에서 내리는\n**카페 한 잔**",who:CAT.food.who[0],pts:CAT.food.pts[0],spec:"중량 | 200g (예시)\n원산지 | 상세 정보에 표기\n분쇄 | 홀빈 / 핸드드립 / 에스프레소",ship:"식품 특성상 단순 변심 반품은 어려워요",tpl:"bold",col:2},
- {cat:"living",img:"store/dd/mug.jpg",story:"손으로 하나하나 빚어 모양이 조금씩 달라요. 아침 커피를 담으면 손바닥 가득 따뜻함이 전해져요.",brand:"SONBIT",name:"손빚음 화이트 머그",hook:"손에 쥐는 순간\n**따뜻한** 아침",who:CAT.living.who[0],pts:CAT.living.pts[0],spec:"용량 | 약 300ml (예시)\n소재 | 도자기\n특징 | 수작업이라 모양이 조금씩 달라요",ship:"깨짐 방지 포장으로 보내 드려요",tpl:"warm",col:3,focus:[.5,.6]}];
+ {cat:"jewel",img:"store/dd/necklace.jpg",page:"ex/necklace.jpg",story:"작은 큐빅 하나가 목선에 은은한 빛을 더해요. 출근길 셔츠에도, 주말 니트에도 자연스럽게 어울려 매일 손이 가는 목걸이예요.",brand:"LUMI SILVER",name:"데일리 큐빅 실버 목걸이",hook:"매일 하고 싶은\n작은 **반짝임**",who:CAT.jewel.who[0],pts:CAT.jewel.pts[0],spec:"소재 | 925 실버 (예시)\n체인 길이 | 45cm (예시)\n펜던트 | 약 0.6cm (예시)\n구성 | 목걸이 1개 + 선물 상자",ship:"오후 2시 전 주문 시 당일 출고 (예시)\n착용 후 교환·반품은 어려워요",tpl:"warm",col:0,focus:[.53,.66]},
+ {cat:"beauty",img:"store/dd/serum.jpg",page:"ex/serum.jpg",brand:"DEW LAB",name:"데일리 수분 세럼 30ml",hook:"아침 30초,\n피부결이 **정돈**되는 습관",who:CAT.beauty.who[0],pts:CAT.beauty.pts[0],spec:"용량 | 30ml (예시)\n사용법 | 세안 후 2~3방울\n보관 | 직사광선을 피해 서늘한 곳",ship:"개봉 후에는 교환·반품이 어려워요",tpl:"clean",col:1},
+ {cat:"food",img:"store/dd/coffee.jpg",page:"ex/coffee.jpg",brand:"ROASTERY 12",name:"오늘 볶은 원두 200g",hook:"집에서 내리는\n**카페 한 잔**",who:CAT.food.who[0],pts:CAT.food.pts[0],spec:"중량 | 200g (예시)\n원산지 | 상세 정보에 표기\n분쇄 | 홀빈 / 핸드드립 / 에스프레소",ship:"식품 특성상 단순 변심 반품은 어려워요",tpl:"bold",col:2},
+ {cat:"living",img:"store/dd/mug.jpg",page:"ex/mug.jpg",story:"손으로 하나하나 빚어 모양이 조금씩 달라요. 아침 커피를 담으면 손바닥 가득 따뜻함이 전해져요.",brand:"SONBIT",name:"손빚음 화이트 머그",hook:"손에 쥐는 순간\n**따뜻한** 아침",who:CAT.living.who[0],pts:CAT.living.pts[0],spec:"용량 | 약 300ml (예시)\n소재 | 도자기\n특징 | 수작업이라 모양이 조금씩 달라요",ship:"깨짐 방지 포장으로 보내 드려요",tpl:"warm",col:3,focus:[.5,.6]}];
 const COLS=["#B9874A","#D45A8A","#2F7A62","#6A4FD8"];
 const TPL={clean:{n:"깔끔",bg:"#FFFFFF",bg2:"#F5F5F7",ink:"#18181B",mu:"#6B6B76",ln:"#E7E7EC",hf:"900 ",hfam:'"Noto Sans KR",sans-serif',sw:"linear-gradient(#fff,#F5F5F7)"},
  warm:{n:"감성",bg:"#FBF6EF",bg2:"#F2E8DA",ink:"#2E241B",mu:"#857463",ln:"#E6D8C6",hf:"800 ",hfam:'"Nanum Myeongjo",serif',sw:"linear-gradient(#FBF6EF,#EADBC6)"},
@@ -454,9 +460,9 @@ function render(cv,d,imgs,W=860){
 
 function renderAny(cv,d,imgs,W){return d.sec&&d.sec.some(x=>x.img)?renderPosters(cv,d,W):render(cv,d,imgs,W)}
 /* ===== 섹션 포스터 방식 (쿠팡 상위 페이지처럼 섹션을 통째로 그리기) ===== */
-const SEC_PLAN="1 첫인상: 위에 후킹 제목, 그 아래 화면의 70%를 채우는 아주 큰 메인 사진(상품을 쓰거나 착용한 감성 장면), 맨 아래 작은 원형 사진 4개, 2 디자인 소개: 상품 클로즈업 + 특징 4개 원형 확대컷과 짧은 설명, 3 포인트1: 큰 연출 사진 + 아래 아이콘 4개 장점, 4 포인트2: 다른 장면의 큰 사진 + 비교·활용 사진 4개, 5 포인트3: 라이프스타일 사진 + 아이콘 3~4개, 6 디테일: 부위별 확대 사진 3~4개와 설명선, 7 선물·포장: 선물 상자 연출 + 아이콘 3개, 8 사용·관리법: 단계별 사진이나 아이콘 3~4개";
+const SEC_PLAN="1 표지(스크롤을 멈추게 하는 첫 화면): 아주 크고 굵은 후킹 제목 2줄 + 화면 70%를 채우는 강렬하고 감성적인 메인 사진(상품을 쓰거나 착용한 장면) + 아래 짧은 키워드 3개, 2 공감: 고객이 겪는 고민 3개를 말풍선으로 + 그 고민을 풀어 주는 상품 사진 + '그래서 준비했어요', 3 브랜드 무드: 감성 문장 + 분위기 있는 큰 라이프스타일 사진 1장, 4 디자인 소개: 상품 클로즈업 + 특징 4개 원형 확대컷, 5 포인트1: 큰 연출 사진 + 아이콘 4개 장점, 6 포인트2: 다른 장면 큰 사진 + 활용 사진 4개, 7 포인트3: 손에 들거나 쓰는 장면 + 아이콘 3개, 8 다양한 활용·코디: 서로 다른 장면 사진 4장 격자, 9 디테일: 부위별 확대 사진 3~4개와 설명선, 10 선물·포장: 선물 상자 연출 + 아이콘 3개, 11 사용·관리법: 단계별 사진이나 아이콘 3~4개, 12 자주 묻는 질문: Q&A 4개(일반적인 사용·관리·배송 질문, 지어낸 후기 없이) + 작은 상품 사진";
 async function aiPlan(key,file,name){const data=await b64(file,768);
- const prompt=`너는 쿠팡·네이버 스마트스토어 상위 1% 상세페이지를 만드는 아트디렉터이자 카피라이터야. 사진 속 상품${name?` (판매자가 적은 이름: "${name}")`:""}으로 섹션 8장짜리 상세페이지를 기획해.
+ const prompt=`너는 쿠팡·네이버 스마트스토어 상위 1% 상세페이지를 만드는 아트디렉터이자 카피라이터야. 사진 속 상품${name?` (판매자가 적은 이름: "${name}")`:""}으로 섹션 12장짜리 상세페이지를 기획해.
 규칙: 쉬운 한국어. 후기·별점·판매량·인증·효능 수치·가격은 절대 넣지 마. 사진으로 확인할 수 없는 품질·안전 주장(순은/금 함량, 도금 종류, 무니켈, 알레르기 안심, 변색 방지, 방수, 유기농, 원산지, 인증 등)도 섹션 글에 넣지 마 — 대신 디자인·분위기·쓰는 장면·스타일링·선물로 매력을 써. 과장(최고·1위·완벽)·의약품 오인 표현 금지. 한글은 짧게(이미지 안에 그대로 그려짐).
 섹션 순서: ${SEC_PLAN}.
 JSON만 출력:
@@ -465,14 +471,14 @@ JSON만 출력:
 "tone":"warm/clean/bold","spec":[["항목","값"]],
 "sections":[{"en":"짧은 영어 필기체 문구 5단어 이내","h":"한국어 큰 제목 2줄(\\n), 줄당 11자 이내, 가장 중요한 단어 하나를 **로 감싸기","b":"한국어 설명 한 줄 26자 이내","photo":"English: the main photo of this section in detail (scene, model or props, angle, light). People: face cropped or out of frame","layout":"English: how the small items are shown (e.g. 4 circle close-up photos / 4 thin line icons / 3 numbered steps)","items":[["한국어 라벨 6자 이내","한국어 설명 14자 이내"]]}]}
 spec은 이 종류 상품에서 흔히 쓰는 표준 규격 5~7줄(소재·크기·용량·구성·원산지·관리 등). 사진에서 보이는 건 그대로, 안 보이는 건 가장 일반적인 값.
-sections는 정확히 8개, items는 섹션마다 3~4개.`;
+sections는 정확히 12개, items는 섹션마다 3~4개 (12번 Q&A는 items에 [질문, 짧은 답] 4개).`;
  const j=await gem(TXT_MODELS,{contents:[{parts:[{inline_data:{mime_type:"image/jpeg",data}},{text:prompt}]}],generationConfig:{responseMimeType:"application/json",temperature:.85}},key);
  const t=j.candidates?.[0]?.content?.parts?.map(p=>p.text||"").join("")||"{}";const o=JSON.parse(t.replace(/^```json|```$/g,"").trim());if(!Array.isArray(o.sections)||o.sections.length<4)throw new Error("기획이 비었어요");return o}
 function secPrompt(sec,i,n,name,palette,styled,extra){
  const hl=(String(sec.h||"").match(/\*\*([^*]+)\*\*/)||[])[1];const L=String(sec.h||"").replace(/\*\*/g,"").split("\n").map(x=>`"${x.trim()}"`).join(" / ");const it=(sec.items||[]).map(x=>Array.isArray(x)?`"${x[0]}"${x[1]?` with caption "${x[1]}"`:""}`:`"${x}"`).join(", ");
  return `Design ONE complete section (${i+1} of ${n}) of a premium Korean e-commerce product detail page, the quality of top-selling Coupang and Naver pages. Vertical 2:3 poster.
 Product: ${name} — the product in the FIRST reference image. Reproduce it EXACTLY: same shape, color, material, proportions and details. Do not redesign it.${styled?" The SECOND reference image is section 1 of this same page: match its background color, typography, margins, icon style and photo grading exactly so all sections look like one continuous design.":""}
-Show the product used correctly and realistically for what it is (e.g. a necklace is worn around the neck, never on a wrist).${i===0?" This is the FIRST section: the main photo must be very large and immersive, about 70% of the height.":""}
+Show the product used correctly and realistically for what it is (e.g. a necklace is worn around the neck, never on a wrist).${i===0?" This is the COVER section that must stop a shopper scrolling on Coupang or Naver: an extra-large, bold, high-contrast Korean headline (about twice the usual size), a dramatic, emotional, beautifully lit main photo filling about 70% of the height, strong focal point, magazine-cover feel.":""}${i===1?" This is the EMPATHY section: show the customer worries as 3 rounded speech bubbles in a natural conversational style, then the product as the answer.":""}
 Design system: ${palette}.${i%3===1?" For rhythm, this section uses a slightly deeper tint of the background color.":""}${i===4?" This section may use a rich deep accent-colored background with light text for contrast.":""} Use the accent color for small English line, key word, icons and thin divider lines. Elegant Korean serif headline, small clean Korean sans-serif body text, thin line icons, generous margins, luxury minimal magazine layout, professional commercial photography.
 Layout, top to bottom:
 1) small italic English script line: "${sec.en||""}"
@@ -517,11 +523,11 @@ async function runPoster(nm,cat){const key=($("#qsKey").value||"").trim();const 
  if(!plan){pgSet(steps);await new Promise(r=>setTimeout(r,1200));return runAI(nm,cat)}
  steps[0][1]="ok";if(plan.cat&&CAT[plan.cat])S.cat=plan.cat;if(!nm&&plan.name)S.name=plan.name;S.brand=plan.brand||"";if(plan.hook)S.hook=plan.hook;if(TPL[plan.tone])S.tpl=plan.tone;S.palette=plan.palette||"warm ivory background, champagne gold accents";
  if(Array.isArray(plan.spec)&&plan.spec.length)S.spec=plan.spec.filter(p=>p&&p[0]).map(p=>p[0]+" | "+p[1]).join("\n");
- S.sec=plan.sections.slice(0,8).map(s=>({en:s.en||"",h:s.h||"",b:s.b||"",photo:s.photo||"",layout:s.layout||"",items:(s.items||[]).slice(0,4),img:null}));
+ S.sec=plan.sections.slice(0,12).map(s=>({en:s.en||"",h:s.h||"",b:s.b||"",photo:s.photo||"",layout:s.layout||"",items:(s.items||[]).slice(0,4),img:null}));
  S.sec.forEach((s,i)=>steps.push([(i?"섹션 "+(i+1):"섹션 1 · 전체 디자인 정하기"),""]));steps.push(["상세페이지 이어 붙이기",""]);pgSet(steps);
  const one=async(i,style)=>{steps[i+1][1]="on";pgSet(steps);for(let t=0;t<2;t++){try{const im=await aiPoster(key,file,style,secPrompt(S.sec[i],i,S.sec.length,S.name,S.palette,!!style,S.sec[i].extra));S.sec[i].img=im;steps[i+1][1]="ok";if(!i){const e=edgeColor(im);if(e){S.bgc=e[0];if(e[1]<110){S.ink="#F4F1EA";S.mu="#B9B3C4"}else{S.ink=null;S.mu=null}}}draw();break}
   catch(e){if(/API key|PERMISSION|401|403|quota|한도/i.test(e.message)){steps[i+1]=["섹션 "+(i+1)+": "+e.message,"er"];pgSet(steps);throw e}if(t)steps[i+1]=["섹션 "+(i+1)+": 다시 시도 실패","er"]}}pgSet(steps)};
- try{await one(0,null);const style=S.sec[0].img;let next=1;const w=async()=>{while(next<S.sec.length){const i=next++;await one(i,style)}};await Promise.all([w(),w(),w()])}catch(e){}
+ try{await one(0,null);const style=S.sec[0].img;let next=1;const w=async()=>{while(next<S.sec.length){const i=next++;await one(i,style)}};await Promise.all([w(),w(),w(),w()])}catch(e){}
  const L2=steps.length-1;steps[L2][1]="ok";pgSet(steps);draw();setTimeout(()=>$("#prog").classList.remove("on"),900);return true}
 async function regenSec(i,extra){const b=$("#edRe");if(b){b.disabled=true;b.textContent="그리는 중… (10~20초)"}
  try{const style=i?S.sec[0].img:(S.sec[1]&&S.sec[1].img);const im=await aiPoster(($("#qsKey").value||"").trim(),qFiles[0],style,secPrompt(S.sec[i],i,S.sec.length,S.name,S.palette,!!style,extra));S.sec[i].img=im;draw();edClose()}
@@ -537,7 +543,16 @@ function lawCheck(){const text=[S.hook,S.sub,S.story,S.who,S.pts,S.spec].join("\
  const el=$("#law");el.className="law on "+(hits.length?"warn":"good");
  el.innerHTML=hits.length?"<b>⚠ 올리기 전에 확인해 주세요</b>"+hits.map(([w,m])=>`<span>${w.map(x=>`<mark>${x}</mark>`).join(" ")} · ${m}</span>`).join(""):"<b>✓ 광고 표현 검사 통과</b><span>과장·의약품 오인 표현이 보이지 않아요 (최종 판단은 판매자 몫이에요)</span>"}
 /* ===== 썸네일(1000×1000) · 인스타(1080×1350) ===== */
-$("#mkt").onclick=()=>{const T=TPL[S.tpl]||TPL.clean,A=COLS[S.col]||COLS[0],im=IM[0];const base=(S.name||"상품").replace(/[\\/:*?"<>|\s]+/g,"_");
+async function aiThumbs(){if(!qFiles[0]){alert("먼저 상품 사진으로 상세페이지를 만들어 주세요");return}const M=$("#th");M.classList.add("on");
+ const G=$("#thG");const items=[["대표이미지_1000","쇼핑 검색 대표 이미지 (흰 배경)","1:1","Main product listing image for Coupang/Naver search results: the product alone, perfectly centered, filling about 80% of the frame, pure white seamless background (#FFFFFF), soft natural contact shadow, crisp studio lighting, ultra sharp. Absolutely no text, no props, no logos."],
+  ["추가이미지_1000","눈길 끄는 추가 이미지","1:1","Scroll-stopping lifestyle thumbnail for a shopping app: the product as the hero in an emotional, beautifully lit scene that matches this design system: "+(S.palette||"warm and premium")+". Strong focal point, rich but clean colors. No text, no logos."],
+  ["인스타_1080x1350","인스타 광고 (글 포함)","4:5","Instagram feed ad for this product in the same design system: "+(S.palette||"warm and premium")+". Large bold Korean headline at the top: "+String(S.hook||S.name).replace(/\*\*/g,"").split("\n").map(x=>'"'+x.trim()+'"').join(" / ")+", the product hero photo below, small Korean line at the bottom: \""+(S.name||"")+"\". Render the Korean text exactly, crisp. No prices, no logos."]];
+ G.innerHTML=items.map((x,i)=>`<div class="thc"><div class="thi" id="thi${i}"><span class="spin"></span></div><b>${x[1]}</b><button class="btn pr sm" data-i="${i}" disabled>⬇ 저장</button></div>`).join("");
+ await Promise.all(items.map(async(x,i)=>{try{const data=await b64(qFiles[0],1024);const j=await gem(IMG_MODELS,{contents:[{parts:[{inline_data:{mime_type:"image/jpeg",data}},{text:"Use the product in the reference image EXACTLY as it is (same shape, color, material, details). "+x[3]}]}],generationConfig:{responseModalities:["IMAGE"],imageConfig:{aspectRatio:x[2]}}},"");
+  const p=j.candidates?.[0]?.content?.parts?.find(p=>p.inline_data||p.inlineData);const d=p&&(p.inline_data||p.inlineData);if(!d)throw new Error("그림을 받지 못했어요");const url=`data:${d.mime_type||d.mimeType};base64,${d.data}`;
+  $("#thi"+i).innerHTML=`<img src="${url}" alt="">`;const b=G.querySelector(`[data-i="${i}"]`);b.disabled=false;b.onclick=async()=>{const im=await load(url);const c=document.createElement("canvas");const W=x[2]==="1:1"?1000:1080,H=x[2]==="1:1"?1000:1350;c.width=W;c.height=H;cover(c.getContext("2d"),im,0,0,W,H,1,0,0);c.toBlob(bl=>{const a=document.createElement("a");a.href=URL.createObjectURL(bl);a.download=(S.name||"상품").replace(/[\\/:*?"<>|\s]+/g,"_")+"_"+x[0]+".jpg";a.click()},"image/jpeg",.92)}}
+  catch(e){$("#thi"+i).textContent="다시 시도해 주세요: "+e.message}}))}
+$("#mkt").onclick=()=>{if(AI_ON()&&qFiles[0])return aiThumbs();const T=TPL[S.tpl]||TPL.clean,A=COLS[S.col]||COLS[0],im=IM[0];const base=(S.name||"상품").replace(/[\\/:*?"<>|\s]+/g,"_");
  const save=(cv,n,i)=>setTimeout(()=>cv.toBlob(b=>{const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=base+"_"+n+".jpg";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),4000)},"image/jpeg",.92),i*400);
  const t=document.createElement("canvas");t.width=t.height=1000;const tc=t.getContext("2d");tc.fillStyle="#fff";tc.fillRect(0,0,1000,1000);cover(tc,im,0,0,1000,1000,1,0,0);save(t,"썸네일_1000",0);
  const g=document.createElement("canvas");g.width=1080;g.height=1350;const c=g.getContext("2d");cover(c,im,0,0,1080,1350,1,0,0);const gr=c.createLinearGradient(0,600,0,1350);gr.addColorStop(0,"rgba(0,0,0,0)");gr.addColorStop(1,"rgba(0,0,0,.72)");c.fillStyle=gr;c.fillRect(0,0,1080,1350);
@@ -618,7 +633,7 @@ async function aiScene(key,file,name,scene){const data=await b64(file,1024);
  const j=await gem(IMG_MODELS,{contents:[{parts:[{inline_data:{mime_type:"image/jpeg",data}},{text:prompt}]}],generationConfig:{responseModalities:["IMAGE"],imageConfig:{aspectRatio:"3:4"}}},key);
  const p=j.candidates?.[0]?.content?.parts?.find(p=>p.inline_data||p.inlineData);const d=p&&(p.inline_data||p.inlineData);if(!d)throw new Error("그림을 받지 못했어요");
  return load(`data:${d.mime_type||d.mimeType||"image/png"};base64,${d.data}`)}
-function pgSet(list){$("#pgs").innerHTML=list.map(([t,st])=>`<li class="${st}"><i>${st==="ok"?"✓":st==="on"?'<span class="spin"></span>':st==="er"?"!":"·"}</i>${t}</li>`).join("")}
+function pgSet(list){try{const d=list.filter(x=>x[1]==="ok"||x[1]==="er").length;$("#pbarI").style.width=Math.round(d/list.length*100)+"%"}catch(e){}$("#pgs").innerHTML=list.map(([t,st])=>`<li class="${st}"><i>${st==="ok"?"✓":st==="on"?'<span class="spin"></span>':st==="er"?"!":"·"}</i>${t}</li>`).join("")}
 /* ===== 사진 넣고 바로 만들기 ===== */
 const qf=document.createElement("input");qf.type="file";qf.accept="image/*";qf.multiple=true;qf.hidden=true;document.body.appendChild(qf);
 let qCat="jewel",qFiles=[];
