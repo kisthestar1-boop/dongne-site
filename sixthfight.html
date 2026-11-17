@@ -39,11 +39,12 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 #toast{position:fixed;left:50%;top:70px;transform:translateX(-50%);background:rgba(10,9,8,.9);border:1px solid #E9C46A;border-radius:12px;padding:7px 14px;font-weight:800;font-size:13px;z-index:15;opacity:0;transition:opacity .25s;pointer-events:none;white-space:nowrap}
 #back{position:absolute;left:8px;top:8px;z-index:3;font-size:12px;color:#D9CFBC;text-decoration:none;background:rgba(0,0,0,.45);border-radius:9px;padding:5px 9px}
 @media (max-width:600px){.cb{width:62px;height:86px}.cb .e img{width:36px!important;height:36px!important}.cb .e{font-size:24px}.cb .n{font-size:9.5px}.cs .f{font-size:20px}.cs b{font-size:11px}#bar{justify-content:flex-start}}
+.fi{width:40px;height:40px;border-radius:50%;object-fit:cover;display:block;border:2px solid #3FBF6A}.cs.r .fi{border-color:#E05A4A}@media (max-width:600px){.fi{width:32px;height:32px}}
 </style></head><body>
 <div id="app">
- <div id="hud"><div class="cs"><span class="f">🦊</span><div class="bx"><b>여섯 번째 성주</b><div class="hpb"><i id="hp0" style="width:100%"></i></div></div></div>
+ <div id="hud"><div class="cs"><span class="f"><img src="store/lords/me.jpg" alt="" class="fi"></span><div class="bx"><b>여섯 번째 성주</b><div class="hpb"><i id="hp0" style="width:100%"></i></div></div></div>
   <div class="mid"><div class="g">🪙 <span id="gold">0</span></div><small id="tm">0:00</small><button id="spd">▶ 1배</button></div>
-  <div class="cs r"><span class="f" id="ef">🐺</span><div class="bx"><b id="en">늑대 성주</b><div class="hpb"><i id="hp1" style="width:100%"></i></div></div></div></div>
+  <div class="cs r"><span class="f" id="ef"></span><div class="bx"><b id="en">늑대 성주</b><div class="hpb"><i id="hp1" style="width:100%"></i></div></div></div></div>
  <div id="wrap"><canvas id="cv"></canvas><a id="back" href="sixthlord.html">← 성으로</a></div>
  <div id="bar"></div>
 </div>
@@ -216,11 +217,11 @@ function end(win){if(G.over)return;G.over=true;window.__result=win?"win":"lose";
  setTimeout(()=>{$("#ov").style.display="flex";$("#ov").innerHTML=`<div class="box"><div class="p">${win?"🏆":"💥"}</div><h1>${win?LD[1]+"의 성이 무너졌다!":"성이 무너졌어요…"}</h1><div class="q">${win?"쓰러뜨린 적 "+G.kills[0]+" · 걸린 시간 "+$("#tm").textContent:"💡 앞쪽엔 🐢🐻 같은 튼튼한 병사, 뒤쪽엔 🦊🦉 원거리를 섞어 보세요"}</div><div style="color:#F3D27A;font-weight:800">${msg}</div>
   <div><span class="gbtn" id="again">한 판 더</span><a class="sbtn" href="sixthlord.html?back=${win?"win":"lose"}&foe=${FOE}">성으로 돌아가기</a></div></div>`;$("#again").onclick=()=>{$("#ov").style.display="none";newGame()}},win?900:600)}
 /* 시작 */
-function intro(){$("#ov").style.display="flex";$("#ov").innerHTML=`<div class="box"><div class="p">${LD[0]}</div><h1>${LD[1]}</h1><div class="q">"${LD[4]}"</div>
+function intro(){$("#ov").style.display="flex";$("#ov").innerHTML=`<div class="box"><div class="p"><img src="store/lords/${FOE}.jpg" alt="" style="width:120px;height:120px;border-radius:16px;object-fit:cover;border:1px solid #6A5A3A;box-shadow:0 0 30px rgba(224,90,74,.35)"></div><h1>${LD[1]}</h1><div class="q">"${LD[4]}"</div>
  <div class="rules"><b>① 카드 = 막사</b> 아래 영웅 카드를 누르면 내 진영에 막사가 지어져요<br><b>② 병사는 저절로</b> 막사에서 병사가 계속 나와 알아서 싸워요<br><b>③ 막사 강화</b> 지은 막사를 누르면 ★강화 (더 빨리 · 더 강하게)<br><b>④ 금화</b> 시간이 지나면 쌓이고, 적을 쓰러뜨리면 더 들어와요<br><b>🏰 승리</b> 상대 성을 먼저 무너뜨리기</div>
  <span class="gbtn" id="go">⚔ 전투 시작</span></div>`;$("#go").onclick=()=>{$("#ov").style.display="none";beep(440,.15);newGame()}}
 const loop=t=>{const dt=Math.min(.05,(t-(loop.last||t))/1000);loop.last=t;if(G){let n=AUTO?8:G.spd;for(let i=0;i<n;i++)step(dt);draw();hud()}requestAnimationFrame(loop)};
-$("#en").textContent=LD[1];$("#ef").textContent=LD[0];fit();
+$("#en").textContent=LD[1];$("#ef").innerHTML=`<img src="store/lords/${FOE}.jpg" alt="" class="fi">`;fit();
 if(AUTO){newGame()}else intro();requestAnimationFrame(loop);
 window.__f=()=>G;
 </script></body></html>
