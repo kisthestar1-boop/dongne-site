@@ -94,9 +94,9 @@ function newGame(){G={t:0,spd:1,over:false,gold:[120,120],inc:[6,5*(LD[3]?.8+LD[
 function mkCastle(t){return{k:"castle",t,x:t?L-40:40,y:W/2,hp:3000,mhp:3000,r:34,cd:0}}
 /* 건물 짓기 · 강화 */
 function build(t,id){const P=G.plots[t].find(p=>!p.b);const c=cost(id);if(!P||G.gold[t]<c)return false;G.gold[t]-=c;
- P.b={k:"bld",t,id,x:P.x,y:P.y,hp:380,mhp:380,r:20,lv:1,cd:1.2,ulv:t?1+Math.floor(LD[3]/2):lvOf(id)};pop(P.x,P.y,"🔨",t?"#F09A7A":"#8BE08F");if(!t)beep(520,.08);return true}
+ P.b={k:"bld",t,id,x:P.x,y:P.y,hp:380,mhp:380,r:20,lv:1,cd:1.2,ulv:t?1+Math.floor(LD[3]/2):lvOf(id)};pop(P.x,P.y,"🔨",t?"#F09A7A":"#8BE08F");G.fx.push({x:P.x,y:P.y,ring:1,c:"#F3D27A",life:.5,l0:.5,rr:70,lw:3});for(let i=0;i<10;i++)G.fx.push({x:P.x,y:P.y,vx:(R()-.5)*120,vy:(R()-.5)*120,dot:1,c:"#C9B48A",life:.45});if(!t)beep(520,.08);return true}
 function upCost(b){return Math.round(cost(b.id)*.9*b.lv)}
-function upgrade(t,b){if(b.lv>=3||G.gold[t]<upCost(b))return false;G.gold[t]-=upCost(b);b.lv++;b.mhp+=120;b.hp=b.mhp;pop(b.x,b.y,"⬆ Lv"+b.lv,"#F3D27A");if(!t)beep(780,.12);return true}
+function upgrade(t,b){if(b.lv>=3||G.gold[t]<upCost(b))return false;G.gold[t]-=upCost(b);b.lv++;b.mhp+=120;b.hp=b.mhp;pop(b.x,b.y,"⬆ Lv"+b.lv,"#F3D27A");G.fx.push({x:b.x,y:b.y,ring:1,c:"#7DFF9A",life:.6,l0:.6,rr:80,lw:3});if(!t)beep(780,.12);return true}
 /* 유닛 */
 function spawn(b){const d=U[b.id],n=d[10],m=(1+(b.ulv-1)*.1)*(1+(b.lv-1)*.25);
  for(let i=0;i<n;i++)G.units.push({k:"unit",t:b.t,id:b.id,em:d[0],x:b.x+(b.t?-24:24),y:b.y+(i?14:0)+(R()-.5)*10,hp:d[4]*m,mhp:d[4]*m,atk:d[5]*m,rng:d[6],spd:d[7]*(1+(R()-.5)*.1),acd:d[8],cd:.3,sp:d[9],r:d[4]>400?15:11,dot:0,dotT:0,reb:d[9].includes("rebirth")?1:0,fl:0})}
@@ -109,13 +109,13 @@ function dmg(tg,d,src){if(tg.hp<=0)return;if(src&&src.sp.includes("siege")&&tg.k
  if(tg.hp<=0)die(tg,src)}
 function die(e,src){if(e.k==="unit"){if(e.reb){e.reb=0;e.hp=e.mhp*.5;pop(e.x,e.y,"🔥 부활","#FFB13D");return}
   const k=1-e.t;const bonus=Math.round(3+U[e.id][3]*1.5);G.gold[k]+=bonus;G.kills[k]++;if(k===0)G.fx.push({x:e.x,y:e.y-20,txt:"+"+bonus+"🪙",c:"#F3D27A",life:.9});
-  for(let i=0;i<7;i++)G.fx.push({x:e.x,y:e.y,vx:(R()-.5)*90,vy:(R()-.5)*90,dot:1,c:e.t?"#E05A4A":"#3FBF6A",life:.5})}
+  G.fx.push({x:e.x,y:e.y,ring:1,c:e.t?"#E05A4A":"#3FBF6A",life:.3});for(let i=0;i<10;i++)G.fx.push({x:e.x,y:e.y,vx:(R()-.5)*130,vy:(R()-.5)*130,dot:1,c:e.t?"#E05A4A":"#3FBF6A",life:.5})}
  if(e.k==="bld"){const P=G.plots[e.t].find(p=>p.b===e);if(P)P.b=null;pop(e.x,e.y,"💥","#fff");shake(4);if(e.t===0)toast("내 건물이 무너졌어요!")}
- if(e.k==="castle")end(e.t===1)}
+ if(e.k==="castle"){for(let i=0;i<40;i++)G.fx.push({x:e.x,y:e.y,vx:(R()-.5)*320,vy:(R()-.5)*320,dot:1,c:i%2?"#FFB13D":"#FF5A3A",life:1.1});for(let k=0;k<3;k++)G.fx.push({x:e.x,y:e.y,ring:1,c:"#FFE08A",life:.6+k*.25,l0:.6+k*.25,rr:120+k*60,lw:4});shake(12);G.slow=1;end(e.t===1)}}
 /* ===== 한 틱 ===== */
-function step(dt){if(G.over)return;G.t+=dt;
+function step(dt){if(G.over){if(G.slow){for(const f of G.fx){f.life-=dt*.4;if(f.vx){f.x+=f.vx*dt*.4;f.y+=f.vy*dt*.4}}G.fx=G.fx.filter(f=>f.life>0)}return}G.t+=dt;
  for(const t of[0,1])G.gold[t]+=G.inc[t]*dt;
- for(const t of[0,1])for(const p of G.plots[t])if(p.b){p.b.cd-=dt;if(p.b.cd<=0){p.b.cd=every(p.b.id)*Math.pow(.82,p.b.lv-1);spawn(p.b)}}
+ for(const t of[0,1])for(const p of G.plots[t])if(p.b){p.b.cd-=dt;if(p.b.cd<=0){p.b.cd=every(p.b.id)*Math.pow(.82,p.b.lv-1);spawn(p.b);G.fx.push({x:p.b.x,y:p.b.y,ring:1,c:p.b.t?"#E05A4A":"#7DFF9A",life:.35,l0:.35,rr:30,lw:2})}}
  for(const c of G.cast){c.cd-=dt;if(c.cd<=0){const tg=G.units.filter(u=>u.t!==c.t&&u.hp>0&&dist(u,c)<190).sort((a,b)=>dist(a,c)-dist(b,c))[0];if(tg){c.cd=.9;G.shots.push({x:c.x,y:c.y-20,tx:tg.x,ty:tg.y,c:c.t?"#F09A7A":"#BFE8FF",life:.25});dmg(tg,30,null)}}}
  const lions=G.units.filter(u=>u.sp==="aura"&&u.hp>0);
  for(const u of G.units){if(u.hp<=0)continue;u.fl=Math.max(0,u.fl-dt);
@@ -192,7 +192,7 @@ function draw(){cx.setTransform(DPR,0,0,DPR,0,0);cx.clearRect(0,0,VW,VH);
  // 글자 효과
  for(const f of G.fx){const [px,py]=P2(f.x,f.y);cx.globalAlpha=Math.min(1,f.life*2.2);
   if(f.dot){cx.fillStyle=f.c;cx.beginPath();cx.arc(px,py,2.5,0,7);cx.fill()}
-  else if(f.ring){cx.strokeStyle=f.c;cx.lineWidth=2;cx.beginPath();cx.arc(px,py,(1-f.life/.3)*44*sc+4,0,7);cx.stroke()}
+  else if(f.ring){const L0=f.l0||.3,R0=f.rr||44;cx.globalAlpha=Math.min(1,f.life/L0*1.4);cx.strokeStyle=f.c;cx.lineWidth=f.lw||2;cx.beginPath();cx.arc(px,py,(1-f.life/L0)*R0*sc+4,0,7);cx.stroke()}
   else{cx.font=`900 ${f.big?17:13}px system-ui`;cx.textAlign="center";cx.lineWidth=3;cx.strokeStyle="rgba(0,0,0,.8)";cx.strokeText(f.txt,px,py);cx.fillStyle=f.c;cx.fillText(f.txt,px,py)}cx.globalAlpha=1}}
 function hpBar(x,y,w,f,t){cx.fillStyle="rgba(0,0,0,.6)";cx.fillRect(x-w/2,y,w,4);cx.fillStyle=t?"#E05A4A":"#3FBF6A";cx.fillRect(x-w/2,y,w*Math.max(0,f),4)}
 function roundRect(x,y,w,h,r){cx.beginPath();cx.moveTo(x+r,y);cx.arcTo(x+w,y,x+w,y+h,r);cx.arcTo(x+w,y+h,x,y+h,r);cx.arcTo(x,y+h,x,y,r);cx.arcTo(x,y,x+w,y,r);cx.closePath()}
@@ -215,7 +215,7 @@ function end(win){if(G.over)return;G.over=true;window.__result=win?"win":"lose";
  if(S){const g=win?40+LD[3]*15:12;S.gold=(S.gold||0)+g;if(win){S.tro=(S.tro||0)+20;S.camp=S.camp||{};S.camp[FOE]=1}(S.log=S.log||[]).unshift({t:Date.now(),w:win?1:0,m:LD[1]});if(!AUTO)try{localStorage.setItem("beastlord_v1",JSON.stringify(S))}catch(_){}msg=`🪙 금화 +${g}${win?" · 🏆 +20":""}`}
  if(win)[523,659,784,1047].forEach((f,i)=>setTimeout(()=>beep(f,.3,.06),i*130));
  setTimeout(()=>{$("#ov").style.display="flex";$("#ov").innerHTML=`<div class="box"><div class="p">${win?"🏆":"💥"}</div><h1>${win?LD[1]+"의 성이 무너졌다!":"성이 무너졌어요…"}</h1><div class="q">${win?"쓰러뜨린 적 "+G.kills[0]+" · 걸린 시간 "+$("#tm").textContent:"💡 앞쪽엔 🐢🐻 같은 튼튼한 병사, 뒤쪽엔 🦊🦉 원거리를 섞어 보세요"}</div><div style="color:#F3D27A;font-weight:800">${msg}</div>
-  <div><span class="gbtn" id="again">한 판 더</span><a class="sbtn" href="sixthlord.html?back=${win?"win":"lose"}&foe=${FOE}">성으로 돌아가기</a></div></div>`;$("#again").onclick=()=>{$("#ov").style.display="none";newGame()}},win?900:600)}
+  <div><span class="gbtn" id="again">한 판 더</span><a class="sbtn" href="sixthlord.html?back=${win?"win":"lose"}&foe=${FOE}">성으로 돌아가기</a></div></div>`;$("#again").onclick=()=>{$("#ov").style.display="none";newGame()}},win?1500:1100)}
 /* 시작 */
 function intro(){$("#ov").style.display="flex";$("#ov").innerHTML=`<div class="box"><div class="p"><img src="store/lords/${FOE}.jpg" alt="" style="width:120px;height:120px;border-radius:16px;object-fit:cover;border:1px solid #6A5A3A;box-shadow:0 0 30px rgba(224,90,74,.35)"></div><h1>${LD[1]}</h1><div class="q">"${LD[4]}"</div>
  <div class="rules"><b>① 카드 = 막사</b> 아래 영웅 카드를 누르면 내 진영에 막사가 지어져요<br><b>② 병사는 저절로</b> 막사에서 병사가 계속 나와 알아서 싸워요<br><b>③ 막사 강화</b> 지은 막사를 누르면 ★강화 (더 빨리 · 더 강하게)<br><b>④ 금화</b> 시간이 지나면 쌓이고, 적을 쓰러뜨리면 더 들어와요<br><b>🏰 승리</b> 상대 성을 먼저 무너뜨리기</div>
