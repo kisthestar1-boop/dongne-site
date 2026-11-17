@@ -1116,7 +1116,7 @@ const GAMES=[
   rank(){const alive=t0=>P.filter(p=>p.team===t0&&!p.out).reduce((a,p)=>a+p.lv,0);const w=alive(0)===alive(1)?null:(alive(0)>alive(1)?0:1);
    return P.slice().sort((a,b)=>((b.team===w)-(a.team===w))||((!b.out)-(!a.out))||(b.hitsN-a.hitsN))},
   over(T){const al=t0=>P.some(p=>p.team===t0&&!p.out);return !al(0)||!al(1)||T>this.len}},
- {id:"badm",nolag:1,camK:1.1,em:"🏸",ico:"🏸",name:t("팡팡 배드민턴","Bonk Badminton"),how:t("🏸 2대2 배드민턴! 서브는 스페이스로! 셔틀콕이 가까이 오면 스페이스로 휘둘러 쳐요. 안 치면 떨어져서 실점! 두 번 주고받으면 세 번째는 점프 스매시 ⚡! 높은 공은 스매시 💥, 네트 앞은 드롭샷~ 5점 먼저 내면 승리!","🏸 2 vs 2! Swing with Space when the shuttle comes close — miss it and you lose the point! High = SMASH, near the net = drop shot. First to 5 wins!"),act:"none",actLabel:t("휘두르기!","SWING!"),keys:t("이동: WASD/방향키 · 스페이스로 휘두르기 (높은 공 = 스매시)","Move: WASD/Arrows · Space to swing (high = smash)"),tk:t("셔틀콕 그림자로 가서 버튼으로 휘둘러요!","Go to the shuttle's shadow and tap to swing!"),len:120,timed:1,sc:1,
+ {id:"badm",nolag:1,camK:1.1,em:"🏸",ico:"🏸",name:t("팡팡 배드민턴","Bonk Badminton"),how:t("🏸 2대2 배드민턴! 서브는 스페이스로! 셔틀콕이 가까이 오면 스페이스로 휘둘러 쳐요. 안 치면 떨어져서 실점! 두 번 주고받으면 세 번째는 점프 스매시 ⚡! 높은 공은 스매시 💥, 네트 앞은 드롭샷~ 3점 먼저 내면 승리! (70초)","🏸 2 vs 2! Swing with Space when the shuttle comes close — miss it and you lose the point! High = SMASH, near the net = drop shot. First to 3 wins!"),act:"none",actLabel:t("휘두르기!","SWING!"),keys:t("이동: WASD/방향키 · 스페이스로 휘두르기 (높은 공 = 스매시)","Move: WASD/Arrows · Space to swing (high = smash)"),tk:t("셔틀콕 그림자로 가서 버튼으로 휘둘러요!","Go to the shuttle's shadow and tap to swing!"),len:70,timed:1,sc:1,
   netOut(){const b=this.b;return [+b.x.toFixed(2),+b.y.toFixed(2),+b.z.toFixed(2),+b.vx.toFixed(1),+b.vy.toFixed(1),+b.vz.toFixed(1),this.S[0],this.S[1]]},
   netIn(a){const b=this.b;b.x=a[0];b.y=a[1];b.z=a[2];b.vx=a[3];b.vy=a[4];b.vz=a[5];this.S[0]=a[6];this.S[1]=a[7];P.forEach(p=>p.score=this.S[p.team])},
   setup(){const W=9,H=5.6;this.W=W;this.H=H;const g=mesh(new THREE.BoxGeometry(2*W+4,1,2*H+4),"#BFE6A8",false,true);g.position.y=-.5;arena.add(g);
@@ -1159,7 +1159,7 @@ const GAMES=[
      if(Math.abs(b.x)<.5&&b.y<1.9&&b.y>0&&Math.abs(b.vx)>0){b.x=b.vx>0?-.5:.5;b.vx*=-.3;SND.tick();popTxt({x:0,y:2,z:b.z},t("네트!","Net!"),"#FFFFFF",22)}
      for(const p of P){if(p.out||p.sw<=0||p.swHit)continue;const d=Math.hypot(b.x-p.x,b.z-p.z);if(d<2.7&&b.y>.25&&b.y<4.6&&(p.team?b.x>-.3:b.x<.3)){
        const s=p.team?-1:1,early=p.sw>.18;p.swHit=1;p.hits++;this.last=p;this.rally=(this.rally||0)+1;const tz=clamp(rnd(-H+1,H-1)-b.z,-6,6);const sup=this.rally%3===0||this.rally>=6;
-       if(sup){p.vy=11.5;p.grounded=false;const sp=17.5;b.vx=s*sp;b.vy=-1.5;b.vz=tz*.28;SND.boom();thwack(1);hitStop(.2);shake=Math.max(shake,.6);burst(b.x,b.y,b.z,"#FFD700",34,10);burst(p.x,1.5,p.z,"#FF8FC0",18,7);confetti(10);
+       if(sup){p.vy=11.5;p.grounded=false;const sp=this.rally>=6?20:17.5;b.vx=s*sp;b.vy=-1.5;b.vz=tz*.28;SND.boom();thwack(1);hitStop(.2);shake=Math.max(shake,.6);burst(b.x,b.y,b.z,"#FFD700",34,10);burst(p.x,1.5,p.z,"#FF8FC0",18,7);confetti(10);
         [523,784,1047,1568].forEach((n,k)=>setTimeout(()=>tone(n,.12,"square",.07),k*55));say(t("팡팡 점프 스매시!! ⚡","JUMP SMASH!! ⚡"),"#FFD700",1.1);popTxt(p,t("받아라!!","TAKE THAT!!"),"#FFD700",34);this.flash()}
        else if(b.y>2.5){const sp=early?15:12.5;b.vx=s*sp;b.vy=-2.2;b.vz=tz*.25;SND.boom();thwack(1);hitStop(early?.13:.09);shake=Math.max(shake,.3);burst(b.x,b.y,b.z,"#FFE066",early?20:12,7);popTxt(p,early?t("퍼펙트 스매시!","PERFECT SMASH!"):t("스매시!","SMASH!"),"#FFE066",early?32:26)}
        else if(Math.abs(p.x)<3){b.vx=s*3.6;b.vy=6.2;b.vz=tz*.15;SND.bump();thwack(0);hitStop(.04);burst(b.x,b.y,b.z,"#FFFFFF",8,4);if(R()<.5)popTxt(p,t("드롭샷~","Drop shot~"),"#FFFFFF",20)}
@@ -1177,11 +1177,11 @@ const GAMES=[
    const mySide=s<0?tx<0:tx>0;const mates=P.filter(q=>q.team===p.team&&!q.out);const ch=mates.reduce((a,q)=>Math.hypot(q.x-tx,q.z-tz)<Math.hypot(a.x-tx,a.z-tz)?q:a,mates[0]);
    if(!mySide||ch!==p)return this.goTo(p,p.home[0],ch===p?0:p.home[1],false);
    const err=(1-p.skill)*1.2;const gx=tx+Math.sin(GT*1.3+p.id)*err-s*.5,gz=tz+Math.cos(GT*1.1+p.id)*err;
-   const d=Math.hypot(b.x-p.x,b.z-p.z);const tired=(this.rally||0)>=6?.22:(this.rally||0)>=4?.7:1;const swing=d<2.3&&b.y<4.2&&b.y>.5&&p.swc<=0&&R()<(.3+p.skill*.5)*tired;
+   const d=Math.hypot(b.x-p.x,b.z-p.z);const tired=(this.rally||0)>=6?.08:(this.rally||0)>=4?.55:1;const swing=d<2.3&&b.y<4.2&&b.y>.5&&p.swc<=0&&R()<(.3+p.skill*.5)*tired;
    return this.goTo(p,gx,gz,swing)},
   goTo(p,x,z,a){const dx=x-p.x,dz=z-p.z,d=Math.hypot(dx,dz);if(d<.25)return [0,0,a];const k=Math.min(1,d/1.2);return [dx/d*k,dz/d*k,a]},
   rank(){const w=this.S[0]===this.S[1]?null:(this.S[0]>this.S[1]?0:1);return P.slice().sort((a,b)=>((b.team===w)-(a.team===w))||(b.hits-a.hits))},
-  over(T){return this.S[0]>=5||this.S[1]>=5||T>this.len}}
+  over(T){return this.S[0]>=3||this.S[1]>=3||T>this.len}}
 ];
 addEventListener("keydown",e=>{if(e.repeat||state!=="play"||!G||G.id!=="mbox")return;if(e.code==="Digit1"||e.code==="Numpad1"||e.code==="ArrowLeft")G.choose(1);if(e.code==="Digit2"||e.code==="Numpad2"||e.code==="ArrowRight")G.choose(2)});
 GAMES.find(g=>g.id==="sumo").revive=function(){return [0,0]};
