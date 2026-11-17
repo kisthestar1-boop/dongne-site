@@ -1,5 +1,5 @@
 // 찰칵상세 AI 서버 (Google Apps Script) — 키는 스크립트 속성 GEMINI_KEY 에만 둔다
-const TXT = ["gemini-3.1-flash", "gemini-3-flash", "gemini-2.5-flash"];
+const TXT = ["gemini-flash-latest", "gemini-3.1-flash", "gemini-3-flash-preview", "gemini-3-flash", "gemini-2.5-flash"];
 const IMG = ["gemini-3.1-flash-image", "gemini-2.5-flash-image"];
 const LIMIT = { copy: 150, scene: 600 }; // 하루 최대 (요금 폭주 방지)
 
@@ -8,6 +8,12 @@ function doGet() { return out({ ok: true, service: "chalkak-ai" }); }
 function doPost(e) {
   try {
     const q = JSON.parse(e.postData.contents);
+    if (q.op === "list") {
+      const k0 = PropertiesService.getScriptProperties().getProperty("GEMINI_KEY");
+      const lr = UrlFetchApp.fetch("https://generativelanguage.googleapis.com/v1beta/models?pageSize=200", { headers: { "x-goog-api-key": k0 }, muteHttpExceptions: true });
+      const lj = JSON.parse(lr.getContentText());
+      return out({ models: (lj.models || []).map(function (m) { return m.name.replace("models/", ""); }) });
+    }
     if (q.op !== "copy" && q.op !== "scene") return out({ error: "잘못된 요청" });
     if (e.postData.contents.length > 6000000) return out({ error: "사진이 너무 커요" });
     const key = PropertiesService.getScriptProperties().getProperty("GEMINI_KEY");
