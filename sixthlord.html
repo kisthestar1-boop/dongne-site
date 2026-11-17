@@ -108,8 +108,9 @@ body.lit #moon{filter:drop-shadow(0 0 70px rgba(220,227,234,.45)) drop-shadow(0 
 .qi b{font-size:14px}.qi small{display:block;color:var(--sub);font-size:12px;margin-top:2px}
 .qi .pg{margin-left:auto;font-weight:900;font-size:13px;white-space:nowrap}
 @media (max-width:600px){.banners{top:38%}.bn{opacity:.6}.corner i{width:52px;height:52px;font-size:26px}.altar{margin-bottom:15vh}}
+body.art #moon,body.art #wall,body.art #tower,body.art .banners{display:none}body.art #sky .fog{height:30%;background:linear-gradient(transparent,rgba(5,5,8,.7))}body.art .altar::before{opacity:.35}
 </style></head><body>
-<div id="sky"><svg id="moon" viewBox="0 0 200 200"><defs><radialGradient id="mg" cx="42%" cy="38%"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".55" stop-color="#D5DDE5"/><stop offset="1" stop-color="#8E9AA8"/></radialGradient><filter id="gl"><feGaussianBlur stdDeviation="2.4"/></filter></defs>
+<div id="sky"><img id="bgimg" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 40%;opacity:0;transition:opacity 1.2s" onload="document.body.classList.add('art');this.style.opacity=1" src="store/sixth_menu.jpg"><svg id="moon" viewBox="0 0 200 200"><defs><radialGradient id="mg" cx="42%" cy="38%"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".55" stop-color="#D5DDE5"/><stop offset="1" stop-color="#8E9AA8"/></radialGradient><filter id="gl"><feGaussianBlur stdDeviation="2.4"/></filter></defs>
 <circle cx="100" cy="100" r="92" fill="url(#mg)"/><circle cx="70" cy="70" r="12" fill="#B9C3CD" opacity=".5"/><circle cx="128" cy="122" r="16" fill="#B3BDC8" opacity=".45"/><circle cx="118" cy="58" r="7" fill="#BCC6D0" opacity=".5"/>
 <path d="M96 8 L104 46 L88 78 L110 104 L94 140 L106 192" stroke="#C2382E" stroke-width="5" fill="none" filter="url(#gl)" opacity=".9"/><path d="M96 8 L104 46 L88 78 L110 104 L94 140 L106 192" stroke="#3B0B08" stroke-width="2" fill="none"/>
 <path d="M88 78 L58 92 M110 104 L146 98" stroke="#3B0B08" stroke-width="1.4" fill="none"/></svg>
