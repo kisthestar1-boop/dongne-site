@@ -261,6 +261,7 @@ const jEnd=e=>{if(e.pointerId!==joy.id)return;joy.on=false;joy.x=joy.y=0;J.style
 
 /* 전체 화면: 안드로이드는 바로, 카카오톡 안에서는 크롬으로 열기, 아이폰은 홈 화면 추가 안내 */
 const UA=navigator.userAgent,IN_KAKAO=/KAKAOTALK/i.test(UA),IN_APP=IN_KAKAO||/NAVER\(inapp|Instagram|FBAN|FBAV|Line\//i.test(UA),IOS=/iPhone|iPad|iPod/i.test(UA)||(/Macintosh/.test(UA)&&navigator.maxTouchPoints>1);
+let IN_FRAME=false;try{IN_FRAME=window.self!==window.top}catch(_){IN_FRAME=true}/* CrazyGames 등 다른 사이트 안에서는 그 사이트의 전체 화면을 씀 */
 const fsEl=document.documentElement,FS_OK=!!(fsEl.requestFullscreen||fsEl.webkitRequestFullscreen);
 const isFS=()=>!!(document.fullscreenElement||document.webkitFullscreenElement)||matchMedia("(display-mode: fullscreen)").matches||matchMedia("(display-mode: standalone)").matches||navigator.standalone===true;
 const fsTip=$("#fsTip");let fsTipT=0;function tipFS(t,ms){fsTip.textContent=t;fsTip.style.display="block";clearTimeout(fsTipT);fsTipT=setTimeout(()=>fsTip.style.display="none",ms||4200)}
@@ -269,10 +270,10 @@ function goFS(auto){if(isFS())return;
   if(IN_APP){if(!auto)tipFS(KO?"앱 안의 브라우저에서는 전체 화면이 안 돼요. 오른쪽 위 메뉴에서 '다른 브라우저로 열기'를 눌러 주세요":"Full screen isn't available in this in-app browser. Open it in Chrome or Safari.",5200);return}
   if(FS_OK){try{const r=(fsEl.requestFullscreen||fsEl.webkitRequestFullscreen).call(fsEl,{navigationUI:"hide"});if(r&&r.catch)r.catch(()=>{})}catch(_){}return}
   if(!auto)tipFS(IOS?(KO?"아이폰은 공유 버튼 → '홈 화면에 추가' 후 그 아이콘으로 열면 전체 화면이 돼요":"On iPhone: Share → Add to Home Screen, then open from the icon for full screen"):(KO?"이 브라우저는 전체 화면을 지원하지 않아요":"Full screen isn't supported here"),5200)}
-const fsB=$("#fsBtn");function upFSBtn(){fsB.style.display=(TOUCH&&!isFS())?"block":"none"}
+const fsB=$("#fsBtn");function upFSBtn(){fsB.style.display=(TOUCH&&!isFS()&&!IN_FRAME)?"block":"none"}
 fsB.addEventListener("pointerdown",e=>{e.preventDefault();e.stopPropagation();goFS(false)});
 ["fullscreenchange","webkitfullscreenchange"].forEach(ev=>document.addEventListener(ev,()=>{upFSBtn();setTimeout(resize,60)}));upFSBtn();
-addEventListener("pointerup",e=>{if(!TOUCH||e.pointerType==="mouse"||isFS()||IN_APP)return;if(e.target.closest("#fsBtn"))return;goFS(true)},true);
+addEventListener("pointerup",e=>{if(!TOUCH||e.pointerType==="mouse"||isFS()||IN_APP||IN_FRAME)return;if(e.target.closest("#fsBtn"))return;goFS(true)},true);
 /* 카카오톡 안에서 열리면 바로 크롬(기본 브라우저)으로 넘기기 — 한 번만 */
 if(IN_KAKAO&&TOUCH){let done=false;try{done=sessionStorage.getItem("ppExt")==="1";sessionStorage.setItem("ppExt","1")}catch(_){}if(!done)setTimeout(()=>{location.href="kakaotalk://web/openExternal?url="+encodeURIComponent(location.href)},300)}
 if(TOUCH&&IN_KAKAO&&!isFS())setTimeout(()=>tipFS(KO?"크롬으로 안 넘어갔다면 왼쪽 위 ⛶ 를 눌러 주세요. 크롬에서 전체 화면으로 열려요":"Tap ⛶ (top-left) to open in your browser for full screen",6000),1800);

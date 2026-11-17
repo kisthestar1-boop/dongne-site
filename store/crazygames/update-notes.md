@@ -1,15 +1,17 @@
-# 팡팡 파티 — CrazyGames 업데이트 제출용 (20종 버전)
+# 팡팡 파티 — CrazyGames 업데이트 제출용 (25종 버전, 2026-11-17)
 
 ## Update notes (English, paste into "What's new")
-Pang Pang Party now has 20 mini-games! New this update:
-- 🎯 Splash Targets — slide left/right and splash moving targets (gold = 3 pts)
-- 💃 Dance Copy — copy the arrows (or clap!) as fast as you can
-- ⭕ O X Quiz — run to TRUE or FALSE before time runs out
-Also added: Run Run Run, Tug of War, Squeaky Mole Whack, Melon Toss, Chicken Road, Hammer Ball, Mystery Box and more, plus cuter characters and a festival arena.
+Pang Pang Party now has 25 mini-games! New this update:
+- 🏐 Bonk Volleyball — 2 vs 2, toss your serve, jump to SPIKE, slide for low balls
+- ⚽ Four-Goal Soccer — guard your goal, tackle to steal, last one standing wins
+- 🎣 Bonk Fishing — 14 sea friends from minnows to a 20-point whale!
+- 🔥 Bonk Dodgeball — catch to charge a FIRE SHOT (you can only dodge it!)
+- 🏸 Bonk Badminton — 2 vs 2 rallies with a jump smash every third hit
+Also: stronger hit feedback, cuter balls and fish, better phone portrait view.
 
 ## 업데이트 노트 (한국어)
-팡팡 파티 미니게임이 20종이 됐어요! 새 게임: 물풍선 표적 맞히기 · 춤 따라 하기 · O X 퀴즈. 캐릭터와 경기장도 더 귀여워졌어요.
+팡팡 파티 미니게임이 25종이 됐어요! 새 게임: 팡팡 배구 · 골대 지키기 축구 · 팡팡 낚시 · 팡팡 피구 · 팡팡 배드민턴. 타격감과 세로 폰 화면도 좋아졌어요.
 
 ## 파일
-- pangpang-party-20games.zip (index.html = party3d.html, 커밋 8fb94e6 기준)
+- pangpang-party-25games.zip (index.html = party3d.html 최신)
 - 제출 마지막 Submit 버튼은 민성님 확인 후에만 누릅니다.
