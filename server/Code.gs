@@ -1,6 +1,6 @@
 // 찰칵상세 AI 서버 (Google Apps Script) — 키는 스크립트 속성 GEMINI_KEY 에만 둔다
-const TXT = ["gemini-flash-latest", "gemini-3.1-flash", "gemini-3-flash-preview", "gemini-3-flash", "gemini-2.5-flash"];
-const IMG = ["gemini-3.1-flash-image", "gemini-2.5-flash-image"];
+const TXT = ["gemini-3.5-flash", "gemini-flash-latest", "gemini-2.5-flash", "gemini-3.1-flash-lite"];
+const IMG = ["gemini-3.1-flash-image", "gemini-2.5-flash-image", "gemini-3.1-flash-lite-image"];
 const LIMIT = { copy: 150, scene: 600 }; // 하루 최대 (요금 폭주 방지)
 
 function doGet() { return out({ ok: true, service: "chalkak-ai" }); }
@@ -28,6 +28,7 @@ function doPost(e) {
       const code = r.getResponseCode();
       if (code === 404) { last = "모델 없음 " + m; continue; }
       const j = JSON.parse(r.getContentText());
+      if (code === 503 || code === 500) { last = (j.error && j.error.message) || ("오류 " + code); continue; }
       if (code >= 400) return out({ error: (j.error && j.error.message) || ("오류 " + code) });
       return out(j);
     }
