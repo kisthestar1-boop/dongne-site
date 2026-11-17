@@ -1,12 +1,12 @@
 <!doctype html>
 <html lang="ko"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>상세페이지 뚝딱</title>
+<title>찰칵상세 · 사진 한 장으로 상세페이지</title>
 <meta name="description" content="상품 사진 한 장과 특징 몇 줄이면 쿠팡·스마트스토어용 상세페이지가 바로 완성돼요.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Nanum+Myeongjo:wght@700;800&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#FBF8FF;--ink:#1F1830;--mu:#6E6680;--ln:#E9E2F3;--card:#fff;--p1:#FF8FB8;--p2:#B967D6;--p3:#3B2A7A;--acc:#8A4FD8;--y:#FFF1A8;--g:#D8F5E2}
+:root{--bg:#FFFFFF;--ink:#16141F;--mu:#6B6878;--ln:#ECEAF2;--card:#fff;--p1:#5AA9FF;--p2:#7B6CFF;--p3:#A855F7;--acc:#6D5BFF;--y:#FFF1A8;--g:#D8F5E2}
 @media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#15111F;--ink:#F1ECFA;--mu:#A69DB8;--ln:#2E2742;--card:#1E1830;--y:#5A4E14;--g:#1E4830}}
 :root[data-theme=dark]{--bg:#15111F;--ink:#F1ECFA;--mu:#A69DB8;--ln:#2E2742;--card:#1E1830;--y:#5A4E14;--g:#1E4830}
 *{box-sizing:border-box}html{scroll-behavior:smooth}
@@ -22,33 +22,41 @@ nav .in{display:flex;align-items:center;gap:22px;height:60px}
 nav .lk{display:flex;gap:18px;font-size:.88rem;color:var(--mu);margin-left:8px}
 nav .lk a{text-decoration:none}nav .lk a:hover{color:var(--ink)}
 .btn{display:inline-flex;align-items:center;gap:8px;border:0;border-radius:12px;padding:12px 20px;font-weight:800;font-size:.95rem;text-decoration:none;white-space:nowrap}
-.btn.pr{background:linear-gradient(120deg,var(--p2),var(--p3));color:#fff;box-shadow:0 8px 20px rgba(91,52,160,.28)}
+.btn.pr{background:linear-gradient(100deg,var(--p1),var(--p2) 55%,var(--p3));color:#fff;box-shadow:0 8px 22px rgba(109,91,255,.3);border-radius:999px}
 .btn.pr:hover{filter:brightness(1.08)}
 .btn.gh{background:var(--card);color:var(--ink);border:1px solid var(--ln)}
 nav .btn{margin-left:auto;padding:9px 15px;font-size:.85rem}
 @media (max-width:760px){nav .lk{display:none}}
 /* hero */
-.hero{position:relative;overflow:hidden;background:linear-gradient(150deg,#FFB3CF 0%,#D483E0 42%,#5A3A9E 78%,#2C1F5E 100%);color:#fff}
-.hero:after{content:"";position:absolute;inset:auto -10% -40% -10%;height:60%;background:radial-gradient(closest-side,rgba(255,255,255,.18),transparent);pointer-events:none}
-.hero .in{display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:center;padding-top:70px;padding-bottom:70px;position:relative;z-index:1}
-.badge{display:inline-flex;gap:6px;align-items:center;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);border-radius:99px;padding:5px 12px;font-size:.8rem;font-weight:700}
-.hero h1{font-size:clamp(2.1rem,4.6vw,3.4rem);line-height:1.18;margin:16px 0 14px;letter-spacing:-.035em;font-weight:900}
-.hero h1 em{font-style:normal;background:linear-gradient(transparent 62%,rgba(255,241,168,.55) 62%)}
-.hero p.sub{font-size:1.08rem;opacity:.92;margin:0 0 26px;max-width:30em}
-.hero .cta{display:flex;gap:10px;flex-wrap:wrap}
-.hero .btn.pr{background:#fff;color:var(--p3);box-shadow:0 10px 26px rgba(30,10,60,.3)}
-.hero .btn.gh{background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.45)}
-.facts{display:flex;gap:18px;flex-wrap:wrap;margin-top:24px;font-size:.84rem;opacity:.95}
+.hero{position:relative;overflow:hidden;background:var(--bg);text-align:center;padding:84px 0 40px}
+.hero .side{position:absolute;top:40px;width:200px;display:flex;flex-direction:column;gap:16px;opacity:.55;pointer-events:none}
+.hero .side.l{left:max(0px,calc(50% - 760px))}.hero .side.r{right:max(0px,calc(50% - 760px))}
+.hero .side img{width:100%;height:300px;object-fit:cover;object-position:top;border-radius:16px;box-shadow:0 10px 30px rgba(30,20,60,.12)}
+.hero .side.r{top:120px}
+.hero:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,var(--bg) 0%,transparent 22%,transparent 78%,var(--bg) 100%),linear-gradient(transparent 70%,var(--bg));z-index:1;pointer-events:none}
+.hero .in{position:relative;z-index:2}
+.badge{display:inline-flex;gap:6px;align-items:center;background:#16141F;color:#fff;border-radius:99px;padding:6px 14px;font-size:.78rem;font-weight:700}
+.hero h1{font-size:clamp(2.2rem,5vw,3.6rem);line-height:1.2;margin:18px 0 16px;letter-spacing:-.04em;font-weight:900}
+.hero h1 em{font-style:normal;background:linear-gradient(100deg,var(--p1),var(--p2),var(--p3));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p.sub{font-size:1.05rem;color:var(--mu);margin:0 auto 28px;max-width:30em}
+.hero .cta{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.hero .btn{padding:14px 26px;font-size:1rem}
+.hero .btn.gh{border-radius:999px}
+.facts{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin-top:22px;font-size:.84rem;color:var(--mu)}
 .facts span{display:flex;gap:6px;align-items:center}
-.phone{justify-self:center;width:min(330px,80vw);aspect-ratio:9/18.5;border-radius:42px;background:#16112A;padding:12px;box-shadow:0 30px 60px rgba(20,5,50,.45),inset 0 0 0 2px rgba(255,255,255,.12);position:relative}
-.phone .scr{width:100%;height:100%;border-radius:32px;overflow:hidden;background:#fff;position:relative}
-.phone .scr .bar{height:44px;background:#fff;border-bottom:1px solid #eee;display:flex;align-items:center;gap:8px;padding:0 14px;font-size:.72rem;color:#333;font-weight:700}
-.phone .scr .bar b{flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
-.phone .scr .pg{position:absolute;top:44px;left:0;right:0;bottom:0;overflow-y:auto;scrollbar-width:none}
-.phone .scr .pg::-webkit-scrollbar{display:none}
-.phone .tag{position:absolute;right:-14px;top:70px;background:#fff;color:var(--p3);font-weight:900;font-size:.78rem;padding:7px 11px;border-radius:12px;box-shadow:0 10px 24px rgba(0,0,0,.25)}
-.phone .tag2{position:absolute;left:-26px;bottom:90px;background:var(--y);color:#3a3000;font-weight:900;font-size:.78rem;padding:7px 11px;border-radius:12px;box-shadow:0 10px 24px rgba(0,0,0,.25)}
-@media (max-width:860px){.hero .in{grid-template-columns:1fr;padding-top:44px}.phone{margin-top:10px}}
+.demo{position:relative;z-index:2;max-width:980px;margin:46px auto 0;border:1px solid var(--ln);border-radius:20px;background:#fff;box-shadow:0 30px 70px rgba(40,30,90,.14);overflow:hidden;text-align:left}
+.demo .tb{height:40px;border-bottom:1px solid var(--ln);display:flex;align-items:center;gap:6px;padding:0 14px;font-size:.74rem;color:var(--mu)}
+.demo .tb i{width:10px;height:10px;border-radius:50%;background:#E5E3EC}
+.demo .bd{display:grid;grid-template-columns:220px 1fr 220px;height:420px}
+.demo .pn{padding:16px;border-right:1px solid var(--ln);font-size:.78rem;color:var(--mu);display:flex;flex-direction:column;gap:10px}
+.demo .pn b{color:var(--ink);font-size:.82rem}.demo .pn .f{background:#F6F5FA;border-radius:10px;padding:8px 10px}
+.demo .pn img{width:100%;border-radius:10px;aspect-ratio:1;object-fit:cover}
+.demo .cv{background:#F3F2F8;display:flex;justify-content:center;overflow:hidden}
+.demo .cv img{width:300px;height:auto;align-self:flex-start;margin-top:16px;box-shadow:0 10px 30px rgba(0,0,0,.12)}
+.demo .rt{border-right:0;border-left:1px solid var(--ln)}
+.demo .chat{background:#F6F5FA;border-radius:12px 12px 12px 4px;padding:8px 10px;color:var(--ink)}
+.demo .chat.me{background:var(--acc);color:#fff;border-radius:12px 12px 4px 12px;align-self:flex-end}
+@media (max-width:860px){.demo .bd{grid-template-columns:1fr}.demo .pn{display:none}.demo .bd{height:380px}.hero .side{display:none}}
 /* sections */
 section{padding:84px 0}
 .eb{font-size:.78rem;font-weight:900;letter-spacing:.14em;color:var(--acc);text-transform:uppercase}
@@ -115,6 +123,7 @@ input:focus,textarea:focus,select:focus{outline:2px solid color-mix(in srgb,var(
 .dl{display:flex;gap:8px;flex-wrap:wrap}
 .dl select{width:auto;padding:8px 10px;font-size:.82rem}
 .btn.sm{padding:9px 14px;font-size:.84rem}
+.law{font-size:.8rem;border-radius:12px;padding:10px 12px;display:none;flex-direction:column;gap:4px}.law.on{display:flex}.law.warn{background:#FFF4CC;color:#5A4300}.law.good{background:#E6F6EC;color:#1E5E3A}.law b{font-size:.84rem}.law mark{background:#FFD95A;border-radius:3px;padding:0 3px;color:#3A2A00}
 .ok{font-size:.78rem;color:#2D7F52;font-weight:700;min-height:1.2em}
 /* price & faq */
 .price{display:grid;grid-template-columns:1fr 1fr;gap:16px}
@@ -129,33 +138,49 @@ details{background:var(--card);border:1px solid var(--ln);border-radius:14px;pad
 summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}
 summary:before{content:"Q. ";color:var(--acc)}
 details p{margin:8px 0 0;color:var(--mu);font-size:.92rem}
-.end{background:linear-gradient(150deg,#FFB3CF,#B967D6 50%,#3B2A7A);color:#fff;text-align:center;border-radius:28px;padding:54px 20px;margin:0 20px}
+.end{background:linear-gradient(110deg,#5AA9FF,#7B6CFF 55%,#A855F7);color:#fff;text-align:center;border-radius:28px;padding:54px 20px;margin:0 20px}
 .end h2{margin:0 0 12px}.end .btn{background:#fff;color:var(--p3)}
 footer{padding:40px 0 60px;color:var(--mu);font-size:.8rem;text-align:center}
+.qs{position:fixed;inset:0;z-index:60;background:rgba(15,8,30,.6);display:none;align-items:center;justify-content:center;padding:16px}.qs.on{display:flex}
+.qb{width:min(440px,100%);background:var(--card);border-radius:22px;padding:20px;display:flex;flex-direction:column;gap:14px;box-shadow:0 30px 60px rgba(0,0,0,.35)}
+.qh{display:flex;justify-content:space-between;align-items:center}.qh b{font-size:1.15rem}.qx{border:0;background:none;font-size:1.1rem;color:var(--mu)}
+.qp{display:flex;gap:8px;flex-wrap:wrap}.qp img{width:72px;height:72px;object-fit:cover;border-radius:12px;border:1px solid var(--ln)}
+.mu2{color:var(--mu);font-size:.76rem}
+.ai{display:flex;gap:10px;align-items:flex-start;background:color-mix(in srgb,var(--acc) 8%,var(--bg));border:1px solid color-mix(in srgb,var(--acc) 30%,var(--ln));border-radius:14px;padding:12px;font-size:.84rem;cursor:pointer}
+.ai input{margin-top:4px;accent-color:var(--acc)}.ai small{display:block;color:var(--acc);font-weight:700}
+.aik summary{font-size:.8rem;color:var(--mu)}.aik summary:before{content:"⚙ "}
+.prog{position:fixed;inset:0;z-index:70;background:rgba(15,8,30,.62);display:none;align-items:center;justify-content:center;padding:16px}.prog.on{display:flex}
+.pgb{width:min(420px,100%);background:var(--card);border-radius:22px;padding:22px;display:flex;flex-direction:column;gap:10px}
+.pgb b{font-size:1.05rem}.pgs{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:7px;font-size:.88rem}
+.pgs li{display:flex;gap:8px;align-items:center;color:var(--mu)}.pgs li.on{color:var(--ink);font-weight:700}.pgs li.ok{color:#2D7F52}
+.pgs li i{font-style:normal;width:20px;text-align:center}
+.spin{width:14px;height:14px;border:2px solid var(--ln);border-top-color:var(--acc);border-radius:50%;animation:sp 1s linear infinite;display:inline-block}@keyframes sp{to{transform:rotate(360deg)}}
+.made{animation:none;outline:3px solid color-mix(in srgb,var(--acc) 50%,transparent);outline-offset:4px;border-radius:24px}
 .lb{position:fixed;inset:0;background:rgba(10,5,20,.82);z-index:50;display:none;justify-content:center;overflow:auto;padding:30px 12px}
 .lb.on{display:flex}.lb img{max-width:min(520px,94vw);height:auto;align-self:flex-start;border-radius:6px}
 .lb button{position:fixed;right:16px;top:12px;border:0;background:#fff;border-radius:50%;width:38px;height:38px;font-size:18px}
 </style></head><body>
 
 <nav><div class="in">
- <a class="logo" href="#top"><i>✦</i>상세페이지 뚝딱</a>
+ <a class="logo" href="#top"><i>✦</i>찰칵상세</a>
  <div class="lk"><a href="#ex">예시</a><a href="#how">만드는 법</a><a href="#why">잘 팔리는 구조</a><a href="#price">요금</a><a href="#faq">자주 묻는 질문</a></div>
- <a class="btn pr" href="#make">무료로 만들기</a>
+ <a class="btn pr go" href="#make">📸 사진 넣고 만들기</a>
 </div></nav>
 
-<header class="hero" id="top"><div class="in">
- <div>
-  <span class="badge">✦ 베타 · 가입 없이 바로</span>
-  <h1>사진 한 장이면,<br><em>상세페이지 뚝딱</em></h1>
-  <p class="sub">상품 사진과 특징 몇 줄만 넣으세요. 잘 팔리는 순서대로 짜인 쿠팡·스마트스토어용 세로 상세페이지가 바로 완성돼요.</p>
-  <div class="cta"><a class="btn pr" href="#make">무료로 만들기 →</a><a class="btn gh" href="#ex">결과물 보기</a></div>
-  <div class="facts"><span>📸 사진 1장부터</span><span>🧭 첫 3초 후킹 구조</span><span>🔒 사진은 내 기기에서만 처리</span></div>
+<header class="hero" id="top">
+ <div class="side l" id="sideL"></div><div class="side r" id="sideR"></div>
+ <div class="in">
+  <span class="badge">✦ 가입 없이 바로 · 지금은 베타 무료</span>
+  <h1>사진 한 장이면,<br><em>상세페이지 완성</em></h1>
+  <p class="sub">상품 사진을 올리면 AI가 문구를 쓰고, 장면 사진 8장을 새로 그려 쿠팡·스마트스토어 규격 상세페이지로 완성해요.</p>
+  <div class="cta"><a class="btn pr go" href="#make">📸 사진 넣고 바로 만들기 →</a><a class="btn gh" href="#ex">결과물 보기</a></div>
+  <div class="facts"><span>⚡ 사진 1장부터</span><span>🛡 광고 표현 자동 검사</span><span>🏷 AI 연출 컷은 표시</span><span>🛒 쇼핑몰 9곳 규격</span></div>
+  <div class="demo" aria-label="만들기 화면 미리보기"><div class="tb"><i></i><i></i><i></i><span style="margin-left:8px">찰칵상세 · 작업 화면</span></div>
+   <div class="bd"><div class="pn"><b>상품 정보</b><img id="dmPic" alt=""><div class="f">상품명 · <span id="dmName"></span></div><div class="f">카테고리 · 주얼리</div><div class="f">✨ AI 장면 사진 8장</div></div>
+   <div class="cv"><img id="phImg" alt="자동으로 만든 상세페이지 예시"></div>
+   <div class="pn rt"><b>AI에게 고쳐 달라고 하기</b><div class="chat me">첫 문장을 더 감성적으로 바꿔 줘</div><div class="chat">“매일 하고 싶은 작은 반짝임”으로 바꿨어요 ✓</div><div class="chat me">쿠팡용으로 저장</div><div class="chat">780px 폭으로 3장 나눠 저장했어요 ✓</div><small style="margin-top:auto">※ 화면 예시예요. 대화로 고치기는 출시 때 열려요.</small></div></div></div>
  </div>
- <div class="phone" aria-label="휴대폰으로 본 상세페이지 예시">
-  <div class="scr"><div class="bar">‹ <b id="phT">상품 상세</b> ♡</div><div class="pg"><img id="phImg" alt="자동으로 만든 상세페이지 예시"></div></div>
-  <div class="tag">⏱ 1분 완성</div><div class="tag2">📐 세로 860px</div>
- </div>
-</div></header>
+</header>
 
 <section id="ex"><div class="in">
  <div class="eb">Examples</div>
@@ -172,7 +197,7 @@ footer{padding:40px 0 60px;color:var(--mu);font-size:.8rem;text-align:center}
  <div class="steps">
   <div class="st"><div class="ill">📸✍️</div><div class="n">01 · 넣기</div><h3>사진과 특징 넣기</h3><p>상품 사진(1~6장)과 이름, 첫 화면 한 줄, 특징 3개만 적으면 돼요. <b>문구 추천</b> 버튼이 카테고리에 맞는 문장을 골라 줘요.</p></div>
   <div class="st"><div class="ill">🎨👀</div><div class="n">02 · 고르기</div><h3>스타일 고르고 바로 고치기</h3><p>깔끔·감성·고급 3가지 틀과 포인트 색을 고르면 즉시 바뀌어요. 글자를 고치면 미리보기도 함께 바뀌어요.</p></div>
-  <div class="st"><div class="ill">⬇️🛒</div><div class="n">03 · 저장</div><h3>규격대로 저장</h3><p>가로 860/780/750px 중 고르고, 한 장 또는 여러 장으로 나눠 JPG로 저장해 쿠팡·스마트스토어에 바로 올려요.</p></div>
+  <div class="st"><div class="ill">⬇️🛒</div><div class="n">03 · 저장</div><h3>규격대로 저장</h3><p>쿠팡·스마트스토어·11번가·무신사 등 쇼핑몰을 고르면 그 폭에 맞춰, 한 장 또는 여러 장으로 나눠 JPG로 저장돼요.</p></div>
  </div>
 </div></section>
 
@@ -202,7 +227,8 @@ footer{padding:40px 0 60px;color:var(--mu);font-size:.8rem;text-align:center}
     <input type="file" id="file" accept="image/*" multiple hidden>
     <div class="thumbs" id="thumbs"></div></div>
    <div class="row2"><div class="fg"><label>브랜드</label><input type="text" id="brand"></div><div class="fg"><label>상품 이름</label><input type="text" id="name"></div></div>
-   <div class="fg"><label>첫 화면 한 줄 <button type="button" class="sugg" data-s="hook">문구 추천</button></label><textarea id="hook" rows="2"></textarea></div>
+   <div class="fg"><label>첫 화면 한 줄 <small>**강조할 말**은 색이 바뀌어요</small> <button type="button" class="sugg" data-s="hook">문구 추천</button></label><textarea id="hook" rows="2"></textarea></div>
+   <div class="fg"><label>상품 이야기 <small>2~3문장 · 비우면 안 보여요</small></label><textarea id="story" rows="3"></textarea></div>
    <div class="fg"><label>이런 분께 <small>한 줄에 하나 · 3개</small> <button type="button" class="sugg" data-s="who">문구 추천</button></label><textarea id="who" rows="3"></textarea></div>
    <div class="fg"><label>특징 3개 <small>"제목 | 설명" 한 줄에 하나</small> <button type="button" class="sugg" data-s="pts">문구 추천</button></label><textarea id="pts" rows="4"></textarea></div>
    <div class="fg"><label>상품 정보 <small>"항목 | 내용" 한 줄에 하나</small></label><textarea id="spec" rows="4"></textarea></div>
@@ -212,9 +238,10 @@ footer{padding:40px 0 60px;color:var(--mu);font-size:.8rem;text-align:center}
   </form>
   <div class="out">
    <div class="hd"><b>미리보기</b><small id="sz"></small><span class="sp"></span>
-    <div class="dl"><select id="wsel" aria-label="가로 폭"><option value="860">가로 860px</option><option value="780">가로 780px</option><option value="750">가로 750px</option></select>
+    <div class="dl"><select id="wsel" aria-label="쇼핑몰 규격"><option value="780">쿠팡 · 780px</option><option value="860" selected>네이버 스마트스토어 · 860px</option><option value="831">11번가 · 831px</option><option value="860">지마켓 · 860px</option><option value="860">지그재그 · 860px</option><option value="880">에이블리 · 880px</option><option value="890">카카오 선물하기 · 890px</option><option value="1000">무신사 · 1000px</option><option value="1000">토스쇼핑 · 1000px</option></select>
     <select id="split" aria-label="나누기"><option value="0">한 장으로</option><option value="1200">1200px씩 나누기</option><option value="2000">2000px씩 나누기</option></select>
-    <button class="btn pr sm" id="save" type="button">⬇ JPG 저장</button></div></div>
+    <button class="btn pr sm" id="save" type="button">⬇ JPG 저장</button><button class="btn gh sm" id="mkt" type="button">📣 썸네일·인스타 이미지</button></div></div>
+   <div class="law" id="law"></div>
    <div class="pv"><canvas id="cv"></canvas></div>
    <div class="ok" id="ok"></div>
   </div>
@@ -227,8 +254,8 @@ footer{padding:40px 0 60px;color:var(--mu);font-size:.8rem;text-align:center}
  <p class="lead">혼자 만들기 어려우시면 맡기셔도 돼요.</p>
  <div class="price">
   <div class="pc hot"><span class="pb">지금 바로</span><h3>직접 만들기</h3><div class="pp">무료 <small style="font-size:.9rem;color:var(--mu)">베타</small></div>
-   <ul><li>가입 없이 바로 사용</li><li>스타일 3종 · 포인트 색 4종</li><li>가로 860/780/750px · 나눠 저장</li><li>사진은 서버로 보내지 않고 내 기기에서만 그려요</li></ul>
-   <a class="btn pr" href="#make" style="align-self:flex-start">무료로 만들기</a></div>
+   <ul><li>가입 없이 바로 사용</li><li>스타일 3종 · 포인트 색 4종</li><li>쇼핑몰 9곳 규격 · 나눠 저장</li><li>사진은 서버로 보내지 않고 내 기기에서만 그려요</li></ul>
+   <a class="btn pr go" href="#make" style="align-self:flex-start">📸 사진 넣고 만들기</a></div>
   <div class="pc"><h3>맡기기</h3><div class="pp">문의</div>
    <ul><li>상품 사진 보정·배경 정리</li><li>상위 판매 페이지 분석 후 문구 작성</li><li>여러 상품 한 번에 제작</li></ul>
    <span class="note" style="margin:0">준비 중이에요. 열리면 이 자리에서 알려 드려요.</span></div>
@@ -244,8 +271,19 @@ footer{padding:40px 0 60px;color:var(--mu);font-size:.8rem;text-align:center}
  <details><summary>상업적으로 써도 되나요?</summary><p>직접 찍은 사진과 직접 쓴 문구로 만든 결과물은 자유롭게 판매에 쓰셔도 돼요. 예시 페이지의 AI 사진은 설명용이라 판매에는 쓰지 말아 주세요.</p></details>
 </div></section>
 
-<div class="end"><h2>오늘 올릴 상품, 지금 뚝딱</h2><p style="opacity:.9;margin:0 0 22px">사진 한 장이면 충분해요.</p><a class="btn" href="#make">무료로 만들기 →</a></div>
-<footer>상세페이지 뚝딱 · 베타 · 민성 AI 사업 본부</footer>
+<div class="end"><h2>오늘 올릴 상품, 지금 찰칵</h2><p style="opacity:.9;margin:0 0 22px">사진 한 장이면 충분해요.</p><a class="btn go" href="#make">📸 사진 넣고 만들기 →</a></div>
+<footer>찰칵상세 · 베타</footer>
+<div class="qs" id="qs" role="dialog" aria-modal="true" aria-labelledby="qsT"><div class="qb">
+ <div class="qh"><b id="qsT">거의 다 됐어요 ✦</b><button type="button" class="qx" aria-label="닫기">✕</button></div>
+ <div class="qp" id="qsPics"></div>
+ <div class="fg"><label>상품 이름</label><input type="text" id="qsName" placeholder="예) 데일리 큐빅 실버 목걸이"></div>
+ <div class="fg"><label>카테고리</label><div class="chips" id="qsCats"></div></div>
+ <label class="ai"><input type="checkbox" id="qsAI"> <span><b>✨ AI로 만들기</b> · 사진을 보고 문구를 쓰고, 상품을 살린 장면 사진 4장을 새로 그려요 <small id="qsAIst"></small></span></label>
+ <details class="aik"><summary>AI 연결 설정</summary><div class="fg" style="margin-top:8px"><label>Gemini API 키 <small>이 기기에만 저장돼요</small></label><input type="password" id="qsKey" placeholder="AI Studio에서 받은 키" autocomplete="off"><small class="mu2">베타 시험용이에요. 정식 출시 때는 키 없이 크레딧으로 써요. 장면 사진 1장에 약 100원 내외의 사용료가 키 주인에게 붙어요.</small></div></details>
+ <button type="button" class="btn pr" id="qsGo" style="justify-content:center">✦ 상세페이지 만들기</button>
+ <small class="mu2">문구는 카테고리에 맞춰 먼저 채워 드려요. 만든 뒤 아래에서 마음껏 고칠 수 있어요.</small>
+</div></div>
+<div class="prog" id="prog"><div class="pgb"><b>✨ AI가 상세페이지를 만드는 중이에요</b><small class="mu2">사진 장면은 1장에 10~20초쯤 걸려요. 창을 닫지 말아 주세요.</small><ul class="pgs" id="pgs"></ul></div></div>
 <div class="lb" id="lb"><button aria-label="닫기" onclick="lb.classList.remove('on')">✕</button><img id="lbImg" alt="상세페이지 크게 보기"></div>
 
 <script>
@@ -260,10 +298,10 @@ const CAT={
  etc:{n:"기타",hook:["매일이 조금 편해지는 물건","써 보면 다시 찾게 되는","작지만 확실한 변화"],who:["불편함을 간단히 해결하고 싶은 분\n선물을 고민 중인 분\n오래 쓸 물건을 찾는 분"],pts:["핵심 기능 | 가장 중요한 장점 하나를 구체적으로\n편한 사용 | 어떻게 쓰는지 한 줄로\n믿을 수 있는 정보 | 소재·인증 등 사실만"]}};
 /* ===== 예시 4종 (가상 상품) ===== */
 const EX=[
- {cat:"jewel",img:"store/dd/necklace.jpg",brand:"LUMI SILVER",name:"데일리 큐빅 실버 목걸이",hook:"매일 하고 싶은\n작은 반짝임",who:CAT.jewel.who[0],pts:CAT.jewel.pts[0],spec:"소재 | 925 실버 (예시)\n체인 길이 | 45cm (예시)\n펜던트 | 약 0.6cm (예시)\n구성 | 목걸이 1개 + 선물 상자",ship:"오후 2시 전 주문 시 당일 출고 (예시)\n착용 후 교환·반품은 어려워요",tpl:"warm",col:0,focus:[.53,.66]},
- {cat:"beauty",img:"store/dd/serum.jpg",brand:"DEW LAB",name:"데일리 수분 세럼 30ml",hook:"아침 30초,\n피부결이 정돈되는 습관",who:CAT.beauty.who[0],pts:CAT.beauty.pts[0],spec:"용량 | 30ml (예시)\n사용법 | 세안 후 2~3방울\n보관 | 직사광선을 피해 서늘한 곳",ship:"개봉 후에는 교환·반품이 어려워요",tpl:"clean",col:1},
- {cat:"food",img:"store/dd/coffee.jpg",brand:"ROASTERY 12",name:"오늘 볶은 원두 200g",hook:"집에서 내리는\n카페 한 잔",who:CAT.food.who[0],pts:CAT.food.pts[0],spec:"중량 | 200g (예시)\n원산지 | 상세 정보에 표기\n분쇄 | 홀빈 / 핸드드립 / 에스프레소",ship:"식품 특성상 단순 변심 반품은 어려워요",tpl:"bold",col:2},
- {cat:"living",img:"store/dd/mug.jpg",brand:"SONBIT",name:"손빚음 화이트 머그",hook:"손에 쥐는 순간\n따뜻한 아침",who:CAT.living.who[0],pts:CAT.living.pts[0],spec:"용량 | 약 300ml (예시)\n소재 | 도자기\n특징 | 수작업이라 모양이 조금씩 달라요",ship:"깨짐 방지 포장으로 보내 드려요",tpl:"warm",col:3,focus:[.5,.6]}];
+ {cat:"jewel",img:"store/dd/necklace.jpg",story:"작은 큐빅 하나가 목선에 은은한 빛을 더해요. 출근길 셔츠에도, 주말 니트에도 자연스럽게 어울려 매일 손이 가는 목걸이예요.",brand:"LUMI SILVER",name:"데일리 큐빅 실버 목걸이",hook:"매일 하고 싶은\n작은 **반짝임**",who:CAT.jewel.who[0],pts:CAT.jewel.pts[0],spec:"소재 | 925 실버 (예시)\n체인 길이 | 45cm (예시)\n펜던트 | 약 0.6cm (예시)\n구성 | 목걸이 1개 + 선물 상자",ship:"오후 2시 전 주문 시 당일 출고 (예시)\n착용 후 교환·반품은 어려워요",tpl:"warm",col:0,focus:[.53,.66]},
+ {cat:"beauty",img:"store/dd/serum.jpg",brand:"DEW LAB",name:"데일리 수분 세럼 30ml",hook:"아침 30초,\n피부결이 **정돈**되는 습관",who:CAT.beauty.who[0],pts:CAT.beauty.pts[0],spec:"용량 | 30ml (예시)\n사용법 | 세안 후 2~3방울\n보관 | 직사광선을 피해 서늘한 곳",ship:"개봉 후에는 교환·반품이 어려워요",tpl:"clean",col:1},
+ {cat:"food",img:"store/dd/coffee.jpg",brand:"ROASTERY 12",name:"오늘 볶은 원두 200g",hook:"집에서 내리는\n**카페 한 잔**",who:CAT.food.who[0],pts:CAT.food.pts[0],spec:"중량 | 200g (예시)\n원산지 | 상세 정보에 표기\n분쇄 | 홀빈 / 핸드드립 / 에스프레소",ship:"식품 특성상 단순 변심 반품은 어려워요",tpl:"bold",col:2},
+ {cat:"living",img:"store/dd/mug.jpg",story:"손으로 하나하나 빚어 모양이 조금씩 달라요. 아침 커피를 담으면 손바닥 가득 따뜻함이 전해져요.",brand:"SONBIT",name:"손빚음 화이트 머그",hook:"손에 쥐는 순간\n**따뜻한** 아침",who:CAT.living.who[0],pts:CAT.living.pts[0],spec:"용량 | 약 300ml (예시)\n소재 | 도자기\n특징 | 수작업이라 모양이 조금씩 달라요",ship:"깨짐 방지 포장으로 보내 드려요",tpl:"warm",col:3,focus:[.5,.6]}];
 const COLS=["#B9874A","#D45A8A","#2F7A62","#6A4FD8"];
 const TPL={clean:{n:"깔끔",bg:"#FFFFFF",bg2:"#F5F5F7",ink:"#18181B",mu:"#6B6B76",ln:"#E7E7EC",hf:"900 ",hfam:'"Noto Sans KR",sans-serif',sw:"linear-gradient(#fff,#F5F5F7)"},
  warm:{n:"감성",bg:"#FBF6EF",bg2:"#F2E8DA",ink:"#2E241B",mu:"#857463",ln:"#E6D8C6",hf:"800 ",hfam:'"Nanum Myeongjo",serif',sw:"linear-gradient(#FBF6EF,#EADBC6)"},
@@ -277,73 +315,124 @@ function focusOf(img){if(img._f)return img._f;try{const n=64,cv=document.createE
  const dv=R.map((r,i)=>Math.hypot(r-mr,G[i]-mg,B[i]-mb));const th=dv.slice().sort((a,b)=>a-b)[Math.floor(dv.length*.93)];let sx=0,sy=0,sw=0;
  dv.forEach((v,i)=>{if(v<th)return;const x=(i%n)/n,y=Math.floor(i/n)/n;const w=v*v*Math.exp(-((x-.5)**2+(y-.5)**2)/.18);sx+=x*w;sy+=y*w;sw+=w});
  img._f=sw?[sx/sw,sy/sw]:[.5,.5]}catch(e){img._f=[.5,.5]}return img._f}
-function cover(c,img,x,y,w,h,zoom=1,dx=0,dy=0,r=0){if(!img)return;c.save();if(r){rr(c,x,y,w,h,r);c.clip()}else{c.beginPath();c.rect(x,y,w,h);c.clip()}
+function cover(c,img,x,y,w,h,zoom=1,dx=0,dy=0,r=0){if(!img)return;const _ai=img._ai;c.save();if(r){rr(c,x,y,w,h,r);c.clip()}else{c.beginPath();c.rect(x,y,w,h);c.clip()}
  const s=Math.max(w/img.width,h/img.height)*zoom,iw=img.width*s,ih=img.height*s;const [px,py]=zoom>1.01?focusOf(img):[.5,.5];
- let ox=x+w/2-(px+dx)*iw,oy=y+h/2-(py+dy)*ih;ox=Math.min(x,Math.max(x+w-iw,ox));oy=Math.min(y,Math.max(y+h-ih,oy));c.drawImage(img,ox,oy,iw,ih);c.restore()}
+ let ox=x+w/2-(px+dx)*iw,oy=y+h/2-(py+dy)*ih;ox=Math.min(x,Math.max(x+w-iw,ox));oy=Math.min(y,Math.max(y+h-ih,oy));c.drawImage(img,ox,oy,iw,ih);
+ if(_ai&&w>120){const fs=Math.max(11,w*.022);c.font=`600 ${fs}px "Noto Sans KR",sans-serif`;const t="AI 연출 이미지",tw=c.measureText(t).width+fs;c.fillStyle="rgba(0,0,0,.45)";c.fillRect(x+w-tw-fs*.6,y+h-fs*2.2,tw,fs*1.6);c.fillStyle="#fff";c.textAlign="left";c.textBaseline="top";c.fillText(t,x+w-tw-fs*.1,y+h-fs*1.95)}
+ c.restore()}
 function lines(s){return String(s||"").split("\n").map(t=>t.trim()).filter(Boolean)}
 function pairs(s){return lines(s).map(l=>{const i=l.indexOf("|");return i<0?[l,""]:[l.slice(0,i).trim(),l.slice(i+1).trim()]})}
 function render(cv,d,imgs,W=860){
  const T=TPL[d.tpl]||TPL.clean,A=COLS[d.col]||COLS[0],k=W/860,P=60*k,IW=W-2*P;
- const c=cv.getContext("2d");cv.width=W;cv.height=12000*k;
+ const c=cv.getContext("2d");cv.width=W;cv.height=16000*k;
  c.fillStyle=T.bg;c.fillRect(0,0,cv.width,cv.height);c.textBaseline="top";
  const F=(sz,wt="500 ",fam='"Noto Sans KR",sans-serif')=>{c.font=wt+(sz*k)+"px "+fam};
  const txt=(t,x,y,align="left",col=T.ink)=>{c.fillStyle=col;c.textAlign=align;c.fillText(t,x,y)};
  const pic=i=>imgs.length?imgs[i%imgs.length]:null;
- // 사진이 모자랄 때 쓰는 확대 컷 설정
- const crop=[[1,0,0],[1.5,0,0],[2,.03,-.03],[1.3,-.1,.06],[2.2,0,0],[1.7,.08,-.05],[1.4,-.05,-.08],[2.1,.02,.03]];
- const shot=i=>{const n=imgs.length;if(i<n)return[pic(i),1,0,0];const cc=crop[i%crop.length];return[pic(i%n),cc[0],cc[1],cc[2]]};
  if(d.focus&&imgs[0])imgs[0]._f=d.focus;
- let y=70*k;
- // 1. 브랜드 라벨
- F(20,"700 ");c.save();c.letterSpacing=(6*k)+"px";txt((d.brand||"").toUpperCase(),W/2,y,"center",A);c.restore();y+=54*k;
- // 2. 후킹
- F(60,T.hf,T.hfam);const hl=wrap(c,d.hook||"",IW);for(const l of hl){txt(l,W/2,y,"center");y+=80*k}y+=6*k;
- F(26,"500 ");txt(d.name||"",W/2,y,"center",T.mu);y+=70*k;
- // 3. 대표 사진
- cover(c,pic(0),0,y,W,W,1,0,0);y+=W;
- // 4. 이런 분께
- y+=90*k;F(18,"800 ");c.save();c.letterSpacing=(5*k)+"px";txt("RECOMMEND",W/2,y,"center",A);c.restore();y+=40*k;
- F(42,T.hf,T.hfam);txt("이런 분께 추천해요",W/2,y,"center");y+=86*k;
- for(const l of lines(d.who).slice(0,4)){F(27,"500 ");const wl=wrap(c,l,IW-130*k);const bh=Math.max(96*k,(wl.length*40+52)*k);c.fillStyle=T.bg2;rr(c,P,y,IW,bh,22*k);c.fill();
-  c.fillStyle=A;c.beginPath();c.arc(P+50*k,y+bh/2,20*k,0,7);c.fill();c.strokeStyle="#fff";c.lineWidth=4*k;c.lineCap="round";c.beginPath();c.moveTo(P+41*k,y+bh/2);c.lineTo(P+48*k,y+bh/2+8*k);c.lineTo(P+60*k,y+bh/2-8*k);c.stroke();
-  let ty=y+(bh-wl.length*40*k)/2+2*k;for(const w of wl){txt(w,P+92*k,ty);ty+=40*k}y+=bh+16*k}
- // 5. 포인트 3개
+ const crop=[[1,0,0],[1.5,0,0],[2,.03,-.03],[1.3,-.1,.06],[2.2,0,0],[1.7,.08,-.05],[1.4,-.05,-.08],[2.1,.02,.03],[1.8,-.04,.04],[1.25,.06,.02]];
+ const shot=i=>{const n=imgs.length;if(i<n)return[pic(i),1,0,0];const cc=crop[i%crop.length];return[pic(i%Math.max(1,n)),cc[0],cc[1],cc[2]]};
+ const plain=t=>String(t||"").replace(/\*\*/g,"");
+ // **강조** 를 포인트 색으로 (한 줄)
+ const rich=(t,x,y,align,base=T.ink)=>{const segs=String(t).split(/(\*\*[^*]+\*\*)/).filter(Boolean).map(z=>z.startsWith("**")?[z.slice(2,-2),A]:[z,base]);
+  const tw=segs.reduce((m,[q])=>m+c.measureText(q).width,0);let cx=align==="center"?x-tw/2:x;c.textAlign="left";for(const [q,col] of segs){c.fillStyle=col;c.fillText(q,cx,y);cx+=c.measureText(q).width}};
+ // 여러 줄 강조 글 (줄바꿈 유지, 넘치면 감싸기)
+ const richBlock=(t,x,y,maxW,lh,align)=>{for(const raw of String(t||"").split("\n")){const pl=plain(raw);const wl=wrap(c,pl,maxW);if(wl.length===1){rich(raw,x,y,align)}else{for(const w of wl){txt(w,x,y,align)}}y+=lh*wl.length}return y};
+ const eyebrow=(t,x,y,align="center")=>{F(18,"800 ");c.save();c.letterSpacing=(5*k)+"px";txt(t,x,y,align,A);c.restore()};
+ const para=(t,x,y,maxW,align="left",col=T.mu,sz=26,lh=42)=>{F(sz,"400 ");for(const l of wrap(c,t,maxW)){txt(l,x,y,align,col);y+=lh*k}return y};
+ const aiImgs=imgs.filter(x=>x&&x._ai);let sIdx=1;const nextShot=()=>shot(sIdx++);
+ let y=86*k;
+ /* A. 히어로 */
+ const heroH=(d.tpl==="warm"?1.5:1.42)*W;const hg=c.createLinearGradient(0,0,0,heroH);hg.addColorStop(0,T.bg2);hg.addColorStop(1,T.bg);c.fillStyle=hg;c.fillRect(0,0,W,heroH);
+ eyebrow((d.brand||"").toUpperCase(),W/2,y);y+=50*k;
+ F(60,T.hf,T.hfam);y=richBlock(d.hook,W/2,y,IW,80*k,"center")+4*k;
+ F(25,"500 ");txt(d.sub||d.name||"",W/2,y,"center",T.mu);y+=66*k;
+ if(d.tpl==="warm"){const aw=IW-40*k,ax=(W-aw)/2,ah=heroH-y-46*k;c.save();c.beginPath();c.moveTo(ax,y+aw/2);c.arc(ax+aw/2,y+aw/2,aw/2,Math.PI,0);c.lineTo(ax+aw,y+ah);c.lineTo(ax,y+ah);c.closePath();c.clip();cover(c,pic(0),ax,y,aw,ah,1,0,0);c.restore()}
+ else cover(c,pic(0),0,y,W,heroH-y,1,0,0);
+ y=heroH;
+ /* B. 이야기 */
+ if(d.story){y+=110*k;eyebrow("STORY",P,y,"left");y+=40*k;F(44,T.hf,T.hfam);for(const l of wrap(c,d.name||"",IW)){txt(l,P,y);y+=60*k}y+=18*k;
+  y=para(d.story,P,y,IW)+44*k;const [im,z,fx,fy]=nextShot();cover(c,im,P,y,IW,IW*.82,z,fx,fy,24*k);y+=IW*.82}
+ /* C. 고객 고민 말풍선 */
+ y+=110*k;eyebrow("CONSUMER CONCERNS",W/2,y);y+=40*k;F(42,T.hf,T.hfam);txt("이런 고민, 해 보셨나요?",W/2,y,"center");y+=92*k;
+ lines(d.who).slice(0,3).forEach((l,i)=>{const q=l.replace(/(분|사람)$/,"").trim();const say=(d.say&&d.say[i])?"“"+String(d.say[i]).replace(/^["“]|["”]$/g,"")+"”":"“"+q.replace(/싶은$/,"싶어요").replace(/중인$/,"중이에요").replace(/좋아하는$/,"좋아해요").replace(/찾는$/,"찾고 있어요").replace(/필요한$/,"필요해요").replace(/는$/,"는 편이에요")+"”";
+  F(27,"500 ");const wl=wrap(c,say,IW*.66);const bw=Math.max(...wl.map(w=>c.measureText(w).width))+64*k,bh=(wl.length*40+44)*k;const left=i%2===0;const bx=left?P:W-P-bw;
+  c.fillStyle=T.bg2;rr(c,bx,y,bw,bh,26*k);c.fill();c.beginPath();if(left){c.moveTo(bx+34*k,y+bh-2);c.lineTo(bx+20*k,y+bh+22*k);c.lineTo(bx+62*k,y+bh-2)}else{c.moveTo(bx+bw-34*k,y+bh-2);c.lineTo(bx+bw-20*k,y+bh+22*k);c.lineTo(bx+bw-62*k,y+bh-2)}c.fill();
+  let ty=y+22*k;for(const w of wl){txt(w,bx+32*k,ty,"left",T.ink);ty+=40*k}y+=bh+44*k});
+ y+=6*k;F(30,"800 ");txt("그래서 준비했어요",W/2,y,"center",A);y+=42*k;c.fillStyle=A;c.beginPath();c.moveTo(W/2-14*k,y);c.lineTo(W/2+14*k,y);c.lineTo(W/2,y+18*k);c.fill();y+=18*k;
+ /* D. 포인트 — 세 가지 다른 배치 */
  const pts=pairs(d.pts).slice(0,4);
- pts.forEach(([t,s],i)=>{y+=110*k;F(20,"800 ");c.save();c.letterSpacing=(4*k)+"px";txt("POINT 0"+(i+1),W/2,y,"center",A);c.restore();y+=44*k;
-  F(46,T.hf,T.hfam);for(const l of wrap(c,t,IW)){txt(l,W/2,y,"center");y+=62*k}y+=10*k;
-  F(27,"400 ");for(const l of wrap(c,s,IW-40*k)){txt(l,W/2,y,"center",T.mu);y+=42*k}y+=40*k;
-  const [im,z,fx,fy]=shot(i+1);cover(c,im,P,y,IW,IW*.72,z,fx,fy,26*k);y+=IW*.72});
- // 6. 디테일 컷
- y+=110*k;F(18,"800 ");c.save();c.letterSpacing=(5*k)+"px";txt("DETAIL",W/2,y,"center",A);c.restore();y+=40*k;F(42,T.hf,T.hfam);txt("가까이 보기",W/2,y,"center");y+=86*k;
- const g=14*k,cw=(IW-g)/2;for(let i=0;i<4;i++){const [im,z,fx,fy]=shot(i+4);cover(c,im,P+(i%2)*(cw+g),y+Math.floor(i/2)*(cw+g),cw,cw,z*1.15,fx,fy,18*k)}y+=cw*2+g;
- // 7. 상품 정보
- const sp=pairs(d.spec);if(sp.length){y+=110*k;F(18,"800 ");c.save();c.letterSpacing=(5*k)+"px";txt("INFORMATION",W/2,y,"center",A);c.restore();y+=40*k;F(42,T.hf,T.hfam);txt("상품 정보",W/2,y,"center");y+=80*k;
-  c.fillStyle=T.ink;c.fillRect(P,y,IW,3*k);y+=3*k;
+ pts.forEach(([t,s2],i)=>{const kind=i%3;y+=110*k;
+  if(kind===0){eyebrow("POINT 0"+(i+1),P,y,"left");y+=44*k;F(46,T.hf,T.hfam);for(const l of wrap(c,t,IW)){txt(l,P,y);y+=62*k}y+=14*k;
+   F(26,"400 ");const dl=wrap(c,s2,IW);dl.forEach((l,j)=>{if(j===0){const w=c.measureText(l).width;c.fillStyle=A+"33";c.fillRect(P-4*k,y+22*k,w+8*k,16*k)}txt(l,P,y,"left",j===0?T.ink:T.mu);y+=42*k});y+=40*k;
+   const [im,z,fx,fy]=nextShot();cover(c,im,P,y,IW,IW*.78,z,fx,fy,24*k);y+=IW*.78}
+  else if(kind===1){y-=40*k;const [im,z,fx,fy]=nextShot();const fh=W*1.05;cover(c,im,0,y,W,fh,z,fx,fy);const og=c.createLinearGradient(0,y+fh*.42,0,y+fh);og.addColorStop(0,"rgba(0,0,0,0)");og.addColorStop(1,"rgba(0,0,0,.74)");c.fillStyle=og;c.fillRect(0,y,W,fh);
+   F(26,"400 ");const dl=wrap(c,s2,IW);F(46,T.hf,T.hfam);const tl=wrap(c,t,IW);let ty=y+fh-60*k-dl.length*40*k-tl.length*62*k-60*k;
+   F(20,"800 ");c.save();c.letterSpacing=(4*k)+"px";txt("POINT 0"+(i+1),P,ty,"left","rgba(255,255,255,.85)");c.restore();ty+=46*k;
+   F(46,T.hf,T.hfam);for(const l of tl){txt(l,P,ty,"left","#fff");ty+=62*k}ty+=8*k;F(26,"400 ");for(const l of dl){txt(l,P,ty,"left","rgba(255,255,255,.9)");ty+=40*k}y+=fh}
+  else{eyebrow("POINT 0"+(i+1),W/2,y);y+=44*k;F(46,T.hf,T.hfam);for(const l of wrap(c,t,IW)){txt(l,W/2,y,"center");y+=62*k}y+=12*k;y=para(s2,W/2,y,IW-40*k,"center")+40*k;
+   const [im,z,fx,fy]=nextShot();cover(c,im,P,y,IW,IW*.72,z,fx,fy,22*k);y+=IW*.72+14*k;const cw=(IW-14*k)/2;
+   for(let j=0;j<2;j++){const [a,b,e,f]=nextShot();cover(c,a,P+j*(cw+14*k),y,cw,cw,b*1.1,e,f,18*k)}y+=cw}});
+ /* E. 숫자로 보기 (상품 정보 중 짧은 값 3개) */
+ const sp=pairs(d.spec);const nums=sp.filter(([a,b])=>b&&!/확인|적어/.test(b)&&b.length<=12).slice(0,3);
+ if(nums.length>=2){y+=100*k;const cw=IW/nums.length;c.fillStyle=T.bg2;rr(c,P,y,IW,170*k,22*k);c.fill();
+  nums.forEach(([a,b],j)=>{const cx=P+cw*j+cw/2;let fs=36;F(fs,"800 ");while(c.measureText(b).width>cw-28*k&&fs>18){fs-=2;F(fs,"800 ")}txt(b,cx,y+44*k+(36-fs)*k*.5,"center",A);F(22,"500 ");txt(a,cx,y+104*k,"center",T.mu);if(j){c.fillStyle=T.ln;c.fillRect(P+cw*j,y+40*k,2*k,90*k)}});y+=170*k}
+ /* F. 한눈에 보기 (아이콘 2×2) */
+ if(pts.length>=3){y+=110*k;eyebrow("AT A GLANCE",W/2,y);y+=40*k;F(42,T.hf,T.hfam);txt("한눈에 보기",W/2,y,"center");y+=90*k;
+  const ncol=pts.length===3?3:2,gw=(IW-16*k*(ncol-1))/ncol,gh=(ncol===3?250:230)*k,icons=["✦","◎","♡","✓"];pts.slice(0,4).forEach(([t,s2],j)=>{const gx=P+(j%ncol)*(gw+16*k),gy=y+Math.floor(j/ncol)*(gh+16*k);
+   c.strokeStyle=T.ln;c.lineWidth=2*k;rr(c,gx,gy,gw,gh,22*k);c.stroke();c.fillStyle=A+"22";c.beginPath();c.arc(gx+gw/2,gy+58*k,30*k,0,7);c.fill();
+   F(28,"700 ");txt(icons[j],gx+gw/2,gy+42*k,"center",A);let tf=25;F(tf,"800 ");while(c.measureText(t).width>gw-24*k&&tf>16){tf-=1;F(tf,"800 ")}txt(t,gx+gw/2,gy+110*k,"center");F(20,"400 ");let ty=gy+150*k;for(const l of wrap(c,s2,gw-32*k).slice(0,3)){txt(l,gx+gw/2,ty,"center",T.mu);ty+=30*k}});
+  y+=Math.ceil(Math.min(4,pts.length)/ncol)*(gh+16*k)-16*k}
+ /* G. 가까이 보기 */
+ y+=110*k;eyebrow("DETAIL",W/2,y);y+=40*k;F(42,T.hf,T.hfam);txt("가까이 보기",W/2,y,"center");y+=86*k;
+ const g=14*k,cw=(IW-g)/2;for(let i=0;i<4;i++){const [im,z,fx,fy]=nextShot();cover(c,im,P+(i%2)*(cw+g),y+Math.floor(i/2)*(cw+g),cw,cw,z*1.1,fx,fy,18*k)}y+=cw*2+g;
+ /* H. 상품 정보 */
+ if(sp.length){y+=110*k;eyebrow("INFORMATION",W/2,y);y+=40*k;F(42,T.hf,T.hfam);txt("상품 정보",W/2,y,"center");y+=80*k;
+  c.fillStyle=A;c.fillRect(P,y,IW,3*k);y+=3*k;
   for(const [a,b] of sp){F(26,"400 ");const bl=wrap(c,b,IW-230*k);const rh=Math.max(78*k,(bl.length*38+40)*k);c.fillStyle=T.bg2;c.fillRect(P,y,200*k,rh);
    F(25,"700 ");txt(a,P+26*k,y+(rh-34*k)/2);F(26,"400 ");let ty=y+(rh-bl.length*38*k)/2;for(const l of bl){txt(l,P+230*k,ty,"left",T.ink);ty+=38*k}
    y+=rh;c.fillStyle=T.ln;c.fillRect(P,y,IW,2*k);y+=2*k}}
- // 8. 배송·안내
+ /* I. 배송·안내 */
  const sh=lines(d.ship);if(sh.length){y+=70*k;F(25,"400 ");const all=sh.flatMap(l=>wrap(c,"· "+l,IW-80*k));const bh=(all.length*40+110)*k;c.strokeStyle=T.ln;c.lineWidth=2*k;rr(c,P,y,IW,bh,22*k);c.stroke();
   F(26,"800 ");txt("배송 · 교환 안내",P+40*k,y+36*k);let ty=y+86*k;F(25,"400 ");for(const l of all){txt(l,P+40*k,ty,"left",T.mu);ty+=40*k}y+=bh}
- // 9. 마무리
- y+=100*k;const eh=420*k;cover(c,pic(0),0,y,W,eh,1.25,0,0);c.fillStyle="rgba(0,0,0,.45)";c.fillRect(0,y,W,eh);
- F(54,T.hf,T.hfam);const el=wrap(c,(d.hook||"").replace(/\n/g," "),IW);let ty=y+eh/2-el.length*36*k-30*k;for(const l of el){txt(l,W/2,ty,"center","#fff");ty+=72*k}
+ /* J. 마무리 */
+ y+=100*k;const eh=440*k;const lastAI=aiImgs[aiImgs.length-1];cover(c,lastAI||pic(0),0,y,W,eh,lastAI?1:1.25,0,0);c.fillStyle="rgba(0,0,0,.45)";c.fillRect(0,y,W,eh);
+ F(54,T.hf,T.hfam);const el=wrap(c,plain(d.hook).replace(/\n/g," "),IW);let ty=y+eh/2-el.length*36*k-30*k;for(const l of el){txt(l,W/2,ty,"center","#fff");ty+=72*k}
  F(24,"700 ");c.fillStyle=A;const bw=300*k;rr(c,W/2-bw/2,ty+20*k,bw,64*k,32*k);c.fill();txt("지금 만나보세요",W/2,ty+38*k,"center","#fff");y+=eh;
  F(18,"500 ");txt(d.brand||"",W/2,y+40*k,"center",T.mu);y+=100*k;
- // 잘라내기
  const out=document.createElement("canvas");out.width=W;out.height=Math.ceil(y);out.getContext("2d").drawImage(cv,0,0);cv.width=W;cv.height=out.height;cv.getContext("2d").drawImage(out,0,0);return cv.height}
+
+
+/* ===== 광고 표현 검사 (과장·의약품 오인·근거 없는 수치) ===== */
+const LAW=[[/최고|최상|최초|1위|넘버원|유일|완벽|무조건|100\s?%|모든 사람/,"과장 표현 — 객관적 근거(시험 성적·출처)가 없으면 빼는 게 안전해요"],
+ [/치료|완치|예방|처방|질병|아토피|염증|통증 완화|혈압|혈당|면역력/,"의약품처럼 보이는 표현 — 일반 상품·화장품·식품에는 쓰면 안 돼요"],
+ [/주름\s?개선|미백|탈모|여드름/,"기능성 표현 — 기능성 인증을 받은 제품만 쓸 수 있어요"],
+ [/다이어트|살 빠|체지방|해독|디톡스/,"효과 단정 표현 — 식품·생활용품에 쓰면 문제 될 수 있어요"],
+ [/후기\s?\d|만족도\s?\d|판매\s?\d+만|\d+만\s?개 판매|재구매율/,"수치 후기·판매량 — 실제 근거가 있을 때만 적어 주세요"]];
+function lawCheck(){const text=[S.hook,S.sub,S.story,S.who,S.pts,S.spec].join("\n");const hits=[];for(const [re,msg] of LAW){const m=text.match(new RegExp(re.source,"g"));if(m)hits.push([[...new Set(m)],msg])}
+ const el=$("#law");el.className="law on "+(hits.length?"warn":"good");
+ el.innerHTML=hits.length?"<b>⚠ 올리기 전에 확인해 주세요</b>"+hits.map(([w,m])=>`<span>${w.map(x=>`<mark>${x}</mark>`).join(" ")} · ${m}</span>`).join(""):"<b>✓ 광고 표현 검사 통과</b><span>과장·의약품 오인 표현이 보이지 않아요 (최종 판단은 판매자 몫이에요)</span>"}
+/* ===== 썸네일(1000×1000) · 인스타(1080×1350) ===== */
+$("#mkt").onclick=()=>{const T=TPL[S.tpl]||TPL.clean,A=COLS[S.col]||COLS[0],im=IM[0];const base=(S.name||"상품").replace(/[\\/:*?"<>|\s]+/g,"_");
+ const save=(cv,n,i)=>setTimeout(()=>cv.toBlob(b=>{const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=base+"_"+n+".jpg";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),4000)},"image/jpeg",.92),i*400);
+ const t=document.createElement("canvas");t.width=t.height=1000;const tc=t.getContext("2d");tc.fillStyle="#fff";tc.fillRect(0,0,1000,1000);cover(tc,im,0,0,1000,1000,1,0,0);save(t,"썸네일_1000",0);
+ const g=document.createElement("canvas");g.width=1080;g.height=1350;const c=g.getContext("2d");cover(c,im,0,0,1080,1350,1,0,0);const gr=c.createLinearGradient(0,600,0,1350);gr.addColorStop(0,"rgba(0,0,0,0)");gr.addColorStop(1,"rgba(0,0,0,.72)");c.fillStyle=gr;c.fillRect(0,0,1080,1350);
+ c.textBaseline="top";c.textAlign="left";c.fillStyle="rgba(255,255,255,.85)";c.font='700 30px "Noto Sans KR",sans-serif';c.fillText((S.brand||"").toUpperCase(),80,1000-((S.hook||"").split("\n").length-1)*96);
+ let y=1050-((S.hook||"").split("\n").length-1)*96;c.font=`900 76px ${T.hfam}`;for(const l of String(S.hook||"").split("\n")){let x=80;for(const z of l.split(/(\*\*[^*]+\*\*)/).filter(Boolean)){const hl=z.startsWith("**");const q=hl?z.slice(2,-2):z;c.fillStyle=hl?"#FFE08A":"#fff";c.fillText(q,x,y);x+=c.measureText(q).width}y+=96}
+ c.font='500 32px "Noto Sans KR",sans-serif';c.fillStyle="rgba(255,255,255,.85)";c.fillText(S.name||"",80,y+14);save(g,"인스타_1080x1350",1);
+ $("#ok").textContent="✓ 썸네일(1000×1000)과 인스타 피드(1080×1350) 이미지를 저장했어요"};
 /* ===== 이미지 불러오기 ===== */
 const load=src=>new Promise(r=>{const i=new Image();i.onload=()=>r(i);i.onerror=()=>r(null);i.src=src});
 /* ===== 만들기 도구 ===== */
 let S={...EX[0]},IM=[],SRC=[];
-const ids=["brand","name","hook","who","pts","spec","ship"];
+const ids=["brand","name","hook","story","who","pts","spec","ship"];
 function fill(){for(const k of ids)$("#"+k).value=S[k]||"";chips();tpls();cols()}
 function chips(){$("#cats").innerHTML=Object.entries(CAT).map(([k,v])=>`<button type="button" class="chip ${S.cat===k?"on":""}" data-c="${k}">${v.n}</button>`).join("")}
 function tpls(){$("#tpls").innerHTML=Object.entries(TPL).map(([k,v])=>`<button type="button" class="tp ${S.tpl===k?"on":""}" data-t="${k}"><i style="background:${v.sw}"></i>${v.n}</button>`).join("")}
 function cols(){$("#cols").innerHTML=COLS.map((c,i)=>`<button type="button" class="${S.col===i?"on":""}" data-k="${i}" style="background:${c}" aria-label="색 ${i+1}"></button>`).join("")}
 function thumbs(){$("#thumbs").innerHTML=SRC.map((s,i)=>`<div class="t"><img src="${s}" alt="">${i===0?"<em>대표</em>":""}<button type="button" data-x="${i}" aria-label="지우기">✕</button></div>`).join("")}
-let rT;function draw(){clearTimeout(rT);rT=setTimeout(()=>{const h=render($("#cv"),S,IM,860);$("#sz").textContent=`860 × ${h}px`},60)}
-$("#f").addEventListener("input",e=>{if(ids.includes(e.target.id)){S[e.target.id]=e.target.value;draw()}});
+let rT;function draw(){clearTimeout(rT);rT=setTimeout(()=>{const h=render($("#cv"),S,IM,860);$("#sz").textContent=`860 × ${h}px`;lawCheck()},60)}
+$("#f").addEventListener("input",e=>{if(ids.includes(e.target.id)){S[e.target.id]=e.target.value;if(e.target.id==="who")S.say=null;draw()}});
 $("#cats").onclick=e=>{const b=e.target.closest("[data-c]");if(!b)return;S.cat=b.dataset.c;chips()};
 $("#tpls").onclick=e=>{const b=e.target.closest("[data-t]");if(!b)return;S.tpl=b.dataset.t;tpls();draw()};
 $("#cols").onclick=e=>{const b=e.target.closest("[data-k]");if(!b)return;S.col=+b.dataset.k;cols();draw()};
@@ -367,8 +456,69 @@ const lb=$("#lb");
 (async()=>{await document.fonts.ready;const ims=await Promise.all(EX.map(e=>load(e.img)));
  const gal=$("#gal");EX.forEach((e,i)=>{const cv=document.createElement("canvas");render(cv,e,ims[i]?[ims[i]]:[],860);const url=cv.toDataURL("image/jpeg",.82);
   const b=document.createElement("button");b.className="gc";b.innerHTML=`<div class="th"><img src="${url}" alt="${e.name} 상세페이지 예시"></div><div class="cap"><b>${e.name}</b><span>${CAT[e.cat].n} · ${TPL[e.tpl].n}</span></div>`;
-  b.onclick=()=>{$("#lbImg").src=url;lb.classList.add("on")};gal.appendChild(b);if(i===0){$("#phImg").src=url;$("#phT").textContent=e.name}});
+  b.onclick=()=>{$("#lbImg").src=url;lb.classList.add("on")};gal.appendChild(b);if(i===0){$("#phImg").src=url;$("#dmName").textContent=e.name;$("#dmPic").src=e.img}
+  const sd=document.createElement("img");sd.src=url;sd.alt="";(i%2?$("#sideR"):$("#sideL")).appendChild(sd);const sd2=sd.cloneNode();sd2.style.objectPosition="center 40%";(i%2?$("#sideL"):$("#sideR")).appendChild(sd2)});
  IM=ims[0]?[ims[0]]:[];SRC=[EX[0].img];fill();thumbs();draw()})();
 lb.onclick=e=>{if(e.target===lb)lb.classList.remove("on")};
+/* ===== AI (Gemini) — 베타: 사용자의 키로 브라우저에서 직접 호출 ===== */
+const LS={get:k=>{try{return localStorage.getItem(k)}catch(e){return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}}};
+const TXT_MODELS=["gemini-3.1-flash","gemini-3-flash","gemini-2.5-flash"],IMG_MODELS=["gemini-3.1-flash-image","gemini-2.5-flash-image"];
+async function gem(models,body,key){let last;for(const m of models){const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent`,{method:"POST",headers:{"Content-Type":"application/json","x-goog-api-key":key},body:JSON.stringify(body)});
+ if(r.status===404){last="모델 없음 "+m;continue}const j=await r.json();if(!r.ok)throw new Error(j.error?.message||("오류 "+r.status));return j}throw new Error(last||"모델을 찾지 못했어요")}
+function b64(file,max=1024){return new Promise(res=>{const u=URL.createObjectURL(file),im=new Image();im.onload=()=>{const s=Math.min(1,max/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=im.width*s;c.height=im.height*s;c.getContext("2d").drawImage(im,0,0,c.width,c.height);res(c.toDataURL("image/jpeg",.9).split(",")[1])};im.src=u})}
+const SCENES={jewel:["worn by a woman, close-up of neckline/ear/wrist, soft natural light, minimal neutral outfit, face cropped out","on a velvet jewelry tray beside a small gift box, warm studio light","macro close-up showing the material and sparkle, shallow depth of field","flat lay on linen with dried flowers and a coffee cup, top view"],
+ beauty:["on a bathroom vanity shelf with soft morning light and green leaves","held in a hand with clean manicure, light pink background","macro texture shot with water droplets and fresh botanical ingredients","flat lay with towel and skincare props, top view, airy"],
+ food:["on a cafe table with a freshly made serving next to it, warm morning light","ingredients and the product arranged on a rustic wooden board","close-up appetizing detail shot, texture visible","a cozy home kitchen scene, person's hands preparing it, face not shown"],
+ living:["in a bright Scandinavian living room, styled naturally in use","on a wooden table with morning sunlight and a plant","close-up detail of material and craftsmanship","flat lay with matching home props, top view"],
+ fashion:["worn by a model in a clean city street, face cropped out","styled flat lay outfit with accessories, top view","close-up of fabric texture and stitching","hanging on a minimal rack in a bright studio"],
+ etc:["in use in a bright everyday home scene","on a clean table with soft daylight and simple props","close-up detail of key part","flat lay with related props, top view"]};
+async function aiCopy(key,file,name,cat){const data=await b64(file,768);
+ const prompt=`너는 한국 쿠팡·네이버 스마트스토어 상위 판매 상세페이지 카피라이터야. 사진 속 상품과 상품명 "${name}" (카테고리: ${CAT[cat].n})을 보고 상세페이지 문구를 써.
+규칙: 쉬운 한국어, 해요체. 사진에서 확인되지 않는 수치·성분·인증·후기·판매량은 절대 지어내지 마. 모르는 상품 정보 값은 "(확인 필요)"로 둬.
+JSON만 출력: {"sub":"첫 화면 아래 한 줄 설명 20자 이내","story":"상품 이야기 2~3문장(사진에서 보이는 사실 + 쓰는 장면), 90자 이내","brand":"영문 대문자 브랜드 느낌 2단어 이하(모르면 빈칸)","hook":"첫 화면 2줄(줄바꿈 \\n), 가장 강한 단어 하나를 **로 감싸기, 줄당 12자 이내","who":["고객이 겪는 상황·고민 3개, 각각 '~한 분'으로 끝나게"],"say":["위 3개를 고객 속마음 말풍선으로, '~해요/~어요' 말투, 18자 이내"],"points":[["특징 제목 8자 이내","설명 한 문장 30자 이내"],["",""],["",""]],"spec":[["항목","값 또는 (확인 필요)"]],"ship":"배송·교환 안내 한 줄(일반적인 문구)","scenes":["이 상품에 맞는 상세페이지용 사진 장면 8개를 영어로. 순서: 1 사용/착용 장면(얼굴은 가림), 2 라이프스타일 공간 연출, 3 소재·질감 매크로, 4 손에 든 크기감, 5 다른 각도 디테일, 6 선물·포장 연출, 7 플랫레이 탑뷰, 8 감성 무드컷. 각 장면은 배경·소품·빛을 구체적으로 한 문장"]}`;
+ const j=await gem(TXT_MODELS,{contents:[{parts:[{inline_data:{mime_type:"image/jpeg",data}},{text:prompt}]}],generationConfig:{responseMimeType:"application/json",temperature:.8}},key);
+ const t=j.candidates?.[0]?.content?.parts?.map(p=>p.text||"").join("")||"{}";return JSON.parse(t.replace(/^```json|```$/g,"").trim())}
+async function aiScene(key,file,name,scene){const data=await b64(file,1024);
+ const prompt=`Professional Korean e-commerce product photo of "${name}". Use the product in the reference image EXACTLY as it is — same shape, color, material, size and details; do not redesign it, do not add or remove parts. Scene: ${scene}. Photorealistic, premium, soft natural light, clean composition with some empty space. No text, no logos, no watermarks. Square image.`;
+ const j=await gem(IMG_MODELS,{contents:[{parts:[{inline_data:{mime_type:"image/jpeg",data}},{text:prompt}]}],generationConfig:{responseModalities:["IMAGE"]}},key);
+ const p=j.candidates?.[0]?.content?.parts?.find(p=>p.inline_data||p.inlineData);const d=p&&(p.inline_data||p.inlineData);if(!d)throw new Error("그림을 받지 못했어요");
+ return load(`data:${d.mime_type||d.mimeType||"image/png"};base64,${d.data}`)}
+function pgSet(list){$("#pgs").innerHTML=list.map(([t,st])=>`<li class="${st}"><i>${st==="ok"?"✓":st==="on"?'<span class="spin"></span>':st==="er"?"!":"·"}</i>${t}</li>`).join("")}
+/* ===== 사진 넣고 바로 만들기 ===== */
+const qf=document.createElement("input");qf.type="file";qf.accept="image/*";qf.multiple=true;qf.hidden=true;document.body.appendChild(qf);
+let qCat="jewel",qFiles=[];
+document.querySelectorAll(".go").forEach(a=>a.addEventListener("click",e=>{e.preventDefault();qf.click()}));
+qf.onchange=()=>{qFiles=[...qf.files].filter(f=>f.type.startsWith("image/")).slice(0,6);qf.value="";if(!qFiles.length)return;
+ $("#qsPics").innerHTML=qFiles.map(f=>`<img src="${URL.createObjectURL(f)}" alt="">`).join("");$("#qsName").value="";
+ $("#qsCats").innerHTML=Object.entries(CAT).map(([k,v])=>`<button type="button" class="chip ${qCat===k?"on":""}" data-c="${k}">${v.n}</button>`).join("");
+ $("#qs").classList.add("on");setTimeout(()=>$("#qsName").focus(),50)};
+$("#qsCats").onclick=e=>{const b=e.target.closest("[data-c]");if(!b)return;qCat=b.dataset.c;[...$("#qsCats").children].forEach(x=>x.classList.toggle("on",x===b))};
+$(".qx").onclick=()=>$("#qs").classList.remove("on");$("#qs").onclick=e=>{if(e.target.id==="qs")$("#qs").classList.remove("on")};
+$("#qsKey").value=LS.get("dd_key")||"";$("#qsAI").checked=!!LS.get("dd_key");
+$("#qsKey").addEventListener("input",e=>{LS.set("dd_key",e.target.value.trim());$("#qsAI").checked=!!e.target.value.trim()});
+async function runAI(nm,cat){const key=($("#qsKey").value||"").trim();if(!key){$("#qs details").open=true;$("#qsKey").focus();$("#qsAIst").textContent="먼저 아래 AI 연결 설정에 키를 넣어 주세요";return false}
+ const file=qFiles[0];const steps=[["사진 보고 문구 쓰기","on"],["장면 사진 1",""],["장면 사진 2",""],["장면 사진 3",""],["장면 사진 4",""],["상세페이지 그리기",""]];
+ $("#qs").classList.remove("on");$("#prog").classList.add("on");pgSet(steps);
+ let cpScenes=null;try{const cp=await aiCopy(key,file,S.name,cat);cpScenes=cp.scenes;S.sub=cp.sub||"";S.story=cp.story||"";S.brand=cp.brand||"";S.hook=cp.hook||S.hook;if(Array.isArray(cp.who))S.who=cp.who.join("\n");if(Array.isArray(cp.say))S.say=cp.say;
+  if(Array.isArray(cp.points))S.pts=cp.points.filter(p=>p&&p[0]).map(p=>p[0]+" | "+(p[1]||"")).join("\n");
+  if(Array.isArray(cp.spec)&&cp.spec.length)S.spec=cp.spec.map(p=>p[0]+" | "+p[1]).join("\n");if(cp.ship)S.ship=cp.ship;steps[0][1]="ok";fill();draw()}catch(e){steps[0]=["문구: "+e.message+" (기본 문구로 진행)","er"]}
+ let sc=(Array.isArray(cpScenes)&&cpScenes.length>=4)?cpScenes.slice(0,8):SCENES[cat]||SCENES.etc;if(sc.length<8)sc=sc.concat((SCENES[cat]||SCENES.etc)).slice(0,8);
+ steps.splice(1,4,...sc.map((_,i)=>["장면 사진 "+(i+1),""]));pgSet(steps);
+ const got=new Array(sc.length);let stop=false,next=0;
+ const worker=async()=>{while(!stop&&next<sc.length){const i=next++;steps[i+1][1]="on";pgSet(steps);
+  try{const im=await aiScene(key,file,S.name,sc[i]);im._ai=1;got[i]=im;IM=[IM[0],...got.filter(Boolean)].concat(IM.slice(1).filter(x=>!x._ai));SRC=IM.map(x=>x.src);thumbs();draw();steps[i+1][1]="ok"}
+  catch(e){steps[i+1]=["장면 "+(i+1)+": "+e.message,"er"];if(/API key|PERMISSION|401|403|quota/i.test(e.message))stop=true}pgSet(steps)}};
+ await Promise.all([worker(),worker()]);
+ const L2=steps.length-1;steps[L2][1]="ok";pgSet(steps);setTimeout(()=>$("#prog").classList.remove("on"),900);return true}
+$("#qsGo").onclick=async()=>{const nm=$("#qsName").value.trim()||"우리 상품";const C=CAT[qCat];
+ SRC=[];IM=[];for(const f of qFiles){const u=URL.createObjectURL(f);const im=await load(u);if(im){SRC.push(u);IM.push(im)}}
+ const h0=C.hook[0];const hk=h0.includes(",")?h0.replace(/, ?/,",\n"):h0.replace(/^(.{5,11}?) /,"$1\n");
+ S={cat:qCat,brand:"",name:nm,hook:hk,who:C.who[0],pts:C.pts[0],spec:"상품명 | "+nm+"\n소재 | (적어 주세요)\n크기 | (적어 주세요)\n구성 | (적어 주세요)",ship:"배송·교환 안내를 적어 주세요",tpl:qCat==="food"?"bold":(qCat==="beauty"||qCat==="fashion")?"clean":"warm",col:{jewel:0,beauty:1,food:2,living:3,fashion:3,etc:3}[qCat]};
+ fill();thumbs();draw();
+ if($("#qsAI").checked){const ok=await runAI(nm,qCat);if(!ok)return}
+ $("#qs").classList.remove("on");$("#ok").textContent="✓ 만들었어요! 왼쪽 칸을 고치면 바로 바뀌어요";
+ document.querySelector("#make").scrollIntoView({behavior:"smooth"});const o=document.querySelector(".out");o.classList.add("made");setTimeout(()=>o.classList.remove("made"),2500)};
+$("#qsName").addEventListener("keydown",e=>{if(e.key==="Enter")$("#qsGo").click()});
+
 </script>
 </body></html>
