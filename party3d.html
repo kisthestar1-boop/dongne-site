@@ -761,7 +761,7 @@ const GAMES=[
     if(done){if(b.z<-9.3)burst(b.x,b.y,-9.3,"#7AD9FF",6,3);arena.remove(b.m);this.balls.splice(i,1)}}},
   drive(p,dt){const i=p.lastIn||[0,0];p.vx=i[0]*7.5;p.vz=Math.abs(i[1])>.15?i[1]*6.5:0;if(Math.abs(i[0])>.2)p.face=Math.PI},
   ground(){return true},
-  clampP(p){p.x=clamp(p.x,-10,10);p.z=clamp(p.z,1.2,8.6)},
+  clampP(p){p.x=clamp(p.x,-10,10);p.z=clamp(p.z,4.2,8.6)},
   ai(p,dt){let best=null,bs=1e9;for(const g of this.tg){if(g.hit)continue;const tt=(p.z-.8-g.z)/22,px=g.x+g.v*tt;if(Math.abs(px)>9.6)continue;const s=Math.abs(px-p.x)-(g.gold?4:0)+(g.z<-6?1:0);if(s<bs){bs=s;best={g,px}}}
    p._af^=1;if(!best)return [0,0,false];if(p._err===undefined||R()<dt*1.5)p._err=rnd(-1,1)*(1-p.skill)*1.6;const dx=best.px+p._err-p.x;
    return [clamp(dx*1.4,-1,1),0,Math.abs(dx)<best.g.r*.9&&p._af===1&&R()<.55+p.skill]},
