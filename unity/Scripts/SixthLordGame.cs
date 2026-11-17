@@ -358,9 +358,16 @@ public class SixthLordGame : MonoBehaviour
         shake *= .9f;
         cam.transform.position = new Vector3(Random.Range(-shake, shake), -0.6f + Random.Range(-shake, shake), -10);
         // 막사 누르면 강화
-        if (!over && Input.GetMouseButtonDown(0) && Input.mousePosition.y > Screen.height * .2f && Input.mousePosition.y < Screen.height * .88f)
+        Vector2 mp = Vector2.zero; bool down = false;
+#if ENABLE_INPUT_SYSTEM
+        var ms = UnityEngine.InputSystem.Mouse.current; if (ms != null) { down = ms.leftButton.wasPressedThisFrame; mp = ms.position.ReadValue(); }
+        var ts = UnityEngine.InputSystem.Touchscreen.current; if (!down && ts != null && ts.primaryTouch.press.wasPressedThisFrame) { down = true; mp = ts.primaryTouch.position.ReadValue(); }
+#else
+        down = Input.GetMouseButtonDown(0); mp = Input.mousePosition;
+#endif
+        if (!over && down && mp.y > Screen.height * .2f && mp.y < Screen.height * .88f)
         {
-            var wp = cam.ScreenToWorldPoint(Input.mousePosition); Ent best = null; float bd = .8f;
+            var wp = cam.ScreenToWorldPoint(new Vector3(mp.x, mp.y, 10)); Ent best = null; float bd = .8f;
             foreach (var p in plots[0]) if (p.b != null) { float d = Vector2.Distance(wp, WP(p.b.x, p.b.y)); if (d < bd) { bd = d; best = p.b; } }
             if (best != null) { if (!Upgrade(0, best)) toast = best.lv >= 3 ? "최고 단계예요 ★★★" : "강화에 금화 " + UpCost(best) + " 필요해요"; else toast = Get(best.id).nm + " ★" + best.lv + " · 더 빨리, 더 강하게!"; toastT = 1.5f; }
         }
