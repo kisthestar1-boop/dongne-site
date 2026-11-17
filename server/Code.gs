@@ -29,7 +29,7 @@ function doPost(e) {
       const code = r.getResponseCode();
       if (code === 404) { last = "모델 없음 " + m; continue; }
       const j = JSON.parse(r.getContentText());
-      if (code === 503 || code === 500) { last = (j.error && j.error.message) || ("오류 " + code); continue; }
+      if (code === 503 || code === 500 || code === 429) { last = (j.error && j.error.message) || ("오류 " + code); continue; }
       if (code >= 400) return out({ error: (j.error && j.error.message) || ("오류 " + code) });
       return out(j);
     }
