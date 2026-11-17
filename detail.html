@@ -68,7 +68,7 @@ h2{font-size:clamp(1.6rem,3.2vw,2.3rem);line-height:1.25;letter-spacing:-.03em;m
 @media (max-width:900px){.gal{grid-template-columns:repeat(2,1fr)}}
 .gc{background:var(--card);border:1px solid var(--ln);border-radius:18px;overflow:hidden;cursor:zoom-in;text-align:left;padding:0;color:var(--ink)}
 .gc .th{height:360px;overflow:hidden;background:#f3f0f7}
-.gc .th img{width:100%;height:auto}
+.gc .th img{width:100%;height:auto;transition:transform 6s ease}.gc:hover .th img{transform:translateY(calc(-100% + 360px))}
 .gc .cap{padding:12px 14px;display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:.86rem}
 .gc .cap b{font-weight:800}.gc .cap span{font-size:.72rem;color:var(--mu);background:var(--bg);border-radius:99px;padding:2px 9px}
 .note{font-size:.78rem;color:var(--mu);margin-top:14px}
@@ -269,7 +269,7 @@ footer{padding:40px 0 60px;color:var(--mu);font-size:.8rem;text-align:center}
   <div class="out">
    <div class="hd"><b>미리보기</b><small id="sz"></small><span class="sp"></span>
     <div class="dl"><select id="wsel" aria-label="쇼핑몰 규격"><option value="780">쿠팡 · 780px</option><option value="860" selected>네이버 스마트스토어 · 860px</option><option value="831">11번가 · 831px</option><option value="860">지마켓 · 860px</option><option value="860">지그재그 · 860px</option><option value="880">에이블리 · 880px</option><option value="890">카카오 선물하기 · 890px</option><option value="1000">무신사 · 1000px</option><option value="1000">토스쇼핑 · 1000px</option></select>
-    <select id="split" aria-label="나누기"><option value="0">한 장으로</option><option value="1200">1200px씩 나누기</option><option value="2000">2000px씩 나누기</option></select>
+    <select id="split" aria-label="나누기"><option value="0">한 장으로</option><option value="1200">1200px씩 나누기</option><option value="2000">2000px씩 나누기</option><option value="-1">섹션별로 나누기</option></select>
     <button class="btn pr sm" id="save" type="button">⬇ JPG 저장</button><button class="btn gh sm" id="mkt" type="button">📣 썸네일·인스타 이미지</button></div></div>
    <div class="law" id="law"></div>
    <div class="pv"><canvas id="cv"></canvas></div>
@@ -571,7 +571,7 @@ $("#file").onchange=e=>{addFiles(e.target.files);e.target.value=""};
 $("#drop").addEventListener("drop",e=>addFiles(e.dataTransfer.files));
 $("#thumbs").onclick=e=>{const b=e.target.closest("[data-x]");if(!b)return;const i=+b.dataset.x;SRC.splice(i,1);IM.splice(i,1);thumbs();draw()};
 $("#save").onclick=()=>{const W=+$("#wsel").value,sp=+$("#split").value;const cv=document.createElement("canvas");const H=renderAny(cv,S,IM,W);
- const base=(S.name||"상세페이지").replace(/[\\/:*?"<>|\s]+/g,"_");const parts=[];if(!sp)parts.push([0,H]);else for(let y=0;y<H;y+=sp)parts.push([y,Math.min(sp,H-y)]);
+ const base=(S.name||"상세페이지").replace(/[\\/:*?"<>|\s]+/g,"_");const parts=[];if(sp===-1&&cv._rg){const ys=[...new Set(cv._rg.flatMap(r=>[Math.round(r.y0),Math.round(r.y1)]))].sort((a,b)=>a-b);for(let j=0;j<ys.length-1;j++)if(ys[j+1]-ys[j]>40)parts.push([ys[j],ys[j+1]-ys[j]])}else if(sp===-1)parts.push([0,H]);else if(!sp)parts.push([0,H]);else for(let y=0;y<H;y+=sp)parts.push([y,Math.min(sp,H-y)]);
  parts.forEach(([y,h],i)=>{const o=document.createElement("canvas");o.width=W;o.height=h;o.getContext("2d").drawImage(cv,0,y,W,h,0,0,W,h);
   setTimeout(()=>o.toBlob(b=>{const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=base+(parts.length>1?`_${String(i+1).padStart(2,"0")}`:"")+".jpg";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),4000)},"image/jpeg",.9),i*350)});
  $("#ok").textContent=`✓ ${W}px · ${parts.length}장 저장했어요`};
@@ -579,7 +579,7 @@ $("#save").onclick=()=>{const W=+$("#wsel").value,sp=+$("#split").value;const cv
 const lb=$("#lb");
 const FONTS_OK=Promise.all(["400","500","700","800","900"].map(w=>document.fonts.load(w+" 20px Pretendard")).concat([document.fonts.load('italic 500 20px "Playfair Display"'),document.fonts.load('800 20px "Nanum Myeongjo"'),document.fonts.load('900 20px "Noto Sans KR"')])).catch(()=>{});
 (async()=>{await document.fonts.ready;await FONTS_OK;const ims=await Promise.all(EX.map(e=>load(e.img)));
- const gal=$("#gal");EX.forEach((e,i)=>{const cv=document.createElement("canvas");render(cv,e,ims[i]?[ims[i]]:[],860);const url=cv.toDataURL("image/jpeg",.82);
+ const gal=$("#gal");EX.forEach((e,i)=>{let url=e.page;if(!url){const cv=document.createElement("canvas");render(cv,e,ims[i]?[ims[i]]:[],860);url=cv.toDataURL("image/jpeg",.82)}
   const b=document.createElement("button");b.className="gc";b.innerHTML=`<div class="th"><img src="${url}" alt="${e.name} 상세페이지 예시"></div><div class="cap"><b>${e.name}</b><span>${CAT[e.cat].n} · ${TPL[e.tpl].n}</span></div>`;
   b.onclick=()=>{$("#lbImg").src=url;lb.classList.add("on")};gal.appendChild(b);if(i===0){$("#phImg").src=url;$("#dmName").textContent=e.name;$("#dmPic").src=e.img}
   const sd=document.createElement("img");sd.src=url;sd.alt="";(i%2?$("#sideR"):$("#sideL")).appendChild(sd);const sd2=sd.cloneNode();sd2.style.objectPosition="center 40%";(i%2?$("#sideL"):$("#sideR")).appendChild(sd2)});
