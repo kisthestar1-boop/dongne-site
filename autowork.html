@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>일 대신 해 드려요</title>
+<style>
+:root{--bg:#FFF8EC;--ink:#2B2118;--y:#FFD66B;--b:#7FD3FF;--g:#2E9E5B;--line:#E9D9BC}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;font-size:20px;line-height:1.5;min-height:100vh}
+.wrap{max-width:560px;margin:0 auto;padding:22px 18px 120px}
+.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.top b{font-size:1.15rem}.help{background:#fff;border:2px solid var(--line);border-radius:14px;padding:8px 14px;font-size:1rem;font-weight:800;cursor:pointer}
+h1{font-size:1.6rem;line-height:1.35;margin:6px 0 18px}
+.big{display:flex;align-items:center;gap:14px;width:100%;border:0;border-radius:22px;padding:22px 20px;font-size:1.4rem;font-weight:900;color:var(--ink);cursor:pointer;margin-bottom:14px;text-align:left;box-shadow:0 4px 0 rgba(0,0,0,.12)}
+.big span{font-size:2.2rem}.big small{display:block;font-size:1rem;font-weight:600;opacity:.8}
+.y{background:var(--y)}.bl{background:var(--b)}.gr{background:var(--g);color:#fff}
+.step{display:none}.step.on{display:block}
+.card{background:#fff;border:2px solid var(--line);border-radius:18px;padding:16px 18px;margin-bottom:12px}
+.num{display:inline-flex;width:34px;height:34px;border-radius:50%;background:var(--y);align-items:center;justify-content:center;font-weight:900;margin-right:8px}
+.row{display:flex;gap:10px;margin-top:10px}.row button{flex:1}
+.sm{border:0;border-radius:16px;padding:16px;font-size:1.15rem;font-weight:900;cursor:pointer}
+.mic{width:120px;height:120px;border-radius:50%;border:0;background:#FF8A8A;color:#fff;font-size:3rem;margin:10px auto;display:block;cursor:pointer;box-shadow:0 6px 0 rgba(0,0,0,.12)}
+.mic.on{background:#E5484D;box-shadow:0 0 0 10px rgba(229,72,77,.25)}
+textarea{width:100%;min-height:120px;border:2px solid var(--line);border-radius:14px;padding:12px;font-size:1.15rem;font-family:inherit}
+.note{font-size:1rem;color:#7A6650;margin-top:8px}
+.back{background:none;border:0;font-size:1.05rem;color:#7A6650;font-weight:800;margin-bottom:10px;cursor:pointer}
+.bar{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:2px solid var(--line);padding:12px 18px;display:flex;justify-content:center}
+.bar button{max-width:560px;width:100%;border:0;border-radius:16px;padding:16px;font-size:1.15rem;font-weight:900;background:#FFE9E9;color:#B42318;cursor:pointer}
+.proto{font-size:.85rem;background:#FFF1C2;border-radius:10px;padding:6px 10px;margin-bottom:12px;color:#6B4E00}
+video{width:100%;border-radius:14px;margin-top:8px;background:#000}
+</style></head><body>
+<div class="wrap">
+ <div class="top"><b>🤖 일 대신 해 드려요</b><button class="help" onclick="helpMe()">📞 도와주세요</button></div>
+ <div class="proto">🧪 시제품이에요 · 화면과 순서를 먼저 시험하고 있어요</div>
+
+ <section class="step on" id="s0">
+  <h1>무엇을 대신<br>해 드릴까요?</h1>
+  <button class="big y" onclick="go('s1')"><span>📹</span><div>하는 모습 찍기<small>평소처럼 한 번 해 보이면 돼요</small></div></button>
+  <button class="big bl" onclick="pickFile()"><span>📎</span><div>파일 올리기<small>엑셀·사진·문서 무엇이든</small></div></button>
+  <button class="big gr" onclick="go('s4')"><span>▶</span><div>지난번 일 다시 해 줘<small>버튼 하나면 끝</small></div></button>
+  <p class="note">🎤 말로 해도 돼요 · 결과는 카톡이나 문자로 보내 드려요</p>
+  <input type="file" id="file" hidden onchange="gotFile(this)">
+ </section>
+
+ <section class="step" id="s1">
+  <button class="back" onclick="go('s0')">← 처음으로</button>
+  <h1>화면을 찍을게요</h1>
+  <div class="card"><span class="num">1</span>아래 <b>찍기 시작</b>을 누르세요</div>
+  <div class="card"><span class="num">2</span>평소처럼 그 일을 <b>한 번</b> 해 보세요</div>
+  <div class="card"><span class="num">3</span>다 끝나면 <b>다 했어요</b>를 누르세요</div>
+  <button class="big y" id="recB" onclick="rec()"><span>⏺</span><div>찍기 시작</div></button>
+  <video id="vid" controls hidden></video>
+ </section>
+
+ <section class="step" id="s2">
+  <button class="back" onclick="go('s0')">← 처음으로</button>
+  <h1>무슨 일인지<br>말로 알려 주세요</h1>
+  <button class="mic" id="micB" onclick="listen()">🎤</button>
+  <p class="note" style="text-align:center" id="micT">마이크를 누르고 말하세요<br>예) "매일 아침 주문서를 엑셀에 옮겨요"</p>
+  <textarea id="say" placeholder="여기에 글로 써도 돼요"></textarea>
+  <button class="big gr" style="margin-top:14px" onclick="makeSteps()"><span>✨</span><div>순서 정리해 줘</div></button>
+ </section>
+
+ <section class="step" id="s3">
+  <h1>이렇게 하면<br>맞나요?</h1>
+  <div id="steps"></div>
+  <div class="row"><button class="sm" style="background:var(--g);color:#fff" onclick="go('s5')">👍 네, 맞아요</button><button class="sm" style="background:#eee" onclick="go('s2')">✏️ 다시 말할게요</button></div>
+ </section>
+
+ <section class="step" id="s4">
+  <button class="back" onclick="go('s0')">← 처음으로</button>
+  <h1>지난번 일</h1>
+  <div id="saved"></div>
+ </section>
+
+ <section class="step" id="s5">
+  <h1>✅ 저장했어요!</h1>
+  <div class="card" style="font-size:1.15rem">다음부터는 처음 화면에서<br><b>▶ 지난번 일 다시 해 줘</b>만 누르면 돼요.</div>
+  <div class="card">📱 결과 받을 곳 (카톡·문자)<br><input id="phone" inputmode="tel" placeholder="휴대폰 번호" style="width:100%;margin-top:8px;border:2px solid var(--line);border-radius:12px;padding:12px;font-size:1.15rem"></div>
+  <button class="big y" onclick="go('s0')"><span>🏠</span><div>처음으로</div></button>
+ </section>
+</div>
+<div class="bar"><button onclick="helpMe()">📞 막히셨나요? 눌러 주세요</button></div>
+<script>
+const $=s=>document.querySelector(s);
+function go(id){document.querySelectorAll('.step').forEach(e=>e.classList.toggle('on',e.id===id));scrollTo(0,0);if(id==='s4')showSaved()}
+function pickFile(){$('#file').click()}
+function gotFile(i){if(i.files[0]){job.file=i.files[0].name;go('s2')}}
+let job={},mr=null,chunks=[];
+async function rec(){const b=$('#recB');
+ if(mr){mr.stop();return}
+ try{const st=await navigator.mediaDevices.getDisplayMedia({video:true,audio:false});mr=new MediaRecorder(st);chunks=[];mr.ondataavailable=e=>chunks.push(e.data);
+  mr.onstop=()=>{st.getTracks().forEach(t=>t.stop());const v=$('#vid');v.src=URL.createObjectURL(new Blob(chunks,{type:'video/webm'}));v.hidden=false;job.video=1;mr=null;b.innerHTML='<span>➡</span><div>다음: 말로 설명하기</div>';b.onclick=()=>go('s2')};
+  mr.start();b.innerHTML='<span>⏹</span><div>다 했어요</div>'}
+ catch(e){alert('이 기기에서는 화면 찍기가 안 돼요.\n대신 말로 설명해 주세요.');go('s2')}}
+function listen(){const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){$('#micT').textContent='이 기기에서는 말하기가 안 돼요 · 아래에 글로 써 주세요';return}
+ const r=new SR();r.lang='ko-KR';r.interimResults=true;const b=$('#micB');b.classList.add('on');$('#micT').textContent='듣고 있어요…';
+ r.onresult=e=>{$('#say').value=[...e.results].map(x=>x[0].transcript).join(' ')};r.onend=()=>{b.classList.remove('on');$('#micT').textContent='다 들었어요! 아래에서 확인하세요'};r.start()}
+function makeSteps(){const t=$('#say').value.trim();if(!t){$('#micT').textContent='먼저 말하거나 써 주세요';return}
+ job.say=t;const parts=t.split(/[,.·→\n]|그리고|다음에|그 다음/).map(x=>x.trim()).filter(x=>x.length>1);
+ const S=(parts.length?parts:[t]).slice(0,6);job.steps=S;
+ $('#steps').innerHTML=S.map((x,i)=>`<div class="card"><span class="num">${i+1}</span>${x}</div>`).join('')+(job.file?`<div class="card">📎 ${job.file}</div>`:'')+(job.video?`<div class="card">📹 찍은 화면도 함께 볼게요</div>`:'');
+ go('s3');try{const L=JSON.parse(localStorage.getItem('aw_jobs')||'[]');L.unshift({at:Date.now(),...job});localStorage.setItem('aw_jobs',JSON.stringify(L.slice(0,10)))}catch(_){}}
+function showSaved(){let L=[];try{L=JSON.parse(localStorage.getItem('aw_jobs')||'[]')}catch(_){}
+ $('#saved').innerHTML=L.length?L.map((j,i)=>`<div class="card"><b>${new Date(j.at).toLocaleDateString('ko-KR')}</b><br>${j.say}<div class="row"><button class="sm" style="background:var(--g);color:#fff" onclick="runAgain(${i})">▶ 다시 해 줘</button></div></div>`).join(''):'<div class="card">아직 저장한 일이 없어요.<br>처음 화면에서 <b>📹 하는 모습 찍기</b>부터 해 보세요.</div>'}
+function runAgain(i){alert('✅ 맡겼어요!\n끝나면 카톡·문자로 알려 드릴게요.\n(시제품: 실제 실행은 준비 중이에요)')}
+function helpMe(){alert('📞 도움 요청을 보냈어요.\n곧 연락드릴게요.\n(시제품: 실제 연결은 준비 중이에요)')}
+</script></body></html>
