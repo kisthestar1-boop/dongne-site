@@ -500,7 +500,7 @@ lb.onclick=e=>{if(e.target===lb)lb.classList.remove("on")};
 /* ===== AI (Gemini) — 베타: 사용자의 키로 브라우저에서 직접 호출 ===== */
 const LS={get:k=>{try{return localStorage.getItem(k)}catch(e){return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}}};
 const TXT_MODELS=["gemini-3.1-flash","gemini-3-flash","gemini-2.5-flash"],IMG_MODELS=["gemini-3.1-flash-image","gemini-2.5-flash-image"];
-const PROXY="__PROXY__";
+const PROXY="https://script.google.com/macros/s/AKfycbz09Pualc3dVyOYhjRIBLY1lVpeZMpi8YMoUFlBcqWjJ30gKJagm0HAhio3rFaIf_E/exec";
 async function gem(models,body,key){const op=models===IMG_MODELS?"scene":"copy";
  if(PROXY&&!PROXY.startsWith("__")&&!key){const r=await fetch(PROXY,{method:"POST",body:JSON.stringify({op,body})});const j=await r.json();if(j.error)throw new Error(j.error);return j}
  let last;for(const m of models){const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent`,{method:"POST",headers:{"Content-Type":"application/json","x-goog-api-key":key},body:JSON.stringify(body)});
