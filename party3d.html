@@ -248,7 +248,7 @@ function burst(x,y,z,col,n,sp,conf){for(let i=0;i<n;i++){const m=new THREE.Mesh(
 function confetti(n){cheer=Math.max(cheer,1.6);for(let i=0;i<n;i++){const m=new THREE.Mesh(fxBox,new THREE.MeshBasicMaterial({color:fpick(["#FFE066","#FF7AA8","#7AD9FF","#9BE58A","#C59BFF","#fff"]),transparent:true,side:THREE.DoubleSide}));m.position.set(frnd(-10,10),frnd(10,16),frnd(-6,8));scene.add(m);FX.push({m,vx:frnd(-1,1),vy:frnd(-2,0),vz:frnd(-1,1),life:frnd(3,5),max:5,rs:frnd(-8,8),g:3})}}
 function upFX(dt){for(let i=FX.length-1;i>=0;i--){const f=FX[i];f.life-=dt;f.vy-=(f.g||18)*dt;f.m.position.x+=f.vx*dt;f.m.position.y+=f.vy*dt;f.m.position.z+=f.vz*dt;if(f.rs){f.m.rotation.x+=f.rs*dt;f.m.rotation.y+=f.rs*dt*.7}
   f.m.material.opacity=clamp(f.life/f.max*2,0,1);if(f.life<=0){scene.remove(f.m);f.m.material.dispose();FX.splice(i,1)}}}
-let shake=0,HS=0;/* 타격감: 아주 짧게 멈칫(히트스톱) + 묵직한 소리 */function hitStop(t){HS=Math.max(HS,Math.min(.16,t))}function thwack(big){try{noise(big?.12:.07,big?.45:.3);tone(big?150:230,big?.18:.1,"square",big?.14:.1,big?50:90)}catch(_){}}
+let shake=0,HS=0;function emo(p,k,t){if(!p)return;p.emoK=k;p.emoT=t||.8}/* 타격감: 아주 짧게 멈칫(히트스톱) + 묵직한 소리 */function hitStop(t){HS=Math.max(HS,Math.min(.16,t))}function thwack(big){try{noise(big?.12:.07,big?.45:.3);tone(big?150:230,big?.18:.1,"square",big?.14:.1,big?50:90)}catch(_){}}
 const banner=$("#banner");let bT=0;function say(s,col,d){s=L10(s);banner.textContent=s;banner.style.color=col||"#FFE066";banner.classList.add("on");bT=d||1}
 
 /* ---------- 입력 ---------- */
@@ -1079,6 +1079,7 @@ const GAMES=[
   throwB(p){const b=this.b;const foes=P.filter(q=>!q.out&&q.team!==p.team);if(!foes.length)return;let tg=foes.reduce((a,q)=>Math.hypot(q.x-p.x,q.z-p.z)<Math.hypot(a.x-p.x,a.z-p.z)?q:a,foes[0]);
    const fire=p.gauge>=2;const sp=fire?19:14;const lead=Math.hypot(tg.x-p.x,tg.z-p.z)/sp*.6;const ax=tg.x+tg.vx*lead-p.x,az=tg.z+tg.vz*lead-p.z,l=Math.hypot(ax,az)||1;
    b.h=null;b.th=p;b.fire=fire;b.vx=ax/l*sp;b.vz=az/l*sp;b.x=p.x+ax/l*1.1;b.z=p.z+az/l*1.1;p.face=Math.atan2(ax,az);p.hold=0;p.ccd=.4;
+   emo(p,"joy",.7);if(tg&&!tg.out){emo(tg,"wow",1.1);if(!fire)popTxt(tg,pick([t("앗!","Eek!"),t("히익~","Yikes~"),t("으앗!","Whoa!"),t("나야?!","Me?!")]),"#FFFFFF",20)}
    if(fire){p.gauge=0;SND.boom();thwack(1);hitStop(.12);shake=Math.max(shake,.4);say(tg.you?t("불꽃슛이 온다! 피해요!! 🔥","FIRE SHOT! DODGE!! 🔥"):t("불꽃슛!! 🔥","FIRE SHOT!! 🔥"),"#FF8A1F",1.1);burst(p.x,1.2,p.z,"#FF8A1F",22,8)}else{SND.dash();thwack(0);popTxt(p,pick([t("받아라~!","Take this!"),t("슝!","Whoosh!"),t("에잇!","Hiyah!")]),"#FFE066",22)}renderChips()},
   update(dt,T){const b=this.b,W=this.W,H=this.H;if(!this.said){this.said=1;say(t("받기는 맞기 직전에 탁! 🔥","Catch right before it hits! 🔥"),"#FFE066",1.6)}
    for(const p of P){p.ct-=dt;p.ccd-=dt;p.hi-=dt;if(p.out)continue;const tp=state==="play"&&tapped(p);
@@ -1093,12 +1094,12 @@ const GAMES=[
      for(const q of P){if(q.out)continue;const d=Math.hypot(q.x-b.x,q.z-b.z);
       if(b.th&&b.th.team!==q.team&&d<1.85&&q.hi<=0){
        if(q.ct>0&&b.fire&&q.you&&!q._fwarn){q._fwarn=1;say(t("불꽃슛은 못 받아요! 피해야 해요 🔥","Can't catch fire! Dodge it 🔥"),"#FF8A1F",1)}
-       if(q.ct>0&&!b.fire){b.h=q;b.th=null;q.hold=0;q.gauge=Math.min(2,q.gauge+1);q.ct=0;SND.coin();thwack(0);hitStop(.09);burst(q.x,1.2,q.z,"#FFE066",16,6);
+       if(q.ct>0&&!b.fire){b.h=q;b.th=null;q.hold=0;q.gauge=Math.min(2,q.gauge+1);q.ct=0;SND.coin();thwack(0);hitStop(.09);burst(q.x,1.2,q.z,"#FFE066",16,6);emo(q,"joy",1.2);
         popTxt(q,q.gauge>=2?t("나이스 캐치! 🔥 불꽃 준비!","Nice catch! 🔥 READY!"):t("나이스 캐치!","Nice catch!"),"#FFE066",q.you?32:24);if(q.you&&q.gauge>=2)say(t("불꽃슛 준비! 🔥","FIRE SHOT READY! 🔥"),"#FF8A1F",1.1);renderChips()}
-       else{const th=b.th;q.lv-=1;q.hi=1;q.stun=.5;const nx=b.vx/(sp||1),nz=b.vz/(sp||1);q.ex+=nx*(b.fire?14:8);q.ez+=nz*(b.fire?14:8);q.vy=b.fire?7:4.5;q.grounded=false;th.hitsN++;th.score=th.hitsN;
+       else{const th=b.th;q.lv-=1;q.hi=1;emo(q,"ouch",1.1);emo(th,"joy",1);q.stun=.5;const nx=b.vx/(sp||1),nz=b.vz/(sp||1);q.ex+=nx*(b.fire?14:8);q.ez+=nz*(b.fire?14:8);q.vy=b.fire?7:4.5;q.grounded=false;th.hitsN++;th.score=th.hitsN;
         SND.boom();thwack(1);hitStop(b.fire?.16:.1);shake=Math.max(shake,b.fire?.55:.35);burst(q.x,1.1,q.z,b.fire?"#FF8A1F":"#FF6B6B",b.fire?26:16,8);
         b.vx=-b.vx*.25;b.vz=-b.vz*.25+rnd(-2,2);b.th=null;b.fire=false;
-        if(q.lv<=0)eliminate(q);else{popTxt(q,"❤️".repeat(q.lv),"#FF6B6B",26);if(q.you)say(t("아야! ❤️ "+q.lv,"Ouch! ❤️ "+q.lv),"#FF9BB5",.8)}renderChips()}
+        if(q.lv<=0)eliminate(q);else{popTxt(q,pick([t("아야~","Ouch~"),t("으앙!","Waah!"),t("앗 따가!","Ow!")])+" "+"❤️".repeat(q.lv),"#FF6B6B",24);if(q.you)say(t("아야! ❤️ "+q.lv,"Ouch! ❤️ "+q.lv),"#FF9BB5",.8)}renderChips()}
        break}
       if(!b.th&&!b.h&&d<1.6&&q.stun<=0){b.h=q;q.hold=0;SND.tick();break}}}}
    this.bl.position.set(b.x,b.y,b.z);{const sp2=Math.hypot(b.vx,b.vz);if(sp2>1){this.bl.rotation.y=Math.atan2(b.vx,b.vz)}else if(b.h){this.bl.rotation.y=b.h.face+Math.PI}this.bl.rotation.z=Math.sin(GT*6)*.12}this.fireM.visible=!!b.fire;if(b.fire){this.fireM.scale.setScalar(1+Math.sin(GT*30)*.12);if(R()<.7)burst(b.x,b.y,b.z,"#FF8A1F",2,2)}
@@ -1148,7 +1149,7 @@ const GAMES=[
   doServe(p){const b=this.b,s=p.team?-1:1;this.server=null;this.last=p;p.sw=.32;p.swHit=1;b.x=p.x+s*.8;b.y=p.y+1.6;b.z=p.z;b.vx=s*rnd(6.4,7.2);b.vy=rnd(8.4,9.2);b.vz=clamp(-p.z*.25+rnd(-1.5,1.5),-3,3);this.clear(b);SND.bump();thwack(0);hitStop(.05);burst(b.x,b.y,b.z,"#FFFFFF",10,4);popTxt(p,t("서브~!","Serve!"),"#FFE066",22)},
   point(team,why){this.S[team]++;this.rally=0;hitStop(.14);P.forEach(p=>p.score=this.S[p.team]);SND.coin();confetti(6);
    const mine=P.find(p=>p.you);const good=mine&&mine.team===team;say((why||"")+(good?t(" 득점! 🎉"," POINT! 🎉"):t(" 실점 ㅠㅠ"," Lost a point")),good?"#FFE066":"#FF9BB5",1.2);
-   this.serveSide=team===0?1:-1;this.wait=1.3;this.b.y=-5;renderChips()},
+   this.serveSide=team===0?-1:1;this.wait=1.3;this.b.y=-5;renderChips()},
   update(dt,T){const b=this.b,W=this.W,H=this.H;if(!this.said){this.said=1;say(t("셔틀콕이 오면 휘둘러요! 🏸","Swing when it comes! 🏸"),"#FFE066",1.6)}
    for(const p of P){p.sw-=dt;p.swc-=dt;if(!p.out&&state==="play"&&tapped(p)&&p.swc<=0){if(this.server===p){this.doServe(p);p.swc=.42;continue}if(this.server)continue;p.sw=.32;p.swc=.42;p.swHit=0;SND.dash()}
     const u=p.sw>0?1-p.sw/.32:-1;this.pose(p,u)}
@@ -1167,7 +1168,7 @@ const GAMES=[
        else{b.vx=s*rnd(6.6,7.6);b.vy=rnd(8.5,9.5);b.vz=tz*.2;SND.bump();thwack(0);hitStop(.05);burst(b.x,b.y,b.z,"#FFFFFF",10,4);if(R()<.35)popTxt(p,pick([t("탁!","Tok!"),t("넘겨~","Over!"),t("받아라!","Take it!")]),"#FFFFFF",20)}
        this.clear(b);b.sup=sup;if(this.rally%3===2){const rc=P.filter(q=>q.team!==p.team&&!q.out);if(rc.some(q=>q.you))say(t("다음에 치면 점프 스매시! ⚡","Next hit = JUMP SMASH! ⚡"),"#FFE066",.9);else popTxt({x:-s*4,y:2.5,z:0},t("다음은 점프 스매시 ⚡","Jump smash next ⚡"),"#FFE066",22)}
        break}}
-     if(b.y<=.35){b.y=.35;burst(b.x,.3,b.z,"#FFFFFF",10,4);const inC=Math.abs(b.x)<=W+.3&&Math.abs(b.z)<=H+.3;
+     if(b.y<=.35){b.y=.35;burst(b.x,.3,b.z,"#FFFFFF",10,4);const inC=Math.abs(b.x)<=W+1.6&&Math.abs(b.z)<=H+1.6;
       if(inC)this.point(b.x<0?1:0,t("콕!","In!"));else this.point(this.last?1-this.last.team:(b.x<0?0:1),t("아웃!","Out!"))}}}
    const vis=b.y>-1;this.sh.visible=this.shd.visible=vis;this.sh.position.set(b.x,b.y,b.z);
    if(vis){const sp=Math.hypot(b.vx,b.vy,b.vz);if(sp>.5){const dir=new THREE.Vector3(-b.vx,-b.vy,-b.vz).normalize();this.sh.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),dir)}this.shd.position.set(b.x,.03,b.z);const s=clamp(1.4-b.y*.08,.6,1.4);this.shd.scale.set(s,s,s)}},
@@ -1236,7 +1237,7 @@ function animP(dt,T){for(const p of P){if(!p.mesh.visible)continue;const m=p.mes
   p.squash=Math.max(0,(p.squash||0)-dt);const s=p.squash>0?Math.sin(p.squash/.25*Math.PI)*.25:0;const air=!p.grounded&&!p.falling?.08:0;{const K=b.userData.k||1;b.scale.set((1+s)*K,(1-s+air)*K,(1+s)*K)}
   b.rotation.x=p.stun>0?Math.sin(T*25)*.2:(p.falling||p.ko?b.rotation.x+dt*6:clamp(spd/6,0,1)*.12);if(!p.falling&&!p.ko&&p.stun<=0)b.rotation.x+=(clamp(spd/6,0,1)*.16-b.rotation.x)*Math.min(1,dt*8);if(G&&G.id==="tug"&&p._ln!==undefined)b.rotation.x=-p._ln;
   if(G&&G.dancePose)G.dancePose(p,b,T);else if(b.userData.dz){restorePose(b);b.userData.dz=0}
-  if(b.userData.eyes){const bt=(T+p.id*1.7)%3.6,bl=bt<.14?.12:1;b.userData.eyes.forEach(e=>e[0].scale.y=e[1]*bl)}
+  if(b.userData.eyes){if(p.emoT>0)p.emoT-=dt;const ek=p.emoT>0?p.emoK:null;const bt=(T+p.id*1.7)%3.6,bl=ek==="wow"?1.45:ek==="joy"?.25:ek==="ouch"?.12:(bt<.14?.12:1);b.userData.eyes.forEach(e=>{e[0].scale.y=e[1]*bl;e[0].scale.x=ek==="wow"?1.25:ek==="joy"?1.15:1})}
   m.userData.ring.visible=p.grounded&&!p.falling;if(m.userData.arrow){m.userData.arrow.position.y=3.0+Math.sin(T*5)*.15;m.userData.arrow.rotation.y+=dt*2}}}
 
 /* ---------- 화면 (HUD) ---------- */
