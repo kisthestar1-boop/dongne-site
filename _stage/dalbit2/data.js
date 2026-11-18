@@ -8,7 +8,7 @@ window.TOON={
    "g": "회귀 · 판타지",
    "kind": "연재 중",
    "day": "수요일",
-   "by": "글 Claude · 그림 제미나이",
+   "by": "AI 민성",
    "art": {
     "bg": "radial-gradient(120% 90% at 50% 8%,#6a2222 0%,#1b1426 48%,#090c16 100%)",
     "moon": true,
@@ -63,7 +63,7 @@ window.TOON={
    "g": "영지 · 힐링 판타지",
    "kind": "연재 예정",
    "day": "",
-   "by": "글 Claude · 그림 제미나이",
+   "by": "AI 민성",
    "art": {
     "bg": "radial-gradient(120% 90% at 50% 10%,#F6D9A8 0%,#C98F5C 45%,#4A2E2A 100%)",
     "ic": "🧙‍♀️🌿🏰",
@@ -79,7 +79,7 @@ window.TOON={
    "g": "힐링 · 판타지",
    "kind": "연재 예정",
    "day": "",
-   "by": "글 Claude · 그림 제미나이",
+   "by": "AI 민성",
    "art": {
     "bg": "radial-gradient(120% 90% at 50% 15%,#DDEBF6 0%,#8FB3D1 45%,#2A3A55 100%)",
     "ic": "✉️🧝🌌",
@@ -95,7 +95,7 @@ window.TOON={
    "g": "학원 · 성장 판타지",
    "kind": "연재 예정",
    "day": "",
-   "by": "글 Claude · 그림 제미나이",
+   "by": "AI 민성",
    "art": {
     "bg": "radial-gradient(120% 90% at 50% 10%,#E9DDF8 0%,#A48BD6 45%,#2C2350 100%)",
     "ic": "🪄📚✨",

@@ -40,6 +40,7 @@ def bubble(img, text, cx, cy, size=30, tail=None, shout=False, maxw=320):
     d = ImageDraw.Draw(img)
     size = int(size * 1.12)
     f = F(LOUD if shout else TALK, size)
+    text = text.replace("…", "...")
     lines = wrap(d, text, f, maxw)
     lh = size * 1.3
     tw = max(d.textlength(l, font=f) for l in lines); th = lh * len(lines)
@@ -83,6 +84,7 @@ def narration(img, text, x, y, size=26, maxw=560, dark=True):
 
 
 def sfx(img, text, x, y, size=90, color=(255, 255, 255), stroke=(20, 10, 10), rot=-8):
+    text = text.replace("…", "...")
     f = F(LOUD, size)
     tmp = Image.new("RGBA", (int(size * len(text) * 1.2 + 40), int(size * 1.6)), (0, 0, 0, 0))
     d = ImageDraw.Draw(tmp)
@@ -142,7 +144,7 @@ blocks.append((p, 40))
 
 p = panel(6)
 bubble(p, "미끼 노릇이나 해라!", 230, 110, size=34, tail=(280, 230), shout=True)
-bubble(p, "…!", 640, 330, size=34, tail=(560, 420))
+bubble(p, "…!", 560, 600, size=30, tail=(470, 680))
 narration(p, "달아나던 바르크의 손에서, 빼앗긴 조각이 떨어졌다.", 40, p.height - 100, maxw=700)
 blocks.append((p, 0))
 
@@ -200,8 +202,7 @@ sfx(p, "…이번이 마지막이다.", 120, 40, size=46, color=(220, 40, 40), s
 blocks.append((p, 0))
 
 c = card(560)
-center_text(c, "2화 「폐성」에서 계속", 230, F(NARRB, 34), (232, 228, 220))
-center_text(c, "달빛툰 · 글 Claude · 그림 제미나이", 320, F(TALK, 18), (110, 116, 135))
+center_text(c, "2화 「폐성」에서 계속", 250, F(NARRB, 34), (232, 228, 220))
 blocks.append((c, 0))
 
 # 세로로 잇기 (컷 사이 여백 = 연출 속도)
