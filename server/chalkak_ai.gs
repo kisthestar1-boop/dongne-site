@@ -3,8 +3,8 @@
 const TXT = ["gemini-3.5-flash", "gemini-flash-latest", "gemini-2.5-flash", "gemini-3.1-flash-lite"];
 const IMG = ["gemini-3.1-flash-image", "gemini-2.5-flash-image", "gemini-3.1-flash-lite-image"];
 const PRO = ["gemini-3-pro-image", "nano-banana-pro-preview", "gemini-3-pro-image-preview", "gemini-3.1-flash-image"];
-const LIMIT = { copy: 400, scene: 200, poster: 300 }; // 하루 최대 (요금 폭주 방지)
-const PAGE = 50, REDO = 2, FREE_PER_DAY = 15;   // 상세페이지 1건 50크레딧 · 다시 찍기 2크레딧 · 무료 맛보기(대표 컷 1장) 하루 15명 (비용 보호)
+const LIMIT = { copy: 800, scene: 400, poster: 600 }; // 하루 최대 (요금 폭주 방지)
+const PAGE = 50, REDO = 2, FREE_PER_DAY = 30;   // 상세페이지 1건 50크레딧 · 다시 찍기 2크레딧 · 무료 맛보기(대표 컷 1장) 하루 30명 (출시용)
 const PKG = { p50: [5000, 50], p110: [10000, 110], p350: [30000, 350] }; // 원, 크레딧
 const SHEET_NAME = "찰칵상세 주문";
 
