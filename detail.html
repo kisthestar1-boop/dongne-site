@@ -369,7 +369,7 @@ nav .lk{color:#333!important}
 </div></div>
 <div class="qs" id="th"><div class="qb" style="width:min(860px,100%)"><div class="qh"><b>📣 썸네일 · 광고 이미지</b><button type="button" class="qx" onclick="$('#th').classList.remove('on')" aria-label="닫기">✕</button></div><small class="mu2">쇼핑 검색에서 눈길을 끄는 건 첫 사진이에요. 대표 이미지는 흰 배경이 쿠팡·네이버 기준에 가장 안전해요.</small><div id="thG" class="thg"></div></div></div>
 <div class="ed" id="ed"><div class="qh"><b>✏️ 찰칵상세에게 부탁하기</b><button type="button" class="qx" id="edX" aria-label="닫기">✕</button></div><div id="edB"></div><small class="mu2">고치는 대로 바로 그려져요</small></div>
-<div class="prog" id="prog"><div class="pgb"><b>📸 찰칵상세가 상세페이지를 만드는 중이에요</b><small class="mu2">약 3분 걸려요. 완성된 장부터 뒤에 바로 보여요. 창을 닫지 말아 주세요.</small><div class="pbar"><i id="pbarI"></i></div><ul class="pgs" id="pgs"></ul></div></div>
+<div class="prog" id="prog"><div class="pgb"><b>📸 고객님의 소중한 상세페이지를 만들고 있어요</b><small class="mu2">찰칵상세가 사진 한 장 한 장 촬영하듯 정성껏 만들고 있어요. 약 3분이면 끝나요 · 창은 닫지 말아 주세요.</small><div id="pgTip" style="margin:8px 0 2px;padding:8px 12px;border-radius:12px;background:#F6F3FF;color:#5B45C9;font-size:.82rem;font-weight:600;transition:opacity .6s">💡 잘 팔리는 쿠팡 상위 페이지처럼, 사진 위주로 구성하고 있어요</div><div class="pbar"><i id="pbarI"></i></div><ul class="pgs" id="pgs"></ul></div></div>
 <div class="lb" id="lb"><button aria-label="닫기" onclick="lb.classList.remove('on')">✕</button><img id="lbImg" alt="상세페이지 크게 보기"></div>
 
 <script>
@@ -561,9 +561,9 @@ function photoPrompt(sec,name,styled,extra){
  return `Create ONE single photograph (not a poster, not a layout): a realistic, high-end commercial product photo for a top-selling Korean online store detail page.
 Product: ${name} — the product in the FIRST reference image. Reproduce it EXACTLY: same shape, color, material, size proportions and every detail. Do not redesign or embellish it.${styled?" The SECOND reference image is another photo from this same shoot: match its lighting, color grading and overall mood so all photos look like one consistent photoshoot.":""}
 Scene: ${sec.photo||"the product beautifully styled"}.
-Show the product used correctly and at a realistic scale (e.g. a necklace is worn around the neck). People: natural skin, relaxed pose, face cropped out of frame. Hands, if shown, must be anatomically perfect with five natural fingers; when unsure, avoid hands.
+Show exactly ONE instance of the product (never two copies in one photo), used correctly and at a realistic scale (e.g. a necklace is worn around the neck). People: natural skin, relaxed pose, face cropped out of frame. Hands, if shown, must be anatomically perfect with five natural fingers; when unsure, avoid hands.
 Style: soft natural daylight, true-to-life colors, shallow depth of field, sharp focus on the product, clean minimal background, premium magazine-quality photography.
-${extra?"Extra request: "+extra+"\n":""}ABSOLUTELY NO text, letters, numbers, logos, watermarks, borders, frames or graphic elements anywhere in the image.`}
+${extra?"Extra request: "+extra+"\n":""}ABSOLUTELY NO text, letters, numbers, rulers, measuring tapes, logos, watermarks, borders, frames or graphic elements anywhere in the image.`}
 function renderGallery(cv,d,W=860){const k=W/860,P=44*k,IW=W-2*P;const c=cv.getContext("2d");const ink="#1E1E22",mu="#7A7A84",acc=d.acc||"#B08D57",bg="#FFFFFF",bg2="#F6F5F2";
  const ph=d.sec.filter(s=>s.img);let est=0;for(const s of ph)est+=Math.round(IW*s.img.height/s.img.width)+24*k;cv.width=W;cv.height=est+6000*k;
  c.fillStyle=bg;c.fillRect(0,0,W,cv.height);c.textBaseline="top";const RG=[];cv._rg=RG;let y=0;
@@ -572,7 +572,7 @@ function renderGallery(cv,d,W=860){const k=W/860,P=44*k,IW=W-2*P;const c=cv.getC
  /* 브랜드 머리 */
  let y0=y;y+=64*k;F(15,"600 ");sp((d.brand||"SELECT SHOP").toUpperCase(),W/2,y,7,acc);y+=40*k;F(40,"700 ",SER);txt(d.hook||d.name||"",W/2,y);y+=70*k;c.fillStyle=acc;c.fillRect(W/2-18*k,y,36*k,2*k);y+=40*k;RG.push({y0,y1:y,keys:["brand","hook"]});
  const photo=(i)=>{const s=d.sec[i];if(!s||!s.img)return;const h=Math.round(IW*s.img.height/s.img.width);const yy=y;c.drawImage(s.img,P,y,IW,h);RG.push({y0:yy,y1:yy+h,sec:i});y+=h+20*k};
- const head=(gi)=>{const hd=(d.gh||[])[gi]||{};const yy=y;y+=70*k;F(14,"600 ");sp(String(hd.en||GAL_G[gi][1]).toUpperCase(),W/2,y,6,acc);y+=34*k;F(34,"700 ",SER);txt(hd.h||GAL_G[gi][1],W/2,y);y+=58*k;if(hd.b){F(21,"400 ");txt(hd.b,W/2,y,"center",mu);y+=44*k}y+=26*k;RG.push({y0:yy,y1:y,keys:["gh"+gi]})};
+ const head=(gi)=>{const gl=d["gh"+gi]!=null?String(d["gh"+gi]).split("\n"):null;const hd=gl?{en:gl[0],h:gl[1],b:gl[2]}:((d.gh||[])[gi]||{});const yy=y;y+=70*k;F(14,"600 ");sp(String(hd.en||GAL_G[gi][1]).toUpperCase(),W/2,y,6,acc);y+=34*k;F(34,"700 ",SER);txt(hd.h||GAL_G[gi][1],W/2,y);y+=58*k;if(hd.b){F(21,"400 ");txt(hd.b,W/2,y,"center",mu);y+=44*k}y+=26*k;RG.push({y0:yy,y1:y,keys:["gh"+gi]})};
  const byG=g=>d.sec.map((s,i)=>[s,i]).filter(([s])=>s.g===g&&s.img).map(([,i])=>i);
  byG("hero").forEach(photo);
  /* 상품 소개 */
@@ -589,7 +589,7 @@ function renderGallery(cv,d,W=860){const k=W/860,P=44*k,IW=W-2*P;const c=cv.getC
  y+=30*k;F(17,"400 ");txt("이 페이지의 연출 이미지는 AI로 제작되었으며, 실제 상품과 색감·크기가 조금 다를 수 있어요.",W/2,y,"center",mu);y+=80*k;
  const out=document.createElement("canvas");out.width=W;out.height=Math.ceil(y);out.getContext("2d").drawImage(cv,0,0);cv.width=W;cv.height=out.height;cv.getContext("2d").drawImage(out,0,0);return cv.height}
 async function runGallery(nm,cat){const key=($("#qsKey").value||"").trim();const file=qFiles[0];
- const steps=[["찰칵상세가 상품을 파악하고 사진 14장을 기획하는 중","on"]];$("#qs").classList.remove("on");$("#prog").classList.add("on");pgSet(steps);
+ const steps=[["고객님 상품을 꼼꼼히 살펴보고 촬영 계획을 세우는 중","on"]];$("#qs").classList.remove("on");$("#prog").classList.add("on");pgSet(steps);
  let plan=null;for(let t=0;t<3&&!plan;t++){try{plan=await aiPlanG(key,file,nm)}catch(e){if(t===2)steps[0]=["기획 실패: "+e.message,"er"];else await new Promise(r=>setTimeout(r,2500))}}
  if(!plan){pgSet(steps);return runPoster(nm,cat)}
  steps[0][1]="ok";if(plan.cat&&CAT[plan.cat])S.cat=plan.cat;if(!nm&&plan.name)S.name=plan.name;S.brand=plan.brand||"";S.hook=plan.hook||"";S.story=plan.story||"";S.gal=1;
@@ -597,7 +597,7 @@ async function runGallery(nm,cat){const key=($("#qsKey").value||"").trim();const
  S.care=(plan.care||[]).join("\n");S.gh=(plan.heads||[]).slice(0,5);S.gh.forEach((h,i)=>{S["gh"+i]=[h.en||"",h.h||"",h.b||""].join("\n")});
  const order={hero:0,wear:1,detail:2,scale:3,gift:4};const ph=plan.photos.filter(p=>order[p.g]!=null).sort((a,b)=>order[a.g]-order[b.g]).slice(0,14);
  S.sec=ph.map(p=>({g:p.g,photo:p.photo||"",img:null,h:"",b:"",items:[]}));
- S.sec.forEach((s,i)=>steps.push([(i?"사진 "+(i+1)+" · "+GAL_G[order[s.g]][1]:"사진 1 · 대표 컷 (전체 톤 정하기)"),""]));steps.push(["상세페이지 이어 붙이기",""]);pgSet(steps);
+ const GL={hero:"대표 컷 촬영 (페이지 분위기 정하기)",wear:"착용 컷 촬영",detail:"디테일 컷 촬영",scale:"실제 크기 컷 촬영",gift:"선물 · 무드 컷 촬영"};S.sec.forEach((s,i)=>steps.push(["사진 "+(i+1)+" · "+GL[s.g],""]));steps.push(["고객님 페이지로 예쁘게 이어 붙이는 중",""]);pgSet(steps);
  const one=async(i,style)=>{steps[i+1][1]="on";pgSet(steps);let fix="";const ar=S.sec[i].g==="hero"||S.sec[i].g==="wear"?"4:5":"1:1";
   for(let t=0;t<3;t++){try{const im=await aiPoster(key,file,style,photoPrompt(S.sec[i],S.name,!!style,[S.sec[i].extra,fix].filter(Boolean).join(" ")),!(t===2&&!fix),ar);
    if(t<2){const q=await aiCheck(im,S.name);if(q&&q.ok===false){fix="AVOID this defect seen in a previous attempt: "+(q.issue||"unnatural details")+".";if(!S.sec[i].img)S.sec[i].img=im;continue}}
@@ -778,6 +778,7 @@ async function aiScene(key,file,name,scene){const data=await b64(file,1024);
  const j=await gem(IMG_MODELS,{contents:[{parts:[{inline_data:{mime_type:"image/jpeg",data}},{text:prompt}]}],generationConfig:{responseModalities:["IMAGE"],imageConfig:{aspectRatio:"3:4"}}},key);
  const p=j.candidates?.[0]?.content?.parts?.find(p=>p.inline_data||p.inlineData);const d=p&&(p.inline_data||p.inlineData);if(!d)throw new Error("그림을 받지 못했어요");
  return load(`data:${d.mime_type||d.mimeType||"image/png"};base64,${d.data}`)}
+const PG_TIPS=["💡 잘 팔리는 쿠팡 상위 페이지처럼, 사진 위주로 구성하고 있어요","🔍 상품 모양과 색은 고객님 사진 그대로 살리고 있어요","👗 착용 컷은 옷차림을 바꿔 가며 여러 장 찍고 있어요","✅ 어색한 사진은 찰칵상세가 스스로 검사해서 다시 찍어요","✏️ 완성 후 글자나 사진을 누르면 엑셀처럼 바로 고칠 수 있어요","💾 오른쪽 아래 저장 버튼으로 쿠팡·스마트스토어 규격 그대로 저장돼요"];let pgTi=0;setInterval(()=>{const t=document.getElementById("pgTip"),pr=document.getElementById("prog");if(!t||!pr||!pr.classList.contains("on"))return;t.style.opacity=0;setTimeout(()=>{pgTi=(pgTi+1)%PG_TIPS.length;t.textContent=PG_TIPS[pgTi];t.style.opacity=1},600)},6000);
 function pgSet(list){try{const d=list.filter(x=>x[1]==="ok"||x[1]==="er").length;$("#pbarI").style.width=Math.round(d/list.length*100)+"%"}catch(e){}$("#pgs").innerHTML=list.map(([t,st])=>`<li class="${st}"><i>${st==="ok"?"✓":st==="on"?'<span class="spin"></span>':st==="er"?"!":"·"}</i>${t}</li>`).join("")}
 
 const CATS=[["fashion","패션"],["appliance","가전"],["pet","반려동물"],["kids","유아·키즈"],["outdoor","아웃도어"],["flower","꽃·선물"]];
