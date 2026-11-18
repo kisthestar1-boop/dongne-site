@@ -565,11 +565,11 @@ heads는 정확히 5개(hero, wear, detail, scale, gift 순서). photos는 정�
  const t=j.candidates?.[0]?.content?.parts?.map(p=>p.text||"").join("")||"{}";const o=JSON.parse(t.replace(/^```json|```$/g,"").trim());if(!Array.isArray(o.photos)||o.photos.length<8)throw new Error("기획이 비었어요");return o}
 function photoPrompt(sec,name,styled,extra){
  return `Create ONE single photograph (not a poster, not a layout): a realistic, high-end commercial product photo for a top-selling Korean online store detail page.
-Product: ${name} — the product in the FIRST reference image. Reproduce it EXACTLY: same shape, color, material, size proportions and every detail. Do not redesign or embellish it.${styled?" The SECOND reference image is another photo from this same shoot: match its lighting, color grading and overall mood so all photos look like one consistent photoshoot.":""}
+Product: ${name} — the product in the FIRST reference image. Reproduce it EXACTLY: same shape, color, material, size proportions and every detail. Do not redesign or embellish it. If the product has a printed label, logo or text on it, reproduce that label exactly as in the reference (the only text allowed in the photo).${styled?" The SECOND reference image is another photo from this same shoot: match its lighting, color grading and overall mood so all photos look like one consistent photoshoot.":""}
 Scene: ${sec.photo||"the product beautifully styled"}.
 Show exactly ONE instance of the product (never two copies in one photo), used correctly and at a realistic scale (e.g. a necklace is worn around the neck). People: natural skin, relaxed pose, face cropped out of frame. Hands, if shown, must be anatomically perfect with five natural fingers; when unsure, avoid hands.
 Style: soft natural daylight, true-to-life colors, shallow depth of field, sharp focus on the product, clean minimal background, premium magazine-quality photography.
-${extra?"Extra request: "+extra+"\n":""}ABSOLUTELY NO text, letters, numbers, rulers, measuring tapes, logos, watermarks, borders, frames or graphic elements anywhere in the image.`}
+${extra?"Extra request: "+extra+"\n":""}Apart from the product's own label, ABSOLUTELY NO text, letters, numbers, rulers, measuring tapes, logos, watermarks, borders, frames or graphic elements anywhere in the image.`}
 function renderGallery(cv,d,W=860){const k=W/860,P=44*k,IW=W-2*P;const c=cv.getContext("2d");const ink="#1E1E22",mu="#7A7A84",acc=d.acc||"#B08D57",bg="#FFFFFF",bg2="#F6F5F2";
  const ph=d.sec.filter(s=>s.img);let est=0;for(const s of ph)est+=Math.round(IW*s.img.height/s.img.width)+24*k;cv.width=W;cv.height=est+6000*k;
  c.fillStyle=bg;c.fillRect(0,0,W,cv.height);c.textBaseline="top";const RG=[];cv._rg=RG;let y=0;
