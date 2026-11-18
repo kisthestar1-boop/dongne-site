@@ -135,13 +135,16 @@ sfx(p, "그르르…", 470, 560, size=64, color=(230, 60, 60), stroke=(10, 0, 0)
 blocks.append((p, 40))
 
 p = panel(6)
-bubble(p, "여우 밥이나 돼라!", 230, 110, size=34, tail=(280, 230), shout=True)
+bubble(p, "미끼 노릇이나 해라!", 230, 110, size=34, tail=(280, 230), shout=True)
 bubble(p, "…!", 640, 330, size=34, tail=(560, 420))
+narration(p, "달아나던 바르크의 손에서, 빼앗긴 조각이 떨어졌다.", 40, p.height - 100, maxw=700)
 blocks.append((p, 0))
 
 c = card(900)
-center_text(c, "'쓰지 마.'", 380, F(SERIF, 40), (200, 205, 220))
-center_text(c, "— 머릿속에서, 내 목소리가 들렸다.", 470, F(SERIF, 22), (120, 126, 145))
+center_text(c, "레온의 품에는 조각이 하나 더 있었다.", 250, F(SERIF, 28), (200, 205, 220))
+center_text(c, "아무에게도 보여 주지 않은, 손톱만 한 조각.", 300, F(SERIF, 22), (150, 156, 175))
+center_text(c, "'쓰지 마.'", 480, F(SERIF, 40), (200, 205, 220))
+center_text(c, "— 머릿속에서, 내 목소리가 들렸다.", 570, F(SERIF, 22), (120, 126, 145))
 blocks.append((c, 0))
 
 p = panel(7)
@@ -164,6 +167,7 @@ blocks.append((p, 160))
 
 p = panel(11)
 bubble(p, "이건 내가 가져가지.", 560, 140, size=32, tail=(520, 300))
+narration(p, "바닥에 떨어진, 원래 내 조각.", 40, p.height - 100)
 blocks.append((p, 320))
 
 p = panel(12)
