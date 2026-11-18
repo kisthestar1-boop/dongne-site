@@ -586,7 +586,7 @@ function renderGallery(cv,d,W=860){const k=W/860,P=44*k,IW=W-2*P;const c=cv.getC
   const all=care.map(l=>{F(21,"400 ");return wrap(c,l,IW-120*k)});const bh=all.reduce((m,b)=>m+b.length*36*k+18*k,0)+60*k;c.fillStyle=bg2;rr(c,P,y,IW,bh,20*k);c.fill();let ty=y+34*k;
   for(const bl of all){c.fillStyle=acc;c.beginPath();c.arc(P+44*k,ty+12*k,5*k,0,7);c.fill();F(21,"400 ");for(const l of bl){txt(l,P+66*k,ty,"left",ink);ty+=36*k}ty+=18*k}y+=bh+20*k;RG.push({y0:yy,y1:y,keys:["care"]})}
  const sh=lines(d.ship);if(sh.length){const yy=y;y+=30*k;F(24,"700 ");txt("배송 · 교환 안내",P,y,"left",ink);y+=48*k;F(20,"400 ");for(const l of sh)for(const w of wrap(c,l,IW-20*k)){txt("· "+w,P,y,"left",mu);y+=34*k}y+=20*k;RG.push({y0:yy,y1:y,keys:["ship"]})}
- y+=30*k;F(17,"400 ");txt("이 페이지의 연출 이미지는 AI로 제작되었으며, 실제 상품과 색감·크기가 조금 다를 수 있어요.",W/2,y,"center",mu);y+=80*k;
+ y+=60*k;
  const out=document.createElement("canvas");out.width=W;out.height=Math.ceil(y);out.getContext("2d").drawImage(cv,0,0);cv.width=W;cv.height=out.height;cv.getContext("2d").drawImage(out,0,0);return cv.height}
 async function runGallery(nm,cat){const key=($("#qsKey").value||"").trim();const file=qFiles[0];
  const steps=[["고객님 상품을 꼼꼼히 살펴보고 촬영 계획을 세우는 중","on"]];$("#qs").classList.remove("on");$("#prog").classList.add("on");pgSet(steps);
@@ -624,7 +624,7 @@ function renderPosters(cv,d,W=860){const k=W/860,T=TPL[d.tpl]||TPL.warm,A=COLS[d
  const sh=lines(d.ship);if(sh.length){y+=40*k;F(25,"400 ");const all=sh.flatMap(l=>wrap(c,l,IW-140*k));const bh=(all.length*42+120)*k;c.fillStyle="#fff";c.strokeStyle=acc+"55";c.lineWidth=2*k;rr(c,P,y,IW,bh,28*k);c.fill();c.stroke();
   c.fillStyle=acc;c.beginPath();c.arc(P+62*k,y+60*k,24*k,0,7);c.fill();F(24,"800 ");txt("✓",P+62*k,y+47*k,"center","#fff");F(28,"800 ");txt("배송 · 교환 안내",P+104*k,y+44*k,"left",ink);
   let ty=y+100*k;F(25,"400 ");for(const l of all){txt("· "+l,P+104*k,ty,"left",mu);ty+=42*k}y+=bh}
- y+=50*k;F(19,"400 ");txt("이 페이지의 연출 이미지는 AI로 제작되었으며, 실제 상품과 색감·크기가 조금 다를 수 있어요.",W/2,y,"center",mu);y+=90*k;
+ y+=70*k;
  RG.push({y0,y1:y,keys:["spec","ship"]});
  const out=document.createElement("canvas");out.width=W;out.height=Math.ceil(y);out.getContext("2d").drawImage(cv,0,0);cv.width=W;cv.height=out.height;cv.getContext("2d").drawImage(out,0,0);return cv.height}
 /* 포스터 섹션 배경색 읽기 (정보 영역 색을 맞추려고) */
