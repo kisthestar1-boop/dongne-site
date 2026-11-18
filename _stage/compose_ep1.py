@@ -9,7 +9,9 @@ os.makedirs(OUT, exist_ok=True)
 SANS = "/usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc"
 SANSB = "/usr/share/fonts/opentype/noto/NotoSansCJK-Black.ttc"
 SERIF = "/usr/share/fonts/opentype/noto/NotoSerifCJK-SemiBold.ttc"
-F = lambda p, s: ImageFont.truetype(p, s, index=1)  # KR
+FD = "/home/claude/dongne-site/toon_tools/fonts/"
+TALK = FD + "Jua-Regular.ttf"; LOUD = FD + "BlackHanSans-Regular.ttf"; NARR = FD + "GowunBatang-Regular.ttf"; NARRB = FD + "GowunBatang-Bold.ttf"
+F = lambda p, s: ImageFont.truetype(p, s, index=1) if p.endswith(".ttc") else ImageFont.truetype(p, s)  # KR
 BG = (12, 14, 22)
 
 
@@ -36,17 +38,20 @@ def wrap(d, text, font, maxw):
 
 def bubble(img, text, cx, cy, size=30, tail=None, shout=False, maxw=320):
     d = ImageDraw.Draw(img)
-    f = F(SANSB if shout else SANS, size)
+    size = int(size * 1.12)
+    f = F(LOUD if shout else TALK, size)
     lines = wrap(d, text, f, maxw)
-    lh = size * 1.35
+    lh = size * 1.3
     tw = max(d.textlength(l, font=f) for l in lines); th = lh * len(lines)
-    rx, ry = tw / 2 + size * 1.1, th / 2 + size * 0.9
+    rx, ry = tw / 2 + size * 1.0, th / 2 + size * 0.95
     if tail:
         tx, ty = tail
+        dx, dy = tx - cx, ty - cy; dist = math.hypot(dx, dy); edge = math.hypot(rx * dx / dist, ry * dy / dist)
+        L = min(dist, edge + 46); tx, ty = cx + dx / dist * L, cy + dy / dist * L
         ang = math.atan2(ty - cy, tx - cx)
         b1 = (cx + rx * 0.55 * math.cos(ang + 0.35), cy + ry * 0.55 * math.sin(ang + 0.35))
         b2 = (cx + rx * 0.55 * math.cos(ang - 0.35), cy + ry * 0.55 * math.sin(ang - 0.35))
-        d.polygon([b1, (tx, ty), b2], fill="white", outline=(20, 20, 20))
+        d.polygon([b1, (tx, ty), b2], fill="white", outline=(28, 26, 30))
     if shout:
         pts = []
         for k in range(28):
@@ -55,17 +60,17 @@ def bubble(img, text, cx, cy, size=30, tail=None, shout=False, maxw=320):
             pts.append((cx + rx * r * math.cos(a), cy + ry * r * math.sin(a)))
         d.polygon(pts, fill="white", outline=(20, 20, 20), width=3)
     else:
-        d.ellipse([cx - rx, cy - ry, cx + rx, cy + ry], fill="white", outline=(20, 20, 20), width=3)
+        d.ellipse([cx - rx, cy - ry, cx + rx, cy + ry], fill="white", outline=(28, 26, 30), width=2)
     if tail:  # 꼬리 이음새 덮기
         d.polygon([b1, ((b1[0] + b2[0]) / 2 + (cx - (b1[0] + b2[0]) / 2) * 0.3, (b1[1] + b2[1]) / 2 + (cy - (b1[1] + b2[1]) / 2) * 0.3), b2], fill="white")
     y = cy - th / 2
     for l in lines:
-        d.text((cx - d.textlength(l, font=f) / 2, y), l, font=f, fill=(15, 15, 15)); y += lh
+        d.text((cx - d.textlength(l, font=f) / 2, y - size * 0.08), l, font=f, fill=(32, 28, 30)); y += lh
 
 
 def narration(img, text, x, y, size=26, maxw=560, dark=True):
     d = ImageDraw.Draw(img, "RGBA")
-    f = F(SERIF, size)
+    f = F(NARR, size)
     lines = wrap(d, text, f, maxw)
     lh = size * 1.55
     tw = max(d.textlength(l, font=f) for l in lines)
@@ -78,7 +83,7 @@ def narration(img, text, x, y, size=26, maxw=560, dark=True):
 
 
 def sfx(img, text, x, y, size=90, color=(255, 255, 255), stroke=(20, 10, 10), rot=-8):
-    f = F(SANSB, size)
+    f = F(LOUD, size)
     tmp = Image.new("RGBA", (int(size * len(text) * 1.2 + 40), int(size * 1.6)), (0, 0, 0, 0))
     d = ImageDraw.Draw(tmp)
     d.text((20, 10), text, font=f, fill=color, stroke_width=max(4, size // 14), stroke_fill=stroke)
@@ -100,12 +105,12 @@ blocks = []  # (image, gap_after)
 
 # 0. 오프닝: 검은 화면 · 붉은 글씨 (전독시식 첫 화면)
 c = card(900)
-center_text(c, "…이번이 마지막이다.", 400, F(SERIF, 44), (214, 58, 52))
+center_text(c, "…이번이 마지막이다.", 400, F(NARRB, 44), (214, 58, 52))
 blocks.append((c, 0))
 c = card(520)
-center_text(c, "EPISODE 1", 170, F(SANS, 22), (201, 71, 63))
-center_text(c, "F급의 수첩", 220, F(SERIF, 58), (240, 238, 232))
-center_text(c, "F급 사냥꾼은 99번째 인생을 기억한다", 330, F(SANS, 22), (150, 156, 175))
+center_text(c, "EPISODE 1", 170, F(TALK, 22), (201, 71, 63))
+center_text(c, "F급의 수첩", 220, F(NARRB, 58), (240, 238, 232))
+center_text(c, "F급 사냥꾼은 99번째 인생을 기억한다", 330, F(TALK, 22), (150, 156, 175))
 blocks.append((c, 120))
 
 p = panel(1)
@@ -125,8 +130,9 @@ narration(p, "가문 없는 여우는, 원래 그런 대우를 받았다.", 120,
 blocks.append((p, 280))
 
 p = panel(4)
-narration(p, "그날 밤, 그림자 숲.", 30, 30)
-bubble(p, "앞장서, 길잡이.", 590, 160, size=28, tail=(560, 300))
+narration(p, "그날 밤, 그림자 숲.\n그 숲길을 아는 건, 거기서 조각을 줍던 F급뿐이었다.", 30, 30, maxw=640)
+bubble(p, "길 안내해.\n조각 값은 쳐주지.", 660, 195, size=26, tail=(610, 300))
+narration(p, "조각을 되찾을 수 있다면 — 레온은 따라나섰다.", 230, p.height - 100, maxw=560)
 blocks.append((p, 40))
 
 p = panel(5)
@@ -141,10 +147,10 @@ narration(p, "달아나던 바르크의 손에서, 빼앗긴 조각이 떨어졌
 blocks.append((p, 0))
 
 c = card(900)
-center_text(c, "레온의 품에는 조각이 하나 더 있었다.", 250, F(SERIF, 28), (200, 205, 220))
-center_text(c, "아무에게도 보여 주지 않은, 손톱만 한 조각.", 300, F(SERIF, 22), (150, 156, 175))
-center_text(c, "'쓰지 마.'", 480, F(SERIF, 40), (200, 205, 220))
-center_text(c, "— 머릿속에서, 내 목소리가 들렸다.", 570, F(SERIF, 22), (120, 126, 145))
+center_text(c, "레온의 품에는 조각이 하나 더 있었다.", 250, F(NARRB, 28), (200, 205, 220))
+center_text(c, "아무에게도 보여 주지 않은, 손톱만 한 조각.", 300, F(NARRB, 22), (150, 156, 175))
+center_text(c, "'쓰지 마.'", 480, F(NARRB, 40), (200, 205, 220))
+center_text(c, "— 머릿속에서, 내 목소리가 들렸다.", 570, F(NARRB, 22), (120, 126, 145))
 blocks.append((c, 0))
 
 p = panel(7)
@@ -157,7 +163,7 @@ narration(p, "그런데 — 반대였다.", 430, p.height - 100)
 blocks.append((p, 40))
 
 p = panel(9)
-narration(p, "수십 번. 아니, 백 번 가까이.", 30, 30)
+narration(p, "수십 번. 아니, 백 번 가까이 살아 본 기억.\n짐승들이 어디로 뛸지 — 이미 본 적이 있었다.", 30, 30, maxw=640)
 bubble(p, "…다음은, 왼쪽.", 600, p.height - 150, size=28, tail=(520, p.height - 260))
 blocks.append((p, 40))
 
@@ -182,11 +188,11 @@ c = Image.new("RGB", (W, 760), (236, 226, 204))
 d = ImageDraw.Draw(c)
 for yy in range(120, 700, 52):
     d.line([(70, yy + 40), (730, yy + 40)], fill=(205, 190, 165), width=1)
-fh = F(SERIF, 28)
+fh = F(NARRB, 28)
 note = ["1. 사흘 뒤, 붉은 비가 온다. 지붕 아래 있어라.", "2. 동쪽 폐성으로 가라. 그곳이 네 성이다.", "3. 세나를 지켜라. 이번에는 반드시.", "4. 절대 그 여우를 믿지 마라."]
 for i, l in enumerate(note):
     d.text((80, 128 + i * 104), l, font=fh, fill=(52, 40, 30))
-d.text((440, 560), "— 99번째의 너가.", font=F(SERIF, 30), fill=(52, 40, 30))
+d.text((440, 560), "— 99번째의 너가.", font=F(NARRB, 30), fill=(52, 40, 30))
 blocks.append((c, 0))
 
 p = panel(14)
@@ -194,8 +200,8 @@ sfx(p, "…이번이 마지막이다.", 120, 40, size=46, color=(220, 40, 40), s
 blocks.append((p, 0))
 
 c = card(560)
-center_text(c, "2화 「폐성」에서 계속", 230, F(SERIF, 34), (232, 228, 220))
-center_text(c, "달빛툰 · 글 Claude · 그림 제미나이", 320, F(SANS, 18), (110, 116, 135))
+center_text(c, "2화 「폐성」에서 계속", 230, F(NARRB, 34), (232, 228, 220))
+center_text(c, "달빛툰 · 글 Claude · 그림 제미나이", 320, F(TALK, 18), (110, 116, 135))
 blocks.append((c, 0))
 
 # 세로로 잇기 (컷 사이 여백 = 연출 속도)
