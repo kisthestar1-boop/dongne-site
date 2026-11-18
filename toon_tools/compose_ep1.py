@@ -83,12 +83,12 @@ def narration(img, text, x, y, size=26, maxw=560, dark=True):
         d.text((x + pad, yy), l, font=f, fill=(238, 236, 228) if dark else (30, 24, 20)); yy += lh
 
 
-def sfx(img, text, x, y, size=90, color=(255, 255, 255), stroke=(20, 10, 10), rot=-8):
+def sfx(img, text, x, y, size=90, color=(255, 255, 255), stroke=(20, 10, 10), rot=-8, font=None):
     text = text.replace("…", "...")
-    f = F(LOUD, size)
+    f = F(font or LOUD, size)
     tmp = Image.new("RGBA", (int(size * len(text) * 1.2 + 40), int(size * 1.6)), (0, 0, 0, 0))
     d = ImageDraw.Draw(tmp)
-    d.text((20, 10), text, font=f, fill=color, stroke_width=max(4, size // 14), stroke_fill=stroke)
+    d.text((20, 10), text, font=f, fill=color, stroke_width=(max(4, size // 14) if not font else 2), stroke_fill=stroke)
     tmp = tmp.rotate(rot, expand=True, resample=Image.BICUBIC)
     img.paste(tmp, (int(x), int(y)), tmp)
 
@@ -186,19 +186,36 @@ p = panel(13)
 narration(p, "그런데 페이지가 늘어나 있었다.\n처음 보는 — 하지만 틀림없는 내 글씨로.", 30, 30)
 blocks.append((p, 0))
 
-c = Image.new("RGB", (W, 760), (236, 226, 204))
-d = ImageDraw.Draw(c)
-for yy in range(120, 700, 52):
-    d.line([(70, yy + 40), (730, yy + 40)], fill=(205, 190, 165), width=1)
-fh = F(NARRB, 28)
-note = ["1. 사흘 뒤, 붉은 비가 온다. 지붕 아래 있어라.", "2. 동쪽 폐성으로 가라. 그곳이 네 성이다.", "3. 세나를 지켜라. 이번에는 반드시.", "4. 절대 그 여우를 믿지 마라."]
-for i, l in enumerate(note):
-    d.text((80, 128 + i * 104), l, font=fh, fill=(52, 40, 30))
-d.text((440, 560), "— 99번째의 너가.", font=F(NARRB, 30), fill=(52, 40, 30))
-blocks.append((c, 0))
+# 수첩 페이지: 낡은 종이 + 손글씨 + 살짝 기울기 + 마지막 줄 붉은 밑줄
+import random
+random.seed(7)
+PEN = FD + "NanumPenScript-Regular.ttf"
+pg = Image.new("RGB", (W, 820), (232, 218, 188))
+pd = ImageDraw.Draw(pg, "RGBA")
+for _ in range(2600):  # 종이 얼룩
+    x, y = random.randint(0, W), random.randint(0, 820); r = random.randint(1, 3)
+    pd.ellipse([x, y, x + r, y + r], fill=(150, 120, 80, random.randint(8, 22)))
+for k in range(60):  # 가장자리 그을림
+    a_ = int(60 * (1 - k / 60) ** 2)
+    pd.rectangle([k, k, W - k, 820 - k], outline=(90, 60, 30, a_))
+for yy in range(150, 760, 62):
+    pd.line([(60, yy), (740, yy)], fill=(160, 130, 95, 70), width=1)
+pd.line([(110, 60), (110, 780)], fill=(190, 80, 70, 70), width=2)
+ink = (40, 34, 52)
+lines_ = [("1. 사흘 뒤, 붉은 비가 온다.  지붕 아래 있어라.", 0), ("2. 동쪽 폐성으로 가라.  그곳이 네 성이다.", 1), ("3. 세나를 지켜라.  이번에는 반드시.", 2), ("4. 절대 그 여우를 믿지 마라.", 3)]
+txt = Image.new("RGBA", (W, 820), (0, 0, 0, 0)); td = ImageDraw.Draw(txt)
+fp = F(PEN, 46)
+for l, i in lines_:
+    td.text((128 + random.randint(-4, 4), 92 + i * 124 + random.randint(-3, 3)), l, font=fp, fill=ink + (235,))
+y4 = 92 + 3 * 124
+td.line([(130, y4 + 58), (130 + td.textlength("4. 절대 그 여우를 믿지 마라.", font=fp), y4 + 62)], fill=(170, 30, 30, 220), width=4)
+td.text((430, 640), "— 99번째의 너가.", font=F(PEN, 50), fill=ink + (240,))
+txt = txt.rotate(-1.2, resample=Image.BICUBIC)
+pg.paste(txt, (0, 0), txt)
+blocks.append((pg, 0))
 
 p = panel(14)
-sfx(p, "…이번이 마지막이다.", 120, 40, size=46, color=(220, 40, 40), stroke=(30, 0, 0), rot=-3)
+sfx(p, "…이번이 마지막이다.", 110, 30, size=70, color=(200, 24, 24), stroke=(70, 0, 0), rot=-4, font=FD + "NanumPenScript-Regular.ttf")
 blocks.append((p, 0))
 
 c = card(560)
