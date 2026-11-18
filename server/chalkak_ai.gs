@@ -18,8 +18,9 @@ function rnd(n) { const a = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; let s = ""; for 
 function cc(code) { return String(code || "").toUpperCase().replace(/[^A-Z0-9-]/g, ""); }
 
 function doPost(e) {
+  let q0 = null;
   try {
-    const q = JSON.parse(e.postData.contents);
+    const q = JSON.parse(e.postData.contents); q0 = q;
     if (q.op === "list") {
       const k0 = P().getProperty("GEMINI_KEY");
       const lr = UrlFetchApp.fetch("https://generativelanguage.googleapis.com/v1beta/models?pageSize=200", { headers: { "x-goog-api-key": k0 }, muteHttpExceptions: true });
@@ -44,9 +45,24 @@ function doPost(e) {
     if (q.op === "order") return out(lock(function () {
       const pk = PKG[q.pkg]; const em = String(q.email || "").trim();
       if (!pk || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)) return { error: "이메일과 충전 금액을 확인해 주세요" };
-      const id = String(Math.floor(1000 + Math.random() * 9000));
-      sheet().appendRow([new Date(), id, em, pk[0], pk[1], false, "", ""]);
-      return { order: id, amount: pk[0], credits: pk[1] };
+      const sh = sheet(); const id = String(1000 + sh.getLastRow());
+      const into = q.code && jget("c_" + cc(q.code)) ? cc(q.code) : ""; // 이미 코드가 있으면 그 코드에 충전 (지갑 하나)
+      const claim = rnd(20); jset("o_" + claim, { order: id });
+      sh.appendRow([new Date(), id, em, pk[0], pk[1], false, "", "", into, claim]);
+      return { order: id, amount: pk[0], credits: pk[1], claim: claim, into: into };
+    }));
+    if (q.op === "claim") { const o = jget("o_" + String(q.claim || "")); return out(o ? (o.code ? { code: o.code, credits: o.credits, bal: (jget("c_" + o.code) || {}).b } : { wait: true, order: o.order }) : { error: "주문을 찾을 수 없어요" }); }
+    if (q.op === "find") return out(lock(function () { // 코드 잃어버렸을 때: 이메일로 다시 보내기 (1시간 1번)
+      const em = String(q.email || "").trim().toLowerCase(); if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)) return { error: "이메일을 확인해 주세요" };
+      const ok = { ok: true, msg: "충전 기록이 있으면 몇 분 안에 메일로 코드를 다시 보내 드려요" };
+      const rk = "m_" + em; if (Number(P().getProperty(rk) || 0) > Date.now() - 3600e3) return ok;
+      const rows = sheet().getDataRange().getValues().slice(1).filter(function (r) { return String(r[2]).trim().toLowerCase() === em && r[6]; });
+      if (!rows.length) return ok;
+      P().setProperty(rk, String(Date.now()));
+      MailApp.sendEmail({ to: em, name: "찰칵상세", subject: "[찰칵상세] 크레딧 코드를 다시 보내 드려요",
+        body: "안녕하세요, 찰칵상세예요.\n요청하신 크레딧 코드예요.\n\n" + rows.map(function (r) { const c = jget("c_" + r[6]); return "· " + r[6] + "  (주문 " + r[1] + " · 남은 " + (c ? c.b : 0) + "크레딧)"; }).join("\n") +
+          "\n\nhttps://kisthestar1-boop.github.io/ttukttak/ 작업 화면 위쪽 '크레딧 코드' 칸에 넣어 주세요.\n찰칵상세 드림" });
+      return ok;
     }));
     /* ---- AI 호출 ---- */
     if (q.op !== "copy" && q.op !== "scene" && q.op !== "poster") return out({ error: "잘못된 요청" });
@@ -65,14 +81,14 @@ function doPost(e) {
       if (code === 404) { last = "모델 없음 " + m; continue; }
       const j = JSON.parse(r.getContentText());
       if (code === 503 || code === 500 || code === 429) { last = (j.error && j.error.message) || ("오류 " + code); continue; }
-      if (code >= 400) return out({ error: (j.error && j.error.message) || ("오류 " + code) });
+      if (code >= 400) { ungate(q); return out({ error: (j.error && j.error.message) || ("오류 " + code) }); }
       return out(j);
     }
-    return out({ error: last });
-  } catch (err) { return out({ error: String(err) }); }
+    ungate(q); return out({ error: last });
+  } catch (err) { try { if (q0 && q0.op !== "copy") ungate(q0); } catch (e2) {} return out({ error: String(err) }); }
 }
 
-/* 그림 생성은 ① 크레딧 티켓 ② 무료 맛보기(브라우저당 1번, 하루 40명) 둘 중 하나가 있어야 해요 */
+/* 그림 생성은 ① 크레딧 티켓 ② 무료 맛보기(브라우저당 1번, 하루 FREE_PER_DAY명) 둘 중 하나가 있어야 해요 */
 function gate(q) {
   return lock(function () {
     if (q.ticket) {
@@ -92,6 +108,14 @@ function gate(q) {
   });
 }
 
+/* AI가 실패하면 티켓 사용 1회를 돌려줘요 (실패한 사진은 돈을 안 받아요) */
+function ungate(q) {
+  if (q.op === "copy") return;
+  lock(function () {
+    if (q.ticket) { const t = jget("t_" + q.ticket); if (t) { t.left++; t.used = Math.max(0, t.used - 1); jset("t_" + q.ticket, t); } return; }
+    if (q.taste) { P().deleteProperty("f_" + String(q.taste).slice(0, 40)); const dk = "free_" + today(); P().setProperty(dk, String(Math.max(0, Number(P().getProperty(dk) || 0) - 1))); }
+  });
+}
 function countOk(op) {
   return lock(function () {
     const k = "n_" + op + "_" + today();
@@ -108,8 +132,8 @@ function sheet() {
   if (!ss) {
     ss = SpreadsheetApp.create(SHEET_NAME); P().setProperty("SHEET_ID", ss.getId());
     const sh = ss.getSheets()[0]; sh.setName("주문");
-    sh.appendRow(["시간", "주문번호", "이메일", "금액(원)", "크레딧", "☑ 입금확인", "크레딧 코드", "메일 발송"]);
-    sh.setFrozenRows(1); sh.getRange("F2:F1000").insertCheckboxes(); sh.setColumnWidths(1, 8, 130);
+    sh.appendRow(["시간", "주문번호", "이메일", "금액(원)", "크레딧", "☑ 입금확인", "크레딧 코드", "메일 발송", "기존 코드", "자동반영키"]);
+    sh.setFrozenRows(1); sh.getRange("F2:F1000").insertCheckboxes(); sh.setColumnWidths(1, 10, 130);
   }
   return ss.getSheetByName("주문");
 }
@@ -122,13 +146,16 @@ function mint(credits, note) {
 function onOrderEdit(e) {
   const r = e.range, sh = r.getSheet(); if (sh.getName() !== "주문" || r.getColumn() !== 6 || r.getRow() < 2) return;
   if (r.getValue() !== true) return;
-  const row = sh.getRange(r.getRow(), 1, 1, 8).getValues()[0];
+  const row = sh.getRange(r.getRow(), 1, 1, 10).getValues()[0];
   if (row[6]) return; // 이미 발급
-  const code = mint(Number(row[4]), "주문 " + row[1]);
+  const add = Number(row[4]); let code = row[8] ? cc(row[8]) : "";
+  if (code && jget("c_" + code)) lock(function () { const c = jget("c_" + code); c.b += add; jset("c_" + code, c); });
+  else code = mint(add, "주문 " + row[1]);
   sh.getRange(r.getRow(), 7).setValue(code);
+  if (row[9]) jset("o_" + row[9], { order: row[1], code: code, credits: add }); // 주문한 브라우저에 자동 반영
   MailApp.sendEmail({ to: row[2], name: "찰칵상세",
-    subject: "[찰칵상세] 크레딧 코드가 도착했어요 (" + row[4] + "크레딧)",
-    body: "안녕하세요, 찰칵상세예요.\n충전해 주셔서 감사합니다.\n\n크레딧 코드: " + code + "\n충전 크레딧: " + row[4] + "\n\n사용 방법\n1) https://kisthestar1-boop.github.io/ttukttak/ 접속\n2) 작업 화면 위쪽 '크레딧 코드' 칸에 코드 입력\n3) 사진 올리고 만들기 — 상세페이지 1건 50크레딧, 사진 다시 찍기 2크레딧\n\n코드는 다른 사람과 나누지 말아 주세요. 궁금한 점은 이 메일에 답장 주세요.\n찰칵상세 드림" });
+    subject: "[찰칵상세] " + add + "크레딧 충전이 완료됐어요",
+    body: "안녕하세요, 찰칵상세예요.\n충전해 주셔서 감사합니다.\n주문하신 브라우저에는 크레딧이 자동으로 들어가 있어요.\n다른 기기에서 쓰실 때는 아래 코드를 넣어 주세요.\n\n크레딧 코드: " + code + "\n이번 충전: " + add + "크레딧 (지금 잔액 " + (jget("c_" + code) || {}).b + ")\n\n사용 방법\n1) https://kisthestar1-boop.github.io/ttukttak/ 접속\n2) 작업 화면 위쪽 '크레딧 코드' 칸에 코드 입력\n3) 사진 올리고 만들기 — 상세페이지 1건 50크레딧, 사진 다시 찍기 2크레딧\n\n코드는 다른 사람과 나누지 말아 주세요. 궁금한 점은 이 메일에 답장 주세요.\n찰칵상세 드림" });
   sh.getRange(r.getRow(), 8).setValue(new Date());
 }
 /* 처음 한 번 실행: 시트 만들기 + 체크 트리거 연결 (권한 허용 필요) */
