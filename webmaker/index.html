@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>홈페이지 공장</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;700&family=Do+Hyeon&display=swap">
+<style>
+/* 홈페이지 공장: 왼쪽 입력 · 오른쪽 미리보기 (찰칵상세 스튜디오와 같은 구조) */
+:root{--bg:#EEF2F5;--card:#fff;--ink:#16232F;--mu:#5B6B78;--ln:#D9E1E8;--acc:#2E6FA3;--acc2:#F2B630;--go:#2F9E63;--bad:#C2453D;
+ --disp:"Do Hyeon","IBM Plex Sans KR",sans-serif;--body:"IBM Plex Sans KR",system-ui,"Malgun Gothic",sans-serif}
+*{box-sizing:border-box}[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:14px}
+.bar{display:flex;align-items:center;gap:12px;padding:10px 18px;background:#13212E;color:#fff;position:sticky;top:0;z-index:5}
+.bar b{font-family:var(--disp);font-size:22px;font-weight:400;letter-spacing:.02em}
+.bar small{color:#9FB6C8}
+.bar .sp{flex:1}
+.main{display:grid;grid-template-columns:minmax(300px,380px) 1fr;min-height:calc(100vh - 52px)}
+@media (max-width:860px){.main{grid-template-columns:1fr}}
+.form{background:var(--card);border-right:1px solid var(--ln);padding:16px;display:flex;flex-direction:column;gap:12px;overflow:auto;max-height:calc(100vh - 52px);position:sticky;top:52px}
+@media (max-width:860px){.form{max-height:none;position:static}}
+.form h3{margin:4px 0 0;font-family:var(--disp);font-weight:400;font-size:18px}
+label{display:flex;flex-direction:column;gap:4px;font-weight:700;font-size:12.5px}
+label small{font-weight:400;color:var(--mu)}
+input,select,textarea{width:100%;min-width:0;font:inherit;padding:9px 10px;border:1px solid var(--ln);border-radius:9px;background:#fff;color:var(--ink)}
+textarea{min-height:64px;resize:vertical}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.drop{border:2px dashed var(--ln);border-radius:12px;padding:14px;text-align:center;color:var(--mu);cursor:pointer;background:#F7FAFC}
+.drop.hov{border-color:var(--acc);background:#EAF3FB}
+.thumbs{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.thumbs .t{position:relative;aspect-ratio:1;border-radius:8px;overflow:hidden;border:2px solid transparent}
+.thumbs .t.hero{border-color:var(--acc2)}
+.thumbs .t img{width:100%;height:100%;object-fit:cover;display:block}
+.thumbs .t button{position:absolute;right:3px;top:3px;width:20px;height:20px;border-radius:50%;border:0;background:rgba(0,0,0,.65);color:#fff;font-size:12px;cursor:pointer;padding:0}
+.thumbs .t i{position:absolute;left:3px;bottom:3px;font-style:normal;font-size:10px;font-weight:700;background:var(--acc2);color:#16232F;border-radius:5px;padding:1px 5px}
+.btn{font:inherit;font-weight:700;border:0;border-radius:10px;padding:11px 14px;cursor:pointer;background:var(--acc);color:#fff}
+.btn.big{font-size:16px;padding:14px;background:linear-gradient(90deg,#2E6FA3,#21507A)}
+.btn.ghost{background:#fff;color:var(--ink);border:1px solid var(--ln)}
+.btn:disabled{opacity:.5;cursor:default}
+.btn:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #9CC7EA;outline-offset:1px}
+.st{font-size:13px;color:var(--mu);min-height:18px}
+.st.err{color:var(--bad)}
+.out{display:flex;flex-direction:column;min-width:0}
+.tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 14px;background:#fff;border-bottom:1px solid var(--ln)}
+.seg{display:inline-flex;border:1px solid var(--ln);border-radius:999px;overflow:hidden}
+.seg button{font:inherit;font-size:13px;font-weight:700;border:0;background:#fff;color:var(--mu);padding:7px 13px;cursor:pointer}
+.seg button.on{background:#13212E;color:#fff}
+.stage{flex:1;display:flex;justify-content:center;align-items:flex-start;padding:16px;overflow:auto}
+.frame{width:100%;max-width:1280px;height:calc(100vh - 140px);min-height:520px;border:0;border-radius:12px;background:#fff;box-shadow:0 10px 30px rgba(20,40,60,.15);transition:max-width .3s}
+.frame.m{max-width:390px}
+.empty{max-width:520px;margin:60px auto;text-align:center;color:var(--mu);display:flex;flex-direction:column;gap:10px;align-items:center}
+.empty .big{font-size:56px}
+.steps{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.steps span{background:#fff;border:1px solid var(--ln);border-radius:999px;padding:4px 10px;font-size:12px}
+.steps span.on{background:var(--acc2);border-color:var(--acc2);color:#16232F;font-weight:700}
+</style>
+</head>
+<body>
+<div class="bar"><b>🏭 홈페이지 공장</b><small>회사 사진과 정보만 넣으면 AI가 홈페이지 시안을 만들어요</small><span class="sp"></span><button class="btn ghost" id="demo" style="padding:7px 12px">🧪 예시로 채우기</button></div>
+<div class="main">
+ <div class="form">
+  <h3>① 회사 정보</h3>
+  <div class="row2">
+   <label>회사 이름 *<input id="fName" placeholder="예: 한빛정밀"></label>
+   <label>영문 이름<input id="fNameEn" placeholder="HANBIT PRECISION"></label>
+  </div>
+  <label>업종<select id="fInd"><option value="machine">기계 · 설비</option><option value="parts">부품 · 정밀가공</option><option value="material">소재 · 화학</option><option value="other">기타 제조</option></select></label>
+  <label>무엇을 만드나요? *<small>한 줄이면 충분해요</small><input id="fWhat" placeholder="예: 자동차·반도체 장비용 정밀 가공 부품"></label>
+  <label>회사 소개 메모<small>업력, 설비, 인증, 주요 고객, 수출국 등 아는 만큼 (짧아도 돼요)</small><textarea id="fMemo" placeholder="예: 1998년 설립, CNC 42대, ISO 9001·IATF 16949, 일본·미국 수출"></textarea></label>
+  <div class="row2">
+   <label>설립 연도<input id="fYear" inputmode="numeric" placeholder="1998"></label>
+   <label>전화<input id="fTel" placeholder="055-000-0000"></label>
+  </div>
+  <div class="row2"><label>이메일<input id="fMail" placeholder="sales@company.co.kr"></label><label>홈페이지 주소(도메인)<input id="fDom" placeholder="www.회사이름.co.kr"></label></div>
+  <label>주소<input id="fAddr" placeholder="경남 김해시 ○○로 00"></label>
+  <h3>② 사진 <small style="font-family:var(--body);font-size:12px;color:var(--mu)">첫 사진이 첫 화면(큰 사진)이 돼요 · 최대 8장</small></h3>
+  <div class="drop" id="drop"><b>📂 사진을 여기로 끌어다 놓기</b><br><small>또는 눌러서 고르기 · 공장 전경, 설비, 제품</small><input type="file" id="pick" accept="image/*" multiple hidden></div>
+  <div class="thumbs" id="thumbs"></div>
+  <button class="btn big" id="go">🤖 홈페이지 만들기</button>
+  <div class="st" id="st"></div>
+ </div>
+ <div class="out">
+  <div class="tools">
+   <div class="seg" id="sStyle"><button data-v="A" class="on">시안 A · 다크</button><button data-v="B">시안 B · 밝은</button></div>
+   <div class="seg" id="sLang"><button data-v="ko" class="on">한국어</button><button data-v="en">English</button></div>
+   <div class="seg" id="sDev"><button data-v="pc" class="on">🖥 PC</button><button data-v="m">📱 휴대폰</button></div>
+   <span style="flex:1"></span>
+   <button class="btn ghost" id="dl" disabled>⬇ 파일 받기</button>
+   <button class="btn" id="pub" disabled title="Cloudflare Pages에 올리는 방법">☁ 공개하기</button>
+  </div>
+  <div class="stage" id="stage">
+   <div class="empty" id="empty"><div class="big">🏭</div><b style="color:var(--ink);font-size:16px">왼쪽에 회사 정보와 사진을 넣고 [🤖 홈페이지 만들기]를 눌러 주세요</b>
+    <div class="steps"><span>사진 분석</span><span>글 쓰기 (한·영)</span><span>디자인 2개</span><span>미리보기</span></div>
+    <small>처음이라면 위의 [🧪 예시로 채우기]로 먼저 구경해 보세요</small></div>
+   <iframe class="frame" id="frame" title="홈페이지 미리보기" hidden></iframe>
+  </div>
+ </div>
+</div>
+
+<script>
+const PROXY="https://script.google.com/macros/s/AKfycbz09Pualc3dVyOYhjRIBLY1lVpeZMpi8YMoUFlBcqWjJ30gKJagm0HAhio3rFaIf_E/exec";
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+let PH=[];          // {full: dataURL(1600), ai: base64(768)}
+let DATA=null;      // AI가 쓴 글
+let VIEW={style:"A",lang:"ko",dev:"pc"};
+
+/* ---------- 사진 ---------- */
+function shrink(file,max,q){return new Promise((res,rej)=>{const fr=new FileReader();fr.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,max/Math.max(im.width,im.height));const c=document.createElement("canvas");c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext("2d").drawImage(im,0,0,c.width,c.height);res(c.toDataURL("image/jpeg",q))};im.onerror=rej;im.src=fr.result};fr.onerror=rej;fr.readAsDataURL(file)})}
+async function addFiles(fs){for(const f of fs){if(!/^image\//.test(f.type)||PH.length>=8)continue;try{const full=await shrink(f,1600,.82),ai=await shrink(f,768,.75);PH.push({full,ai:ai.split(",")[1]})}catch(_){}}thumbs()}
+function thumbs(){$("#thumbs").innerHTML=PH.map((p,i)=>`<div class="t ${i?"":"hero"}"><img src="${p.full}" alt="사진 ${i+1}"><button data-x="${i}" aria-label="사진 빼기">✕</button>${i?"":"<i>첫 화면</i>"}</div>`).join("")}
+$("#thumbs").onclick=e=>{const b=e.target.closest("[data-x]");if(b){PH.splice(+b.dataset.x,1);thumbs()}};
+const dz=$("#drop");dz.onclick=()=>$("#pick").click();$("#pick").onchange=e=>addFiles([...e.target.files]);
+["dragenter","dragover"].forEach(t=>dz.addEventListener(t,e=>{e.preventDefault();dz.classList.add("hov")}));
+["dragleave","drop"].forEach(t=>dz.addEventListener(t,e=>{e.preventDefault();dz.classList.remove("hov")}));
+dz.addEventListener("drop",e=>addFiles([...(e.dataTransfer?.files||[])]));
+
+/* ---------- 입력 ---------- */
+const F=()=>({name:$("#fName").value.trim(),nameEn:$("#fNameEn").value.trim(),ind:$("#fInd").value,what:$("#fWhat").value.trim(),memo:$("#fMemo").value.trim(),year:$("#fYear").value.trim(),tel:$("#fTel").value.trim(),mail:$("#fMail").value.trim(),dom:$("#fDom").value.trim(),addr:$("#fAddr").value.trim()});
+const IND={machine:"기계·설비 제조",parts:"부품·정밀가공",material:"소재·화학",other:"제조업"};
+
+/* ---------- AI 글쓰기 (찰칵상세 서버의 copy 기능 재사용) ---------- */
+function prompt(f,n){return `당신은 한국 제조업 B2B 홈페이지 카피라이터입니다. 아래 회사 정보와 사진 ${n}장을 보고 홈페이지 문구를 JSON으로만 답하세요.
+회사: ${f.name} (${f.nameEn||"영문명 없음"}) · 업종: ${IND[f.ind]} · 만드는 것: ${f.what}
+메모: ${f.memo||"없음"} · 설립: ${f.year||"모름"} · 주소: ${f.addr||"모름"}
+규칙:
+- 사실은 메모와 사진에서 확인되는 것만 쓰고, 모르는 숫자·인증·고객사를 지어내지 마세요.
+- 슬로건은 짧고 단단하게(한국어 20자 이내, 영어 6단어 이내).
+- products는 사진 2번부터 각 사진에 보이는 것을 1개씩(최대 6개). 사진이 1장이면 '만드는 것'에서 2~3개.
+- stats는 메모에 있는 숫자만(업력·설비 대수·인증 수 등). 없으면 빈 배열.
+- 해외 바이어가 궁금해하는 품질·납기·맞춤 생산을 strengths에 반영.
+형식: {"ko":{"slogan":"","sub":"","about":"","strengths":[{"t":"","d":""}],"products":[{"name":"","desc":""}],"stats":[{"num":"","label":""}],"process":["","","",""],"cta":""},"en":{같은 구조 영어}}
+strengths는 정확히 3개, process는 4단계(문의→검토→생산→출하 같은 흐름).`}
+async function ai(f){const parts=[{text:prompt(f,PH.length)}];PH.slice(0,4).forEach(p=>parts.push({inline_data:{mime_type:"image/jpeg",data:p.ai}}));
+ const body={contents:[{role:"user",parts}],generationConfig:{temperature:.6,responseMimeType:"application/json"}};
+ const r=await fetch(PROXY,{method:"POST",body:JSON.stringify({op:"copy",body})});const j=await r.json();
+ if(j.error)throw new Error(j.error);const txt=j.candidates?.[0]?.content?.parts?.map(p=>p.text||"").join("")||"";
+ const m=txt.match(/\{[\s\S]*\}/);if(!m)throw new Error("AI 답을 읽지 못했어요");return JSON.parse(m[0])}
+function fallback(f){const ko={slogan:`${f.what.split(/[·,]/)[0]||"정밀 제조"}의 기준`,sub:`${f.name}은 ${f.what}을(를) 만듭니다.`,about:`${f.year?f.year+"년 설립 이후 ":""}${f.name}은 ${f.what} 분야에서 품질과 납기를 지켜 왔습니다. ${f.memo}`.trim(),
+ strengths:[{t:"품질 관리",d:"원자재 입고부터 출하까지 단계별로 검사합니다."},{t:"맞춤 생산",d:"도면과 사양에 맞춰 소량부터 양산까지 대응합니다."},{t:"납기 준수",d:"계획 생산으로 약속한 날짜를 지킵니다."}],
+ products:(PH.length>1?PH.slice(1,7).map((_,i)=>({name:`제품 ${i+1}`,desc:"사양과 용도는 문의해 주세요."})):[{name:f.what||"주요 제품",desc:"사양과 용도는 문의해 주세요."}]),
+ stats:f.year?[{num:String(new Date().getFullYear()-(+f.year||new Date().getFullYear())),label:"년 업력"}]:[],process:["문의","도면 검토 · 견적","생산 · 검사","출하"],cta:"견적 문의하기"};
+ const en={slogan:"Precision you can rely on",sub:`${f.nameEn||f.name} manufactures ${f.what}.`,about:`${f.nameEn||f.name} has delivered quality and on-time supply${f.year?" since "+f.year:""}.`,
+ strengths:[{t:"Quality control",d:"Inspection at every step from material to shipment."},{t:"Custom production",d:"From prototypes to mass production, built to your drawings."},{t:"On-time delivery",d:"Planned production keeps every promised date."}],
+ products:ko.products.map((p,i)=>({name:`Product ${i+1}`,desc:"Contact us for specifications."})),stats:ko.stats.map(s=>({num:s.num,label:"years in business"})),process:["Inquiry","Drawing review · Quote","Production · Inspection","Shipment"],cta:"Request a quote"};return {ko,en}}
+
+/* ---------- 홈페이지 조립 (손님에게 넘길 완성 파일) ---------- */
+function site(d,f,style,lang){
+ const T=d[lang]||d.ko,K=lang==="ko";const nm=K?f.name:(f.nameEn||f.name);
+ const hero=PH[0]?.full||"",gal=PH.slice(1,7);
+ const pal=style==="A"?{bg:"#0E141B",bg2:"#151E28",fg:"#E9EEF2",mu:"#9AA8B4",acc:"#F2B630",card:"#18232E",ln:"#26323E"}:{bg:"#FFFFFF",bg2:"#F2F5F8",fg:"#14202B",mu:"#5B6B78",acc:"#1F6FB5",card:"#FFFFFF",ln:"#DDE4EA"};
+ const L=K?{nav:["회사소개","제품","강점","문의"],about:"회사소개",prod:"제품",str:"우리의 강점",proc:"진행 순서",con:"문의하기",tel:"전화",mail:"이메일",addr:"주소",q:"견적 문의",sw:"EN",fm:["회사명","이름","연락처(이메일/전화)","문의 내용","보내기"],fmNote:"문의 폼 연결 전 미리보기입니다. 위 이메일·전화로 연락 주세요."}
+  :{nav:["About","Products","Strengths","Contact"],about:"About us",prod:"Products",str:"Why us",proc:"How we work",con:"Contact",tel:"Tel",mail:"Email",addr:"Address",q:"Get a quote",sw:"KO",fm:["Company","Name","Email / Phone","Message","Send"],fmNote:"Preview: please contact us by the email or phone above."};
+ const prods=(T.products||[]).map((p,i)=>`<article class="pc">${gal[i]?`<img src="${gal[i].full}" alt="${esc(p.name)}">`:`<div class="pi">${esc((p.name||"").slice(0,1))}</div>`}<h3>${esc(p.name)}</h3><p>${esc(p.desc)}</p></article>`).join("");
+ const stats=(T.stats||[]).filter(s=>s.num).map(s=>`<div><b>${esc(s.num)}</b><span>${esc(s.label)}</span></div>`).join("");
+ return `<!doctype html><html lang="${lang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(nm)}</title>
+<meta name="description" content="${esc(T.sub)}"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;700&display=swap">
+<style>:root{--bg:${pal.bg};--bg2:${pal.bg2};--fg:${pal.fg};--mu:${pal.mu};--acc:${pal.acc};--card:${pal.card};--ln:${pal.ln}}*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:"IBM Plex Sans KR",system-ui,sans-serif;line-height:1.65}
+a{color:inherit}.w{max-width:1160px;margin:0 auto;padding:0 max(20px,4vw)}
+header{position:sticky;top:0;z-index:9;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--ln)}
+header .w{display:flex;align-items:center;gap:22px;height:64px}header b{font-size:19px;letter-spacing:.04em}header nav{margin-left:auto;display:flex;gap:22px;font-size:15px}header nav a{text-decoration:none;color:var(--mu)}header nav a:hover{color:var(--fg)}
+@media(max-width:700px){header nav{display:none}}
+.hero{position:relative;min-height:min(82vh,760px);display:flex;align-items:flex-end;overflow:hidden;background:#111}
+.hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;animation:kb 24s ease-in-out infinite alternate}
+@keyframes kb{to{transform:scale(1.08)}}@media(prefers-reduced-motion:reduce){.hero img{animation:none}}
+.hero:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.15) 30%,rgba(0,0,0,.72))}
+.hero .w{position:relative;z-index:1;padding-bottom:9vh;color:#fff}.hero h1{font-size:clamp(34px,6vw,72px);line-height:1.12;margin:0 0 14px;letter-spacing:-.01em;max-width:14ch}
+.hero p{font-size:clamp(16px,1.6vw,20px);max-width:46ch;opacity:.92;margin:0 0 24px}
+.btn{display:inline-block;background:var(--acc);color:${style==="A"?"#14202B":"#fff"};font-weight:700;text-decoration:none;padding:13px 22px;border-radius:6px}
+.stats{display:flex;flex-wrap:wrap;gap:0;border-bottom:1px solid var(--ln)}.stats div{flex:1;min-width:160px;padding:28px 20px;border-right:1px solid var(--ln)}.stats b{display:block;font-size:40px;color:var(--acc);font-variant-numeric:tabular-nums}.stats span{color:var(--mu)}
+section{padding:90px 0}section.alt{background:var(--bg2)}h2{font-size:clamp(26px,3.2vw,40px);margin:0 0 10px}.lead{color:var(--mu);max-width:60ch;margin:0 0 36px;font-size:17px}
+.ab{display:grid;grid-template-columns:1.1fr 1fr;gap:48px;align-items:center}.ab img{width:100%;border-radius:8px;aspect-ratio:4/3;object-fit:cover}@media(max-width:800px){.ab{grid-template-columns:1fr}}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:20px}
+.pc{background:var(--card);border:1px solid var(--ln);border-radius:8px;overflow:hidden}.pc img,.pc .pi{width:100%;aspect-ratio:4/3;object-fit:cover;display:block}.pc .pi{display:flex;align-items:center;justify-content:center;font-size:56px;background:var(--bg2);color:var(--acc)}.pc h3{margin:16px 18px 6px;font-size:18px}.pc p{margin:0 18px 20px;color:var(--mu);font-size:14.5px}
+.str{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}@media(max-width:800px){.str{grid-template-columns:1fr}}.str div{border-top:3px solid var(--acc);padding-top:18px}.str h3{margin:0 0 8px}.str p{margin:0;color:var(--mu)}
+.proc{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;counter-reset:p}@media(max-width:800px){.proc{grid-template-columns:1fr 1fr}}.proc div{background:var(--card);border:1px solid var(--ln);border-radius:8px;padding:18px;font-weight:700}.proc div:before{counter-increment:p;content:"0" counter(p);display:block;color:var(--acc);font-size:13px;margin-bottom:6px}
+.con{display:grid;grid-template-columns:1fr 1.2fr;gap:40px}@media(max-width:800px){.con{grid-template-columns:1fr}}.con dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:10px 18px}.con dt{color:var(--mu)}.con dd{margin:0;font-weight:500}
+form{display:grid;gap:10px}form input,form textarea{font:inherit;padding:12px;border-radius:6px;border:1px solid var(--ln);background:var(--card);color:var(--fg)}form textarea{min-height:110px}form small{color:var(--mu)}
+footer{padding:28px 0;border-top:1px solid var(--ln);color:var(--mu);font-size:13px}
+.fab{position:fixed;right:18px;bottom:18px;z-index:9;box-shadow:0 8px 20px rgba(0,0,0,.25)}</style></head><body>
+<header><div class="w"><b>${esc(nm)}</b><nav><a href="#about">${L.nav[0]}</a><a href="#products">${L.nav[1]}</a><a href="#strengths">${L.nav[2]}</a><a href="#contact">${L.nav[3]}</a></nav></div></header>
+<div class="hero">${hero?`<img src="${hero}" alt="${esc(nm)}">`:""}<div class="w"><h1>${esc(T.slogan)}</h1><p>${esc(T.sub)}</p><a class="btn" href="#contact">${esc(T.cta||L.q)}</a></div></div>
+${stats?`<div class="w stats">${stats}</div>`:""}
+<section id="about"><div class="w ab"><div><h2>${L.about}</h2><p class="lead" style="margin-bottom:0">${esc(T.about)}</p></div>${PH[1]?`<img src="${PH[1].full}" alt="">`:""}</div></section>
+<section id="products" class="alt"><div class="w"><h2>${L.prod}</h2><p class="lead">${esc(f.what)}</p><div class="grid">${prods}</div></div></section>
+<section id="strengths"><div class="w"><h2>${L.str}</h2><div class="str" style="margin-top:30px">${(T.strengths||[]).map(s=>`<div><h3>${esc(s.t)}</h3><p>${esc(s.d)}</p></div>`).join("")}</div>
+<h2 style="margin-top:80px">${L.proc}</h2><div class="proc" style="margin-top:24px">${(T.process||[]).map(s=>`<div>${esc(s)}</div>`).join("")}</div></div></section>
+<section id="contact" class="alt"><div class="w con"><div><h2>${L.con}</h2><dl>${f.tel?`<dt>${L.tel}</dt><dd>${esc(f.tel)}</dd>`:""}${f.mail?`<dt>${L.mail}</dt><dd>${esc(f.mail)}</dd>`:""}${f.addr?`<dt>${L.addr}</dt><dd>${esc(f.addr)}</dd>`:""}</dl></div>
+<form onsubmit="event.preventDefault();this.querySelector('small').hidden=false"><input placeholder="${L.fm[0]}"><input placeholder="${L.fm[1]}"><input placeholder="${L.fm[2]}"><textarea placeholder="${L.fm[3]}"></textarea><button class="btn" style="border:0;cursor:pointer;font:inherit;font-weight:700">${L.fm[4]}</button><small hidden>${L.fmNote}</small></form></div></section>
+<footer><div class="w">© ${new Date().getFullYear()} ${esc(nm)}${f.addr?" · "+esc(f.addr):""}${f.dom?" · "+esc(f.dom):""}</div></footer>
+<a class="btn fab" href="#contact">${L.q}</a></body></html>`}
+
+/* ---------- 미리보기 ---------- */
+function show(){if(!DATA)return;const html=site(DATA,F(),VIEW.style,VIEW.lang);const fr=$("#frame");fr.hidden=false;$("#empty").hidden=true;fr.srcdoc=html;fr.classList.toggle("m",VIEW.dev==="m");$("#dl").disabled=$("#pub").disabled=false}
+["sStyle","sLang","sDev"].forEach(id=>$("#"+id).onclick=e=>{const b=e.target.closest("button");if(!b)return;[...b.parentNode.children].forEach(x=>x.classList.toggle("on",x===b));VIEW[{sStyle:"style",sLang:"lang",sDev:"dev"}[id]]=b.dataset.v;show()});
+function st(t,err){const s=$("#st");s.textContent=t;s.classList.toggle("err",!!err)}
+$("#go").onclick=async()=>{const f=F();if(!f.name||!f.what){st("회사 이름과 '무엇을 만드나요'를 적어 주세요",1);return}
+ if(!PH.length){st("사진을 1장 이상 올려 주세요 (첫 화면에 쓰여요)",1);return}
+ const b=$("#go");b.disabled=true;st("🤖 사진을 보고 글을 쓰는 중이에요… (20초쯤)");
+ try{DATA=await ai(f);st("✅ 완성! 오른쪽에서 시안 A/B, 한국어/English를 바꿔 보세요")}
+ catch(e){DATA=fallback(f);st("AI 연결이 안 돼서 기본 문구로 만들었어요 ("+e.message+")",1)}
+ b.disabled=false;show()};
+$("#dl").onclick=()=>{const f=F();const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([site(DATA,f,VIEW.style,VIEW.lang)],{type:"text/html"}));a.download="index.html";document.body.appendChild(a);a.click();a.remove()};
+$("#pub").onclick=()=>{st("☁ 공개: Cloudflare Pages → Create → Upload assets → 받은 index.html 올리기 → 손님 도메인(www.회사이름.co.kr) 연결 (다음 단계에서 버튼 하나로 바꿀게요)")};
+
+/* ---------- 예시 (가상 회사 · 그림은 캔버스로 그림) ---------- */
+function art(seed,w,h,label){const c=document.createElement("canvas");c.width=w;c.height=h;const g=c.getContext("2d");
+ const gr=g.createLinearGradient(0,0,w,h);gr.addColorStop(0,["#1d2b38","#24343f","#2c3a2f","#3a2f28"][seed%4]);gr.addColorStop(1,"#0b1117");g.fillStyle=gr;g.fillRect(0,0,w,h);
+ g.strokeStyle="rgba(255,255,255,.08)";for(let x=0;x<w;x+=40){g.beginPath();g.moveTo(x,0);g.lineTo(x,h);g.stroke()}
+ g.fillStyle="rgba(242,182,48,.85)";g.beginPath();g.arc(w*.7,h*.45,Math.min(w,h)*.18,0,7);g.fill();
+ g.fillStyle="rgba(200,210,220,.9)";g.fillRect(w*.18,h*.55,w*.4,h*.12);g.fillRect(w*.28,h*.3,w*.08,h*.25);
+ g.fillStyle="#fff";g.font=`bold ${Math.round(h*.06)}px sans-serif`;g.fillText(label,w*.06,h*.12);return c.toDataURL("image/jpeg",.8)}
+$("#demo").onclick=()=>{$("#fName").value="한빛정밀(가상)";$("#fNameEn").value="HANBIT PRECISION";$("#fInd").value="parts";$("#fWhat").value="자동차·반도체 장비용 정밀 가공 부품";
+ $("#fMemo").value="1998년 설립, CNC 42대, ISO 9001 인증, 일본·미국 수출";$("#fYear").value="1998";$("#fTel").value="055-000-0000";$("#fMail").value="sales@hanbit-example.co.kr";$("#fDom").value="www.hanbit-example.co.kr";$("#fAddr").value="경남 김해시 예시로 12";
+ PH=["공장 전경 (예시)","CNC 가공 (예시)","샤프트 (예시)","플랜지 (예시)","하우징 (예시)"].map((l,i)=>{const full=art(i,1600,1000,l);return {full,ai:art(i,768,480,l).split(",")[1]}});thumbs();st("예시를 채웠어요. [🤖 홈페이지 만들기]를 눌러 보세요")};
+</script>
+</body>
+</html>
