@@ -4,7 +4,7 @@ const TXT = ["gemini-3.5-flash", "gemini-flash-latest", "gemini-2.5-flash", "gem
 const IMG = ["gemini-3.1-flash-image", "gemini-2.5-flash-image", "gemini-3.1-flash-lite-image"];
 const PRO = ["gemini-3-pro-image", "nano-banana-pro-preview", "gemini-3-pro-image-preview", "gemini-3.1-flash-image"];
 const LIMIT = { copy: 400, scene: 200, poster: 300 }; // 하루 최대 (요금 폭주 방지)
-const PAGE = 50, REDO = 2, FREE_PER_DAY = 40;   // 상세페이지 1건 50크레딧 · 다시 찍기 2크레딧 · 무료 맛보기(대표 컷 1장) 하루 40명
+const PAGE = 50, REDO = 2, FREE_PER_DAY = 15;   // 상세페이지 1건 50크레딧 · 다시 찍기 2크레딧 · 무료 맛보기(대표 컷 1장) 하루 15명 (비용 보호)
 const PKG = { p50: [5000, 50], p110: [10000, 110], p350: [30000, 350] }; // 원, 크레딧
 const SHEET_NAME = "찰칵상세 주문";
 
@@ -33,7 +33,7 @@ function doPost(e) {
       if (!c) return { error: "코드를 찾을 수 없어요" };
       if (c.b < cost) return { error: "크레딧이 부족해요 (남은 " + c.b + ")", bal: c.b };
       c.b -= cost; jset("c_" + code, c);
-      const t = rnd(16); jset("t_" + t, { code: code, cost: cost, left: q.op === "start" ? 30 : 4, used: 0, exp: Date.now() + 2 * 3600e3 });
+      const t = rnd(16); jset("t_" + t, { code: code, cost: cost, left: q.op === "start" ? 22 : 2, used: 0, exp: Date.now() + 2 * 3600e3 });
       return { ticket: t, bal: c.b };
     }));
     if (q.op === "refund") return out(lock(function () {
