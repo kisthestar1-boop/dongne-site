@@ -45,10 +45,12 @@ function doPost(e) {
     if (q.op === "order") return out(lock(function () {
       const pk = PKG[q.pkg]; const em = String(q.email || "").trim();
       if (!pk || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)) return { error: "이메일과 충전 금액을 확인해 주세요" };
-      const sh = sheet(); const id = String(1000 + sh.getLastRow());
+      const sh = sheet(); const n = Number(P().getProperty("ORDER_N") || 0) + 1; P().setProperty("ORDER_N", String(n));
+      const id = String(1000 + n), rowNo = n + 1;
       const into = q.code && jget("c_" + cc(q.code)) ? cc(q.code) : ""; // 이미 코드가 있으면 그 코드에 충전 (지갑 하나)
       const claim = rnd(20); jset("o_" + claim, { order: id });
-      sh.appendRow([new Date(), id, em, pk[0], pk[1], false, "", "", into, claim]);
+      sh.getRange(rowNo, 1, 1, 10).setValues([[new Date(), id, em, pk[0], pk[1], false, "", "", into, claim]]);
+      sh.getRange(rowNo, 6).insertCheckboxes();
       return { order: id, amount: pk[0], credits: pk[1], claim: claim, into: into };
     }));
     if (q.op === "claim") { const o = jget("o_" + String(q.claim || "")); return out(o ? (o.code ? { code: o.code, credits: o.credits, bal: (jget("c_" + o.code) || {}).b } : { wait: true, order: o.order }) : { error: "주문을 찾을 수 없어요" }); }
@@ -133,7 +135,7 @@ function sheet() {
     ss = SpreadsheetApp.create(SHEET_NAME); P().setProperty("SHEET_ID", ss.getId());
     const sh = ss.getSheets()[0]; sh.setName("주문");
     sh.appendRow(["시간", "주문번호", "이메일", "금액(원)", "크레딧", "☑ 입금확인", "크레딧 코드", "메일 발송", "기존 코드", "자동반영키"]);
-    sh.setFrozenRows(1); sh.getRange("F2:F1000").insertCheckboxes(); sh.setColumnWidths(1, 10, 130);
+    sh.setFrozenRows(1); sh.setColumnWidths(1, 10, 130);
   }
   return ss.getSheetByName("주문");
 }
