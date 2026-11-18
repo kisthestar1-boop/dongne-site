@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>찰칵홈 · 사진만 주세요, 홈페이지는 AI가</title>
+<meta name="description" content="회사·가게 사진만 주시면 AI가 홈페이지를 만들어요. 기업 홈페이지 제작·리뉴얼, 판매자 브랜드 사이트, 개인몰. 월 관리까지.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;700&family=Do+Hyeon&display=swap">
+<style>
+:root{--bg:#FFFFFF;--bg2:#F3F6F9;--ink:#14202B;--mu:#5B6B78;--ln:#E1E7EC;--acc:#2156D9;--acc2:#FFD23F;--dark:#0F1A24;--go:#1E9E62;
+ --disp:"Do Hyeon","IBM Plex Sans KR",sans-serif;--body:"IBM Plex Sans KR",system-ui,"Malgun Gothic",sans-serif}
+*{box-sizing:border-box}[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);line-height:1.65;font-size:16px}
+a{color:inherit}.w{max-width:1160px;margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--disp);font-weight:400;margin:0;text-wrap:balance;letter-spacing:.01em}
+.btn{display:inline-flex;align-items:center;gap:8px;font:inherit;font-weight:700;border:0;border-radius:10px;padding:14px 22px;cursor:pointer;text-decoration:none;background:var(--acc);color:#fff}
+.btn.y{background:var(--acc2);color:var(--ink)}.btn.o{background:#fff;color:var(--ink);border:1.5px solid var(--ln)}
+.btn:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid #9DB8F5;outline-offset:2px}
+header{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--ln)}
+header .w{display:flex;align-items:center;gap:26px;height:64px}
+.logo{font-family:var(--disp);font-size:26px;text-decoration:none}.logo i{font-style:normal;color:var(--acc)}
+header nav{display:flex;gap:22px;margin-left:auto;font-size:15px}header nav a{text-decoration:none;color:var(--mu)}header nav a:hover{color:var(--ink)}
+@media(max-width:820px){header nav{display:none}}
+.hero{background:linear-gradient(180deg,#E8F0FF,#fff 85%)}
+.hero .w{display:grid;grid-template-columns:1.05fr 1fr;gap:40px;align-items:center;padding-block:70px 60px}
+@media(max-width:900px){.hero .w{grid-template-columns:1fr;padding-block:44px}}
+.hero h1{font-size:clamp(40px,6vw,68px);line-height:1.12}.hero h1 em{font-style:normal;background:linear-gradient(transparent 62%,var(--acc2) 62%)}
+.hero p{font-size:clamp(17px,1.7vw,20px);color:var(--mu);margin:18px 0 28px;max-width:34ch}
+.hero .cta{display:flex;gap:10px;flex-wrap:wrap}
+.mock{position:relative;border-radius:16px;overflow:hidden;box-shadow:0 30px 60px rgba(20,40,90,.18);background:#0F1A24;aspect-ratio:16/11}
+.mock .bar{height:30px;background:#E9EDF2;display:flex;align-items:center;gap:6px;padding:0 12px}.mock .bar i{width:10px;height:10px;border-radius:50%;background:#C7CFD8}
+.mock .bar span{margin-left:10px;font-size:12px;color:#5B6B78;background:#fff;border-radius:6px;padding:2px 10px}
+.mock img{width:100%;height:calc(100% - 30px);object-fit:cover;display:block;opacity:.85}
+.mock .cap{position:absolute;left:26px;bottom:26px;color:#fff}.mock .cap b{display:block;font-family:var(--disp);font-size:clamp(22px,2.6vw,32px);font-weight:400}.mock .cap small{opacity:.85}
+.mock .chip{position:absolute;right:16px;top:46px;background:var(--acc2);color:var(--ink);font-weight:700;font-size:13px;border-radius:999px;padding:5px 12px}
+.trust{display:flex;gap:28px;flex-wrap:wrap;color:var(--mu);font-size:14px;margin-top:22px}.trust b{color:var(--ink)}
+section{padding-block:84px}section.alt{background:var(--bg2)}
+.sh{text-align:center;margin-bottom:40px}.sh h2{font-size:clamp(28px,3.6vw,42px)}.sh p{color:var(--mu);margin:8px auto 0;max-width:56ch}
+.diag{background:var(--dark);color:#fff;border-radius:18px;padding:28px;display:grid;grid-template-columns:1fr 1.2fr;gap:28px;align-items:center}
+@media(max-width:860px){.diag{grid-template-columns:1fr}}
+.diag h2{font-size:clamp(26px,3vw,36px)}.diag p{color:#B6C3CF;margin:8px 0 0}
+.diag form{display:flex;gap:8px;flex-wrap:wrap}.diag input{flex:1;min-width:200px;font:inherit;padding:14px;border-radius:10px;border:0}
+.dres{grid-column:1/-1;background:#18263A;border-radius:12px;padding:18px;display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:start}
+@media(max-width:600px){.dres{grid-template-columns:1fr}}
+.score{width:110px;height:110px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:conic-gradient(var(--acc2) calc(var(--s)*1%),#2A3A50 0);position:relative}
+.score:before{content:"";position:absolute;inset:10px;border-radius:50%;background:#18263A}.score b,.score small{position:relative}.score b{font-family:var(--disp);font-size:34px;font-weight:400}.score small{color:#B6C3CF;font-size:12px}
+.dres ul{margin:0;padding-left:18px}.dres li{margin:4px 0}
+.svc{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}@media(max-width:900px){.svc{grid-template-columns:1fr}}
+.card{background:#fff;border:1px solid var(--ln);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+.card img{width:100%;aspect-ratio:16/10;object-fit:cover;display:block}.card .in{padding:20px;display:flex;flex-direction:column;gap:8px;flex:1}
+.card h3{font-size:24px}.card p{margin:0;color:var(--mu)}.card ul{margin:0;padding-left:18px;color:var(--mu);font-size:15px}
+.tag{align-self:flex-start;font-size:12px;font-weight:700;color:var(--acc);background:#E8F0FF;border-radius:999px;padding:3px 10px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:18px}@media(max-width:800px){.two{grid-template-columns:1fr}}
+.path{border-radius:16px;padding:28px;display:flex;flex-direction:column;gap:10px;border:1px solid var(--ln);background:#fff}
+.path.b{background:var(--dark);color:#fff;border-color:var(--dark)}.path.b p,.path.b li{color:#B6C3CF}
+.path h3{font-size:28px}.path .pr{font-family:var(--disp);font-size:26px}.path ul{margin:0;padding-left:18px}
+.steps{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;counter-reset:s}@media(max-width:900px){.steps{grid-template-columns:repeat(2,1fr)}}
+.steps div{background:#fff;border:1px solid var(--ln);border-radius:12px;padding:16px;font-size:15px}
+.steps div:before{counter-increment:s;content:"0" counter(s);display:block;font-family:var(--disp);font-size:22px;color:var(--acc)}
+.steps small{display:block;color:var(--mu);font-size:13px}
+.price{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}@media(max-width:900px){.price{grid-template-columns:1fr}}
+.pc{background:#fff;border:1px solid var(--ln);border-radius:14px;padding:24px;display:flex;flex-direction:column;gap:6px}.pc.best{border:2px solid var(--acc);position:relative}
+.pc.best:after{content:"추천";position:absolute;top:-12px;right:18px;background:var(--acc);color:#fff;font-size:12px;font-weight:700;border-radius:999px;padding:3px 10px}
+.pc .n{font-family:var(--disp);font-size:40px;font-variant-numeric:tabular-nums}.pc .n small{font-family:var(--body);font-size:15px;color:var(--mu)}
+.pc ul{margin:6px 0 0;padding-left:18px;color:var(--mu);font-size:15px}
+.care{margin-top:16px;display:grid;grid-template-columns:1fr 1fr;gap:16px}@media(max-width:700px){.care{grid-template-columns:1fr}}
+.care div{background:var(--dark);color:#fff;border-radius:14px;padding:20px}.care small{color:#B6C3CF}
+.cmp{overflow-x:auto}.cmp table{width:100%;border-collapse:collapse;min-width:620px;background:#fff;border-radius:14px;overflow:hidden}
+.cmp th,.cmp td{padding:14px;border-bottom:1px solid var(--ln);text-align:center}.cmp th:first-child,.cmp td:first-child{text-align:left;color:var(--mu)}
+.cmp th.us,.cmp td.us{background:#EEF3FF;font-weight:700}
+.pf{display:grid;grid-template-columns:1fr 1fr;gap:18px}@media(max-width:800px){.pf{grid-template-columns:1fr}}
+.pf a{text-decoration:none}.pf .card img{aspect-ratio:16/9}
+.prep{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}@media(max-width:700px){.prep{grid-template-columns:1fr}}
+.prep div{background:#fff;border:1px solid var(--ln);border-radius:12px;padding:18px}.prep b{display:block;font-size:17px}.prep span{font-size:30px}
+details{background:#fff;border:1px solid var(--ln);border-radius:12px;padding:14px 18px;margin-bottom:10px}summary{cursor:pointer;font-weight:700}details p{margin:8px 0 0;color:var(--mu)}
+.form{display:grid;grid-template-columns:1fr 1fr;gap:12px;background:#fff;border:1px solid var(--ln);border-radius:16px;padding:24px}
+@media(max-width:700px){.form{grid-template-columns:1fr}}
+.form label{display:flex;flex-direction:column;gap:6px;font-weight:700;font-size:14px}.form .full{grid-column:1/-1}
+.form input,.form select,.form textarea{font:inherit;font-weight:400;padding:12px;border:1px solid var(--ln);border-radius:10px;width:100%}
+.form textarea{min-height:120px}.ok{grid-column:1/-1;font-weight:700}
+footer{background:var(--dark);color:#9FB0BF;font-size:14px;padding-block:36px}footer a{color:#9FB0BF}
+.fab{position:fixed;right:max(18px,env(safe-area-inset-right,0px));bottom:max(18px,env(safe-area-inset-bottom,0px));z-index:30;box-shadow:0 10px 24px rgba(20,40,90,.3)}
+</style>
+</head>
+<body>
+<header><div class="w"><a class="logo" href="#">찰칵<i>홈</i></a><nav><a href="#service">서비스</a><a href="#how">진행 방법</a><a href="#price">가격</a><a href="#work">포트폴리오</a><a href="#faq">FAQ</a></nav><a class="btn" href="#contact" style="padding:10px 16px">무료 견적</a></div></header>
+
+<div class="hero"><div class="w">
+ <div>
+  <h1>사진만 주세요.<br><em>홈페이지는 AI가</em> 만들어요.</h1>
+  <p>회사·가게 사진 몇 장과 이름이면 충분해요. 조사·글·디자인·공개·월 관리까지 한 번에 해 드려요.</p>
+  <div class="cta"><a class="btn" href="#contact">🤝 맡기기 · 무료 견적</a><a class="btn o" href="../webmaker/">✨ 직접 만들어 보기 (무료 시안)</a></div>
+  <div class="trust"><span>⏱ 시안 <b>당일</b></span><span>🌐 한국어·영어 <b>동시</b></span><span>🔑 도메인·소스 <b>고객 소유</b></span></div>
+ </div>
+ <div class="mock"><div class="bar"><i></i><i></i><i></i><span>www.회사이름.co.kr</span></div><img src="../webmaker/ex/factory.jpg" alt="AI가 만든 제조업 홈페이지 첫 화면 예시"><span class="chip">AI 시안 · 20초</span><div class="cap"><b>초정밀 가공으로 신뢰를 만듭니다</b><small>예시 · 한빛정밀(가상)</small></div></div>
+</div></div>
+
+<section id="diag"><div class="w">
+ <div class="diag">
+  <div><h2>🤖 AI 무료진단</h2><p>지금 홈페이지 주소를 넣으면 AI가 1분 안에 점수와 고칠 점을 알려 드려요.</p></div>
+  <form id="dForm"><input id="dUrl" inputmode="url" placeholder="https://www.우리회사.co.kr" aria-label="홈페이지 주소"><button class="btn y">진단하기</button></form>
+  <div class="dres" id="dRes" hidden></div>
+ </div>
+</div></section>
+
+<section id="service" class="alt"><div class="w">
+ <div class="sh"><h2>무엇을 만들어 드릴까요?</h2><p>기업부터 개인 판매자까지, 지금 필요한 홈페이지를 골라 주세요.</p></div>
+ <div class="svc">
+  <div class="card"><img src="../webmaker/ex/cnc.jpg" alt="공장 가공 장면"><div class="in"><span class="tag">🏭 기업</span><h3>기업 홈페이지 제작 · 최신화</h3><p>오래된 회사 홈페이지를 요즘 방식으로 바꿔요.</p><ul><li>공장·제품 사진으로 첫 화면</li><li>한국어 + 영어(해외 바이어용)</li><li>견적 문의 버튼 · 카탈로그</li></ul></div></div>
+  <div class="card"><img src="../webmaker/ex/neck1.jpg" alt="실버 목걸이 상품 사진"><div class="in"><span class="tag">🛍 판매자</span><h3>브랜드 홈페이지</h3><p>스마트스토어·쿠팡 판매자를 위한 내 도메인 브랜드 사이트.</p><ul><li>브랜드 이야기 · 상품 소개</li><li>상품마다 [구매하기] → 스토어 연결</li><li>인스타 홍보용 주소로 딱</li></ul></div></div>
+  <div class="card"><img src="../webmaker/ex/pack.jpg" alt="선물 포장"><div class="in"><span class="tag">🛒 개인몰</span><h3>개인몰 (내 쇼핑몰)</h3><p>찰칵상세로 만든 상세페이지를 그대로 상품 페이지로 써요.</p><ul><li>상품 · 장바구니 · 주문서</li><li>카카오페이 송금 주문 (수수료 0원)</li><li>카드 결제는 상담 후 연결</li></ul></div></div>
+ </div>
+</div></section>
+
+<section id="how"><div class="w">
+ <div class="sh"><h2>두 가지 길, 편한 쪽으로</h2><p>직접 해 보고 싶으면 무료 시안, 바쁘시면 맡겨 주세요.</p></div>
+ <div class="two">
+  <div class="path"><span class="tag">직접 만들기</span><h3>✨ 홈페이지 공장</h3><p>이름 · 업종 · 사진만 넣으면 20초 만에 시안 2개가 나와요.</p><ul><li>시안 A(다크) / B(밝은)</li><li>한국어 / English 전환</li><li>마음에 들면 그대로 맡기기</li></ul><div class="pr">무료 시안</div><a class="btn o" href="../webmaker/">지금 만들어 보기 →</a></div>
+  <div class="path b"><span class="tag" style="background:#26385A;color:#9DB8F5">맡기기</span><h3>🤝 찰칵홈이 제작</h3><p>자료만 주시면 조사부터 공개, 월 관리까지 해 드려요.</p><ul><li>회사 정보 조사 · 글 · 사진 보정</li><li>도메인 연결 · 문의 폼 · 공개</li><li>매달 점검 리포트 · 수정 반영</li></ul><div class="pr" style="color:var(--acc2)">49만 원부터</div><a class="btn y" href="#contact">무료 견적 받기 →</a></div>
+ </div>
+ <div class="sh" style="margin:70px 0 24px"><h2 style="font-size:30px">맡기면 이렇게 진행돼요</h2></div>
+ <div class="steps"><div>문의<small>견적 폼 · 카톡</small></div><div>자료 받기<small>사진 · 로고 · 필수 문구</small></div><div>시안 2개<small>당일~2일</small></div><div>수정 · 제작<small>수정 2회 포함</small></div><div>공개<small>내 도메인 연결</small></div><div>월 관리<small>점검 · 리포트</small></div></div>
+</div></section>
+
+<section id="price" class="alt"><div class="w">
+ <div class="sh"><h2>가격</h2><p>제작비는 한 번, 관리는 원하실 때만. 부가세 별도.</p></div>
+ <div class="price">
+  <div class="pc"><b>라이트</b><div class="n">49<small>만 원</small></div><small>작은 회사 · 가게</small><ul><li>5쪽 · 휴대폰 최적화</li><li>문의 폼 · 지도</li><li>제작 3일</li></ul></div>
+  <div class="pc best"><b>스탠다드</b><div class="n">99<small>만 원</small></div><small>수출 제조업 · 브랜드</small><ul><li>10쪽 · 제품 라인업</li><li>영문 페이지 · 카탈로그 PDF</li><li>견적 버튼 고정 · 제작 7일</li></ul></div>
+  <div class="pc"><b>프리미엄 · 개인몰</b><div class="n">199<small>만 원~</small></div><small>다국어 · 쇼핑몰</small><ul><li>다국어 · 뉴스 자동 등록</li><li>상품·주문서 · 문의 관리 화면</li><li>제작 14일</li></ul></div>
+ </div>
+ <div class="care"><div><b>🛠 월 관리 기본 · 3.9만 원</b><br><small>보안 · 백업 · 매달 점검 · 수정 월 1회</small></div><div><b>🛠 월 관리 플러스 · 9.9만 원</b><br><small>수정 월 4회 · 소식 게시 · 영문 번역 · 월간 리포트</small></div></div>
+ <div class="sh" style="margin:60px 0 20px"><h2 style="font-size:30px">한눈에 비교</h2></div>
+ <div class="cmp"><table><tr><th></th><th>빌더 (직접)</th><th>제작 대행사</th><th class="us">찰칵홈</th></tr>
+  <tr><td>내가 할 일</td><td>칸을 하나하나 채우기</td><td>기획 회의 · 자료 정리</td><td class="us">사진 · 이름만</td></tr>
+  <tr><td>시안</td><td>템플릿</td><td>1~2주</td><td class="us">당일</td></tr>
+  <tr><td>영어 페이지</td><td>직접 번역</td><td>추가 비용</td><td class="us">기본 포함(스탠다드)</td></tr>
+  <tr><td>관리</td><td>직접</td><td>별도 계약</td><td class="us">월 3.9만 원부터</td></tr>
+  <tr><td>도메인 · 소스</td><td>플랫폼 종속</td><td>업체마다 다름</td><td class="us">고객 소유</td></tr></table></div>
+</div></section>
+
+<section id="work"><div class="w">
+ <div class="sh"><h2>포트폴리오</h2><p>홈페이지 공장에서 실제로 만든 시안이에요. (가상 회사 예시)</p></div>
+ <div class="pf">
+  <a href="../webmaker/" class="card"><img src="../webmaker/ex/factory.jpg" alt="한빛정밀 예시"><div class="in"><span class="tag">🏭 기업 · 예시</span><h3>한빛정밀(가상) · 정밀 가공 부품</h3><p>1998년 · CNC 42대 · ISO 9001을 첫 화면 숫자로</p></div></a>
+  <a href="../webmaker/" class="card"><img src="../webmaker/ex/atelier.jpg" alt="달빛공방 예시"><div class="in"><span class="tag">🛍 판매자 · 예시</span><h3>달빛공방(가상) · 수제 실버 목걸이</h3><p>브랜드 이야기 + 스마트스토어 구매 버튼</p></div></a>
+ </div>
+ <div class="sh" style="margin:60px 0 20px"><h2 style="font-size:30px">준비물은 3가지면 충분해요</h2></div>
+ <div class="prep"><div><span>📸</span><b>사진 몇 장</b>공장·매장 전경, 제품, 작업 모습</div><div><span>📝</span><b>꼭 넣을 내용</b>회사 이름, 연락처, 자랑할 숫자</div><div><span>🔗</span><b>참고 사이트</b>마음에 드는 홈페이지 주소 (없어도 돼요)</div></div>
+</div></section>
+
+<section id="faq" class="alt"><div class="w" style="max-width:820px">
+ <div class="sh"><h2>자주 묻는 질문</h2></div>
+ <details><summary>정말 사진만 주면 되나요?</summary><p>네. 회사 이름과 사진 몇 장이면 시안을 만들어요. 업력·인증·수출국처럼 자랑할 내용을 알려 주시면 더 좋아져요. 모르는 숫자는 지어내지 않아요.</p></details>
+ <details><summary>지금 있는 홈페이지를 바꿀 수도 있나요?</summary><p>네. 지금 주소를 알려 주시면 내용을 읽고 요즘 방식으로 새로 만들어요. 위의 AI 무료진단으로 먼저 점수를 확인해 보세요.</p></details>
+ <details><summary>제작 기간은 얼마나 걸리나요?</summary><p>시안은 당일~2일, 라이트 3일 · 스탠다드 7일 · 프리미엄 14일 정도예요. 자료가 빨리 오면 더 빨라져요.</p></details>
+ <details><summary>도메인(www.회사이름.co.kr)은 누가 사나요?</summary><p>고객님 이름으로 사시는 게 안전해요. 구입 방법을 안내해 드리고, 연결은 저희가 해 드려요.</p></details>
+ <details><summary>나중에 직접 수정할 수 있나요?</summary><p>월 관리를 쓰시면 카톡·메일로 말씀만 주세요. 관리 없이 쓰셔도 완성된 파일(소스)을 드려요.</p></details>
+ <details><summary>결제는 어떻게 하나요?</summary><p>크몽 안심결제(작업 완료 후 정산) 또는 계좌·카카오페이로 가능해요. 세금계산서가 필요하면 말씀해 주세요.</p></details>
+ <details><summary>쇼핑몰 카드 결제도 되나요?</summary><p>간단 개인몰은 카카오페이 송금 주문으로 바로 시작할 수 있어요. 카드 결제는 사업자등록·통신판매업 신고 후 결제 회사 심사가 필요해서, 상담 후 연결해 드려요.</p></details>
+ <details><summary>관리 중에 해지할 수 있나요?</summary><p>언제든지요. 도메인과 파일은 고객 소유라 바로 넘겨 드려요.</p></details>
+</div></section>
+
+<section id="contact"><div class="w" style="max-width:860px">
+ <div class="sh"><h2>무료 견적 문의</h2><p>남겨 주시면 하루 안에 시안 방향과 견적을 보내 드려요.</p></div>
+ <form class="form" id="qForm">
+  <label>무엇이 필요하세요?<select id="qKind"><option>기업 홈페이지 새로 만들기</option><option>기업 홈페이지 최신화(리뉴얼)</option><option>판매자 브랜드 홈페이지</option><option>개인몰</option><option>잘 모르겠어요 · 상담</option></select></label>
+  <label>회사 · 브랜드 이름<input id="qCo" placeholder="예: 한빛정밀"></label>
+  <label>성함 *<input id="qName" required></label>
+  <label>연락처 (전화 또는 이메일) *<input id="qContact" required></label>
+  <label class="full">지금 홈페이지 주소 (있으면)<input id="qUrl" inputmode="url" placeholder="https://"></label>
+  <label class="full">요청 내용<textarea id="qMsg" placeholder="예: 일본 바이어용 영문 페이지가 필요해요 / 사진은 공장 사진 10장 있어요"></textarea></label>
+  <small class="full" style="color:var(--mu)">보내 주신 정보는 견적 안내에만 쓰고 다른 곳에 주지 않아요.</small>
+  <button class="btn full" id="qBtn" style="justify-content:center">📨 무료 견적 받기</button>
+  <div class="ok" id="qOk" hidden></div>
+ </form>
+</div></section>
+
+<footer><div class="w" style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap"><span>© 2026 찰칵홈 · 사진 한 장으로 시작하는 홈페이지 · 상세페이지는 <a href="../detail.html">찰칵상세</a></span><a href="admin.html">관리자</a></div></footer>
+<a class="btn y fab" href="#contact">💬 무료 견적</a>
+
+<script>
+const PROXY="https://script.google.com/macros/s/AKfycbz09Pualc3dVyOYhjRIBLY1lVpeZMpi8YMoUFlBcqWjJ30gKJagm0HAhio3rFaIf_E/exec";
+const $=s=>document.querySelector(s);const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+let LAST="";
+$("#dForm").onsubmit=async e=>{e.preventDefault();let u=$("#dUrl").value.trim();if(!u)return;if(!/^https?:\/\//.test(u))u="https://"+u;const r=$("#dRes");r.hidden=false;r.innerHTML='<div>🤖 홈페이지를 읽고 있어요… (30초쯤)</div>';
+ const prompt=`다음 홈페이지를 읽고 한국 중소기업 사장님이 이해하기 쉽게 진단해 주세요: ${u}
+JSON 하나로만 답하세요: {"score":0~100 정수,"one":"한 줄 총평","good":["잘한 점 2개"],"fix":["고칠 점 3개 (쉬운 말, 구체적으로)"]}
+기준: 첫 화면에서 무엇을 하는 회사인지 3초 안에 알 수 있는가, 휴대폰에서 보기 좋은가, 문의/견적 버튼이 잘 보이는가, 제품·사례·숫자로 신뢰를 주는가, 최근 소식이 있는가, 영문 페이지가 있는가. 읽지 못하면 score를 0으로 하고 one에 이유를 쓰세요.`;
+ try{const body={contents:[{role:"user",parts:[{text:prompt}]}],tools:[{url_context:{}}],generationConfig:{temperature:.3}};
+  const j=await (await fetch(PROXY,{method:"POST",body:JSON.stringify({op:"copy",body})})).json();if(j.error)throw new Error(j.error);
+  const t=(j.candidates?.[0]?.content?.parts||[]).map(p=>p.text||"").join("");const m=t.match(/\{[\s\S]*\}/);if(!m)throw new Error("결과를 읽지 못했어요");const d=JSON.parse(m[0]);
+  const s=Math.max(0,Math.min(100,+d.score||0));LAST=`점수 ${s} · ${d.one} · 고칠 점: ${(d.fix||[]).join(" / ")}`;
+  r.innerHTML=`<div class="score" style="--s:${s}"><b>${s}</b><small>/ 100</small></div><div><b style="font-size:18px">${esc(d.one)}</b>${(d.good||[]).length?`<p style="margin:10px 0 4px;color:#9FE3BE">👍 잘한 점</p><ul>${d.good.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`:""}<p style="margin:10px 0 4px;color:var(--acc2)">🛠 고칠 점</p><ul>${(d.fix||[]).map(x=>`<li>${esc(x)}</li>`).join("")}</ul><a class="btn y" href="#contact" style="margin-top:14px" id="dGo">이 진단으로 새 시안 받기 →</a></div>`;
+  $("#qUrl").value=u;$("#qKind").value="기업 홈페이지 최신화(리뉴얼)";
+ }catch(err){r.innerHTML=`<div>진단을 끝내지 못했어요 (${esc(err.message)}). 주소를 확인하거나 아래 견적 문의로 남겨 주시면 직접 봐 드릴게요.</div>`}};
+$("#qForm").onsubmit=async e=>{e.preventDefault();const f={kind:$("#qKind").value,company:$("#qCo").value.trim(),name:$("#qName").value.trim(),contact:$("#qContact").value.trim(),url:$("#qUrl").value.trim(),msg:$("#qMsg").value.trim(),diag:LAST};
+ const ok=$("#qOk");if(!f.name||!f.contact){ok.hidden=false;ok.textContent="성함과 연락처를 적어 주세요";return}
+ const b=$("#qBtn");b.disabled=true;ok.hidden=false;ok.textContent="보내는 중…";
+ try{const j=await (await fetch(PROXY,{method:"POST",body:JSON.stringify({op:"hpq",f})})).json();if(j.error)throw new Error(j.error);ok.innerHTML=`✅ 접수됐어요 (번호 ${esc(j.id)}). 하루 안에 연락드릴게요.`;$("#qForm").reset()}
+ catch(err){ok.textContent="보내지 못했어요: "+err.message+" · 잠시 후 다시 시도해 주세요"}b.disabled=false};
+</script>
+</body>
+</html>

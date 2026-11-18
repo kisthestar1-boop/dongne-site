@@ -66,6 +66,25 @@ function doPost(e) {
           "\n\nhttps://kisthestar1-boop.github.io/ttukttak/ 작업 화면 위쪽 '크레딧 코드' 칸에 넣어 주세요.\n찰칵상세 드림" });
       return ok;
     }));
+    /* ---- 찰칵홈(홈페이지 제작): 견적 문의 · 관리자 ---- */
+    if (q.op === "hpq") return out(lock(function () {
+      const f = q.f || {}; const name = String(f.name || "").slice(0, 60), contact = String(f.contact || "").slice(0, 120);
+      if (!name || !contact) return { error: "이름과 연락처를 적어 주세요" };
+      const dk = "hpq_" + today(); const n = Number(P().getProperty(dk) || 0); if (n >= 200) return { error: "오늘 문의가 많아요. 내일 다시 부탁드려요" };
+      P().setProperty(dk, String(n + 1));
+      const sh = hpSheet(); const id = "H" + Utilities.formatDate(new Date(), "Asia/Seoul", "MMdd") + "-" + rnd(3);
+      sh.appendRow([new Date(), id, String(f.kind || ""), name, String(f.company || "").slice(0, 80), contact, String(f.url || "").slice(0, 200), String(f.msg || "").slice(0, 2000), String(f.diag || "").slice(0, 1500), "새 문의", ""]);
+      try { const to = P().getProperty("HP_MAIL") || Session.getEffectiveUser().getEmail(); if (to) MailApp.sendEmail({ to: to, name: "찰칵홈", subject: "[찰칵홈] 새 견적 문의 " + id + " · " + name, body: "종류: " + (f.kind || "") + "\n이름: " + name + "\n회사: " + (f.company || "") + "\n연락처: " + contact + "\n지금 홈페이지: " + (f.url || "") + "\n\n" + (f.msg || "") }); } catch (e3) {}
+      return { ok: true, id: id };
+    }));
+    if (q.op === "hpadmin") {
+      const key = P().getProperty("HP_ADMIN"); if (!key || String(q.key || "") !== key) return out({ error: "관리자 코드가 맞지 않아요" });
+      if (q.sub === "list") { const v = hpSheet().getDataRange().getValues(); return out({ rows: v.slice(1).reverse().slice(0, 300).map(function (r, i) { return { row: v.length - i, at: r[0], id: r[1], kind: r[2], name: r[3], company: r[4], contact: r[5], url: r[6], msg: r[7], diag: r[8], st: r[9], memo: r[10] }; }) }); }
+      if (q.sub === "st") return out(lock(function () { const sh = hpSheet(); const row = Number(q.row); if (row < 2) return { error: "행 오류" }; sh.getRange(row, 10, 1, 2).setValues([[String(q.st || ""), String(q.memo || "")]]); return { ok: true }; }));
+      if (q.sub === "sites") return out({ sites: jget("hp_sites") || [] });
+      if (q.sub === "sitesSet") return out(lock(function () { jset("hp_sites", (q.sites || []).slice(0, 300)); return { ok: true }; }));
+      return out({ error: "잘못된 요청" });
+    }
     /* ---- AI 호출 ---- */
     if (q.op !== "copy" && q.op !== "scene" && q.op !== "poster") return out({ error: "잘못된 요청" });
     if (e.postData.contents.length > 6000000) return out({ error: "사진이 너무 커요" });
@@ -139,6 +158,13 @@ function sheet() {
   }
   return ss.getSheetByName("주문");
 }
+function hpSheet() {
+  const ss = sheet().getParent(); let sh = ss.getSheetByName("홈페이지 문의");
+  if (!sh) { sh = ss.insertSheet("홈페이지 문의"); sh.appendRow(["시간", "번호", "종류", "이름", "회사/브랜드", "연락처", "지금 홈페이지", "문의 내용", "AI 진단", "상태", "메모"]); sh.setFrozenRows(1); sh.setColumnWidths(1, 11, 140); }
+  return sh;
+}
+/* 찰칵홈 관리자 코드 만들기: 편집기에서 한 번 실행 → 실행 기록에 나온 코드를 관리자 화면에 넣어요 */
+function hpSetup() { let k = P().getProperty("HP_ADMIN"); if (!k) { k = "HP-" + rnd(6) + "-" + rnd(6); P().setProperty("HP_ADMIN", k); } hpSheet(); Logger.log("관리자 코드: " + k); }
 function mint(credits, note) {
   return lock(function () {
     let code; do { code = "CK-" + rnd(4) + "-" + rnd(4); } while (P().getProperty("c_" + code));

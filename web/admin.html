@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>찰칵홈 관리자</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;700&family=Do+Hyeon&display=swap">
+<style>
+:root{--bg:#EEF2F5;--card:#fff;--ink:#14202B;--mu:#5B6B78;--ln:#DCE3E9;--acc:#2156D9;--y:#FFD23F;--dark:#0F1A24}
+*{box-sizing:border-box}[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans KR",system-ui,sans-serif;font-size:14px}
+.top{display:flex;align-items:center;gap:14px;padding:10px 18px;background:var(--dark);color:#fff;flex-wrap:wrap}
+.top b{font-family:"Do Hyeon",sans-serif;font-weight:400;font-size:22px}.top b i{font-style:normal;color:var(--y)}
+.tabs{display:flex;gap:4px;flex-wrap:wrap}.tabs button{font:inherit;font-weight:700;border:0;border-radius:999px;padding:8px 14px;background:#1E2C3A;color:#C9D6E2;cursor:pointer}.tabs button.on{background:var(--y);color:var(--ink)}
+.top .sp{flex:1}.top a{color:#9FB0BF;font-size:13px}
+main{padding:16px;max-width:1300px;margin:0 auto}
+.card{background:var(--card);border:1px solid var(--ln);border-radius:14px;padding:16px}
+.login{max-width:420px;margin:80px auto;display:flex;flex-direction:column;gap:10px;text-align:center}
+input,select,textarea{font:inherit;padding:9px 10px;border:1px solid var(--ln);border-radius:9px;background:#fff;width:100%}
+.btn{font:inherit;font-weight:700;border:0;border-radius:9px;padding:9px 14px;background:var(--acc);color:#fff;cursor:pointer}.btn.g{background:#fff;color:var(--ink);border:1px solid var(--ln)}
+.kpi{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}.kpi div{background:var(--card);border:1px solid var(--ln);border-radius:12px;padding:10px 16px}.kpi b{display:block;font-size:24px;font-variant-numeric:tabular-nums}
+.list{display:flex;flex-direction:column;gap:8px}
+.q{display:grid;grid-template-columns:110px 1fr 170px;gap:12px;align-items:start}@media(max-width:800px){.q{grid-template-columns:1fr}}
+.q small{color:var(--mu)}.q .st{display:flex;flex-direction:column;gap:6px}
+.pill{display:inline-block;font-size:12px;font-weight:700;border-radius:999px;padding:2px 9px;background:#E8F0FF;color:var(--acc)}
+.msg{white-space:pre-wrap;margin-top:6px}.diag{margin-top:6px;font-size:12.5px;background:#FFF8D9;border-radius:8px;padding:6px 9px}
+iframe{width:100%;height:calc(100vh - 110px);border:0;border-radius:14px;background:#fff}
+table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--ln)}th{font-size:12px;color:var(--mu)}
+.empty{color:var(--mu);text-align:center;padding:30px}
+</style>
+</head>
+<body>
+<div class="top"><b>찰칵<i>홈</i> 관리자</b><div class="tabs" id="tabs" hidden><button data-t="inbox" class="on">📥 문의함</button><button data-t="factory">🏭 홈페이지 공장</button><button data-t="sites">🗂 관리 채널</button></div><span class="sp"></span><a href="./" target="_blank" rel="noopener">고객 사이트 보기 ↗</a><a href="#" id="out" hidden>로그아웃</a></div>
+<main>
+ <div class="card login" id="login"><b style="font-size:18px">🔑 관리자 코드</b><small style="color:var(--mu)">처음 한 번만 넣으면 이 기기에서 기억해요 (HP-로 시작)</small><input id="code" placeholder="HP-XXXXXX-XXXXXX" autocomplete="off"><button class="btn" id="go">들어가기</button><small id="lmsg" style="color:#C2453D"></small></div>
+ <section id="inbox" hidden><div class="kpi" id="kpi"></div><div class="list" id="qs"></div></section>
+ <section id="factory" hidden><iframe src="../webmaker/" title="홈페이지 공장"></iframe></section>
+ <section id="sites" hidden><div class="card"><table><thead><tr><th>회사</th><th>주소(도메인)</th><th>단계</th><th>월 관리</th><th>다음 점검</th><th>메모</th><th></th></tr></thead><tbody id="sbody"></tbody></table>
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:12px"><input id="nN" placeholder="회사 이름" style="max-width:200px"><input id="nD" placeholder="www.회사이름.co.kr" style="max-width:240px"><select id="nP" style="max-width:150px"><option>관리 없음</option><option>기본 3.9만</option><option>플러스 9.9만</option></select><button class="btn" id="nAdd">＋ 추가</button></div></div></section>
+</main>
+<script>
+const PROXY="https://script.google.com/macros/s/AKfycbz09Pualc3dVyOYhjRIBLY1lVpeZMpi8YMoUFlBcqWjJ30gKJagm0HAhio3rFaIf_E/exec";
+const $=s=>document.querySelector(s);const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+let KEY="";try{KEY=localStorage.getItem("hpAdmin")||""}catch(_){}
+const api=async(sub,x)=>{const j=await (await fetch(PROXY,{method:"POST",body:JSON.stringify(Object.assign({op:"hpadmin",key:KEY,sub},x||{}))})).json();if(j.error)throw new Error(j.error);return j};
+const ST=["새 문의","상담 중","시안 보냄","계약","제작 중","완료","보류"],SS=["시안","공개","관리 중","보류"];
+let SITES=[];
+async function enter(){$("#lmsg").textContent="확인 중…";try{const j=await api("list");try{localStorage.setItem("hpAdmin",KEY)}catch(_){}$("#login").hidden=true;$("#tabs").hidden=false;$("#out").hidden=false;show("inbox");renderQ(j.rows)}catch(e){$("#lmsg").textContent=e.message;$("#login").hidden=false}}
+function show(t){["inbox","factory","sites"].forEach(x=>$("#"+x).hidden=x!==t);[...$("#tabs").children].forEach(b=>b.classList.toggle("on",b.dataset.t===t));if(t==="sites")loadSites()}
+function renderQ(rows){const c=s=>rows.filter(r=>r.st===s).length;$("#kpi").innerHTML=`<div>전체<b>${rows.length}</b></div><div>새 문의<b style="color:#C2453D">${c("새 문의")}</b></div><div>상담 중<b>${c("상담 중")}</b></div><div>계약<b style="color:#1E9E62">${c("계약")+c("제작 중")+c("완료")}</b></div>`;
+ $("#qs").innerHTML=rows.map(r=>`<div class="card q"><div><span class="pill">${esc(r.st||"새 문의")}</span><br><small>${esc(r.id)}<br>${esc(String(r.at).slice(0,16).replace("T"," "))}</small></div>
+ <div><b style="font-size:15px">${esc(r.name)}</b> · ${esc(r.company||"")} <small>· ${esc(r.kind)}</small><br>📞 ${esc(r.contact)}${r.url?` · 🔗 <a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.url)}</a>`:""}${r.msg?`<div class="msg">${esc(r.msg)}</div>`:""}${r.diag?`<div class="diag">🤖 ${esc(r.diag)}</div>`:""}</div>
+ <div class="st"><select data-row="${r.row}">${ST.map(s=>`<option ${s===r.st?"selected":""}>${s}</option>`).join("")}</select><input data-memo="${r.row}" value="${esc(r.memo||"")}" placeholder="메모"><button class="btn g" data-save="${r.row}">저장</button></div></div>`).join("")||'<div class="card empty">아직 문의가 없어요 · 고객 사이트의 견적 폼으로 들어와요</div>'}
+$("#qs").onclick=async e=>{const b=e.target.closest("[data-save]");if(!b)return;const row=b.dataset.save;b.textContent="저장 중…";try{await api("st",{row,st:$(`select[data-row="${row}"]`).value,memo:$(`input[data-memo="${row}"]`).value});b.textContent="✓ 저장됨"}catch(err){b.textContent="실패"}};
+async function loadSites(){try{SITES=(await api("sites")).sites||[]}catch(_){}drawSites()}
+function drawSites(){$("#sbody").innerHTML=SITES.map((s,i)=>s.arch?"":`<tr><td><b>${esc(s.name)}</b></td><td>${esc(s.domain||"—")}</td><td><button class="btn g" data-sst="${i}">${esc(s.stage||"시안")}</button></td><td>${esc(s.plan||"—")}</td><td><input data-snext="${i}" value="${esc(s.next||"")}" placeholder="예: 12/18" style="max-width:110px"></td><td><input data-smemo="${i}" value="${esc(s.memo||"")}"></td><td><button class="btn g" data-sarc="${i}" title="보관">📦</button></td></tr>`).join("")||'<tr><td colspan="7" class="empty">아직 없어요</td></tr>'}
+async function saveSites(){try{await api("sitesSet",{sites:SITES})}catch(_){}drawSites()}
+$("#sbody").onclick=e=>{const a=e.target.closest("[data-sst]"),r=e.target.closest("[data-sarc]");if(a){const s=SITES[+a.dataset.sst];s.stage=SS[(SS.indexOf(s.stage)+1)%SS.length];saveSites()}if(r){SITES[+r.dataset.sarc].arch=1;saveSites()}};
+$("#sbody").onchange=e=>{const n=e.target.dataset.snext,m=e.target.dataset.smemo;if(n!=null)SITES[+n].next=e.target.value;if(m!=null)SITES[+m].memo=e.target.value;saveSites()};
+$("#nAdd").onclick=()=>{const n=$("#nN").value.trim();if(!n)return;SITES.push({name:n,domain:$("#nD").value.trim(),plan:$("#nP").value,stage:"시안",at:new Date().toISOString().slice(0,10)});$("#nN").value=$("#nD").value="";saveSites()};
+$("#tabs").onclick=e=>{const b=e.target.closest("[data-t]");if(b)show(b.dataset.t)};
+$("#go").onclick=()=>{KEY=$("#code").value.trim();enter()};$("#code").onkeydown=e=>{if(e.key==="Enter")$("#go").click()};
+$("#out").onclick=e=>{e.preventDefault();try{localStorage.removeItem("hpAdmin")}catch(_){}location.reload()};
+if(KEY)enter();
+</script>
+</body>
+</html>
