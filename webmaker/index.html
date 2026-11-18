@@ -216,6 +216,7 @@ $("#dl").onclick=()=>{const f=F();const a=document.createElement("a");a.href=URL
 $("#pub").onclick=()=>{st("☁ 공개: Cloudflare Pages → Create → Upload assets → 받은 index.html 올리기 → 손님 도메인(www.회사이름.co.kr) 연결 (다음 단계에서 버튼 하나로 바꿀게요)")};
 
 /* ---------- 예시 (가상 회사 · 그림은 캔버스로 그림) ---------- */
+async function exPhotos(names){PH=[];for(const n of names){try{const b=await (await fetch("ex/"+n+".jpg")).blob();const f=new File([b],n+".jpg",{type:"image/jpeg"});const full=await shrink(f,1600,.85),ai=await shrink(f,768,.75);PH.push({full,ai:ai.split(",")[1]})}catch(_){}}thumbs()}
 function art(seed,w,h,label){const c=document.createElement("canvas");c.width=w;c.height=h;const g=c.getContext("2d");
  const gr=g.createLinearGradient(0,0,w,h);gr.addColorStop(0,["#1d2b38","#24343f","#2c3a2f","#3a2f28"][seed%4]);gr.addColorStop(1,"#0b1117");g.fillStyle=gr;g.fillRect(0,0,w,h);
  g.strokeStyle="rgba(255,255,255,.08)";for(let x=0;x<w;x+=40){g.beginPath();g.moveTo(x,0);g.lineTo(x,h);g.stroke()}
@@ -224,10 +225,10 @@ function art(seed,w,h,label){const c=document.createElement("canvas");c.width=w;
  g.fillStyle="#fff";g.font=`bold ${Math.round(h*.06)}px sans-serif`;g.fillText(label,w*.06,h*.12);return c.toDataURL("image/jpeg",.8)}
 $("#demo").onclick=()=>{$("#fName").value="한빛정밀(가상)";$("#fNameEn").value="HANBIT PRECISION";$("#fInd").value="parts";$("#fWhat").value="자동차·반도체 장비용 정밀 가공 부품";
  $("#fMemo").value="1998년 설립, CNC 42대, ISO 9001 인증, 일본·미국 수출";$("#fYear").value="1998";$("#fTel").value="055-000-0000";$("#fMail").value="sales@hanbit-example.co.kr";$("#fDom").value="www.hanbit-example.co.kr";$("#fAddr").value="경남 김해시 예시로 12";
- PH=["공장 전경 (예시)","CNC 가공 (예시)","샤프트 (예시)","플랜지 (예시)","하우징 (예시)"].map((l,i)=>{const full=art(i,1600,1000,l);return {full,ai:art(i,768,480,l).split(",")[1]}});thumbs();st("예시를 채웠어요. [🤖 홈페이지 만들기]를 눌러 보세요")};
+ exPhotos(["factory","cnc","shaft","flange"]).then(()=>st("예시를 채웠어요. [🤖 홈페이지 만들기]를 눌러 보세요"))};
 $("#demo2").onclick=()=>{$("#fName").value="달빛공방(가상)";$("#fNameEn").value="DALBIT ATELIER";$("#fInd").value="shop";$("#shopRow").hidden=false;$("#fWhat").value="손으로 만든 실버 목걸이";
  $("#fMemo").value="2023년 시작, 925 실버, 주문 후 직접 제작";$("#fYear").value="2023";$("#fTel").value="010-0000-0000";$("#fMail").value="hello@dalbit-example.kr";$("#fDom").value="www.dalbit-example.kr";$("#fAddr").value="";$("#fShop").value="https://smartstore.naver.com/example";
- PH=["작업실 (예시)","목걸이 1 (예시)","목걸이 2 (예시)","포장 (예시)"].map((l,i)=>{const full=art(i+1,1600,1000,l);return {full,ai:art(i+1,768,480,l).split(",")[1]}});thumbs();st("판매자 예시를 채웠어요. [🤖 홈페이지 만들기]를 눌러 보세요")};
+ exPhotos(["atelier","neck1","pack"]).then(()=>st("판매자 예시를 채웠어요. [🤖 홈페이지 만들기]를 눌러 보세요"))};
 </script>
 </body>
 </html>
