@@ -16,7 +16,7 @@ BG = (12, 14, 22)
 
 
 def panel(n, width=W, crop_top=165):
-    im = Image.open(f"{SRC}/p{n:02d}.jpg").convert("RGB")
+    im = Image.open(f"{SRC}/p{n:02d}.jpg" if isinstance(n, int) else f"{SRC}/p{n}.jpg").convert("RGB")
     im = im.crop((0, crop_top, im.width, im.height))
     h = round(im.height * width / im.width)
     return im.resize((width, h), Image.LANCZOS)
@@ -76,6 +76,8 @@ def narration(img, text, x, y, size=26, maxw=560, dark=True):
     lh = size * 1.55
     tw = max(d.textlength(l, font=f) for l in lines)
     pad = 18
+    x = max(16, min(x, W - 16 - (tw + pad * 2)))
+    y = min(y, img.height - 16 - (lh * len(lines) + pad * 2 - (lh - size)))
     box = [x, y, x + tw + pad * 2, y + lh * len(lines) + pad * 2 - (lh - size)]
     d.rectangle(box, fill=(10, 12, 24, 215) if dark else (250, 247, 240, 235), outline=(255, 255, 255, 60) if dark else (40, 30, 20, 120), width=2)
     yy = y + pad
@@ -129,12 +131,18 @@ blocks.append((p, 60))
 p = panel(3)
 bubble(p, "이건 그린홀드\n기사단이 가져가지.", 230, 110, size=30, tail=(300, 260))
 narration(p, "가문 없는 여우는, 원래 그런 대우를 받았다.", 120, p.height - 100)
+blocks.append((p, 60))
+
+p = panel("03b")
+bubble(p, "그림자 숲 길 안내해라.\n살아서 나오면, 이건 돌려주지.", 250, 95, size=26, tail=(250, 200), maxw=420)
+bubble(p, "…약속했어.", 640, 260, size=28, tail=(610, 360))
+narration(p, "그 숲길을 아는 건, 거기서 조각을 줍던 F급뿐이었다.", 150, p.height - 100, maxw=620)
 blocks.append((p, 280))
 
 p = panel(4)
-narration(p, "그날 밤, 그림자 숲.\n그 숲길을 아는 건, 거기서 조각을 줍던 F급뿐이었다.", 30, 30, maxw=640)
-bubble(p, "길 안내해.\n조각 값은 쳐주지.", 660, 195, size=26, tail=(610, 300))
-narration(p, "조각을 되찾을 수 있다면 — 레온은 따라나섰다.", 230, p.height - 100, maxw=560)
+narration(p, "그날 밤, 그림자 숲.", 30, 30)
+bubble(p, "앞장서, 길잡이.", 660, 195, size=26, tail=(610, 300))
+narration(p, "조각을 되찾을 수 있다면 — 레온은 어디든 갈 수 있었다.", 40, p.height - 100, maxw=720)
 blocks.append((p, 40))
 
 p = panel(5)
@@ -165,8 +173,13 @@ narration(p, "그런데 — 반대였다.", 430, p.height - 100)
 blocks.append((p, 40))
 
 p = panel(9)
-narration(p, "수십 번. 아니, 백 번 가까이 살아 본 기억.\n짐승들이 어디로 뛸지 — 이미 본 적이 있었다.", 30, 30, maxw=640)
-bubble(p, "…다음은, 왼쪽.", 600, p.height - 150, size=28, tail=(520, p.height - 260))
+narration(p, "수십 번. 아니, 백 번 가까이 살아 본 기억.\n그 기억 속의 나는 — 이 짐승들과 이미 싸워 봤다.", 30, 30, maxw=660)
+bubble(p, "…알아, 너희.", 640, p.height - 120, size=28, tail=(560, p.height - 200))
+blocks.append((p, 40))
+
+p = panel("09b")
+narration(p, "백 번의 기억이 겹쳐지자, 보였다.\n짐승이 어디로 뛸지 — 한 걸음 먼저.", 30, 30, maxw=640)
+bubble(p, "왼쪽 하나.\n뒤로 둘.", 650, p.height - 140, size=26, tail=(560, p.height - 230))
 blocks.append((p, 40))
 
 p = panel(10)
