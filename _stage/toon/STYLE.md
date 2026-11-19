@@ -4,6 +4,8 @@
 - 눈매 기준: 새싹 소녀 (_stage/toon/ref/97ffa2e3f5088a82acad533844918fa5.jpg) ← 민성님이 "요런 눈매가 좋아"
 - 허용 범위 끝: 츤데레 얼음 마법사 (_stage/toon/ref/e030c60c3401f1cf528f486fcd160ae9.jpg) ← "요렇게 까지도" — 찡그려도 눈은 크고 동그랗게, 볼 빨갛게
 - 분위기 기준: 장송의 프리렌 (그림체만 참고 · 캐릭터는 전부 새로 만듦)
+- ✅ 합격 기준 (20:36 "요런 풍까지 합격"): 약초 견습 마법사 (_stage/toon/ref/pass_herbalist.jpg) — 앞으로 이 그림을 참고로 붙여서 그림
+- ⚠️ 프롬프트에 작품 이름을 넣으면 실제 캐릭터와 닮게 나옴 → 그림체만 설명하고 캐릭터는 꼭 새로
 - 꼬마(치비) 기준: 덤벙이 꼬마 6종 — 귀엽다고 하심
 
 ## 눈 (가장 중요)
@@ -27,4 +29,4 @@
 - 툰·게임 겸용: 모델 시트 (앞·옆·뒤 + 표정 6 + 게임 동작 4)
 
 ## 제미나이 프롬프트 고정 문구
-STYLE LOCK: gentle calm fantasy anime style like the anime "Frieren: Beyond Journey's End" (style only, original character), clean thin line art, flat cel shading with one soft shadow tone, clear pale pastel colors, cream background. EYES exactly like the attached reference girl: large round gentle eyes, soft curved upper lids, clear irises with one big and one small highlight, innocent calm expression. NO freckles, NO rough watercolor paper texture, NO western storybook faces. NEVER half-lidded, sultry, smirking, winking-seductive or mature-looking eyes.
+STYLE LOCK: gentle calm fantasy anime style (soft modern fantasy anime look, original character only), clean thin line art, flat cel shading with one soft shadow tone, clear pale pastel colors, cream background. EYES exactly like the attached reference girl: large round gentle eyes, soft curved upper lids, clear irises with one big and one small highlight, innocent calm expression. NO freckles, NO rough watercolor paper texture, NO western storybook faces. NEVER half-lidded, sultry, smirking, winking-seductive or mature-looking eyes.
