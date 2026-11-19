@@ -31,11 +31,15 @@ table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:9px 8px;
 </style>
 </head>
 <body>
-<div class="top"><b>찰칵<i>홈</i> 관리자</b><div class="tabs" id="tabs" hidden><button data-t="inbox" class="on">📥 문의함</button><button data-t="factory">🏭 홈페이지 공장</button><button data-t="sites">🗂 관리 채널</button></div><span class="sp"></span><a href="./" target="_blank" rel="noopener">고객 사이트 보기 ↗</a><a href="#" id="out" hidden>로그아웃</a></div>
+<div class="top"><b>찰칵<i>홈</i> 관리자</b><div class="tabs" id="tabs" hidden><button data-t="inbox" class="on">📥 문의함</button><button data-t="factory">🏭 홈페이지 공장</button><button data-t="made">🖼 만든 홈페이지</button><button data-t="sites">🗂 관리 채널</button></div><span class="sp"></span><a href="./" target="_blank" rel="noopener">고객 사이트 보기 ↗</a><a href="#" id="out" hidden>로그아웃</a></div>
 <main>
  <div class="card login" id="login"><b style="font-size:18px">🔑 관리자 코드</b><small style="color:var(--mu)">처음 한 번만 넣으면 이 기기에서 기억해요 (HP-로 시작)</small><input id="code" placeholder="HP-XXXXXX-XXXXXX" autocomplete="off"><button class="btn" id="go">들어가기</button><small id="lmsg" style="color:#C2453D"></small></div>
  <section id="inbox" hidden><div class="kpi" id="kpi"></div><div class="list" id="qs"></div></section>
  <section id="factory" hidden><iframe src="../webmaker/" title="홈페이지 공장"></iframe></section>
+ <section id="made" hidden><div class="mades" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px">
+  <a class="card" href="ex/company/" target="_blank" rel="noopener" style="text-decoration:none;color:inherit"><iframe src="ex/company/" loading="lazy" tabindex="-1" style="height:220px;pointer-events:none;border-radius:10px"></iframe><b style="display:block;margin-top:8px">🏭 한빛정밀(가상) · 기업 예시</b><small style="color:var(--mu)">회사 소개 · 제품 · 강점 · 문의</small></a>
+  <a class="card" href="ex/shop/" target="_blank" rel="noopener" style="text-decoration:none;color:inherit"><iframe src="ex/shop/" loading="lazy" tabindex="-1" style="height:220px;pointer-events:none;border-radius:10px"></iframe><b style="display:block;margin-top:8px">🛍 달빛공방(가상) · 쇼핑몰 예시</b><small style="color:var(--mu)">장바구니 · 주문 → 문의함으로 들어와요</small></a>
+ </div><p style="color:var(--mu);font-size:13px">새로 만든 홈페이지는 🏭 홈페이지 공장에서 만들고, Claude가 여기에 추가해요.</p></section>
  <section id="sites" hidden><div class="card"><table><thead><tr><th>회사</th><th>주소(도메인)</th><th>단계</th><th>월 관리</th><th>다음 점검</th><th>메모</th><th></th></tr></thead><tbody id="sbody"></tbody></table>
   <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:12px"><input id="nN" placeholder="회사 이름" style="max-width:200px"><input id="nD" placeholder="www.회사이름.co.kr" style="max-width:240px"><select id="nP" style="max-width:150px"><option>관리 없음</option><option>기본 3.9만</option><option>플러스 9.9만</option></select><button class="btn" id="nAdd">＋ 추가</button></div></div></section>
 </main>
@@ -47,7 +51,7 @@ const api=async(sub,x)=>{const j=await (await fetch(PROXY,{method:"POST",body:JS
 const ST=["새 문의","상담 중","시안 보냄","계약","제작 중","완료","보류"],SS=["시안","공개","관리 중","보류"];
 let SITES=[];
 async function enter(){$("#lmsg").textContent="확인 중…";try{const j=await api("list");try{localStorage.setItem("hpAdmin",KEY)}catch(_){}$("#login").hidden=true;$("#tabs").hidden=false;$("#out").hidden=false;show("inbox");renderQ(j.rows)}catch(e){$("#lmsg").textContent=e.message;$("#login").hidden=false}}
-function show(t){["inbox","factory","sites"].forEach(x=>$("#"+x).hidden=x!==t);[...$("#tabs").children].forEach(b=>b.classList.toggle("on",b.dataset.t===t));if(t==="sites")loadSites()}
+function show(t){["inbox","factory","made","sites"].forEach(x=>$("#"+x).hidden=x!==t);[...$("#tabs").children].forEach(b=>b.classList.toggle("on",b.dataset.t===t));if(t==="sites")loadSites()}
 function renderQ(rows){const c=s=>rows.filter(r=>r.st===s).length;$("#kpi").innerHTML=`<div>전체<b>${rows.length}</b></div><div>새 문의<b style="color:#C2453D">${c("새 문의")}</b></div><div>상담 중<b>${c("상담 중")}</b></div><div>계약<b style="color:#1E9E62">${c("계약")+c("제작 중")+c("완료")}</b></div>`;
  $("#qs").innerHTML=rows.map(r=>`<div class="card q"><div><span class="pill">${esc(r.st||"새 문의")}</span><br><small>${esc(r.id)}<br>${esc(String(r.at).slice(0,16).replace("T"," "))}</small></div>
  <div><b style="font-size:15px">${esc(r.name)}</b> · ${esc(r.company||"")} <small>· ${esc(r.kind)}</small><br>📞 ${esc(r.contact)}${r.url?` · 🔗 <a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.url)}</a>`:""}${r.msg?`<div class="msg">${esc(r.msg)}</div>`:""}${r.diag?`<div class="diag">🤖 ${esc(r.diag)}</div>`:""}</div>
