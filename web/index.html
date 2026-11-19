@@ -127,6 +127,16 @@ header nav a{font-weight:600}
 .soon{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.soon div{border:1.5px dashed #C9D4E0;border-radius:16px;padding:22px;color:var(--mu);background:#FAFCFE}.soon b{display:block;color:var(--ink);font-size:17px;margin:6px 0 2px}
 @media(max-width:700px){.marq .tr{grid-template-columns:1fr 1fr}}@media(max-width:860px){.pfi,.pfi.r{grid-template-columns:1fr}.pfi.r .sh2{order:0}.pfi .sh2{min-height:240px}.soon{grid-template-columns:1fr}}
 footer{padding-block:48px}
+
+/* 포트폴리오 네 칸 (11/19) */
+.pfx{display:grid!important;grid-template-columns:1fr 1fr;gap:18px}
+.pfx .pfi,.pfx .pfi.r{grid-template-columns:1fr;grid-template-rows:auto 1fr}
+.pfx .pfi.r .sh2{order:0}
+.pfx .pfi .sh2{min-height:250px}
+.pfx .pfi .sh2 img.m{width:20%;bottom:-46px}
+.pfx .pfi .tx{padding:22px 24px 26px;justify-content:flex-start;gap:9px}
+.pfx .pfi h3{font-size:21px}.pfx .pfi p{font-size:14.5px}
+@media(max-width:760px){.pfx{grid-template-columns:1fr}}
 </style></head>
 <body>
 <header><div class="w"><a class="logo" href="#">찰칵<i>홈</i></a><nav><a href="#service">서비스</a><a href="#how">진행 방법</a><a href="#price">가격</a><a href="#work">포트폴리오</a><a href="#faq">FAQ</a></nav><a class="btn" href="#contact" style="padding:10px 16px">무료 견적</a></div></header>
