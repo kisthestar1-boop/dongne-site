@@ -80,6 +80,11 @@ details{background:#fff;border:1px solid var(--ln);border-radius:12px;padding:14
 .form textarea{min-height:120px}.ok{grid-column:1/-1;font-weight:700}
 footer{background:var(--dark);color:#9FB0BF;font-size:14px;padding-block:36px}footer a{color:#9FB0BF}
 .fab{position:fixed;right:max(18px,env(safe-area-inset-right,0px));bottom:max(18px,env(safe-area-inset-bottom,0px));z-index:30;box-shadow:0 10px 24px rgba(20,40,90,.3)}
+
+.pk{position:fixed;inset:0;z-index:150;background:rgba(15,20,30,.5);display:grid;place-items:center;padding:14px}.pk[hidden]{display:none}
+.pkb{position:relative;background:#fff;border-radius:22px;width:min(1040px,100%);max-height:92vh;overflow:auto;box-shadow:0 30px 80px rgba(0,0,0,.3)}
+.pkb>#pkc>section,.pkb>#pkc>div{margin:0!important}.pkb #pkc section{padding:34px 0 30px!important}
+.pkx{position:sticky;top:12px;float:right;margin:12px 12px 0 0;border:0;background:#EEF1F5;width:38px;height:38px;border-radius:12px;cursor:pointer;font-size:16px;z-index:3}
 </style>
 <style>/* 가독성 강화 */:root{--mu:#4A5A6A}.steps div{font-size:17px;font-weight:700;padding:18px}.steps small{font-size:14px;font-weight:500;color:#4A5A6A;margin-top:4px}.pc ul{font-size:16px;color:#2A3846}.pc ul li{margin:4px 0}.sh p,.lead{font-size:17px;color:#3E4E5E}.path ul{font-size:16px;color:#2A3846}.path p{font-size:16px}</style><style>/* v2 · 2026-11 upgrade */
 body{font-size:16.5px;letter-spacing:-.01em}
@@ -167,7 +172,7 @@ footer{padding-block:48px}
 .cf{display:grid;grid-template-columns:1.2fr 1fr;gap:20px;align-items:center}.cf p{margin:0;color:var(--mu)}.cf ul{margin:0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:6px}.cf li{background:#EAF6EE;color:#1E6B3A;border-radius:99px;padding:6px 12px;font-size:13.5px;font-weight:700}
 .cbt{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
 @media(max-width:860px){.hero .w{grid-template-columns:1fr!important}.cg{grid-template-columns:1fr 120px;padding:10px}.ct{grid-template-columns:1fr 1fr 1fr;gap:6px}.ct figcaption{font-size:12px}.cf{grid-template-columns:1fr}.inds .soonc{margin-left:0}}
-</style></head>
+html{scroll-behavior:auto!important}</style></head>
 <body>
 <header><div class="w"><a class="logo" href="#">찰칵<i>홈</i></a><nav><a href="#service">서비스</a><a href="#how">진행 방법</a><a href="#price">가격</a><a href="#work">포트폴리오</a><a href="#faq">FAQ</a></nav><a class="btn" href="#contact" style="padding:10px 16px">무료 견적</a></div></header>
 
@@ -311,5 +316,12 @@ document.addEventListener("click",e=>{const t=e.target.closest("[data-case]");if
  if(e.target.closest("[data-cx]")||e.target===M){close()}
  const f=e.target.closest(".flt button");if(f){document.querySelectorAll(".flt button").forEach(x=>x.classList.toggle("on",x===f));document.querySelectorAll(".pfx .pfi").forEach(x=>x.hidden=f.dataset.f!=="all"&&x.dataset.case!==f.dataset.f)}});
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!M.hidden)close()});})()</script>
+<div class="pk" id="pk" hidden role="dialog" aria-modal="true"><div class="pkb"><button class="pkx" data-pkx aria-label="닫기">✕</button><div id="pkc"></div></div></div><script>(()=>{const P=document.getElementById("pk"),C=document.getElementById("pkc"),EX="".split(",");let node=null,mark=null;
+const close=()=>{if(node&&mark){mark.parentNode.insertBefore(node,mark);mark.remove()}node=mark=null;P.hidden=true;document.body.style.overflow=""};
+const open=id=>{const t=document.getElementById(id);if(!t)return false;close();node=t.closest("section")||t;mark=document.createComment("pk");node.parentNode.insertBefore(mark,node);C.appendChild(node);P.hidden=false;document.body.style.overflow="hidden";P.querySelector(".pkb").scrollTop=0;const f=node.querySelector("input,select,textarea");if(f&&f.offsetParent)setTimeout(()=>f.focus({preventScroll:true}),60);return true};
+document.addEventListener("click",e=>{if(e.target.closest("[data-pkx]")||e.target===P){close();return}
+ const a=e.target.closest('a[href^="#"]:not(nav a):not(.logo)');if(!a)return;const h=(a.getAttribute("href")||"").slice(1);if(!h||EX.includes(h))return;if(P.contains(a)&&node&&node.id===h)return;
+ if(open(h)){e.preventDefault();e.stopPropagation()}},true);
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!P.hidden)close()});window.__pkClose=close;})()</script>
 </body>
 </html>
