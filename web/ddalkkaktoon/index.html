@@ -41,6 +41,13 @@ section{padding-block:80px}section.alt{background:var(--bg2)}
 .cc div{padding:10px 12px}.cc b{font-family:var(--disp);font-size:18px;font-weight:400}.cc small{display:block;color:var(--mu);font-size:13px}
 .role{display:inline-block;font-size:11px;font-weight:700;border-radius:999px;padding:1px 8px;margin-left:4px;vertical-align:middle;background:var(--mint-s);color:var(--mint)}
 .role.p{background:var(--peach-s);color:#B9542C}
+.world{display:grid;grid-template-columns:1.4fr 1fr;gap:18px;background:#fff;border:1px solid #E2DDD2;border-radius:16px;padding:22px}.world small{color:var(--mint);font-weight:700}.world h3{margin:4px 0 8px;font-size:24px}.world p{margin:0;line-height:1.75}.world mark{background:#E4F6EC;padding:0 3px;border-radius:3px}
+.who{display:grid;grid-template-columns:1fr 1fr;gap:8px}.who div{background:#F7F5EF;border-radius:10px;padding:10px 12px}.who small{display:block;color:#6B7A71;font-size:12.5px;margin-top:2px}
+@media(max-width:760px){.world{grid-template-columns:1fr}}
+.sub{font-size:18px;margin:26px 0 12px}
+.conti{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}@media(max-width:1000px){.conti{grid-template-columns:repeat(3,1fr)}}@media(max-width:560px){.conti{grid-template-columns:repeat(2,1fr)}}.ct{background:#fff;border:1px solid #E2DDD2;border-radius:12px;overflow:hidden}.ct img{width:100%;aspect-ratio:4/5;object-fit:cover;display:block}.ct div{padding:10px 12px}.ct .bt{display:inline-block;font-size:11.5px;font-weight:700;color:#2B7A5C;background:#E4F6EC;border-radius:999px;padding:2px 8px}.ct .no{font-size:12px;color:#8A9A90;margin-left:6px}.ct p{margin:6px 0 4px;font-size:13.5px;line-height:1.55}.ct q{display:block;font-size:13px;color:#1D2A23;background:#FFF7E6;border-radius:8px;padding:6px 8px;margin-top:4px;quotes:none}
+.rv{margin-top:22px;background:#fff;border:1px solid #E2DDD2;border-radius:14px;padding:16px 18px}#rvl{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:6px 18px;font-size:14px}#rvl span{color:#2B7A5C;font-weight:700;margin-right:6px}#rvl small{display:block;color:#6B7A71;font-size:12.5px;margin-left:22px}
+.next{margin-top:14px;background:var(--dark);color:#fff;border-radius:14px;padding:16px 18px}.next p{margin:6px 0 0;color:#CFE0D6}
 .tthumb{display:grid;grid-template-columns:repeat(8,1fr);gap:8px;margin-top:14px}.tthumb img{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:8px;display:block}@media(max-width:700px){.tthumb{grid-template-columns:repeat(4,1fr)}}
 .eps{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-top:14px}.epc{display:block;padding:12px 14px;border:1px solid #E2DDD2;border-radius:12px;background:#fff;color:inherit;text-decoration:none}.epc b{display:block}.epc span{font-size:14px}.epc small{display:block;color:#8A9A90;font-size:12px;margin-top:4px}.epc.on{border-color:var(--mint)}
 .ep1{display:grid;grid-template-columns:1.1fr 1fr;gap:24px;align-items:center;margin-top:28px;background:var(--dark);color:#fff;border-radius:18px;padding:26px}
@@ -71,7 +78,7 @@ footer{padding-block:28px;color:var(--mu);font-size:13px;text-align:center}
 </head>
 <body>
 <header><div class="w"><a class="logo" href="#top">딸깍<i>툰</i></a>
- <nav><a href="make.html"><b style="color:var(--mint)">▶ 만들기</b></a><a href="#cast">캐릭터</a><a href="#toons">만든 툰</a><a href="#formula">재미 공식</a><a href="#what">하는 일</a><a href="#how">진행 순서</a><a href="#price">가격</a><a href="#faq">자주 묻는 질문</a><a href="#contact">문의</a></nav></div></header>
+ <nav><a href="make.html"><b style="color:var(--mint)">▶ 만들기</b></a><a href="#cast">캐릭터</a><a href="#toons">만든 툰</a><a href="#formula">재미 공식</a><a href="#story">스토리</a><a href="#what">하는 일</a><a href="#how">진행 순서</a><a href="#price">가격</a><a href="#faq">자주 묻는 질문</a><a href="#contact">문의</a></nav></div></header>
 
 <div class="hero" id="top"><div class="w">
  <div>
@@ -114,6 +121,15 @@ footer{padding-block:28px;color:var(--mu);font-size:13px;text-align:center}
   <div class="plan"><h3>🔍 구독자 검토 기준</h3><ul id="frev"></ul></div>
   <div class="plan"><h3>📖 학습한 작품·자료</h3><ul id="flearn"></ul></div>
  </div>
+</div></section>
+<section id="story"><div class="w">
+ <div class="sh"><h2>스토리 · 만든 과정</h2><p>「봄을 잃은 마을」의 세계와, 1화를 재미 공식대로 한 컷씩 짠 콘티예요.</p></div>
+ <div class="world"><div><small>세계관</small><h3>봄을 잃은 마을</h3><p>어느 밤, <mark>달빛 도둑</mark>이 마을의 봄을 품은 <mark>별 씨앗</mark>들을 훔쳐 가요. 아침이 되자 마을은 색을 잃고 회색이 돼요. 단 하나, 꽃을 한 번도 피워 본 적 없는 새싹 소녀 <b>새봄</b>의 새싹만 빛나요. 새봄은 덤벙이 기사 루비, 고양이 카페 언니 모카와 함께 씨앗을 되찾으러 떠나요. 이 이야기의 캐릭터들은 같은 세계의 육성 게임에도 전투 캐릭터로 나와요.</p></div>
+  <div class="who"><div><b>🌱 새봄</b><small>주인공 · 꽃을 못 피워 본 새싹 소녀</small></div><div><b>🛡️ 루비</b><small>덤벙이 견습 기사 · 투구가 늘 미끄러짐</small></div><div><b>☕ 모카</b><small>고양이 카페 언니 · 모두의 본거지</small></div><div><b>🌙 달빛 도둑</b><small>봄이 돌아오면 곤란한 이유가 있다</small></div></div></div>
+ <h3 class="sub">1화 콘티 — 컷마다 재미 공식의 어느 단계인지</h3>
+ <div class="conti" id="conti"></div>
+ <div class="rv"><h3 class="sub" style="margin:0 0 8px">구독자 눈으로 다시 보기</h3><div id="rvl"></div></div>
+ <div class="next"><b>다음 화 예고 · 2화 「달빛 도둑을 쫓아서」</b><p>지붕 위 발자국을 따라간 세 사람. 시든 숲 입구에서 츤데레 얼음 마법사가 길을 막아요. "그 씨앗, 너희 같은 애들한테는 안 맡겨."</p></div>
 </div></section>
 <section id="what"><div class="w">
  <div class="sh"><h2>딸깍툰이 하는 일</h2><p>웹툰에서 제일 어려운 세 가지를 대신해요.</p></div>
@@ -169,5 +185,21 @@ document.getElementById("cp").onclick=async()=>{const b=document.getElementById(
 document.getElementById("fbeats").innerHTML=F.ep1Beats.map((b,i)=>`<div><b>${i+1} ${b.name}</b><small>${b.rule}</small></div>`).join("");
 document.getElementById("frev").innerHTML=F.review.map(r=>`<li>${r.q}</li>`).join("");
 document.getElementById("flearn").innerHTML=F.learned.slice().reverse().slice(0,10).map(l=>`<li><b>${l.what}</b> — ${l.got}</li>`).join("")})();</script>
+<script>(function(){const C=[
+["제목 전 한 장면","밤, 가면 쓴 도둑이 꽃밭에서 빛나는 별 씨앗을 줍는다","그날 밤, 마을의 봄이 도둑맞았다."],
+["일상 + 소원","아침, 새봄이 화분을 들고 오늘의 다짐","오늘은 꼭 꽃을 피워 볼 거야!"],
+["이변","문을 열자 온 마을이 회색","…어? 색이… 없어?"],
+["비밀 · 정보 격차","새봄의 새싹 핀만 초록빛으로 빛난다","내 새싹만… 빛나?"],
+["동료 · 케미","하늘에서 기사가 거꾸로 떨어진다","비켜어어어!"],
+["동료 · 케미","투구에 눈이 가려진 채 경례하는 루비 — 웃음 포인트","저기… 투구에 눈이 가려졌어요…"],
+["실수 → 대가","새봄의 빛에 시든 슬라임들이 깨어난다","꾸르륵…"],
+["실수 → 대가","슬라임이 고양이 카페 앞까지 몰려온다","꺄악, 우리 가게!"],
+["동료 · 케미","루비가 큰 칼로 막아서지만 비틀비틀","내가 지킨다!"],
+["첫 작은 승리","새봄의 마법에 슬라임 머리에 꽃이 핀다 (꽉 찬 폭 컷)","피었다…! 처음으로!"],
+["첫 작은 승리","카페에서 다 같이 라떼 — 따뜻한 마무리","고마워요! 오늘 라떼는 무료~"],
+["절벽","지붕 위 도둑, 손에는 마지막 별 씨앗","봄이 돌아오면 곤란하거든."]];
+document.getElementById("conti").innerHTML=C.map((c,i)=>`<div class="ct"><a href="ep1/"><img src="../../_stage/toon/ep1/ep1_${String(i+1).padStart(2,"0")}.jpg" alt="${i+1}번 컷" loading="lazy"></a><div><span class="bt">${c[0]}</span><span class="no">${i+1}컷</span><p>${c[1]}</p><q>${c[2]}</q></div></div>`).join("");
+const R=[["첫 3컷 안에 사건","3컷에서 마을이 회색으로"],["주인공이 원하는 것","꽃을 한 번도 못 피워 본 새싹 소녀"],["웃음 + 찡한 순간","거꾸로 떨어진 기사 · 처음 핀 꽃"],["개연성","새봄만 빛나서 슬라임이 깨어남 → 새봄이 해결"],["다음 화 욕구","도둑 손에 마지막 씨앗"],["얼굴·옷 같음","한 채팅방에서만 그림 · 어긋난 3컷은 다시"],["말풍선 3개 이하","컷당 1~2개"],["처음과 끝 분위기","밤의 도둑으로 시작해 밤의 도둑으로 끝"]];
+document.getElementById("rvl").innerHTML=R.map(r=>`<div><span>✓</span>${r[0]}<small>${r[1]}</small></div>`).join("")})();</script>
 </body>
 </html>
