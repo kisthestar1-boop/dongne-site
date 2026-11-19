@@ -128,7 +128,8 @@ async function drawPanel(p,refs,prev,pass){const parts=[];let k=1;const desc=[];
  return "data:"+(d.mime_type||d.mimeType||"image/png")+";base64,"+d.data}
 
 /* ③ 세로 편집: 폭 800 · 컷 간격 공식 · 말풍선 */
-function wrap(ctx,t,max){const out=[];let line="";for(const ch of t){if(ctx.measureText(line+ch).width>max&&line){out.push(line);line=ch}else line+=ch}if(line)out.push(line);return out}
+/* 한글은 띄어쓰기 단위로 줄바꿈 (단어 중간에서 끊지 않기) · 너무 긴 단어만 글자 단위 */
+function wrap(ctx,t,max){const out=[];let line="";for(const w of t.split(/(?<=\s)/)){if(ctx.measureText(line+w).width<=max||!line){if(ctx.measureText(w).width>max){for(const ch of w){if(ctx.measureText(line+ch).width>max&&line){out.push(line);line=ch}else line+=ch}}else line+=w}else{out.push(line.trimEnd());line=w}}if(line)out.push(line.trimEnd());return out}
 async function compose(o,imgs){const F=window.DDK_FORMULA;const W=F.scroll.width,M=40;await document.fonts.ready;
  const ims=await Promise.all(imgs.map(u=>u?loadImg(u):null));const c=document.createElement("canvas"),ctx=c.getContext("2d");
  const blocks=[];let H=150;o.panels.forEach((p,i)=>{const im=ims[i];const w=p.wide?W:W-M*2;const h=im?Math.round(im.height*w/im.width):Math.round(w*1.25);blocks.push({y:H,w,h});H+=h+(i===o.panels.length-1?120:(p.wide?F.scroll.gap.reveal:((i+1)%F.scroll.restEvery===0?F.scroll.gap.breath[1]:F.scroll.gap.flow)))});
