@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>딸깍툰 · 딸깍 한 번이면 스토리부터 컷까지</title>
+<meta name="description" content="캐릭터만 정하면 AI가 학습·콘티·컷·검토까지 이어서 만드는 웹툰 제작 프로그램, 딸깍툰.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Noto+Sans+KR:wght@400;500;700;900&display=swap">
+<style>
+/* 레이아웃: 찰칵홈과 같은 흐름(상단 메뉴 → 첫 화면 → 작품 → 하는 일 → 순서 → 가격 → 질문 → 문의) · 색은 툰의 민트·복숭아 수채 톤 */
+:root{--bg:#FFFFFF;--bg2:#F2F7F3;--ink:#1D2A23;--mu:#5E6F65;--ln:#DDE7E0;--mint:#2F8F6B;--mint-s:#E3F3EA;--peach:#F29B74;--peach-s:#FDEDE4;--dark:#16231D;
+ --disp:"Gowun Dodum","Noto Sans KR",system-ui,sans-serif;--body:"Noto Sans KR",system-ui,"Malgun Gothic",sans-serif}
+*{box-sizing:border-box}[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);line-height:1.65;font-size:16px}
+a{color:inherit}.w{max-width:1160px;margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--disp);font-weight:400;margin:0;text-wrap:balance;letter-spacing:-.02em}
+.btn{display:inline-flex;align-items:center;gap:8px;font:inherit;font-weight:700;border:0;border-radius:12px;padding:14px 22px;cursor:pointer;text-decoration:none;background:var(--mint);color:#fff}
+.btn.o{background:#fff;color:var(--ink);border:1.5px solid var(--ln)}
+.btn:focus-visible{outline:3px solid #9FD7BE;outline-offset:2px}
+header{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.93);backdrop-filter:blur(10px);border-bottom:1px solid var(--ln)}
+header .w{display:flex;align-items:center;gap:26px;height:64px}
+.logo{font-family:var(--disp);font-size:28px;text-decoration:none;letter-spacing:-.03em}.logo i{font-style:normal;color:var(--mint)}
+header nav{display:flex;gap:22px;margin-left:auto;font-size:15px}header nav a{text-decoration:none;color:var(--mu)}header nav a:hover{color:var(--ink)}
+@media(max-width:820px){header nav{display:none}}
+.hero{background:linear-gradient(180deg,var(--mint-s),#fff 88%)}
+.hero .w{display:grid;grid-template-columns:1fr 1.1fr;gap:40px;align-items:center;padding-block:64px 56px}
+@media(max-width:900px){.hero .w{grid-template-columns:1fr;padding-block:40px}}
+.hero h1{font-size:clamp(40px,6vw,66px);line-height:1.15}.hero h1 em{font-style:normal;background:linear-gradient(transparent 62%,#FFD9C6 62%)}
+.hero p{font-size:clamp(17px,1.7vw,20px);color:var(--mu);margin:18px 0 26px;max-width:34ch}
+.cta{display:flex;gap:10px;flex-wrap:wrap}
+.frame{position:relative;border-radius:18px;overflow:hidden;box-shadow:0 26px 54px rgba(30,70,50,.16);background:#F6EFE2}
+.frame img{width:100%;display:block}
+.frame .chip{position:absolute;left:14px;top:14px;background:#fff;color:var(--ink);font-weight:700;font-size:13px;border-radius:999px;padding:5px 12px;box-shadow:0 2px 8px rgba(0,0,0,.12)}
+.frame .btnx{position:absolute;right:14px;bottom:14px;background:var(--mint);color:#fff;font-weight:900;border-radius:12px;padding:9px 16px;font-size:15px}
+.trust{display:flex;gap:26px;flex-wrap:wrap;color:var(--mu);font-size:14px;margin-top:22px}.trust b{color:var(--ink)}
+section{padding-block:80px}section.alt{background:var(--bg2)}
+.sh{text-align:center;margin-bottom:36px}.sh h2{font-size:clamp(30px,3.8vw,44px)}.sh p{color:var(--mu);margin:8px auto 0;max-width:56ch}
+.cast{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}@media(max-width:900px){.cast{grid-template-columns:1fr 1fr}}
+.cc{background:#fff;border:1px solid var(--ln);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+.cc img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;cursor:zoom-in}
+.cc div{padding:10px 12px}.cc b{font-family:var(--disp);font-size:18px;font-weight:400}.cc small{display:block;color:var(--mu);font-size:13px}
+.role{display:inline-block;font-size:11px;font-weight:700;border-radius:999px;padding:1px 8px;margin-left:4px;vertical-align:middle;background:var(--mint-s);color:var(--mint)}
+.role.p{background:var(--peach-s);color:#B9542C}
+.ep1{display:grid;grid-template-columns:1.1fr 1fr;gap:24px;align-items:center;margin-top:28px;background:var(--dark);color:#fff;border-radius:18px;padding:26px}
+@media(max-width:860px){.ep1{grid-template-columns:1fr}}
+.ep1 h3{font-size:30px}.ep1 p{color:#BFD1C6;margin:8px 0 0}.ep1 ol{margin:10px 0 0;padding-left:20px;color:#DCE8E0}.ep1 img{width:100%;border-radius:12px;display:block}
+.do{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}@media(max-width:900px){.do{grid-template-columns:1fr}}
+.dc{background:#fff;border:1px solid var(--ln);border-radius:14px;padding:22px;display:flex;flex-direction:column;gap:8px}
+.dc .ic{font-size:30px}.dc h3{font-size:24px}.dc p{margin:0;color:var(--mu)}
+.dc img{width:100%;border-radius:10px;display:block;margin-top:6px}
+.steps{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}@media(max-width:900px){.steps{grid-template-columns:repeat(2,1fr)}}
+.steps div{background:#fff;border:1px solid var(--ln);border-radius:12px;padding:16px;font-size:15px;display:flex;flex-direction:column;gap:4px}
+.steps i{font-style:normal;font-size:26px}.steps b{font-family:var(--disp);font-size:19px;font-weight:400}.steps small{color:var(--mu);font-size:13px}
+.steps div.me{border-color:var(--peach);background:var(--peach-s)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:18px}@media(max-width:800px){.two{grid-template-columns:1fr}}
+.plan{border-radius:16px;padding:26px;display:flex;flex-direction:column;gap:10px;border:1px solid var(--ln);background:#fff}
+.plan.b{background:var(--dark);color:#fff;border-color:var(--dark)}.plan.b p,.plan.b li{color:#BFD1C6}
+.plan .role{align-self:flex-start;margin:0}.plan h3{font-size:28px}.plan .pr{font-family:var(--disp);font-size:30px}.plan ul{margin:0;padding-left:18px}
+details{background:#fff;border:1px solid var(--ln);border-radius:12px;padding:14px 18px;margin-bottom:10px}
+summary{cursor:pointer;font-weight:700}details p{color:var(--mu);margin:8px 0 0}
+.contact{background:var(--dark);color:#fff;border-radius:18px;padding:30px;display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:center}
+@media(max-width:800px){.contact{grid-template-columns:1fr}}
+.contact h2{font-size:clamp(28px,3.4vw,40px)}.contact p{color:#BFD1C6;margin:8px 0 0}
+.mail{display:flex;gap:8px;align-items:center;flex-wrap:wrap;background:#21332A;border-radius:12px;padding:14px}
+.mail code{font-size:17px;color:#fff;user-select:all}
+footer{padding-block:28px;color:var(--mu);font-size:13px;text-align:center}
+.lb{position:fixed;inset:0;background:rgba(0,0,0,.82);display:grid;place-items:center;z-index:50;padding:16px}.lb img{max-width:100%;max-height:90vh;border-radius:10px}
+</style>
+</head>
+<body>
+<header><div class="w"><a class="logo" href="#top">딸깍<i>툰</i></a>
+ <nav><a href="#cast">캐릭터</a><a href="#what">하는 일</a><a href="#how">진행 순서</a><a href="#price">가격</a><a href="#faq">자주 묻는 질문</a><a href="#contact">문의</a></nav></div></header>
+
+<div class="hero" id="top"><div class="w">
+ <div>
+  <h1>딸깍 한 번이면<br><em>스토리부터 컷까지</em></h1>
+  <p>캐릭터만 정해 두면, 학습 · 콘티 · 컷 그림 · 검토까지 딸깍툰이 이어서 만들어요. 얼굴은 매 컷 똑같이.</p>
+  <div class="cta"><a class="btn" href="#cast">캐릭터 보기</a><a class="btn o" href="#how">어떻게 만들어요?</a></div>
+  <div class="trust"><span>🎨 <b>캐릭터 25명+</b> 같은 그림체</span><span>📋 <b>6단계</b> 자동 진행</span><span>🔍 <b>구독자 시선</b> 검토</span></div>
+ </div>
+ <div class="frame"><img src="img/hero.jpg" alt="약초 견습 마법사 소녀의 상반신과 꼬마 그림" width="1024" height="572"><span class="chip">🌱 딸깍툰 대표 그림체</span><span class="btnx">▶ 딸깍</span></div>
+</div></div>
+
+<section id="cast"><div class="w">
+ <div class="sh"><h2>딸깍툰의 캐릭터들</h2><p>모두 같은 그림체로 만든 오리지널 캐릭터예요. 웹툰과 게임에 같은 얼굴로 나와요. 그림을 누르면 크게 보여요.</p></div>
+ <div class="cast">
+  <div class="cc"><img src="img/sprout.jpg" alt="새싹 소녀" loading="lazy"><div><b>새싹 소녀</b><span class="role">치유</span><small>주인공 · 봄을 깨우는 씨앗 마법</small></div></div>
+  <div class="cc"><img src="img/bakery.jpg" alt="빵집 소녀" loading="lazy"><div><b>빵집 소녀</b><span class="role">지원</span><small>단짝 · 갓 구운 응원빵</small></div></div>
+  <div class="cc"><img src="img/ice.jpg" alt="츤데레 얼음 마법사" loading="lazy"><div><b>츤데레 얼음 마법사</b><span class="role p">마법</span><small>라이벌 · 눈꽃 폭풍</small></div></div>
+  <div class="cc"><img src="img/fire.jpg" alt="츤데레 불꽃 마법사 소년" loading="lazy"><div><b>불꽃 마법사 소년</b><span class="role p">마법</span><small>얼음 마법사와 앙숙</small></div></div>
+  <div class="cc"><img src="img/knight.jpg" alt="덤벙이 견습 기사" loading="lazy"><div><b>덤벙이 견습 기사</b><span class="role">수호</span><small>투구가 늘 미끄러져요</small></div></div>
+  <div class="cc"><img src="img/cat.jpg" alt="고양이 카페 언니" loading="lazy"><div><b>고양이 카페 언니</b><span class="role">치유</span><small>모두의 본거지 카페 주인</small></div></div>
+  <div class="cc"><img src="img/miko.jpg" alt="덤벙이 무녀" loading="lazy"><div><b>덤벙이 무녀</b><span class="role">방해</span><small>부적 봉인 · 낙엽에 파묻힘</small></div></div>
+  <div class="cc"><img src="img/devil.jpg" alt="허당 꼬마 악마" loading="lazy"><div><b>허당 꼬마 악마</b><span class="role p">개그</span><small>마녀의 졸개였다가 동료로</small></div></div>
+ </div>
+ <div class="ep1"><div><h3>📖 1화 · 봄이 사라진 아침</h3><p>지금 딸깍툰으로 만들고 있는 첫 작품 「봄을 잃은 마을」이에요.</p>
+  <ol><li>하룻밤 새 마을의 봄이 사라져요</li><li>새싹 소녀의 새싹 핀만 빛나요</li><li>덤벙이 기사가 하늘에서 떨어지듯 등장</li><li>시든 슬라임과 첫 전투</li><li>마지막 장면 — 달빛 도둑이 마지막 별 씨앗을 훔쳐 가요</li></ol></div>
+  <img src="img/cloud.jpg" alt="졸린 구름 요정" loading="lazy"></div>
+</div></section>
+
+<section id="what" class="alt"><div class="w">
+ <div class="sh"><h2>딸깍툰이 하는 일</h2><p>웹툰에서 제일 어려운 세 가지를 대신해요.</p></div>
+ <div class="do">
+  <div class="dc"><span class="ic">👧</span><h3>얼굴이 안 바뀌어요</h3><p>캐릭터 서랍의 기준 그림(앞·옆·뒤, 표정 6개)을 매 컷 함께 넣어서 화마다 얼굴·옷이 그대로예요.</p><img src="img/sheet.jpg" alt="견습 기사 모델 시트" loading="lazy"></div>
+  <div class="dc"><span class="ic">✍️</span><h3>재미 공식대로 써요</h3><p>인기 웹툰 1화의 첫 장면·끊는 지점·컷 리듬을 학습해서, 첫 3컷 안에 사건, 마지막엔 다음 화를 누르게 하는 한 컷을 넣어요.</p></div>
+  <div class="dc"><span class="ic">🔍</span><h3>구독자 눈으로 다시 봐요</h3><p>다 만든 화를 독자 입장에서 읽어 보고, 개연성이 어색하거나 재미가 약한 컷은 다시 그려요. 그림은 같은 대화에서 2~3번 고쳐 가장 좋은 것만 골라요.</p></div>
+ </div>
+</div></section>
+
+<section id="how"><div class="w">
+ <div class="sh"><h2>진행 순서</h2><p>▶ 딸깍을 누르면 1~5단계가 차례로 진행돼요. 올리기 전에는 꼭 확인을 받아요.</p></div>
+ <div class="steps">
+  <div><i>📚</i><b>1 학습</b><small>인기 웹툰 1화 분석 → 재미 공식 카드</small></div>
+  <div><i>👧</i><b>2 캐릭터</b><small>기준 그림 등록 · 매 컷 고정</small></div>
+  <div><i>✍️</i><b>3 스토리</b><small>개연성 최우선 콘티 · 도파민 포인트</small></div>
+  <div><i>🎨</i><b>4 컷 생성</b><small>2~3번 고쳐 최고만</small></div>
+  <div><i>🔍</i><b>5 검토</b><small>구독자 시선으로 보완</small></div>
+  <div class="me"><i>📤</i><b>6 연재</b><small>확인 후 올리기</small></div>
+ </div>
+</div></section>
+
+<section id="price" class="alt"><div class="w">
+ <div class="sh"><h2>가격</h2><p>지금은 첫 작품을 만드는 중이에요. 1화가 나온 뒤 툰 제작 서비스로 열 예정이에요.</p></div>
+ <div class="two">
+  <div class="plan"><span class="role">지금</span><h3>딸깍툰 직접 연재</h3><div class="pr">무료로 보기</div><ul><li>「봄을 잃은 마을」 1화부터 연재</li><li>캐릭터는 같은 세계의 육성 게임에도 나와요</li></ul></div>
+  <div class="plan b"><span class="role p">준비 중</span><h3>툰 제작 서비스</h3><div class="pr">1화 공개 후 안내</div><ul><li>가게·브랜드 캐릭터로 짧은 인스타툰</li><li>캐릭터 시트 + 4~10컷 툰</li><li>가격은 첫 작품 반응을 보고 정해요</li></ul></div>
+ </div>
+</div></section>
+
+<section id="faq"><div class="w">
+ <div class="sh"><h2>자주 묻는 질문</h2></div>
+ <details><summary>그림은 누가 그려요?</summary><p>AI 이미지 도구(제미나이)로 그리고, 딸깍툰이 고르고 고쳐서 완성해요. AI로 만든 작품이라는 것은 연재할 때 밝혀요.</p></details>
+ <details><summary>다른 작품 캐릭터를 따라 그리나요?</summary><p>아니요. 그림체만 참고하고, 캐릭터와 이야기는 모두 새로 만든 오리지널이에요.</p></details>
+ <details><summary>얼굴이 화마다 달라지지 않나요?</summary><p>캐릭터마다 기준 그림(모델 시트)을 만들어 매 컷 함께 넣어요. 어긋난 컷은 올리기 전에 다시 그려요.</p></details>
+ <details><summary>어디서 볼 수 있어요?</summary><p>1화가 완성되면 이 사이트와 연재처에 올려요. 연재처는 확정되면 여기 알려 드릴게요.</p></details>
+</div></section>
+
+<section id="contact"><div class="w"><div class="contact">
+ <div><h2>툰 제작이 궁금하세요?</h2><p>가게·브랜드 캐릭터로 짧은 툰을 만들고 싶으시면 메일로 편하게 물어봐 주세요.</p></div>
+ <div class="mail"><code id="ml">pms880307@naver.com</code><button class="btn o" id="cp" type="button" style="padding:8px 14px">복사</button></div>
+</div></div></section>
+
+<footer>© 2026 딸깍툰 · 모든 캐릭터는 오리지널이에요 · 그림은 AI 도구로 만들었어요</footer>
+<div class="lb" id="lb" hidden></div>
+<script>
+document.addEventListener("click",e=>{const im=e.target.closest(".cc img");const lb=document.getElementById("lb");
+ if(im){lb.innerHTML='<img src="'+im.src+'" alt="">';lb.hidden=false;return}if(e.target.closest("#lb")){lb.hidden=true}});
+document.getElementById("cp").onclick=async()=>{const b=document.getElementById("cp");try{await navigator.clipboard.writeText("pms880307@naver.com");b.textContent="복사됨"}catch(_){const r=document.createRange();r.selectNodeContents(document.getElementById("ml"));const s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent="선택됨"}};
+</script>
+</body>
+</html>
