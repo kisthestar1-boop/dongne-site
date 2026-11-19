@@ -203,6 +203,13 @@ html,body{overflow-x:clip}header{position:sticky!important;top:0;z-index:60}.eqc
 .pc:hover,.st:hover,.cc2:hover{box-shadow:0 14px 34px rgba(0,0,0,.18)}
 .btn:hover{filter:brightness(1.06)}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* 스크롤 등장 (11/19, ticg 참고 · 더 차분하게) */
+.rv{opacity:0;transform:translateY(12px);transition:opacity .7s ease,transform .7s ease;transition-delay:var(--d,0s)}
+.rv.in{opacity:1;transform:none}
+.hx .w>*{opacity:0;animation:hIn .8s ease forwards}.hx .w>*:nth-child(1){animation-delay:.05s}.hx .w>*:nth-child(2){animation-delay:.18s}.hx .w>*:nth-child(3){animation-delay:.32s}.hx .w>*:nth-child(4){animation-delay:.46s}.hx .w>*:nth-child(5){animation-delay:.6s}
+@keyframes hIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.rv{opacity:1!important;transform:none!important}.hx .w>*{opacity:1!important}}
 </style></head><body>
 
 <div class="pb"><div class="w"><span>📌 <b>찰칵홈 리뉴얼 시안</b> · 삼흥테크(주)를 위해 무료로 만든 예시예요</span><button data-open="ba">지금 사이트와 비교 보기</button></div></div>
@@ -440,4 +447,9 @@ function qwire(){const go=n=>{C.querySelectorAll('.qp').forEach(p=>p.hidden=+p.d
 document.addEventListener('click',e=>{const t=e.target.closest('[data-bt]');if(t){document.querySelectorAll('[data-bt]').forEach(x=>x.classList.toggle('on',x===t));B.innerHTML=t.dataset.bt==='e'?E:t.dataset.bt==='q'?Q:N;return}
  const l=e.target.closest('[data-lock]');if(l){const M=document.getElementById('md'),C=document.getElementById('mc');C.innerHTML=l.dataset.lock==='0'?'<h3>📢 공지사항</h3><p class="sub">시안용 예시 공지예요.</p>':'<h3>🔒 비밀글이에요</h3><p class="sub">작성자와 담당자만 볼 수 있어요. 새 견적이 필요하시면 아래 버튼을 눌러 주세요.</p><button class="btn" data-open="q">📐 견적 문의하기</button>';M.hidden=false;document.body.style.overflow='hidden'}})})()</script>
 <script>document.addEventListener('click',e=>{const c=e.target.closest('[data-cert]');if(!c)return;const f=['cert_iso','cert_yu','cert_trade','cert_clean'][+c.dataset.cert];const M=document.getElementById('md'),C=document.getElementById('mc');C.innerHTML=`<h3>${c.querySelector('b').textContent}</h3><p class="sub">${c.querySelector('small').textContent}</p><img src="img/${f}.jpg" alt="" style="max-height:70vh;margin:0 auto;border:1px solid var(--ln);border-radius:8px">`;M.hidden=false;document.body.style.overflow='hidden'})</script>
+<script>(()=>{if(!('IntersectionObserver' in window)||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+const SEL='.kpi .w>div,section .sh,.pain>div,.ceo>*,.why .ph2,.wl>div,#pg .pc,.flow .st,.cm2,.eqc,.ind span,.apps figure,.who>div,.tl>div,.cg2 .cc2,.bd2,.cta,.loc>*';
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{rootMargin:'0px 0px -8% 0px',threshold:.08});
+const go=()=>{const els=[...document.querySelectorAll(SEL)].filter(e=>!e.classList.contains('rv'));const grp=new Map();els.forEach(e=>{const p=e.parentElement;const i=grp.get(p)||0;grp.set(p,i+1);e.style.setProperty('--d',(Math.min(i,6)*0.07)+'s');e.classList.add('rv');const r=e.getBoundingClientRect();if(r.top<innerHeight*.92)requestAnimationFrame(()=>e.classList.add('in'));else io.observe(e)})};
+go();setTimeout(go,600);})()</script>
 </body></html>
