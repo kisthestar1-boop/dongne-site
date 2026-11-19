@@ -103,8 +103,8 @@ header nav a{font-weight:600}
 .kpi div{padding:26px 22px;border-left:1px solid var(--ln)}.kpi div:first-child{border-left:0}
 .kpi b{display:block;font-size:clamp(26px,2.6vw,36px);font-weight:900;letter-spacing:-.04em;line-height:1.1}.kpi span{color:var(--mu);font-size:14.5px}
 @media(max-width:800px){.kpi .w{grid-template-columns:1fr 1fr}.kpi div:nth-child(3){border-left:0}.kpi div{border-top:1px solid var(--ln)}}
-.marq{overflow:hidden;padding:22px 0;background:#fff}.marq .tr{display:flex;gap:16px;width:max-content;animation:mq 70s linear infinite}
-.marq img{height:170px;border-radius:12px;border:1px solid var(--ln);box-shadow:0 8px 20px rgba(20,40,90,.06)}
+.marq{overflow:hidden;padding:22px 0;background:#fff}.marq .tr{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;max-width:1160px;margin:0 auto;padding:0 20px}
+.marq img{width:100%;aspect-ratio:16/10;object-fit:cover;object-position:top;border-radius:12px;border:1px solid var(--ln);box-shadow:0 8px 20px rgba(20,40,90,.06)}
 @keyframes mq{to{transform:translateX(-50%)}}
 @media(prefers-reduced-motion:reduce){.marq .tr{animation:none}}
 .sh h2{font-size:clamp(30px,3.6vw,46px);font-weight:900}.sh .k{display:block;font-size:13px;font-weight:800;letter-spacing:.16em;color:var(--acc);margin-bottom:10px}
@@ -117,15 +117,15 @@ header nav a{font-weight:600}
 .pfi{display:grid;grid-template-columns:1.35fr 1fr;gap:0;border:1px solid var(--ln);border-radius:20px;overflow:hidden;background:#fff;text-decoration:none;transition:box-shadow .4s}
 .pfi:hover{box-shadow:0 24px 50px rgba(20,40,90,.12)}.pfi.r{grid-template-columns:1fr 1.35fr}.pfi.r .sh2{order:2}
 .pfi .sh2{position:relative;background:#EEF2F7;min-height:360px;overflow:hidden}
-.pfi .sh2 img.d{position:absolute;left:6%;top:8%;width:92%;border-radius:10px;box-shadow:0 20px 40px rgba(20,40,90,.18);transition:transform 1.2s ease}
-.pfi:hover .sh2 img.d{transform:translateY(-6px)}
+.pfi .sh2 img.d{position:absolute;left:6%;top:8%;width:92%;border-radius:10px;box-shadow:0 20px 40px rgba(20,40,90,.18);}
+
 .pfi .sh2 img.m{position:absolute;right:5%;bottom:-30px;width:23%;border-radius:16px;border:5px solid #0F1A24;box-shadow:0 18px 30px rgba(0,0,0,.25)}
 .pfi .tx{padding:34px;display:flex;flex-direction:column;gap:12px;justify-content:center}
 .pfi h3{font-size:28px;font-weight:900}.pfi p{margin:0;color:var(--mu)}
 .pfi ul{margin:0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:6px}.pfi li{font-size:13px;font-weight:700;background:var(--bg2);border-radius:99px;padding:5px 12px}
 .pfi .go{margin-top:6px;font-weight:800;color:var(--acc)}
 .soon{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.soon div{border:1.5px dashed #C9D4E0;border-radius:16px;padding:22px;color:var(--mu);background:#FAFCFE}.soon b{display:block;color:var(--ink);font-size:17px;margin:6px 0 2px}
-@media(max-width:860px){.pfi,.pfi.r{grid-template-columns:1fr}.pfi.r .sh2{order:0}.pfi .sh2{min-height:240px}.soon{grid-template-columns:1fr}}
+@media(max-width:700px){.marq .tr{grid-template-columns:1fr 1fr}}@media(max-width:860px){.pfi,.pfi.r{grid-template-columns:1fr}.pfi.r .sh2{order:0}.pfi .sh2{min-height:240px}.soon{grid-template-columns:1fr}}
 footer{padding-block:48px}
 </style></head>
 <body>
@@ -146,7 +146,7 @@ footer{padding-block:48px}
  </div>
 </div></div>
 <div class="kpi"><div class="w"><div><b>당일</b><span>첫 시안</span></div><div><b>2개 언어</b><span>한국어 · 영어 동시</span></div><div><b>49만 원~</b><span>제작비 한 번</span></div><div><b>고객 소유</b><span>도메인 · 소스 파일</span></div></div></div>
-<div class="marq" aria-hidden="true"><div class="tr"><img src="img/pf_hb.jpg" alt=""><img src="img/pf_rv.jpg" alt=""><img src="img/pf_hb2.jpg" alt=""><img src="img/pf_rv2.jpg" alt=""><img src="img/pf_hb.jpg" alt=""><img src="img/pf_rv.jpg" alt=""><img src="img/pf_hb2.jpg" alt=""><img src="img/pf_rv2.jpg" alt=""><img src="img/pf_hb.jpg" alt=""><img src="img/pf_rv.jpg" alt=""><img src="img/pf_hb2.jpg" alt=""><img src="img/pf_rv2.jpg" alt=""><img src="img/pf_hb.jpg" alt=""><img src="img/pf_rv.jpg" alt=""><img src="img/pf_hb2.jpg" alt=""><img src="img/pf_rv2.jpg" alt=""></div></div>
+<div class="marq" aria-hidden="true"><div class="tr"><img src="img/pf_hb.jpg" alt=""><img src="img/pf_rv.jpg" alt=""><img src="img/pf_hb2.jpg" alt=""><img src="img/pf_rv2.jpg" alt=""></div></div>
 </div></div>
 
 <section id="diag"><div class="w">
