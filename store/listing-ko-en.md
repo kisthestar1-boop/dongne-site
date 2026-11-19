@@ -29,7 +29,7 @@ A 3D mini-game party to play with friends! 🎉
 - 카테고리: 게임 > 캐주얼 (또는 파티)
 - 대상 연령: 6~8세, 9~12세, 13세 이상 (가족 정책 적용)
 - 광고 포함: 처음 버전은 "아니요", 광고 넣는 업데이트 때 "예"로 변경
-- 개인정보처리방침 URL: https://kisthestar1-boop.github.io/dongne-site/privacy.html
+- 개인정보처리방침 URL: https://kisthestar1-boop.github.io/minsung-ai/privacy.html
 
 ## 데이터 보안 설문 (초안)
 - 수집하는 데이터: 없음

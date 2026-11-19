@@ -164,7 +164,7 @@ function hpSheet() {
   return sh;
 }
 /* 찰칵홈 관리자 코드 만들기: 편집기에서 한 번 실행 → 코드가 내 메일로 와요 → 관리자 화면에 넣어요 */
-function hpSetup() { let k = P().getProperty("HP_ADMIN"); if (!k) { k = "HP-" + rnd(6) + "-" + rnd(6); P().setProperty("HP_ADMIN", k); } hpSheet(); const to = Session.getEffectiveUser().getEmail(); MailApp.sendEmail({ to: to, name: "찰칵홈", subject: "[찰칵홈] 관리자 코드", body: "찰칵홈 관리자 코드예요. 다른 사람에게 알려 주지 마세요.\n\n" + k + "\n\n관리자 화면: https://kisthestar1-boop.github.io/dongne-site/web/admin.html" }); Logger.log("관리자 코드를 " + to + " 메일로 보냈어요"); }
+function hpSetup() { let k = P().getProperty("HP_ADMIN"); if (!k) { k = "HP-" + rnd(6) + "-" + rnd(6); P().setProperty("HP_ADMIN", k); } hpSheet(); const to = Session.getEffectiveUser().getEmail(); MailApp.sendEmail({ to: to, name: "찰칵홈", subject: "[찰칵홈] 관리자 코드", body: "찰칵홈 관리자 코드예요. 다른 사람에게 알려 주지 마세요.\n\n" + k + "\n\n관리자 화면: https://kisthestar1-boop.github.io/minsung-ai/web/admin.html" }); Logger.log("관리자 코드를 " + to + " 메일로 보냈어요"); }
 function mint(credits, note) {
   return lock(function () {
     let code; do { code = "CK-" + rnd(4) + "-" + rnd(4); } while (P().getProperty("c_" + code));
