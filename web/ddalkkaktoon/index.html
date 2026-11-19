@@ -48,7 +48,7 @@ section{padding-block:80px}section.alt{background:var(--bg2)}
 .dc{background:#fff;border:1px solid var(--ln);border-radius:14px;padding:22px;display:flex;flex-direction:column;gap:8px}
 .dc .ic{font-size:30px}.dc h3{font-size:24px}.dc p{margin:0;color:var(--mu)}
 .dc img{width:100%;border-radius:10px;display:block;margin-top:6px}
-.steps{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}@media(max-width:900px){.steps{grid-template-columns:repeat(2,1fr)}}
+.steps{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}#fbeats{grid-template-columns:repeat(4,1fr)}@media(max-width:900px){#fbeats{grid-template-columns:repeat(2,1fr)}}@media(max-width:900px){.steps{grid-template-columns:repeat(2,1fr)}}
 .steps div{background:#fff;border:1px solid var(--ln);border-radius:12px;padding:16px;font-size:15px;display:flex;flex-direction:column;gap:4px}
 .steps i{font-style:normal;font-size:26px}.steps b{font-family:var(--disp);font-size:19px;font-weight:400}.steps small{color:var(--mu);font-size:13px}
 .steps div.me{border-color:var(--peach);background:var(--peach-s)}
@@ -69,13 +69,13 @@ footer{padding-block:28px;color:var(--mu);font-size:13px;text-align:center}
 </head>
 <body>
 <header><div class="w"><a class="logo" href="#top">딸깍<i>툰</i></a>
- <nav><a href="#cast">캐릭터</a><a href="#what">하는 일</a><a href="#how">진행 순서</a><a href="#price">가격</a><a href="#faq">자주 묻는 질문</a><a href="#contact">문의</a></nav></div></header>
+ <nav><a href="make.html"><b style="color:var(--mint)">▶ 만들기</b></a><a href="#cast">캐릭터</a><a href="#formula">재미 공식</a><a href="#what">하는 일</a><a href="#how">진행 순서</a><a href="#price">가격</a><a href="#faq">자주 묻는 질문</a><a href="#contact">문의</a></nav></div></header>
 
 <div class="hero" id="top"><div class="w">
  <div>
   <h1>딸깍 한 번이면<br><em>스토리부터 컷까지</em></h1>
   <p>캐릭터만 정해 두면, 학습 · 콘티 · 컷 그림 · 검토까지 딸깍툰이 이어서 만들어요. 얼굴은 매 컷 똑같이.</p>
-  <div class="cta"><a class="btn" href="#cast">캐릭터 보기</a><a class="btn o" href="#how">어떻게 만들어요?</a></div>
+  <div class="cta"><a class="btn" href="make.html">▶ 딸깍 만들기</a><a class="btn o" href="#cast">캐릭터 보기</a><a class="btn o" href="#how">어떻게 만들어요?</a></div>
   <div class="trust"><span>🎨 <b>캐릭터 25명+</b> 같은 그림체</span><span>📋 <b>6단계</b> 자동 진행</span><span>🔍 <b>구독자 시선</b> 검토</span></div>
  </div>
  <div class="frame"><img src="img/hero.jpg" alt="약초 견습 마법사 소녀의 상반신과 꼬마 그림" width="1024" height="572"><span class="chip">🌱 딸깍툰 대표 그림체</span><span class="btnx">▶ 딸깍</span></div>
@@ -98,7 +98,15 @@ footer{padding-block:28px;color:var(--mu);font-size:13px;text-align:center}
   <img src="img/cloud.jpg" alt="졸린 구름 요정" loading="lazy"></div>
 </div></section>
 
-<section id="what" class="alt"><div class="w">
+<section id="formula" class="alt"><div class="w">
+ <div class="sh"><h2>📚 딸깍툰 재미 공식</h2><p>우수 웹툰을 계속 학습해서 코드에 넣어 둔 공식이에요. 딸깍을 누르면 이 공식대로 콘티를 짜요. <span id="fv"></span></p></div>
+ <div class="steps" id="fbeats"></div>
+ <div class="two" style="margin-top:18px">
+  <div class="plan"><h3>🔍 구독자 검토 기준</h3><ul id="frev"></ul></div>
+  <div class="plan"><h3>📖 학습한 작품·자료</h3><ul id="flearn"></ul></div>
+ </div>
+</div></section>
+<section id="what"><div class="w">
  <div class="sh"><h2>딸깍툰이 하는 일</h2><p>웹툰에서 제일 어려운 세 가지를 대신해요.</p></div>
  <div class="do">
   <div class="dc"><span class="ic">👧</span><h3>얼굴이 안 바뀌어요</h3><p>캐릭터 서랍의 기준 그림(앞·옆·뒤, 표정 6개)을 매 컷 함께 넣어서 화마다 얼굴·옷이 그대로예요.</p><img src="img/sheet.jpg" alt="견습 기사 모델 시트" loading="lazy"></div>
@@ -147,5 +155,10 @@ document.addEventListener("click",e=>{const im=e.target.closest(".cc img");const
  if(im){lb.innerHTML='<img src="'+im.src+'" alt="">';lb.hidden=false;return}if(e.target.closest("#lb")){lb.hidden=true}});
 document.getElementById("cp").onclick=async()=>{const b=document.getElementById("cp");try{await navigator.clipboard.writeText("pms880307@naver.com");b.textContent="복사됨"}catch(_){const r=document.createRange();r.selectNodeContents(document.getElementById("ml"));const s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent="선택됨"}};
 </script>
+<script src="formula.js"></script>
+<script>(()=>{const F=window.DDK_FORMULA;if(!F)return;document.getElementById("fv").textContent="· 공식 v"+F.version+" ("+F.updated+")";
+document.getElementById("fbeats").innerHTML=F.ep1Beats.map((b,i)=>`<div><b>${i+1} ${b.name}</b><small>${b.rule}</small></div>`).join("");
+document.getElementById("frev").innerHTML=F.review.map(r=>`<li>${r.q}</li>`).join("");
+document.getElementById("flearn").innerHTML=F.learned.slice().reverse().slice(0,10).map(l=>`<li><b>${l.what}</b> — ${l.got}</li>`).join("")})();</script>
 </body>
 </html>

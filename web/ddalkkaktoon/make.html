@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>딸깍툰 만들기</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Noto+Sans+KR:wght@400;500;700;900&display=swap">
+<style>
+/* 왼쪽: 캐릭터·내용 입력 → 오른쪽: 딸깍 진행과 완성 툰 (세로) · 움직임 없이 차분하게 */
+:root{--bg:#F3F7F4;--sf:#fff;--ink:#1D2A23;--mu:#5E6F65;--ln:#DDE7E0;--mint:#2F8F6B;--mint-s:#E3F3EA;--peach:#F29B74;--peach-s:#FDEDE4;--er:#C0563E;
+ --disp:"Gowun Dodum","Noto Sans KR",system-ui,sans-serif;--body:"Noto Sans KR",system-ui,"Malgun Gothic",sans-serif}
+*{box-sizing:border-box}[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.6}
+.top{background:var(--sf);border-bottom:1px solid var(--ln)}
+.w{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.top .w{display:flex;align-items:center;gap:14px;height:60px}
+.logo{font-family:var(--disp);font-size:26px;text-decoration:none;color:inherit}.logo i{font-style:normal;color:var(--mint)}
+.top small{color:var(--mu)}.top a.back{margin-left:auto;color:var(--mu);font-size:14px}
+main.w{display:grid;grid-template-columns:420px 1fr;gap:18px;padding-block:18px 60px;align-items:start}
+@media(max-width:900px){main.w{grid-template-columns:1fr}}
+.card{background:var(--sf);border:1px solid var(--ln);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:10px;min-width:0}
+h2{font-family:var(--disp);font-weight:400;font-size:21px;margin:0}
+.lab{font-size:13px;color:var(--mu)}
+.chars{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.slot{border:1.5px dashed var(--ln);border-radius:12px;padding:8px;display:flex;flex-direction:column;gap:6px;align-items:center;text-align:center;cursor:pointer;min-height:150px;justify-content:center;background:var(--bg)}
+.slot img{width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:8px}
+.slot input[type=text]{width:100%;font:inherit;font-size:13px;border:1px solid var(--ln);border-radius:7px;padding:4px 6px}
+.samples{display:flex;gap:6px;flex-wrap:wrap}
+.samples button{border:1px solid var(--ln);background:var(--sf);border-radius:999px;padding:3px 10px;font:inherit;font-size:12px;cursor:pointer}
+textarea{width:100%;min-height:110px;font:inherit;border:1px solid var(--ln);border-radius:10px;padding:10px;resize:vertical}
+.opts{display:flex;gap:6px;flex-wrap:wrap}
+.opts label{border:1px solid var(--ln);border-radius:999px;padding:5px 12px;font-size:13px;cursor:pointer}
+.opts input{display:none}.opts label:has(input:checked){background:var(--mint-s);border-color:var(--mint);font-weight:700}
+.code{display:flex;gap:6px}.code input{flex:1;font:inherit;border:1px solid var(--ln);border-radius:8px;padding:7px 10px}
+.go{background:var(--mint);color:#fff;border:0;border-radius:12px;padding:14px;font:inherit;font-weight:900;font-size:18px;cursor:pointer}
+.go[disabled]{opacity:.55;cursor:default}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid #9FD7BE;outline-offset:2px}
+.note{font-size:12px;color:var(--mu);line-height:1.6}
+.steps{display:flex;flex-direction:column;gap:6px}
+.st{display:flex;gap:8px;align-items:flex-start;font-size:14px}.st i{font-style:normal;width:22px;flex:none}
+.st.ok{color:var(--mint)}.st.er{color:var(--er)}.st.run{font-weight:700}
+.result{display:flex;flex-direction:column;align-items:center;gap:10px}
+.result canvas{width:100%;max-width:480px;height:auto;border-radius:10px;box-shadow:0 10px 30px rgba(30,70,50,.15);background:#fff}
+.dl{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.dl a,.dl button{background:var(--sf);border:1px solid var(--ln);border-radius:10px;padding:8px 14px;font:inherit;font-size:14px;color:var(--ink);text-decoration:none;cursor:pointer}
+.dl a.pr{background:var(--mint);border-color:var(--mint);color:#fff;font-weight:700}
+.script{width:100%;font-size:13px;background:var(--bg);border-radius:10px;padding:10px 12px;max-height:280px;overflow:auto}
+.script div{padding:3px 0;border-bottom:1px dashed var(--ln)}
+.empty{color:var(--mu);text-align:center;padding:40px 10px;line-height:1.8}
+</style>
+</head>
+<body>
+<div class="top"><div class="w"><a class="logo" href="./">딸깍<i>툰</i></a><small>캐릭터 넣고 · 내용 쓰고 · 딸깍</small><a class="back" href="./">← 소개로</a></div></div>
+<main class="w">
+ <div class="card">
+  <h2>① 캐릭터 넣기</h2>
+  <span class="lab">그림을 누르면 바꿀 수 있어요 · 최대 2명 · 아래 예시 캐릭터를 눌러도 돼요</span>
+  <div class="chars">
+   <div class="slot" data-slot="0"><span>＋ 캐릭터 1</span></div>
+   <div class="slot" data-slot="1"><span>＋ 캐릭터 2 (선택)</span></div>
+  </div>
+  <input type="file" id="pick" accept="image/*" hidden>
+  <div class="samples" id="samples"></div>
+  <h2>② 내용 쓰기</h2>
+  <textarea id="story" placeholder="예) 덤벙이 기사가 고양이 카페에 처음 와서 라떼를 쏟는데, 카페 언니도 꼬리에 걸려 같이 넘어진다. 둘이 웃다가 친구가 된다."></textarea>
+  <span class="lab">길이</span>
+  <div class="opts">
+   <label><input type="radio" name="len" value="4" checked>4컷 (인스타툰)</label>
+   <label><input type="radio" name="len" value="8">8컷</label>
+   <label><input type="radio" name="len" value="12">12컷 (짧은 1화)</label>
+  </div>
+  <span class="lab">크레딧 코드 (찰칵상세와 같은 코드 · 없으면 무료로 1컷 맛보기)</span>
+  <div class="code"><input id="code" placeholder="예) CK-XXXX-XXXX" autocomplete="off"></div>
+  <button class="go" id="go">▶ 딸깍</button>
+  <p class="note">그림은 AI(구글 제미나이)로 그려요. 글자는 그림 안에 넣지 않고 따로 입혀서 한글이 정확해요. 그림이 실패하면 크레딧은 돌려드려요.</p>
+ </div>
+ <div class="card">
+  <h2>딸깍툰 작업실</h2>
+  <div class="steps" id="steps"></div>
+  <div class="result" id="result"><div class="empty">왼쪽에서 캐릭터와 내용을 넣고 <b>▶ 딸깍</b>을 누르면<br>재미 공식으로 콘티를 짜고 → 컷을 그리고 → 말풍선을 넣어<br>세로 툰 이미지로 완성해요</div></div>
+ </div>
+</main>
+<script src="formula.js"></script>
+<script>
+const PROXY="https://script.google.com/macros/s/AKfycbz09Pualc3dVyOYhjRIBLY1lVpeZMpi8YMoUFlBcqWjJ30gKJagm0HAhio3rFaIf_E/exec";
+const SAMPLE=[["덤벙이 기사","img/knight.jpg"],["고양이 카페 언니","img/cat.jpg"],["새싹 소녀","img/sprout.jpg"],["빵집 소녀","img/bakery.jpg"],["얼음 마법사","img/ice.jpg"],["불꽃 마법사","img/fire.jpg"],["무녀","img/miko.jpg"],["꼬마 악마","img/devil.jpg"]];
+const STYLE="Soft modern fantasy anime webtoon style: clean thin line art, flat cel shading with one soft shadow tone, clear pale pastel colors. Big round glossy sparkling eyes, small nose and mouth, light blush. Never half-lidded or sultry eyes, no freckles, no rough watercolor paper texture.";
+const $=s=>document.querySelector(s);
+const LS={get:k=>{try{return localStorage.getItem(k)}catch(_){return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch(_){}}};
+let chars=[null,null],slotNow=0,busy=false,ticket=null;
+$("#code").value=LS.get("ck_code")||"";
+$("#samples").innerHTML=SAMPLE.map((s,i)=>`<button data-s="${i}">${s[0]}</button>`).join("");
+function drawSlots(){document.querySelectorAll("[data-slot]").forEach(el=>{const i=+el.dataset.slot,c=chars[i];el.innerHTML=c?`<img src="${c.url}" alt=""><input type="text" data-name="${i}" value="${c.name.replace(/"/g,"&quot;")}" placeholder="이름">`:`<span>＋ 캐릭터 ${i+1}${i?" (선택)":""}</span>`})}
+document.addEventListener("click",e=>{const sl=e.target.closest("[data-slot]");if(sl&&!e.target.closest("input")){slotNow=+sl.dataset.slot;$("#pick").click();return}
+ const sb=e.target.closest("[data-s]");if(sb){const s=SAMPLE[+sb.dataset.s];const i=chars[0]?(chars[1]?0:1):0;chars[i]={name:s[0],url:s[1]};drawSlots()}});
+document.addEventListener("input",e=>{const n=e.target.dataset&&e.target.dataset.name;if(n!=null&&chars[+n])chars[+n].name=e.target.value});
+$("#pick").onchange=e=>{const f=e.target.files[0];if(!f)return;chars[slotNow]={name:"",url:URL.createObjectURL(f)};drawSlots();e.target.value=""};
+drawSlots();
+function loadImg(u){return new Promise((res,rej)=>{const im=new Image();im.onload=()=>res(im);im.onerror=rej;im.src=u})}
+async function b64(url,max){const im=await loadImg(url);const s=Math.min(1,max/Math.max(im.width,im.height));const c=document.createElement("canvas");c.width=Math.round(im.width*s);c.height=Math.round(im.height*s);c.getContext("2d").drawImage(im,0,0,c.width,c.height);return c.toDataURL("image/jpeg",.88).split(",")[1]}
+async function call(o){const r=await fetch(PROXY,{method:"POST",body:JSON.stringify(o)});const j=await r.json();if(j.error)throw new Error(j.error);return j}
+function fp(){let f=LS.get("ck_fp");if(!f){f="b"+Math.random().toString(36).slice(2)+Date.now().toString(36);LS.set("ck_fp",f)}return f}
+let ST=[];function step(t,cls){ST.push([t,cls||"run"]);paint();return ST.length-1}function setS(i,t,cls){ST[i]=[t||ST[i][0],cls];paint()}
+function paint(){$("#steps").innerHTML=ST.map(([t,c])=>`<div class="st ${c}"><i>${c==="ok"?"✓":c==="er"?"!":"…"}</i><span>${t}</span></div>`).join("")}
+
+/* ① 콘티: 재미 공식 + 내용 → JSON 컷 목록 (무료 글 AI) */
+async function plan(n,story,names){const F=window.DDK_FORMULA;
+ const beats=n<=4?"기(일상·소원) → 승(이변) → 전(실수·뒤집기) → 결(웃음 또는 찡한 마무리)":F.ep1Beats.map(b=>b.name+": "+b.rule).join("\n");
+ const prompt=`너는 인기 웹툰 콘티 작가야. 아래 '재미 공식'을 지켜서 ${n}컷 세로 웹툰 콘티를 JSON으로만 답해.
+등장인물: ${names.map((x,i)=>`${i+1}번 "${x}"`).join(", ")}
+내용: ${story}
+재미 공식(비트):
+${beats}
+지킬 것: 첫 ${Math.min(3,n)}컷 안에 사건 · 웃음 1번 이상 · 마지막 컷은 ${n<=4?"웃음 펀치라인이나 따뜻한 마무리":"다음 화가 궁금한 절벽"} · 말풍선은 컷당 ${F.lettering.bubblesPerPanel}개 이하, 한 말풍선 1~2문장, 짧은 한국어 구어체 · 개연성 있게.
+형식: {"title":"제목","panels":[{"scene":"영어로 그림 설명(인물 행동·표정·배경·카메라 구도, 글자 없음)","chars":[1],"wide":false,"lines":[{"who":"이름 또는 나레이션","text":"대사"}]}]}
+wide는 손가락이 멈출 만큼 중요한 컷이면 true (전체 ${F.scroll.thumbStops[1]}개 이하).`;
+ const j=await call({op:"copy",body:{contents:[{parts:[{text:prompt}]}],generationConfig:{responseMimeType:"application/json",temperature:0.9}}});
+ const t=j.candidates?.[0]?.content?.parts?.map(p=>p.text||"").join("")||"";const o=JSON.parse(t.replace(/^```json|```$/g,""));
+ if(!o.panels||!o.panels.length)throw new Error("콘티를 받지 못했어요");o.panels=o.panels.slice(0,n);return o}
+
+/* ② 컷 그림: 1번 참고 = 캐릭터 그림, 2번 = 직전 컷 (일관성 공식) */
+async function drawPanel(p,refs,prev,pass){const parts=[];let k=1;const desc=[];
+ for(const r of refs){parts.push({inline_data:{mime_type:"image/jpeg",data:r.data}});desc.push(`Image ${k++}: character reference sheet of "${r.name}" — keep this exact face, hair and outfit.`)}
+ if(prev){parts.push({inline_data:{mime_type:"image/jpeg",data:prev}});desc.push(`Image ${k++}: the previous panel — keep the same place, light and outfits.`)}
+ parts.push({text:`${desc.join("\n")}\nDraw ONE webtoon panel. ${STYLE}\nScene: ${p.scene}\nAbsolutely no text, no letters, no speech bubbles in the image.`});
+ const j=await call(Object.assign({op:"scene",body:{contents:[{parts}],generationConfig:{responseModalities:["IMAGE"],imageConfig:{aspectRatio:p.wide?"9:16":"4:5"}}}},pass));
+ const pr=j.candidates?.[0]?.content?.parts?.find(x=>x.inline_data||x.inlineData);const d=pr&&(pr.inline_data||pr.inlineData);if(!d)throw new Error("그림을 받지 못했어요");
+ return "data:"+(d.mime_type||d.mimeType||"image/png")+";base64,"+d.data}
+
+/* ③ 세로 편집: 폭 800 · 컷 간격 공식 · 말풍선 */
+function wrap(ctx,t,max){const out=[];let line="";for(const ch of t){if(ctx.measureText(line+ch).width>max&&line){out.push(line);line=ch}else line+=ch}if(line)out.push(line);return out}
+async function compose(o,imgs){const F=window.DDK_FORMULA;const W=F.scroll.width,M=40;await document.fonts.ready;
+ const ims=await Promise.all(imgs.map(u=>u?loadImg(u):null));const c=document.createElement("canvas"),ctx=c.getContext("2d");
+ const blocks=[];let H=150;o.panels.forEach((p,i)=>{const im=ims[i];const w=p.wide?W:W-M*2;const h=im?Math.round(im.height*w/im.width):Math.round(w*1.25);blocks.push({y:H,w,h});H+=h+(i===o.panels.length-1?120:(p.wide?F.scroll.gap.reveal:((i+1)%F.scroll.restEvery===0?F.scroll.gap.breath[1]:F.scroll.gap.flow)))});
+ H+=90;c.width=W;c.height=H;ctx.fillStyle="#fff";ctx.fillRect(0,0,W,H);
+ ctx.fillStyle="#1D2A23";ctx.font="44px 'Gowun Dodum'";ctx.textAlign="center";ctx.fillText(o.title||"딸깍툰",W/2,95);
+ o.panels.forEach((p,i)=>{const b=blocks[i],x=(W-b.w)/2,im=ims[i];if(im)ctx.drawImage(im,x,b.y,b.w,b.h);else{ctx.fillStyle="#EEF3EF";ctx.fillRect(x,b.y,b.w,b.h);ctx.fillStyle="#8A9A90";ctx.font="22px 'Noto Sans KR'";ctx.fillText("(맛보기는 1컷만 그려요)",W/2,b.y+b.h/2)}
+  let by=b.y+18;(p.lines||[]).slice(0,3).forEach((ln,j)=>{ctx.font="24px 'Noto Sans KR'";const narr=/나레이션|narration/i.test(ln.who||"");const ls=wrap(ctx,ln.text||"",300);const bw=Math.max(...ls.map(s=>ctx.measureText(s).width))+44,bh=ls.length*34+26;
+   const left=j%2===0;const bx=left?x+18:x+b.w-bw-18;ctx.fillStyle=narr?"#FFF7E6":"#fff";ctx.strokeStyle="#1D2A23";ctx.lineWidth=2.5;ctx.beginPath();
+   if(narr){ctx.rect(bx,by,bw,bh)}else{const r=Math.min(26,bh/2);ctx.moveTo(bx+r,by);ctx.arcTo(bx+bw,by,bx+bw,by+bh,r);ctx.arcTo(bx+bw,by+bh,bx,by+bh,r);ctx.lineTo(bx+(left?60:bw-36),by+bh);ctx.lineTo(bx+(left?44:bw-56),by+bh+18);ctx.lineTo(bx+(left?36:bw-60),by+bh);ctx.arcTo(bx,by+bh,bx,by,r);ctx.arcTo(bx,by,bx+bw,by,r)}
+   ctx.closePath();ctx.fill();ctx.stroke();ctx.fillStyle="#1D2A23";ctx.textAlign="center";ls.forEach((s,k)=>ctx.fillText(s,bx+bw/2,by+38+k*34));by+=bh+26})});
+ ctx.fillStyle="#9AA8A0";ctx.font="18px 'Noto Sans KR'";ctx.textAlign="center";ctx.fillText("딸깍툰 · AI로 그린 웹툰",W/2,H-36);return c}
+function slices(c){const F=window.DDK_FORMULA,out=[];for(let y=0;y<c.height;y+=F.scroll.sliceMax){const h=Math.min(F.scroll.sliceMax,c.height-y);const s=document.createElement("canvas");s.width=c.width;s.height=h;s.getContext("2d").drawImage(c,0,y,c.width,h,0,0,c.width,h);out.push(s.toDataURL("image/jpeg",.9))}return out}
+
+$("#go").onclick=async()=>{if(busy)return;const story=$("#story").value.trim();const cs=chars.filter(Boolean);
+ if(!cs.length){alert("캐릭터를 한 명 이상 넣어 주세요");return}if(story.length<10){alert("내용을 조금 더 써 주세요 (한두 줄)");return}
+ busy=true;$("#go").disabled=true;ST=[];ticket=null;$("#result").innerHTML="";
+ const n=+document.querySelector("[name=len]:checked").value;const code=$("#code").value.trim().toUpperCase();if(code)LS.set("ck_code",code);
+ const names=cs.map((c,i)=>c.name||("캐릭터"+(i+1)));let s;
+ try{s=step("📚 재미 공식으로 콘티 짜는 중");const o=await plan(n,story,names);setS(s,`📚 콘티 완성 · 「${o.title||"딸깍툰"}」 ${o.panels.length}컷`,"ok");
+  const sc=document.createElement("div");sc.className="script";sc.innerHTML=o.panels.map((p,i)=>`<div><b>${i+1}컷</b> ${(p.lines||[]).map(l=>`${l.who}: ${l.text}`).join(" / ")||"(대사 없음)"}</div>`).join("");$("#result").appendChild(sc);
+  let pass;if(code){s=step("🎟 크레딧 확인");const j=await call({op:"start",code});ticket=j.ticket;pass={ticket};setS(s,`🎟 크레딧 확인 · 남은 ${j.bal}`,"ok")}else{pass={taste:fp()}}
+  s=step("👧 캐릭터 기준 그림 준비");const refs=await Promise.all(cs.map(async(c,i)=>({name:names[i],data:await b64(c.url,768)})));setS(s,"👧 캐릭터 기준 그림 고정","ok");
+  const imgs=[];let prev=null;const lim=code?o.panels.length:1;
+  for(let i=0;i<o.panels.length;i++){if(i>=lim){imgs.push(null);continue}const p=o.panels[i];s=step(`🎨 ${i+1}컷 그리는 중`);
+   const who=(p.chars&&p.chars.length?p.chars:[1]).map(k=>refs[k-1]).filter(Boolean);
+   try{const u=await drawPanel(p,who.length?who:refs.slice(0,1),(i%window.DDK_FORMULA.consistency.reanchorEvery)?prev:null,pass);imgs.push(u);prev=u.split(",")[1];setS(s,`🎨 ${i+1}컷 완성`,"ok")}
+   catch(e){try{await new Promise(r=>setTimeout(r,1500));const u=await drawPanel(p,who.length?who:refs.slice(0,1),null,pass);imgs.push(u);prev=u.split(",")[1];setS(s,`🎨 ${i+1}컷 완성 (다시 그림)`,"ok")}catch(e2){imgs.push(null);setS(s,`🎨 ${i+1}컷 실패: ${e2.message}`,"er")}}}
+  if(!imgs.some(Boolean)){throw new Error("그림을 하나도 받지 못했어요")}
+  s=step("🗨️ 말풍선 넣고 세로로 편집");const cv=await compose(o,imgs);setS(s,"🗨️ 세로 편집 완료 (폭 800px)","ok");
+  const box=$("#result");box.prepend(cv);const sl=slices(cv);const full=cv.toDataURL("image/png");
+  const dl=document.createElement("div");dl.className="dl";dl.innerHTML=`<a class="pr" href="${full}" download="ddalkkaktoon.png">⬇ 전체 이미지 받기</a>`+sl.map((u,i)=>`<a href="${u}" download="ddalkkaktoon_${i+1}.jpg">조각 ${i+1}</a>`).join("");box.insertBefore(dl,cv.nextSibling);
+  step(code?"✅ 완성! 이미지로 받아 가세요":"✅ 맛보기 완성 · 크레딧 코드를 넣으면 모든 컷을 그려요","ok")}
+ catch(e){step("멈췄어요: "+e.message+(ticket?" (크레딧은 돌려드려요)":""),"er");if(ticket){try{await call({op:"refund",ticket})}catch(_){}}}
+ busy=false;$("#go").disabled=false};
+</script>
+</body>
+</html>
