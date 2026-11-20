@@ -108,9 +108,9 @@ footer{padding-block:28px;color:var(--mu);font-size:13px;text-align:center}
  <div class="sh"><h2>만든 툰</h2><p>딸깍툰으로 실제로 만든 웹툰이에요. 누르면 처음부터 끝까지 세로로 볼 수 있어요.</p></div>
  <div class="ep1" style="margin-top:0"><div><h3>📖 1화 · 봄이 사라진 아침</h3><p>딸깍툰으로 만든 첫 작품 「봄을 잃은 마을」 1화가 나왔어요. 13컷 세로 웹툰이에요.</p>
   <ol><li>달빛 도둑이 봄나무의 별 씨앗을 훔치다 한 알을 흘려요</li><li>그 한 알이 새봄의 모자 새싹에 — 마을은 회색, 새싹만 빛나요</li><li>졸다가 봄나무를 못 지킨 견습 기사 루비</li><li>빛을 따라온 회색 슬라임 → 새봄이 처음으로 꽃을 피워요</li><li>마지막 장면 — "한 알을 흘렸군."</li></ol><a class="btn" href="ep1/" style="margin-top:16px;display:inline-block">📖 1화 보기</a></div>
-  <a href="ep1/"><img src="../../_stage/toon/ep1v2/e1_11.jpg" alt="1화 — 새봄이 처음으로 꽃을 피우는 장면" loading="lazy"></a></div>
+  <a href="ep1/"><img src="ep1/cuts/e1_11.jpg" alt="1화 — 새봄이 처음으로 꽃을 피우는 장면" loading="lazy"></a></div>
 
- <div class="tthumb"><a href="ep1/"><img src="../../_stage/toon/ep1v2/e1_01.jpg" alt="1화 1번 컷" loading="lazy"></a><a href="ep1/"><img src="../../_stage/toon/ep1v2/e1_02.jpg" alt="1화 2번 컷" loading="lazy"></a><a href="ep1/"><img src="../../_stage/toon/ep1v2/e1_03.jpg" alt="1화 3번 컷" loading="lazy"></a><a href="ep1/"><img src="../../_stage/toon/ep1v2/e1_06.jpg" alt="1화 6번 컷" loading="lazy"></a><a href="ep1/"><img src="../../_stage/toon/ep1v2/e1_08.jpg" alt="1화 8번 컷" loading="lazy"></a><a href="ep1/"><img src="../../_stage/toon/ep1v2/e1_09.jpg" alt="1화 9번 컷" loading="lazy"></a><a href="ep1/"><img src="../../_stage/toon/ep1v2/e1_11.jpg" alt="1화 11번 컷" loading="lazy"></a><a href="ep1/"><img src="../../_stage/toon/ep1v2/e1_13.jpg" alt="1화 13번 컷" loading="lazy"></a></div>
+ <div class="tthumb"><a href="ep1/"><img src="ep1/cuts/e1_01.jpg" alt="1화 1번 컷" loading="lazy"></a><a href="ep1/"><img src="ep1/cuts/e1_02.jpg" alt="1화 2번 컷" loading="lazy"></a><a href="ep1/"><img src="ep1/cuts/e1_03.jpg" alt="1화 3번 컷" loading="lazy"></a><a href="ep1/"><img src="ep1/cuts/e1_06.jpg" alt="1화 6번 컷" loading="lazy"></a><a href="ep1/"><img src="ep1/cuts/e1_08.jpg" alt="1화 8번 컷" loading="lazy"></a><a href="ep1/"><img src="ep1/cuts/e1_09.jpg" alt="1화 9번 컷" loading="lazy"></a><a href="ep1/"><img src="ep1/cuts/e1_11.jpg" alt="1화 11번 컷" loading="lazy"></a><a href="ep1/"><img src="ep1/cuts/e1_13.jpg" alt="1화 13번 컷" loading="lazy"></a></div>
  <div class="eps"><a class="epc on" href="ep1/"><b>1화</b><span>봄이 사라진 아침</span><small>13컷 · 공개</small></a><div class="epc"><b>2화</b><span>달빛 도둑을 쫓아서</span><small>준비 중</small></div></div>
 </div></section>
 
@@ -199,7 +199,7 @@ document.getElementById("flearn").innerHTML=F.learned.slice().reverse().slice(0,
 ["첫 작은 승리","슬라임 머리에 꽃이 피고 카페만 색이 돌아온다 (꽉 찬 폭 컷)","피었다…! 처음으로!"],
 ["동료 · 케미","카페에서 라떼 — 다음 목표(기사단 본부)가 생긴다","그 씨앗, 기사단 본부에 꼭 알려야 해."],
 ["절벽","밤, 지붕 위 도둑이 빛나는 카페 창을 내려다본다","한 알을 흘렸군."]];
-document.getElementById("conti").innerHTML=C.map((c,i)=>`<div class="ct"><a href="ep1/"><img src="../../_stage/toon/ep1v2/e1_${String(i+1).padStart(2,"0")}.jpg" alt="${i+1}번 컷" loading="lazy"></a><div><span class="bt">${c[0]}</span><span class="no">${i+1}컷</span><p>${c[1]}</p><q>${c[2]}</q></div></div>`).join("");
+document.getElementById("conti").innerHTML=C.map((c,i)=>`<div class="ct"><a href="ep1/"><img src="ep1/cuts/e1_${String(i+1).padStart(2,"0")}.jpg" alt="${i+1}번 컷" loading="lazy"></a><div><span class="bt">${c[0]}</span><span class="no">${i+1}컷</span><p>${c[1]}</p><q>${c[2]}</q></div></div>`).join("");
 const R=[["첫 3컷 안에 사건","3컷에서 마을이 회색으로"],["주인공이 원하는 것","꽃을 한 번도 못 피워 본 새싹 소녀"],["웃음 + 찡한 순간","거꾸로 떨어진 기사 · 처음 핀 꽃"],["개연성","도둑이 흘린 씨앗 → 새싹이 빛남 → 빛이 슬라임을 부름 → 루비 실패 → 새봄이 책임지고 해결 → 도둑이 눈치챔"],["다음 화 욕구","도둑이 흘린 한 알을 알아챘다 — 새봄을 찾으러 올까?"],["얼굴·옷 같음","한 채팅방에서만 그림 · 어긋난 3컷은 다시"],["말풍선 3개 이하","컷당 1~2개"],["처음과 끝 분위기","'한 알이 떨어졌다'로 시작해 '한 알을 흘렸군'으로 끝"]];
 document.getElementById("rvl").innerHTML=R.map(r=>`<div><span>✓</span>${r[0]}<small>${r[1]}</small></div>`).join("")})();</script>
 </body>
