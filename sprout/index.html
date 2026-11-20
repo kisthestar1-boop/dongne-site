@@ -994,11 +994,17 @@ function drawTCard(){if(ST.tc){const n=3,cw=92,ch=118,gx=W/2-(n*cw+(n-1)*12)/2,y
  if(ST.tb&&ST.tb.t>0){const k=ST.tb.k;card(316,12,150,30,15,.85);ctx.font='900 13px system-ui';ctx.fillStyle='#2f6a9a';ctx.fillText(TCARDS[k][0]+' '+TCARDS[k][1]+' '+Math.ceil(ST.tb.t)+'초',328,32)}}
 /* ---------- 자동 사냥 (메이플M식 AUTO) ---------- */
 function autoPilot(dt){const p=ST.pl;ST.apT=(ST.apT||0)-dt;let n=null,bd=1e9;
- for(const e of ST.ents){if(e.dead||e.spawnT>0)continue;const d=Math.abs(e.x-p.x)+Math.abs(e.y-p.y)*.4;if(d<bd){bd=d;n=e}}
+ for(const e of ST.ents){if(e.dead||e.spawnT>0)continue;const dy=e.y-p.y;const d=Math.abs(e.x-p.x)+Math.abs(dy)*(dy<-150?6:2.5);if(d<bd){bd=d;n=e}}
  K.left=0;K.right=0;K.up=0;K.down=0;
- if(n){const dx=n.x-p.x;if(Math.abs(dx)>64){K[dx>0?'right':'left']=1}else{p.face=Math.sign(dx)||p.face;if(ST.apT<=0){P.atk=1;ST.apT=.15}}
-  if(n.y<p.y-70&&p.onG&&Math.abs(dx)<160&&ST.apT<=.05)P.jump=1;
-  if(p.mp>=200)P.skill=1;if(ST.friendCD<=0)P.friend=1;}
+ // 막힘 감지: 3초간 콤보가 안 늘면 앞으로
+ ST.apStuck=(ST.apStuck||0)+dt;if(ST.combo!==ST.apLastC){ST.apLastC=ST.combo;ST.apStuck=0}
+ if(ST.apStuck>3&&!ST.lock){K.right=1;if(ST.apStuck>4.5)ST.apStuck=0;return}
+ if(n){const dx=n.x-p.x,dy=n.y-p.y;
+  if(Math.abs(dx)>58){K[dx>0?'right':'left']=1}else{p.face=Math.sign(dx)||p.face}
+  if(dy<-60&&p.onG&&Math.abs(dx)<170)P.jump=1;
+  if(dy>60&&p.onG&&Math.abs(dx)<220){K.down=1;P.jump=1}
+  if(Math.abs(dx)<90&&Math.abs(dy)<100&&ST.apT<=0){P.atk=1;ST.apT=.14}
+  if(p.mp>=200&&Math.abs(dx)<300)P.skill=1;if(ST.friendCD<=0)P.friend=1;}
  else if(!ST.done)K.right=1;}
 const bF=document.querySelector('#bF .cd'),bS=document.querySelector('#bS .cd'),bAuto=document.getElementById('bAuto');
 function updCtl(){const ctl=scene==='play'&&!(ST&&ST.dlg);if(ctl!==updCtl.v){document.body.classList.toggle('noctl',!ctl);updCtl.v=ctl}
