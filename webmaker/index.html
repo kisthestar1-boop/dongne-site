@@ -53,6 +53,11 @@ textarea{min-height:64px;resize:vertical}
 .steps{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
 .steps span{background:#fff;border:1px solid var(--ln);border-radius:999px;padding:4px 10px;font-size:12px}
 .steps span.on{background:var(--acc2);border-color:var(--acc2);color:#16232F;font-weight:700}
+#seoBox{border:1px solid var(--ln);border-radius:12px;padding:12px 14px;background:#F7FBF8}
+#seoBox h4{margin:0 0 6px;font-family:var(--disp);font-weight:400;font-size:17px}#seoBox .sc{font-size:26px;font-weight:700;color:var(--go)}
+#seoBox ul{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:4px;font-size:12.5px}#seoBox li{display:flex;gap:6px;align-items:baseline}#seoBox li small{margin-left:auto;color:var(--mu);text-align:right}
+#seoBox .after{margin-top:10px;font-size:12px;color:var(--mu);line-height:1.6}#seoBox .after b{color:var(--ink)}
+.seoAdv summary{cursor:pointer;font-size:12.5px;color:var(--mu)}
 </style>
 </head>
 <body>
@@ -64,7 +69,7 @@ textarea{min-height:64px;resize:vertical}
    <label>회사 이름 *<input id="fName" placeholder="예: 한빛정밀"></label>
    <label>영문 이름<input id="fNameEn" placeholder="HANBIT PRECISION"></label>
   </div>
-  <label>업종<select id="fInd"><option value="machine">기계 · 설비</option><option value="parts">부품 · 정밀가공</option><option value="material">소재 · 화학</option><option value="other">기타 제조</option><option value="shop">🛍 쇼핑몰 · 개인 판매자</option></select></label>
+  <label>업종<select id="fInd"><option value="machine">기계 · 설비</option><option value="parts">부품 · 정밀가공</option><option value="material">소재 · 화학</option><option value="other">기타 제조</option><option value="academy">📚 학원 · 교육</option><option value="local">🏪 동네 가게 · 서비스</option><option value="shop">🛍 쇼핑몰 · 개인 판매자</option></select></label>
   <label id="shopRow" hidden>판매 링크<small>스마트스토어·쿠팡·인스타 주소 (있는 것만, 줄마다 하나)</small><textarea id="fShop" placeholder="https://smartstore.naver.com/내가게&#10;https://www.coupang.com/vp/products/..."></textarea></label>
   <label>무엇을 만드나요? *<small>한 줄이면 충분해요</small><input id="fWhat" placeholder="예: 자동차·반도체 장비용 정밀 가공 부품"></label>
   <label>회사 소개 메모<small>업력, 설비, 인증, 주요 고객, 수출국 등 아는 만큼 (짧아도 돼요)</small><textarea id="fMemo" placeholder="예: 1998년 설립, CNC 42대, ISO 9001·IATF 16949, 일본·미국 수출"></textarea></label>
@@ -74,11 +79,15 @@ textarea{min-height:64px;resize:vertical}
   </div>
   <div class="row2"><label>이메일<input id="fMail" placeholder="sales@company.co.kr"></label><label>홈페이지 주소(도메인)<input id="fDom" placeholder="www.회사이름.co.kr"></label></div>
   <label>주소<input id="fAddr" placeholder="경남 김해시 ○○로 00"></label>
-  <h3>② 사진 <small style="font-family:var(--body);font-size:12px;color:var(--mu)">첫 사진이 첫 화면(큰 사진)이 돼요 · 최대 8장</small></h3>
+  <h3>② 검색 상위 노출 <small style="font-family:var(--body);font-size:12px;color:var(--mu)">구글·네이버에 잘 걸리게 자동 세팅</small></h3>
+  <div class="row2"><label>지역<small>손님이 검색할 동네</small><input id="fArea" placeholder="예: 김해 장유"></label><label>대표 키워드<small>쉼표로 3개 정도</small><input id="fKw" placeholder="예: 장유 영어학원, 초등 영어"></label></div>
+  <details class="seoAdv"><summary>공개한 뒤 넣는 확인 코드 (선택)</summary><div class="row2" style="margin-top:6px"><label>구글 서치 콘솔 코드<input id="fGsc" placeholder="google-site-verification 값"></label><label>네이버 서치어드바이저 코드<input id="fNsv" placeholder="naver-site-verification 값"></label></div></details>
+  <h3>③ 사진 <small style="font-family:var(--body);font-size:12px;color:var(--mu)">첫 사진이 첫 화면(큰 사진)이 돼요 · 최대 8장</small></h3>
   <div class="drop" id="drop"><b>📂 사진을 여기로 끌어다 놓기</b><br><small>또는 눌러서 고르기 · 공장 전경, 설비, 제품</small><input type="file" id="pick" accept="image/*" multiple hidden></div>
   <div class="thumbs" id="thumbs"></div>
   <button class="btn big" id="go">🤖 홈페이지 만들기</button>
   <div class="st" id="st"></div>
+  <div id="seoBox" hidden></div>
  </div>
  <div class="out">
   <div class="tools">
@@ -117,14 +126,18 @@ const dz=$("#drop");dz.onclick=()=>$("#pick").click();$("#pick").onchange=e=>add
 dz.addEventListener("drop",e=>addFiles([...(e.dataTransfer?.files||[])]));
 
 /* ---------- 입력 ---------- */
-const F=()=>({name:$("#fName").value.trim(),nameEn:$("#fNameEn").value.trim(),ind:$("#fInd").value,what:$("#fWhat").value.trim(),memo:$("#fMemo").value.trim(),year:$("#fYear").value.trim(),tel:$("#fTel").value.trim(),mail:$("#fMail").value.trim(),dom:$("#fDom").value.trim(),addr:$("#fAddr").value.trim(),shop:links()});
-const IND={machine:"기계·설비 제조",parts:"부품·정밀가공",material:"소재·화학",other:"제조업",shop:"온라인 쇼핑몰·개인 판매 브랜드"};
+const F=()=>({name:$("#fName").value.trim(),nameEn:$("#fNameEn").value.trim(),ind:$("#fInd").value,what:$("#fWhat").value.trim(),memo:$("#fMemo").value.trim(),year:$("#fYear").value.trim(),tel:$("#fTel").value.trim(),mail:$("#fMail").value.trim(),dom:$("#fDom").value.trim(),addr:$("#fAddr").value.trim(),shop:links(),area:$("#fArea").value.trim(),kw:$("#fKw").value.split(/[,，]/).map(x=>x.trim()).filter(Boolean).slice(0,5),gsc:$("#fGsc").value.trim(),nsv:$("#fNsv").value.trim()});
+const IND={machine:"기계·설비 제조",parts:"부품·정밀가공",material:"소재·화학",other:"제조업",academy:"학원·교육",local:"동네 가게·서비스",shop:"온라인 쇼핑몰·개인 판매 브랜드"};
 $("#fInd").onchange=()=>{$("#shopRow").hidden=$("#fInd").value!=="shop"};
 const links=()=>$("#fShop").value.split(/\n+/).map(x=>x.trim()).filter(x=>/^https?:\/\//.test(x)).slice(0,4);
 const shopName=u=>/smartstore|naver/.test(u)?"스마트스토어":/coupang/.test(u)?"쿠팡":/instagram/.test(u)?"인스타그램":/11st/.test(u)?"11번가":/gmarket/.test(u)?"G마켓":"온라인 스토어";
 
 /* ---------- AI 글쓰기 (찰칵상세 서버의 copy 기능 재사용) ---------- */
-function prompt(f,n){if(f.ind==="shop")return `당신은 한국 온라인 판매 브랜드의 홈페이지 카피라이터입니다. 아래 정보와 사진 ${n}장을 보고 브랜드 홈페이지 문구를 JSON으로만 답하세요.
+function prompt(f,n){if(f.ind==="academy"||f.ind==="local"){const A=f.ind==="academy";return `당신은 한국 동네 ${A?"학원":"가게"} 홈페이지 카피라이터입니다. 아래 정보와 사진 ${n}장을 보고 홈페이지 문구를 JSON으로만 답하세요.
+이름: ${f.name} · ${A?"가르치는 것":"하는 일"}: ${f.what} · 지역: ${f.area||f.addr||"모름"} · 검색 키워드: ${(f.kw||[]).join(", ")||"없음"} · 메모: ${f.memo||"없음"}
+규칙: 사실은 메모와 사진에서 확인되는 것만, 모르는 숫자·합격 실적·후기·수상은 지어내지 마세요. ${A?"학부모가 안심하는 말투(커리큘럼·관리·상담).":"동네 손님이 편하게 느끼는 말투."} 지역명과 키워드를 슬로건이나 sub·about에 자연스럽게 한 번씩 넣으세요(억지 반복 금지). 슬로건 한국어 20자 이내, 영어 6단어 이내. products는 ${A?"반·과정":"메뉴·서비스"} 2~6개. stats는 메모의 숫자만. strengths 3개. process는 ${A?"상담→레벨테스트→반 배정→관리":"문의→예약→방문→관리"} 같은 4단계.
+형식: {"ko":{"slogan":"","sub":"","about":"","strengths":[{"t":"","d":""}],"products":[{"name":"","desc":""}],"stats":[{"num":"","label":""}],"process":["","","",""],"cta":""},"en":{같은 구조 영어}}`}
+ if(f.ind==="shop")return `당신은 한국 온라인 판매 브랜드의 홈페이지 카피라이터입니다. 아래 정보와 사진 ${n}장을 보고 브랜드 홈페이지 문구를 JSON으로만 답하세요.
 브랜드: ${f.name} (${f.nameEn||"영문명 없음"}) · 파는 것: ${f.what} · 메모: ${f.memo||"없음"} · 시작: ${f.year||"모름"}
 규칙: 사실은 메모와 사진에서 확인되는 것만, 모르는 숫자·후기·수상은 지어내지 마세요. 따뜻하고 믿음 가는 소비자용 말투. 슬로건 한국어 20자 이내, 영어 6단어 이내. products는 사진 2번부터 보이는 상품 1개씩(최대 6개). stats는 메모의 숫자만, 없으면 빈 배열. strengths는 소재·제작 방식·배송/교환 같은 구매 안심 포인트 3개. process는 주문→제작/포장→배송→교환·문의 4단계. about은 브랜드 이야기.
 형식: {"ko":{"slogan":"","sub":"","about":"","strengths":[{"t":"","d":""}],"products":[{"name":"","desc":""}],"stats":[{"num":"","label":""}],"process":["","","",""],"cta":""},"en":{같은 구조 영어}}`;
@@ -144,7 +157,8 @@ async function ai(f){const parts=[{text:prompt(f,PH.length)}];PH.slice(0,4).forE
  const r=await fetch(PROXY,{method:"POST",body:JSON.stringify({op:"copy",body})});const j=await r.json();
  if(j.error)throw new Error(j.error);const txt=j.candidates?.[0]?.content?.parts?.map(p=>p.text||"").join("")||"";
  const m=txt.match(/\{[\s\S]*\}/);if(!m)throw new Error("AI 답을 읽지 못했어요");return JSON.parse(m[0])}
-function fallback(f){if(f.ind==="shop"){const ko={slogan:`${f.name}, 정성으로 만듭니다`,sub:`${f.what}을(를) 판매하는 ${f.name}입니다.`,about:`${f.name}은 ${f.what}을(를) 정성껏 준비해 보내 드립니다. ${f.memo}`.trim(),strengths:[{t:"꼼꼼한 검수",d:"보내기 전에 하나하나 확인합니다."},{t:"안전한 포장",d:"상품이 다치지 않게 포장합니다."},{t:"빠른 응답",d:"문의는 빠르게 답해 드립니다."}],products:(PH.length>1?PH.slice(1,7).map((_,i)=>({name:`상품 ${i+1}`,desc:"자세한 정보는 구매처에서 확인해 주세요."})):[{name:f.what,desc:"자세한 정보는 구매처에서 확인해 주세요."}]),stats:[],process:["주문","포장","배송","교환·문의"],cta:"구매하러 가기"};const en={slogan:"Made with care",sub:`${f.nameEn||f.name} offers ${f.what}.`,about:`${f.nameEn||f.name} carefully prepares every order.`,strengths:[{t:"Careful check",d:"Every item is inspected before shipping."},{t:"Safe packing",d:"Packed to arrive in perfect shape."},{t:"Quick replies",d:"We answer your questions fast."}],products:ko.products.map((p,i)=>({name:`Product ${i+1}`,desc:"See the store for details."})),stats:[],process:["Order","Packing","Delivery","Returns · Help"],cta:"Shop now"};return {ko,en}}
+function fallback(f){if(f.ind==="academy"||f.ind==="local"){const A=f.ind==="academy",ar=f.area?f.area+" ":"";const ko={slogan:A?"아이 한 명 한 명을 봅니다":`${ar}${f.name}`,sub:`${ar}${f.name} — ${f.what}`,about:`${f.name}은(는) ${ar}${f.what}${A?"을(를) 가르칩니다. 아이마다 수준을 확인하고 꼼꼼히 관리합니다.":"을(를) 합니다."} ${f.memo}`.trim(),strengths:A?[{t:"수준별 반",d:"레벨테스트로 아이에게 맞는 반을 정합니다."},{t:"꼼꼼한 관리",d:"숙제와 진도를 매주 확인합니다."},{t:"학부모 소통",d:"상담과 알림으로 아이 상황을 알려 드립니다."}]:[{t:"가까운 거리",d:"동네에서 편하게 찾아오세요."},{t:"친절한 상담",d:"궁금한 점은 편하게 물어보세요."},{t:"꼼꼼한 마무리",d:"끝까지 책임지고 챙깁니다."}],products:(f.what.split(/[·,、]/).map(x=>x.trim()).filter(Boolean).slice(0,4).map(x=>({name:x,desc:A?"수업 시간과 반은 상담으로 안내해 드려요.":"자세한 내용은 문의해 주세요."}))),stats:[],process:A?["상담","레벨테스트","반 배정","수업 · 관리"]:["문의","예약","방문","관리"],cta:A?"상담 신청하기":"문의하기"};const en={slogan:A?"Every child, seen":"Your neighborhood choice",sub:`${f.nameEn||f.name}`,about:`${f.nameEn||f.name} — ${A?"an academy in":"a local business in"} ${f.area||"Korea"}.`,strengths:ko.strengths.map(x=>({t:x.t,d:x.d})),products:ko.products,stats:[],process:A?["Consultation","Level test","Class","Care"]:["Inquiry","Booking","Visit","Care"],cta:"Contact us"};return {ko,en}}
+ if(f.ind==="shop"){const ko={slogan:`${f.name}, 정성으로 만듭니다`,sub:`${f.what}을(를) 판매하는 ${f.name}입니다.`,about:`${f.name}은 ${f.what}을(를) 정성껏 준비해 보내 드립니다. ${f.memo}`.trim(),strengths:[{t:"꼼꼼한 검수",d:"보내기 전에 하나하나 확인합니다."},{t:"안전한 포장",d:"상품이 다치지 않게 포장합니다."},{t:"빠른 응답",d:"문의는 빠르게 답해 드립니다."}],products:(PH.length>1?PH.slice(1,7).map((_,i)=>({name:`상품 ${i+1}`,desc:"자세한 정보는 구매처에서 확인해 주세요."})):[{name:f.what,desc:"자세한 정보는 구매처에서 확인해 주세요."}]),stats:[],process:["주문","포장","배송","교환·문의"],cta:"구매하러 가기"};const en={slogan:"Made with care",sub:`${f.nameEn||f.name} offers ${f.what}.`,about:`${f.nameEn||f.name} carefully prepares every order.`,strengths:[{t:"Careful check",d:"Every item is inspected before shipping."},{t:"Safe packing",d:"Packed to arrive in perfect shape."},{t:"Quick replies",d:"We answer your questions fast."}],products:ko.products.map((p,i)=>({name:`Product ${i+1}`,desc:"See the store for details."})),stats:[],process:["Order","Packing","Delivery","Returns · Help"],cta:"Shop now"};return {ko,en}}
  const ko={slogan:`${f.what.split(/[·,]/)[0]||"정밀 제조"}의 기준`,sub:`${f.name}은 ${f.what}을(를) 만듭니다.`,about:`${f.year?f.year+"년 설립 이후 ":""}${f.name}은 ${f.what} 분야에서 품질과 납기를 지켜 왔습니다. ${f.memo}`.trim(),
  strengths:[{t:"품질 관리",d:"원자재 입고부터 출하까지 단계별로 검사합니다."},{t:"맞춤 생산",d:"도면과 사양에 맞춰 소량부터 양산까지 대응합니다."},{t:"납기 준수",d:"계획 생산으로 약속한 날짜를 지킵니다."}],
  products:(PH.length>1?PH.slice(1,7).map((_,i)=>({name:`제품 ${i+1}`,desc:"사양과 용도는 문의해 주세요."})):[{name:f.what||"주요 제품",desc:"사양과 용도는 문의해 주세요."}]),
@@ -154,18 +168,50 @@ function fallback(f){if(f.ind==="shop"){const ko={slogan:`${f.name}, 정성으�
  products:ko.products.map((p,i)=>({name:`Product ${i+1}`,desc:"Contact us for specifications."})),stats:ko.stats.map(s=>({num:s.num,label:"years in business"})),process:["Inquiry","Drawing review · Quote","Production · Inspection","Shipment"],cta:"Request a quote"};return {ko,en}}
 
 /* ---------- 홈페이지 조립 (손님에게 넘길 완성 파일) ---------- */
+/* ---------- 🔎 검색 상위 노출 세팅 (구글·네이버) ---------- */
+function seo(d,f,lang){const T=d[lang]||d.ko,K=lang==="ko",nm=K?f.name:(f.nameEn||f.name);const kw=f.kw||[],area=f.area||"";
+ const k1=kw[0]||(area?area+" "+(IND[f.ind]||""):IND[f.ind]||"");
+ let title=K?`${nm} | ${k1}${area&&!k1.includes(area)?" · "+area:""}`:`${nm} | ${T.slogan||""}`;if(title.length>60)title=title.slice(0,58)+"…";
+ let desc=T.sub||"";if(K){if(f.what&&!desc.includes(f.what))desc+=" — "+f.what;if(area&&!desc.includes(area))desc=area+" "+desc;if(f.tel)desc+=" · 상담 "+f.tel}desc=desc.replace(/\s+/g," ").trim();if(desc.length>150)desc=desc.slice(0,148)+"…";
+ const dom=f.dom?("https://"+f.dom.replace(/^https?:\/\//,"").replace(/\/$/,"")+"/"):"";
+ const type=f.ind==="academy"?"EducationalOrganization":f.ind==="shop"?"Store":f.ind==="local"?"LocalBusiness":"Organization";
+ const ld={"@context":"https://schema.org","@type":type,name:nm,description:desc,...(dom?{url:dom,image:dom+"og.jpg"}:{}),...(f.tel?{telephone:f.tel}:{}),...(f.mail?{email:f.mail}:{}),...(f.addr?{address:{"@type":"PostalAddress",streetAddress:f.addr,addressCountry:"KR"}}:{}),...(area?{areaServed:area}:{}),...(f.year?{foundingDate:f.year}:{}),...((f.shop||[]).length?{sameAs:f.shop}:{})};
+ const faq=faqs(f,lang);const ldf=faq.length?{"@context":"https://schema.org","@type":"FAQPage",mainEntity:faq.map(q=>({"@type":"Question",name:q[0],acceptedAnswer:{"@type":"Answer",text:q[1]}}))}:null;
+ const J=o=>JSON.stringify(o).replace(/</g,"\\u003c");
+ const head=`<title>${esc(title)}</title>
+<meta name="description" content="${esc(desc)}">${kw.length?`
+<meta name="keywords" content="${esc(kw.join(", "))}">`:""}
+<meta name="robots" content="index,follow">${dom?`
+<link rel="canonical" href="${esc(dom)}">`:""}
+<meta property="og:type" content="website"><meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(desc)}"><meta property="og:locale" content="${K?"ko_KR":"en_US"}">${dom?`<meta property="og:url" content="${esc(dom)}"><meta property="og:image" content="${esc(dom)}og.jpg">`:""}${f.gsc?`
+<meta name="google-site-verification" content="${esc(f.gsc)}">`:""}${f.nsv?`
+<meta name="naver-site-verification" content="${esc(f.nsv)}">`:""}
+<script type="application/ld+json">${J(ld)}<\/script>${ldf?`
+<script type="application/ld+json">${J(ldf)}<\/script>`:""}`;
+ return {title,desc,dom,head,faq,k1}}
+function faqs(f,lang){const K=lang==="ko",nm=f.name,A=f.ind==="academy";const q=[];if(!K)return q;
+ if(f.addr||f.area)q.push([`${nm}은(는) 어디에 있나요?`,`${f.addr||f.area}에 있어요.`]);
+ q.push([A?`${nm}에서는 무엇을 배우나요?`:`${nm}은(는) 무엇을 하나요?`,`${f.what}${A?" 수업을 해요.":"을(를) 해요."}`]);
+ if(f.tel||f.mail)q.push([A?"상담이나 레벨테스트는 어떻게 신청하나요?":"문의는 어떻게 하나요?",`${f.tel?"전화 "+f.tel:""}${f.tel&&f.mail?" 또는 ":""}${f.mail?"이메일 "+f.mail:""}로 연락 주세요. 아래 문의하기에 남기셔도 돼요.`]);
+ return q}
+function seoCheck(f,S){const kw=f.kw||[];const t=S.title,dsc=S.desc;const has=(x,y)=>!!x&&y.includes(x);
+ return [["제목 길이 (15~60자)",t.length>=15&&t.length<=60,`${t.length}자`],["설명 길이 (50~150자)",dsc.length>=50&&dsc.length<=150,`${dsc.length}자`],
+ ["대표 키워드가 제목에",!!kw[0]&&has(kw[0],t),kw[0]||"키워드 없음"],["지역이 제목·설명에",!!f.area&&(has(f.area,t)||has(f.area,dsc)),f.area||"지역 없음"],
+ ["전화·주소 (지도·구조화 데이터)",!!(f.tel&&f.addr),f.tel&&f.addr?"있음":"전화·주소 넣기"],["도메인 (canonical·사이트맵)",!!S.dom,S.dom||"도메인 없음"],
+ ["자주 묻는 질문 (FAQ 구조화)",S.faq.length>=2,S.faq.length+"개"],["휴대폰 화면 · 사진 설명(alt)",true,"자동"]]}
 function site(d,f,style,lang){
  const T=d[lang]||d.ko,K=lang==="ko";const nm=K?f.name:(f.nameEn||f.name);
  const hero=PH[0]?.full||"",gal=PH.slice(1,7);
  const pal=style==="A"?{bg:"#0E141B",bg2:"#151E28",fg:"#E9EEF2",mu:"#9AA8B4",acc:"#F2B630",card:"#18232E",ln:"#26323E"}:{bg:"#FFFFFF",bg2:"#F2F5F8",fg:"#14202B",mu:"#5B6B78",acc:"#1F6FB5",card:"#FFFFFF",ln:"#DDE4EA"};
- const SH=f.ind==="shop",SL=f.shop||[];
- const L=K?{nav:SH?["브랜드 이야기","상품","구매처","문의"]:["회사소개","제품","강점","문의"],about:SH?"브랜드 이야기":"회사소개",prod:SH?"상품":"제품",str:SH?"안심하고 사세요":"우리의 강점",proc:"진행 순서",con:"문의하기",tel:"전화",mail:"이메일",addr:"주소",q:"견적 문의",sw:"EN",fm:["회사명","이름","연락처(이메일/전화)","문의 내용","보내기"],fmNote:"문의 폼 연결 전 미리보기입니다. 위 이메일·전화로 연락 주세요."}
+ const SH=f.ind==="shop",SL=f.shop||[],AC=f.ind==="academy",LO=f.ind==="local";const S=seo(d,f,lang);
+ const L=K?{nav:SH?["브랜드 이야기","상품","구매처","문의"]:AC?["학원 소개","수업","강점","상담"]:LO?["소개","메뉴·서비스","강점","문의"]:["회사소개","제품","강점","문의"],about:SH?"브랜드 이야기":AC?"학원 소개":LO?"소개":"회사소개",prod:SH?"상품":AC?"수업 안내":LO?"메뉴·서비스":"제품",str:SH?"안심하고 사세요":AC?"학부모님이 안심하는 이유":"우리의 강점",proc:AC?"상담부터 수업까지":"진행 순서",con:AC?"상담 신청":"문의하기",tel:"전화",mail:"이메일",addr:"주소",q:AC?"상담 신청":LO?"문의하기":"견적 문의",sw:"EN",fm:["회사명","이름","연락처(이메일/전화)","문의 내용","보내기"],fmNote:"문의 폼 연결 전 미리보기입니다. 위 이메일·전화로 연락 주세요."}
   :{nav:SH?["Our story","Products","Where to buy","Contact"]:["About","Products","Strengths","Contact"],about:SH?"Our story":"About us",prod:"Products",str:SH?"Shop with confidence":"Why us",proc:"How we work",con:"Contact",tel:"Tel",mail:"Email",addr:"Address",q:"Get a quote",sw:"KO",fm:["Company","Name","Email / Phone","Message","Send"],fmNote:"Preview: please contact us by the email or phone above."};
  const prods=(T.products||[]).map((p,i)=>`<article class="pc">${gal[i]?`<img src="${gal[i].full}" alt="${esc(p.name)}">`:`<div class="pi">${esc((p.name||"").slice(0,1))}</div>`}<h3>${esc(p.name)}</h3><p>${esc(p.desc)}</p>${SH&&SL[0]?`<p style="margin-top:-8px"><a class="btn" style="padding:8px 14px;font-size:14px" href="${esc(SL[0])}" target="_blank" rel="noopener">${K?"구매하기":"Buy now"}</a></p>`:""}</article>`).join("");
  const buy=SH&&SL.length?`<section id="buy"><div class="w"><h2>${K?"구매처":"Where to buy"}</h2><div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:20px">${SL.map(u=>`<a class="btn" href="${esc(u)}" target="_blank" rel="noopener">${esc(shopName(u))} →</a>`).join("")}</div></div></section>`:"";
  const stats=(T.stats||[]).filter(s=>s.num).map(s=>`<div><b>${esc(s.num)}</b><span>${esc(s.label)}</span></div>`).join("");
- return `<!doctype html><html lang="${lang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(nm)}</title>
-<meta name="description" content="${esc(T.sub)}"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;700&display=swap">
+ return `<!doctype html><html lang="${lang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+${S.head}
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;700&display=swap">
 <style>:root{--bg:${pal.bg};--bg2:${pal.bg2};--fg:${pal.fg};--mu:${pal.mu};--acc:${pal.acc};--card:${pal.card};--ln:${pal.ln}}*{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--fg);font-family:"IBM Plex Sans KR",system-ui,sans-serif;line-height:1.65}
 a{color:inherit}.w{max-width:1160px;margin:0 auto;padding:0 max(20px,4vw)}
@@ -191,19 +237,22 @@ form{display:grid;gap:10px}form input,form textarea{font:inherit;padding:12px;bo
 footer{padding:28px 0;border-top:1px solid var(--ln);color:var(--mu);font-size:13px}
 .fab{position:fixed;right:18px;bottom:18px;z-index:9;box-shadow:0 8px 20px rgba(0,0,0,.25)}</style></head><body>
 <header><div class="w"><b>${esc(nm)}</b><nav><a href="#about">${L.nav[0]}</a><a href="#products">${L.nav[1]}</a><a href="${SH&&SL.length?"#buy":"#strengths"}">${L.nav[2]}</a><a href="#contact">${L.nav[3]}</a></nav></div></header>
-<div class="hero">${hero?`<img src="${hero}" alt="${esc(nm)}">`:""}<div class="w"><h1>${esc(T.slogan)}</h1><p>${esc(T.sub)}</p><a class="btn" href="${SH&&SL[0]?esc(SL[0]):"#contact"}"${SH&&SL[0]?' target="_blank" rel="noopener"':""}>${esc(T.cta||L.q)}</a></div></div>
+<div class="hero">${hero?`<img src="${hero}" alt="${esc(nm+(f.area?" · "+f.area:"")+(S.k1&&!S.k1.includes(f.area||"~")?" "+S.k1:""))}">`:""}<div class="w"><h1>${esc(T.slogan)}</h1><p>${esc(T.sub)}</p><a class="btn" href="${SH&&SL[0]?esc(SL[0]):"#contact"}"${SH&&SL[0]?' target="_blank" rel="noopener"':""}>${esc(T.cta||L.q)}</a></div></div>
 ${stats?`<div class="w stats">${stats}</div>`:""}
-<section id="about"><div class="w ab"><div><h2>${L.about}</h2><p class="lead" style="margin-bottom:0">${esc(T.about)}</p></div>${PH[1]?`<img src="${PH[1].full}" alt="">`:""}</div></section>
+<section id="about"><div class="w ab"><div><h2>${L.about}</h2><p class="lead" style="margin-bottom:0">${esc(T.about)}</p></div>${PH[1]?`<img src="${PH[1].full}" alt="${esc(nm+" "+L.about)}" loading="lazy">`:""}</div></section>
 <section id="products" class="alt"><div class="w"><h2>${L.prod}</h2><p class="lead">${esc(f.what)}</p><div class="grid">${prods}</div></div></section>
 <section id="strengths"><div class="w"><h2>${L.str}</h2><div class="str" style="margin-top:30px">${(T.strengths||[]).map(s=>`<div><h3>${esc(s.t)}</h3><p>${esc(s.d)}</p></div>`).join("")}</div>
 <h2 style="margin-top:80px">${L.proc}</h2><div class="proc" style="margin-top:24px">${(T.process||[]).map(s=>`<div>${esc(s)}</div>`).join("")}</div></div></section>
-${buy}<section id="contact" class="alt"><div class="w con"><div><h2>${L.con}</h2><dl>${f.tel?`<dt>${L.tel}</dt><dd>${esc(f.tel)}</dd>`:""}${f.mail?`<dt>${L.mail}</dt><dd>${esc(f.mail)}</dd>`:""}${f.addr?`<dt>${L.addr}</dt><dd>${esc(f.addr)}</dd>`:""}</dl></div>
+${buy}${S.faq.length?`<section id="faq"><div class="w"><h2>${K?"자주 묻는 질문":"FAQ"}</h2><div style="display:grid;gap:12px;margin-top:24px">${S.faq.map(q=>`<details style="background:var(--card);border:1px solid var(--ln);border-radius:8px;padding:16px 18px"><summary style="font-weight:700;cursor:pointer">${esc(q[0])}</summary><p style="margin:10px 0 0;color:var(--mu)">${esc(q[1])}</p></details>`).join("")}</div></div></section>`:""}<section id="contact" class="alt"><div class="w con"><div><h2>${L.con}</h2><dl>${f.tel?`<dt>${L.tel}</dt><dd>${esc(f.tel)}</dd>`:""}${f.mail?`<dt>${L.mail}</dt><dd>${esc(f.mail)}</dd>`:""}${f.addr?`<dt>${L.addr}</dt><dd>${esc(f.addr)}</dd>`:""}</dl></div>
 <form onsubmit="event.preventDefault();this.querySelector('small').hidden=false"><input placeholder="${L.fm[0]}"><input placeholder="${L.fm[1]}"><input placeholder="${L.fm[2]}"><textarea placeholder="${L.fm[3]}"></textarea><button class="btn" style="border:0;cursor:pointer;font:inherit;font-weight:700">${L.fm[4]}</button><small hidden>${L.fmNote}</small></form></div></section>
-<footer><div class="w">© ${new Date().getFullYear()} ${esc(nm)}${f.addr?" · "+esc(f.addr):""}${f.dom?" · "+esc(f.dom):""}</div></footer>
+<footer><div class="w">${f.area&&K?`<div style="margin-bottom:6px">${esc(f.area)} ${esc(IND[f.ind]||"")} · ${esc(nm)}</div>`:""}© ${new Date().getFullYear()} ${esc(nm)}${f.addr?" · "+esc(f.addr):""}${f.dom?" · "+esc(f.dom):""}</div></footer>
 <a class="btn fab" href="${SH&&SL[0]?esc(SL[0]):"#contact"}"${SH&&SL[0]?' target="_blank" rel="noopener"':""}>${SH?(K?"구매하기":"Shop now"):L.q}</a></body></html>`}
 
 /* ---------- 미리보기 ---------- */
-function show(){if(!DATA)return;const html=site(DATA,F(),VIEW.style,VIEW.lang);const fr=$("#frame");fr.hidden=false;$("#empty").hidden=true;fr.srcdoc=html;fr.classList.toggle("m",VIEW.dev==="m");$("#dl").disabled=$("#pub").disabled=false}
+function seoBox(){const f=F(),S=seo(DATA,f,"ko"),C=seoCheck(f,S),ok=C.filter(c=>c[1]).length,sc=Math.round(ok/C.length*100);const b=$("#seoBox");b.hidden=false;
+ b.innerHTML=`<h4>🔎 검색 상위 노출 점검 <span class="sc">${sc}점</span></h4><div style="font-size:12px;color:var(--mu)">제목: ${esc(S.title)}</div><ul>${C.map(c=>`<li>${c[1]?"✅":"⬜"} ${c[0]}<small>${esc(c[2])}</small></li>`).join("")}</ul>
+ <div class="after"><b>공개한 뒤 (상위 노출 세팅 마무리)</b><br>1. 구글 서치 콘솔에 주소 등록 → 확인 코드 넣기 → sitemap.xml 제출<br>2. 네이버 서치어드바이저 등록 → 확인 코드 → 사이트맵 제출<br>3. 구글 비즈니스 프로필 · 네이버 스마트플레이스에 홈페이지 주소 연결<br>4. 매달 블로그 글 2편으로 키워드 넓히기 (딸깍 블로그)<br><small>※ 순위 1위는 약속하지 않아요 — 상위 노출에 필요한 세팅을 모두 해 드려요.</small></div>`}
+function show(){if(!DATA)return;seoBox();const html=site(DATA,F(),VIEW.style,VIEW.lang);const fr=$("#frame");fr.hidden=false;$("#empty").hidden=true;fr.srcdoc=html;fr.classList.toggle("m",VIEW.dev==="m");$("#dl").disabled=$("#pub").disabled=false}
 ["sStyle","sLang","sDev"].forEach(id=>$("#"+id).onclick=e=>{const b=e.target.closest("button");if(!b)return;[...b.parentNode.children].forEach(x=>x.classList.toggle("on",x===b));VIEW[{sStyle:"style",sLang:"lang",sDev:"dev"}[id]]=b.dataset.v;show()});
 function st(t,err){const s=$("#st");s.textContent=t;s.classList.toggle("err",!!err)}
 $("#go").onclick=async()=>{const f=F();if(!f.name||!f.what){st("회사 이름과 '무엇을 만드나요'를 적어 주세요",1);return}
@@ -212,7 +261,14 @@ $("#go").onclick=async()=>{const f=F();if(!f.name||!f.what){st("회사 이름과
  try{DATA=await ai(f);st("✅ 완성! 오른쪽에서 시안 A/B, 한국어/English를 바꿔 보세요")}
  catch(e){DATA=fallback(f);st("AI 연결이 안 돼서 기본 문구로 만들었어요 ("+e.message+")",1)}
  b.disabled=false;show()};
-$("#dl").onclick=()=>{const f=F();const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([site(DATA,f,VIEW.style,VIEW.lang)],{type:"text/html"}));a.download="index.html";document.body.appendChild(a);a.click();a.remove()};
+$("#dl").onclick=async()=>{const f=F(),S=seo(DATA,f,VIEW.lang);const save=(blob,name)=>{const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove()};
+ const html=site(DATA,f,VIEW.style,VIEW.lang);const base=S.dom||"https://www.example.co.kr/";const today=new Date().toISOString().slice(0,10);
+ const robots=`User-agent: *\nAllow: /\n\nSitemap: ${base}sitemap.xml\n`;const map=`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <url><loc>${base}</loc><lastmod>${today}</lastmod><priority>1.0</priority></url>\n</urlset>\n`;
+ try{if(!window.JSZip)await new Promise((ok,no)=>{const sc=document.createElement("script");sc.src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js";sc.onload=ok;sc.onerror=no;document.head.appendChild(sc)});
+  const z=new JSZip();z.file("index.html",html);z.file("robots.txt",robots);z.file("sitemap.xml",map);
+  if(PH[0]){const c=document.createElement("canvas");c.width=1200;c.height=630;const g=c.getContext("2d");const im=new Image();im.src=PH[0].full;await im.decode();const k=Math.max(1200/im.width,630/im.height);g.drawImage(im,(1200-im.width*k)/2,(630-im.height*k)/2,im.width*k,im.height*k);z.file("og.jpg",c.toDataURL("image/jpeg",.85).split(",")[1],{base64:true})}
+  save(await z.generateAsync({type:"blob"}),(f.nameEn||"homepage").replace(/[^\w-]+/g,"-")+".zip");st("⬇ index.html · robots.txt · sitemap.xml · og.jpg 를 한 번에 받았어요"+(S.dom?"":" (도메인을 넣으면 사이트맵 주소가 정확해져요)"))}
+ catch(_){save(new Blob([html],{type:"text/html"}),"index.html")}};
 $("#pub").onclick=()=>{st("☁ 공개: Cloudflare Pages → Create → Upload assets → 받은 index.html 올리기 → 손님 도메인(www.회사이름.co.kr) 연결 (다음 단계에서 버튼 하나로 바꿀게요)")};
 
 /* ---------- 예시 (가상 회사 · 그림은 캔버스로 그림) ---------- */
