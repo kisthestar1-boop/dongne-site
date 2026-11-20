@@ -42,7 +42,7 @@ h1 em{font-style:normal;background:linear-gradient(transparent 58%,#FFE45C 58%)}
 """
 
 def seo(q, title):
-    return f"""<div class="seo"><div style="flex:1.15;display:grid;gap:1.6mm"><div class="sb"><span style="color:#03C75A">N</span>{q}</div><div class="sb"><span>G</span>{q}</div></div><div class="rs"><i>원장님가게.kr ›</i><b>{title}</b>📞 전화 · 🕑 영업시간 · 📍 주소까지 한 번에</div><div class="tx"><b>네이버 · 구글 검색에 나오게</b><br>검색 등록 + 네이버 지도 · 구글 지도에 <b style="color:#1A1A2E">연락처 · 영업시간 · 주소</b> 등록까지 해 드려요</div></div>
+    return f"""<div class="seo"><div style="flex:1.15;display:grid;gap:1.6mm"><div class="sb"><span style="color:#03C75A">N</span>{q}</div><div class="sb"><span>G</span>{q}</div></div><div class="rs"><i>원장님가게.kr ›</i><b>{title}</b>📞 전화 · 🕑 영업시간 · 📍 주소까지 한 번에</div><div class="tx"><b>네이버 · 구글 검색 등록은 저희가 다 해요</b><br>원장님은 신경 쓰실 것 없어요. 지도에 <b style="color:#1A1A2E">연락처 · 영업시간</b> 올리는 것도 원하시면 5분이면 끝나게 도와드려요</div></div>
 <div style="font-size:7.5pt;color:#999;margin:-3.5mm 0 4mm;text-align:right">※ 검색 순위는 보장하지 않아요 (표시광고법)</div>"""
 
 def phones():
