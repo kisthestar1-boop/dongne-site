@@ -37,12 +37,13 @@ input,textarea{font:inherit;padding:12px 14px;border-radius:12px;border:0;width:
 button{font:inherit;font-weight:900;border:0;border-radius:99px;padding:14px;background:var(--y);color:var(--ink);cursor:pointer;font-size:16px}
 .ok{font-weight:800;color:var(--y)}.mail{margin-top:14px;font-size:15px}.mail b{color:#fff}
 footer{padding:28px 0 40px;color:var(--mu);font-size:13px;text-align:center}
+.tap{background:#FFE45C;color:#14202B;border-radius:16px;padding:14px 16px;margin:4px 0 18px;box-shadow:0 0 0 0 rgba(255,228,92,.7);animation:tapglow 2.4s ease-in-out infinite}.tap b{display:block;font-size:18px;line-height:1.35}.tap span{display:block;font-size:13.5px;margin-top:4px;opacity:.8}@keyframes tapglow{0%,100%{box-shadow:0 0 0 0 rgba(255,228,92,.55)}50%{box-shadow:0 0 0 8px rgba(255,228,92,0)}}.demo .ph{position:relative}.demo .ph::after{content:"👆 눌러서 보기";position:absolute;left:50%;bottom:10px;transform:translateX(-50%);background:rgba(20,32,43,.88);color:#fff;font-size:12.5px;font-weight:800;border-radius:99px;padding:6px 12px;white-space:nowrap}@media(prefers-reduced-motion:reduce){.tap{animation:none}}
 </style></head><body>
 <header><div class="w"><a class="logo" href="#">찰칵<b>홈</b><small>동네 학원 · 가게 홈페이지</small></a><a class="go" href="#ask">무료 시안 신청</a></div></header>
 <section class="hero" style="padding-bottom:10px"><div class="w">
 <div class="hi" id="hi">장유 · 율하 학원 원장님께</div>
 <h1><span id="who">원장님</span>, 학원 홈페이지<br><em>시안부터 먼저</em> 보여 드릴게요</h1>
-<p class="lead">👇 <b>예시를 눌러서 직접 열어 보세요!</b> 찰칵홈이 만든 홈페이지가 휴대폰에서 보는 그대로 열려요.</p>
+<div class="tap"><b>👇 아래 휴대폰 화면을 눌러서 확인해 보세요</b><span>찰칵홈이 만든 실제 홈페이지가 열려요 · 옆으로 넘기면 업종별 3개</span></div>
 <div class="demos">
 <a class="demo" href="https://kisthestar1-boop.github.io/saebom-academy/" target="_blank" rel="noopener"><div class="ph"><div><img src="../img/pf_ac_m.jpg" alt="영어·수학 학원 예시 화면"></div></div><b>영어 · 수학 학원</b><small>매주 리포트 · 교습비 공개 · 실사 영상</small><span>👆 눌러서 예시 열어 보기 ↗</span></a>
 <a class="demo" href="../ex/beatup/" target="_blank" rel="noopener"><div class="ph"><div><img src="../img/pf_bu_m.jpg" alt="다이어트댄스 예시 화면"></div></div><b>다이어트댄스</b><small>수업 영상 · 가격 공개 · 첫 수업 예약</small><span>👆 눌러서 예시 열어 보기 ↗</span></a>
