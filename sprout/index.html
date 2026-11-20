@@ -758,7 +758,7 @@ function drawPlayer(cx){
  const RF=[IMG.p_r1,IMG.p_r2,IMG.p_r3,IMG.p_r4];
  if(p.state==='run'){img=IMG.p_run;const ph=t*13;const c=Math.sin(ph);dy=-Math.abs(c)*6;sy*=1+Math.abs(c)*.03-(1-Math.abs(c))*.035;sx*=1-Math.abs(c)*.015+(1-Math.abs(c))*.03;rot+=Math.sin(ph*.5)*.035}
  else if(p.state==='idle'){sy=1+Math.sin(t*3)*.012}
- else if(p.state==='jump'){img=IMG.p_jump;sy=p.vy<0?1.04:.98}
+ else if(p.state==='jump'){img=p.vy<120?IMG.p_jump:IMG.p_run;sy*=p.vy<0?1.05:.98;sx*=p.vy<0?.97:1.02;rot+=Math.max(-.08,Math.min(.1,p.vy/5000))}
  else if(p.state==='climb'){img=IMG.p_jump;rot=Math.sin(p.y*.05)*.05}
  if(p.state==='a1'||p.state==='a2'){img=IMG.p_swing;const k=1-p.atkT/.2;rot=(p.state==='a1'?1:-1)*(-.18+Math.min(1,k*2.2)*.3);sx*=1+Math.max(0,.12-k*.3)}
  else if(p.state==='a3'){img=p.wind3>0?IMG.p_idle:IMG.p_swing;if(p.wind3>0){rot=-.16;sy*=.94;sx*=1.05}else{const k=1-p.atkT/.34;rot=.22-Math.min(1,k*2.5)*.28;sx*=1.06}}
