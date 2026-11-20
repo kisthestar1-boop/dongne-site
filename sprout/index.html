@@ -780,10 +780,10 @@ function drawPlayer(cx){
  const p=ST.pl,x=p.x-cx;const t=p.anim;
  let dy=0,sx=1,sy=1,rot=0,img=IMG.p_idle;
  const RF=[IMG.p_r1,IMG.p_r2,IMG.p_r3,IMG.p_r4];
- const N=RCN();if(p.state==='run'&&N){const ri=p.ri||0,fk=Math.min(1,(p.rdist||0)/RC_D[ri]);img=IMG['p_'+RC_O[ri]];if(!img||!img.naturalWidth)img=IMG.p_rc6;dy=RC_Y[ri]+(RC_Y[(ri+1)%RC_N]-RC_Y[ri])*fk;if(p.turnT>0){img=IMG.p_rc0;sx*=1.06;sy*=.95}if(p.startT>0)rot+=Math.sign(p.vx)*.06}
+ const N=RCN();if(p.state==='run'&&N){const ri=p.ri||0,fk=Math.min(1,(p.rdist||0)/RC_D[ri]);img=IMG['p_'+RC_O[ri]];if(!img||!img.naturalWidth)img=IMG.p_rc6;const u=((ri+fk)/8)%1,sp=Math.min(1,Math.abs(p.vx)/260);dy=-5.5*Math.pow(Math.sin(Math.PI*u),1.5)*sp+1.2*sp;rot+=Math.sign(p.vx)*(.105+.031*Math.cos(Math.PI*2*u))*sp-Math.sign(p.vx)*.11*sp;p.brv=-.7*Math.cos(Math.PI*2*(u-.12))*sp;if(p.turnT>0){img=IMG.p_rc0;sx*=1.06;sy*=.95}if(p.startT>0)rot+=Math.sign(p.vx)*.06}
  else if(p.state==='idle'&&p.brakeT>0){const k=p.brakeT/.16;img=N?IMG.p_rc0:IMG.p_idle;rot=-p.brakeD*.1*k;sx*=1+.05*k;sy*=1-.04*k}
  else if(p.state==='run'){img=IMG.p_run2&&IMG.p_run2.naturalWidth?IMG.p_run2:IMG.p_run;const ph=t*13;const c=Math.sin(ph);dy=-Math.abs(c)*9;sy*=1+Math.abs(c)*.03-(1-Math.abs(c))*.035;sx*=1-Math.abs(c)*.015+(1-Math.abs(c))*.03;rot+=Math.sin(ph*.5)*.035}
- else if(p.state==='idle'){p.brv=(Math.sin(t*4.2)+1)/2;p.swv=Math.sin(t*2.1+.6)}
+ else if(p.state==='idle'){p.brv=(Math.sin(t*4.2)+1)/2}
  else if(p.state==='jump'){const JK=n=>IMG[n]&&IMG[n].naturalWidth?IMG[n]:null;img=(p.jcT>0&&JK('p_jc'))||(p.vy<-60&&JK('p_jr'))||JK('p_jf')||(p.vy<120?IMG.p_jump:IMG.p_run);sy*=p.vy<0?1.05:.98;sx*=p.vy<0?.97:1.02;rot+=Math.max(-.08,Math.min(.1,p.vy/5000))}
  else if(p.state==='climb'){img=IMG.p_jump;rot=Math.sin(p.y*.05)*.05}
  const KF=n=>IMG[n]&&IMG[n].naturalWidth?IMG[n]:IMG.p_swing;
@@ -801,7 +801,8 @@ function drawPlayer(cx){
  if(p.atkT>0&&p.state!=='climb'){drawSlash(p,x)}
  if(p.dashT>0){ST.ghost=ST.ghost||[];if(!ST.ghostT||ST.t-ST.ghostT>.035){ST.ghostT=ST.t;ST.ghost.push({img,x:p.x,y:p.y,face:p.face,life:.18})}}
  if(ST.ghost){for(const g of ST.ghost){g.life-=1/60;if(g.life>0&&g.img&&g.img.naturalWidth){ctx.save();ctx.globalAlpha=g.life*2.2;ctx.globalCompositeOperation='lighter';sprite(g.img,g.x-(p.x-x),g.y,0,g.face,{k:.58,noShadow:1,alpha:g.life*1.6});ctx.restore()}}ST.ghost=ST.ghost.filter(g=>g.life>0)}
- const isRC=img&&img.src&&/p_(r[ct]\d|j[crfl])\./.test(img.src);sprite(img&&img.naturalWidth?img:IMG.sprout,x,p.y,110,1,{k:img&&img.naturalWidth?(isRC?.455:.58):0,dy:dy+(isRC?4:0),sx:sx*vfs,sy2:sy,rot,alpha:blink?.62:1,flash:p.hurtT>.12?.28:0,br:(p.state==='idle'&&img===IMG.p_idle&&!(p.sq&&p.sq.t>0))?p.brv:null,sw:p.swv});
+ {const tg=-(p.vx*(p.face||1))/260*.9+(p.state==='idle'?Math.sin(t*2.1+.6)*.35:0)+(p.onG?0:Math.max(-.6,Math.min(.6,p.vy/900)));p.swV=(p.swV||0)+((tg-(p.sw2||0))*95-(p.swV||0)*8.5)/60;p.sw2=(p.sw2||0)+p.swV/60;p.sw2=Math.max(-1.6,Math.min(1.6,p.sw2))}
+ const isRC=img&&img.src&&/p_(r[ct]\d|j[crfl])\./.test(img.src);sprite(img&&img.naturalWidth?img:IMG.sprout,x,p.y,110,1,{k:img&&img.naturalWidth?(isRC?.455:.58):0,dy:dy+(isRC?4:0),sx:sx*vfs,sy2:sy,rot,alpha:blink?.62:1,flash:p.hurtT>.12?.28:0,br:((p.state==='idle'&&img===IMG.p_idle)||(p.state==='run'&&isRC))?p.brv:null,sw:p.sw2});
  if(p.skillT>0&&IMG.fx_leaf.naturalWidth){ctx.save();ctx.globalAlpha=Math.min(1,p.skillT*3);sprite(IMG.fx_leaf,x+p.face*60,p.y-20,0,p.face,{k:.6+(0.5-p.skillT),noShadow:1,rot:ST.t*4});ctx.restore()}
  nameTag(x,p.y+18,(SV.job?'꽃의 기사':'새싹 소녀')+(SV.wpn?' +'+SV.wpn:''),SV.job?'#ffd86b':(SV.wpn>=10?'#ffd86b':'#fbf5e6'));
 }
@@ -972,7 +973,7 @@ function drawTitle(dt){
  button(W-232,H-58,104,40,'📖 도감',()=>{scene='book'},'#cfe7b8');
  button(W-120,H-58,104,40,SV.mute?'🔇 음악':'🎵 음악',()=>{SV.mute=!SV.mute;save();if(SV.mute)bgmStop();else bgmStart()},'#e7e0f6');
  btns.unshift({x:0,y:0,w:W,h:H,cb:startGame});
- ctx.fillStyle='rgba(58,41,30,.7)';ctx.font='bold 12px system-ui';ctx.fillText('v1.1 · 육성 시험판 · 효과음 Kenney (CC0)',14,H-14);
+ ctx.fillStyle='rgba(58,41,30,.7)';ctx.font='bold 12px system-ui';ctx.fillText('v1.2 · 육성 시험판 · 효과음 Kenney (CC0)',14,H-14);
  if(loaded<NAMES.length){ctx.fillStyle='#fff';ctx.font='bold 13px system-ui';ctx.fillText('그림 불러오는 중… '+loaded+'/'+NAMES.length,14,24)}
  // 꽃잎 (천천히)
  for(let i=0;i<22;i++){const sp=18+(i%5)*6,x=((i*137+titleT*sp*1.4)%(W+80))-40,y=((i*89+titleT*(sp+10))%(H+60))-30;ctx.save();ctx.translate(x,y);ctx.rotate(titleT*.8+i);ctx.fillStyle=i%3?'rgba(255,214,228,.75)':'rgba(255,240,200,.7)';ctx.beginPath();ctx.ellipse(0,0,6,3,0,0,7);ctx.fill();ctx.restore()}
