@@ -24,31 +24,34 @@ function pose(m,ph,t,sp){
  const P={dy:0,lean:0,thF:0,knF:0,thB:0,knB:0,arF:0,arB:0,head:0,skirt:0,skY:1,stf:0};
  if(m==='run'){const s=Math.sin(2*Math.PI*ph),c=Math.cos(2*Math.PI*ph);
   const leg=(p)=>{const sn=Math.sin(2*Math.PI*p),cs=Math.cos(2*Math.PI*p);
-   const th=-40*sn;                       // 허벅지 앞뒤 스윙
+   const th=-46*sn+4;                       // 허벅지 앞뒤 스윙
    const swing=Math.max(0,Math.cos(2*Math.PI*(p-.03))); // 앞으로 넘어오는 구간
-   const kn=(12+80*swing*swing);         // 무릎 접힘 (뒤로)
+   const kn=(10+95*swing*swing);         // 무릎 접힘 (뒤로)
    return [th*D,kn*D]};
   const a=leg(ph),b=leg(ph+.5);P.thF=a[0];P.knF=a[1];P.thB=b[0];P.knB=b[1];
-  P.dy=-1.5*Math.cos(4*Math.PI*ph)*sp;
-  P.lean=(11+2.2*Math.cos(4*Math.PI*(ph-.08)))*D*sp;
-  P.arF=(14*s-18)*D*sp;P.arB=-44*s*D*sp+6*D;
-  P.head=(-3+2.5*Math.cos(4*Math.PI*(ph-.14)))*D*sp;
-  P.skirt=(-5+4*Math.sin(4*Math.PI*(ph-.12)))*D*sp;P.skY=1+.04*Math.cos(4*Math.PI*(ph-.1))*sp;
+  P.dy=-11*Math.pow(Math.max(0,Math.cos(4*Math.PI*(ph-.13))),2)*sp;
+  P.lean=(15+2.5*Math.cos(4*Math.PI*(ph-.08)))*D*sp;
+  P.arF=(16*s-22)*D*sp;P.arB=-55*s*D*sp+8*D;
+  P.head=(-7+2.5*Math.cos(4*Math.PI*(ph-.14)))*D*sp;
+  P.skirt=(-9+5*Math.sin(4*Math.PI*(ph-.12)))*D*sp;P.skY=1+.04*Math.cos(4*Math.PI*(ph-.1))*sp;
   P.stf=-P.arF-P.lean+30*D;
  }else if(m==='idle'){const b=Math.sin(t*3.2);P.dy=b*1.6;P.head=Math.sin(t*1.6)*1.2*D;P.arF=(4+b*1.5)*D;P.arB=(-3-b*1.5)*D;P.skirt=Math.sin(t*1.6+1)*1.2*D;P.thF=3*D;P.thB=-3*D;P.knF=2*D;P.knB=2*D;P.stf=-P.arF+12*D}
+ else if(m==='rise'){P.air=1;P.lean=4*D;P.thF=-58*D;P.knF=75*D;P.thB=18*D;P.knB=28*D;P.arF=-35*D;P.arB=-120*D;P.head=-4*D;P.skirt=6*D;P.skY=.96;P.stf=-P.arF+20*D}
+ else if(m==='fall'){P.air=1;const w=Math.sin(t*14)*3;P.lean=-3*D;P.thF=-22*D;P.knF=38*D;P.thB=-6*D;P.knB=30*D;P.arF=-40*D;P.arB=(95+w)*D;P.head=3*D;P.skirt=(-4+w*.6)*D;P.skY=.88;P.skX=1.12;P.stf=-P.arF+35*D}
+ else if(m==='crouch'){P.thF=-38*D;P.knF=70*D;P.thB=-30*D;P.knB=66*D;P.lean=14*D;P.arF=10*D;P.arB=30*D;P.head=4*D;P.skY=.9;P.stf=-P.arF+20*D}
  return P}
 // 캐릭터 그리기: (x,y)=발바닥 중앙, h=목표 키(px), face=1 오른쪽
 function draw(ctx,x,y,h,face,P,opt){if(!R.ready)return false;opt=opt||{};
  const k=h/575;ctx.save();ctx.translate(x,y);ctx.scale(k*face,k);
  const L=footLen();const fy=(th,kn)=>Math.cos(th)*(L.hk-6)+Math.cos(th+kn)*L.hs;const low=Math.max(fy(P.thF,P.knF),fy(P.thB,P.knB))-6;
- const hipY=-low+P.dy;ctx.translate(0,hipY);
+ const hipY=-(P.air?(L.hk-6+L.hs-18):low)+P.dy;ctx.translate(0,hipY);
  // 뒤쪽 다리, 뒤팔
  ctx.save();ctx.translate(-10,-6);ctx.filter&&0;drawLeg(ctx,'legB',P.thB,P.knB,1.03);ctx.restore();
  ctx.save();ctx.rotate(P.lean);ctx.translate(-26,-126);ctx.rotate(P.arB);ctx.scale(.82,.82);drawPart(ctx,'armB',.5,.06);ctx.restore();
  ctx.save();ctx.translate(12,-6);drawLeg(ctx,'legF',P.thF,P.knF,1.03);ctx.restore();
  // 몸통 + 치마 + 가방
  ctx.save();ctx.rotate(P.lean);
-  ctx.save();ctx.translate(2,-8);ctx.rotate(P.skirt);ctx.scale(1,P.skY);drawPart(ctx,'skirt',.5,.05,.92,.80);ctx.restore();
+  ctx.save();ctx.translate(2,-8);ctx.rotate(P.skirt);ctx.scale(P.skX||1,P.skY);drawPart(ctx,'skirt',.5,.05,.92,.80);ctx.restore();
   ctx.save();ctx.translate(0,4);drawPart(ctx,'torso',.5,1);ctx.restore();
   ctx.save();ctx.translate(-30,-10);ctx.rotate(P.skirt*1.5);ctx.scale(.62,.62);drawPart(ctx,'bag',.5,.2);ctx.restore();
   // 머리
