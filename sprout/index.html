@@ -776,7 +776,7 @@ function drawPlayer(cx){
  else if(p.state==='idle'&&p.brakeT>0){const k=p.brakeT/.16;img=N?IMG.p_rc0:IMG.p_idle;rot=-p.brakeD*.1*k;sx*=1+.05*k;sy*=1-.04*k}
  else if(p.state==='run'){img=IMG.p_run2&&IMG.p_run2.naturalWidth?IMG.p_run2:IMG.p_run;const ph=t*13;const c=Math.sin(ph);dy=-Math.abs(c)*9;sy*=1+Math.abs(c)*.03-(1-Math.abs(c))*.035;sx*=1-Math.abs(c)*.015+(1-Math.abs(c))*.03;rot+=Math.sin(ph*.5)*.035}
  else if(p.state==='idle'){sy=1+Math.sin(t*3)*.012}
- else if(p.state==='jump'){img=p.vy<120?IMG.p_jump:IMG.p_run;sy*=p.vy<0?1.05:.98;sx*=p.vy<0?.97:1.02;rot+=Math.max(-.08,Math.min(.1,p.vy/5000))}
+ else if(p.state==='jump'){img=N?(p.vy<-150?IMG.p_rc1:p.vy<150?IMG.p_rc2:IMG.p_rc5):(p.vy<120?IMG.p_jump:IMG.p_run);sy*=p.vy<0?1.05:.98;sx*=p.vy<0?.97:1.02;rot+=Math.max(-.08,Math.min(.1,p.vy/5000))}
  else if(p.state==='climb'){img=IMG.p_jump;rot=Math.sin(p.y*.05)*.05}
  const KF=n=>IMG[n]&&IMG[n].naturalWidth?IMG[n]:IMG.p_swing;
  if(p.state==='a1'){const k=1-p.atkT/.2;img=KF(k<.3?'p_k1':'p_k2');rot=k<.3?-.04:.03}
