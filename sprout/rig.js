@@ -55,6 +55,7 @@ function pose(m,ph,t,sp,k){k=k||0;const ez=x=>{x=Math.max(0,Math.min(1,x));if(x<
  else if(m==='air'){const e=ez(k/.7);P.air=1;P.arF=(150+160*e)*D;P.stf=180*D;P.stfA=.82;P.lean=(-4+20*e)*D;P.thF=-40*D;P.knF=70*D;P.thB=10*D;P.knB=50*D;P.arB=(-60+80*e)*D;P.skY=.92;P.skX=1.08}
  else if(m==='hurt'){P.lean=-20*D;P.thF=-14*D;P.knF=22*D;P.thB=-26*D;P.knB=30*D;P.arF=-70*D;P.arB=80*D;P.head=-8*D;P.skirt=10*D;P.stf=-P.arF+40*D}
  else if(m==='cast'){const b=Math.sin(t*18)*2;P.lean=-5*D;P.arF=(-158+b)*D;P.stf=180*D;P.stfA=.82;P.arB=(-60-b)*D;P.thF=4*D;P.thB=-6*D;P.knF=4*D;P.knB=6*D;P.head=6*D;P.skY=.95;P.skX=1.06;P.dy=-3}
+ else if(m==='dash'){P.lean=30*D;P.thF=-62*D;P.knF=30*D;P.thB=48*D;P.knB=40*D;P.arF=30*D;P.arB=70*D;P.head=-12*D;P.skirt=-14*D;P.stf=-P.arF-P.lean+60*D;P.dy=6}
  else if(m==='brake'){P.lean=-12*D;P.thF=-30*D;P.knF=8*D;P.thB=-6*D;P.knB=40*D;P.arF=-45*D;P.arB=40*D;P.head=5*D;P.skirt=-10*D;P.stf=-P.arF+25*D}
  else if(m==='climb'){const w=Math.sin(ph*6.283);P.air=1;P.arF=(-165+12*w)*D;P.arB=(-165-12*w)*D;P.thF=(-20+18*w)*D;P.knF=40*D;P.thB=(-20-18*w)*D;P.knB=40*D;P.stf=-P.arF+10*D}
  {const bt=(t+((t/7|0)%2?0:.0))%3.6;P.blink=(bt<.13||(bt>.26&&bt<.37&&((t/3.6|0)%3===0)))?1:0;if(m==='hurt')P.blink=1}
