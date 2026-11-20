@@ -1,4 +1,5 @@
 // 새싹 소녀 컷아웃 뼈대 리그 (스파인 방식) — 파츠 이미지를 관절로 돌려서 그림
+window.SPROUT_RIG={style:/walk=smooth/.test(location.search)?'smooth':'maple'};
 (function(){
 const NAMES=['head','torso','armF','armB','staff','skirt','legF','legB','bag'];
 const R={img:{},ready:false};
@@ -22,7 +23,14 @@ function footLen(){const im=part('legF');const H=(im&&im.naturalHeight)||404;con
 // pose 계산: phase(0~1 한 사이클), mode
 function pose(m,ph,t,sp,k){k=k||0;const ez=x=>{x=Math.max(0,Math.min(1,x));return 1-Math.pow(1-x,3)};const lunge=(P,a)=>{P.thF=-34*a*D;P.knF=30*a*D;P.thB=26*a*D;P.knB=8*a*D};
  const P={dy:0,lean:0,thF:0,knF:0,thB:0,knB:0,arF:0,arB:0,head:0,skirt:0,skY:1,stf:0};
- if(m==='run'){const s=Math.sin(2*Math.PI*ph),c=Math.cos(2*Math.PI*ph);
+ if(m==='run'&&window.SPROUT_RIG.style!=='smooth'){ // 메이플식: 직립, 8포즈로 또렷하게 끊기
+  const q=8,f=ph*q,i=Math.floor(f),fr=f-i,e=fr<.62?0:(fr-.62)/.38;ph=(i+e*e*(3-2*e))/q;
+  const s=Math.sin(2*Math.PI*ph);
+  const leg=(p)=>{const sn=Math.sin(2*Math.PI*p);const sw=Math.max(0,Math.cos(2*Math.PI*(p-.03)));return [(-27*sn+2)*D,(6+52*sw*sw)*D]};
+  const a=leg(ph),b=leg(ph+.5);P.thF=a[0];P.knF=a[1];P.thB=b[0];P.knB=b[1];
+  P.dy=-3*Math.pow(Math.max(0,Math.cos(4*Math.PI*(ph-.13))),2)*sp;P.lean=3*D*sp;
+  P.arF=(9*s-12)*D*sp;P.arB=-30*s*D*sp+4*D;P.head=0;P.skirt=(-2+2.5*Math.sin(4*Math.PI*(ph-.1)))*D*sp;P.skY=1;P.stf=-P.arF-P.lean+30*D;
+ }else if(m==='run'){const s=Math.sin(2*Math.PI*ph),c=Math.cos(2*Math.PI*ph);
   const leg=(p)=>{const sn=Math.sin(2*Math.PI*p),cs=Math.cos(2*Math.PI*p);
    const th=-46*sn+4;                       // 허벅지 앞뒤 스윙
    const swing=Math.max(0,Math.cos(2*Math.PI*(p-.03))); // 앞으로 넘어오는 구간
@@ -71,5 +79,5 @@ function draw(ctx,x,y,h,face,P,opt){if(!R.ready)return false;opt=opt||{};
   if(Math.cos(P.arF)<-.15){arm();head()}else{head();arm()}
  ctx.restore();
  ctx.restore();return true}
-window.SPROUT_RIG={R,pose,draw};
+window.SPROUT_RIG.R=R;window.SPROUT_RIG.pose=pose;window.SPROUT_RIG.draw=draw;
 })();
