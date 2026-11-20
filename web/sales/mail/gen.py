@@ -22,16 +22,16 @@ CSS = """
 .top{display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid #1A1A2E;padding-bottom:5mm}
 .logo{font-weight:900;font-size:20pt;letter-spacing:-.02em}.logo b{color:#2F6BFF}
 .top small{font-size:9pt;color:#666}
-.to{margin:8mm 0 2mm;font-size:12pt;color:#444}
-h1{font-size:23pt;line-height:1.3;margin:0 0 5mm;letter-spacing:-.02em}
+.to{margin:6mm 0 2mm;font-size:12pt;color:#444}
+h1{font-size:21pt;line-height:1.28;margin:0 0 4mm;letter-spacing:-.02em}
 h1 em{font-style:normal;background:linear-gradient(transparent 58%,#FFE45C 58%)}
 .obs{background:#F3F6FF;border-left:4px solid #2F6BFF;padding:4mm 5mm;border-radius:2mm;font-size:11pt;line-height:1.6}
 .obs b{color:#2F6BFF}
-.phones{display:flex;gap:6mm;justify-content:center;margin:7mm 0 3mm}
-.ph{width:44mm;text-align:center}.ph div{height:86mm;border:2.4mm solid #1A1A2E;border-radius:6mm;overflow:hidden;background:#eee}
+.phones{display:flex;gap:6mm;justify-content:center;margin:5mm 0 2mm}
+.ph{width:36mm;text-align:center}.ph div{height:70mm;border:2.4mm solid #1A1A2E;border-radius:6mm;overflow:hidden;background:#eee}
 .ph img{width:100%;display:block}.ph small{display:block;margin-top:2mm;font-size:8.5pt;color:#555}
 .cap{text-align:center;font-size:9pt;color:#777;margin-bottom:5mm}
-.offer{display:grid;grid-template-columns:1fr 1fr;gap:2.5mm 6mm;font-size:10.5pt;margin-bottom:6mm}
+.offer{display:grid;grid-template-columns:1fr 1fr;gap:2mm 6mm;font-size:10.5pt;margin-bottom:5mm}
 .offer div:before{content:"✔ ";color:#2F6BFF;font-weight:900}
 .cta{display:flex;gap:6mm;align-items:center;background:#1A1A2E;color:#fff;border-radius:4mm;padding:5mm 6mm}
 .cta img.qr{width:30mm;height:30mm;background:#fff;padding:1.5mm;border-radius:2mm}
@@ -42,7 +42,7 @@ h1 em{font-style:normal;background:linear-gradient(transparent 58%,#FFE45C 58%)}
 """
 
 def seo(q, title):
-    return f"""<div class="seo"><div class="sb"><span>G</span>{q}</div><div class="rs"><i>kisthestar1-boop.github.io › …</i><b>{title}</b>시간표 · 교습비 · 상담 신청까지 한 번에</div><div class="tx"><b>구글 · 네이버 검색 노출</b><br>"동네 + 과목" 검색에 잘 나오도록 제목·지도·검색 등록까지 세팅해 드려요</div></div>"""
+    return f"""<div class="seo"><div class="sb"><span>G</span>{q}</div><div class="rs"><i>원장님학원.kr ›</i><b>{title}</b>시간표 · 교습비 · 상담 신청까지 한 번에</div><div class="tx"><b>구글 · 네이버 검색 노출</b><br>"동네 + 과목" 검색에 잘 나오도록 제목·지도·검색 등록까지 세팅해 드려요</div></div>"""
 
 def phones():
     return """<div class="phones"><div class="ph"><div><img src="pf_ac_m.jpg"></div><small>영어·수학 학원</small></div><div class="ph"><div><img src="pf_bu_m.jpg"></div><small>다이어트댄스</small></div><div class="ph"><div><img src="pf_pl_m.jpg"></div><small>필라테스 스튜디오</small></div></div>
@@ -69,7 +69,7 @@ def letter(a):
 FCSS = CSS.replace("@page{size:A4;margin:0}", "@page{size:A5;margin:0}").replace(".pg{width:210mm;height:297mm;padding:16mm 16mm 12mm", ".pg{width:148mm;height:210mm;padding:10mm 10mm 8mm")
 def flyer():
     return f"""<!doctype html><html lang="ko"><head><meta charset="utf-8"><style>{FCSS}
-h1{{font-size:18pt}}.seo{{padding:2.5mm 3mm;gap:3mm;margin-bottom:3mm}}.seo .sb{{font-size:8pt;padding:1.5mm 2.5mm}}.seo .rs{{font-size:7pt}}.seo .rs b{{font-size:8pt}}.seo .tx{{font-size:7.5pt}}.ph{{width:33mm}}.ph div{{height:62mm;border-width:1.8mm}}.offer{{font-size:9pt;gap:1.5mm 4mm}}.cta img.qr{{width:24mm;height:24mm}}.cta b{{font-size:11.5pt}}.cta p{{font-size:8.5pt}}
+h1{{font-size:18pt}}.seo{{padding:2.5mm 3mm;gap:3mm;margin-bottom:3mm}}.seo .sb{{font-size:8pt;padding:1.5mm 2.5mm}}.seo .rs{{font-size:7pt}}.seo .rs b{{font-size:8pt}}.seo .tx{{font-size:7.5pt}}.ph{{width:27mm}}.ph div{{height:50mm;border-width:1.8mm}}.offer{{font-size:9pt;gap:1.5mm 4mm}}.cta img.qr{{width:24mm;height:24mm}}.cta b{{font-size:11.5pt}}.cta p{{font-size:8.5pt}}
 .dino{{right:8mm;top:30mm;width:24mm}}.bub{{right:30mm;top:30mm;font-size:8pt}}.foot{{left:10mm;right:10mm;bottom:5mm;font-size:7pt}}</style></head><body><div class="pg">
 <div class="top"><div class="logo">찰칵<b>홈</b></div><small>장유 학원 · 가게 홈페이지</small></div>
 <h1 style="margin-top:7mm">원장님 학원,<br><em>홈페이지 무료 시안</em><br>먼저 받아 보세요</h1>
