@@ -120,16 +120,21 @@ document.getElementById('bAuto').addEventListener('mousedown',e=>{SV.auto=!SV.au
 function pressed(k){if(P[k]){P[k]=0;return true}return false}
 
 /* ---------- 소리 (작고 부드럽게) ---------- */
-let AC=null;function audioInit(){if(!AC){try{AC=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}}if(AC&&AC.state==='suspended')AC.resume();if(typeof bgmStart==='function')bgmStart();}
+let AC=null;function audioInit(){if(!AC){try{AC=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}}if(AC&&AC.state==='suspended')AC.resume();sndLoad();if(typeof bgmStart==='function')bgmStart();}
 function beep(f,d,type,vol,slide){if(!AC)return;const t=AC.currentTime,o=AC.createOscillator(),g=AC.createGain();o.type=type||'sine';o.frequency.setValueAtTime(f,t);if(slide)o.frequency.exponentialRampToValueAtTime(Math.max(40,f*slide),t+d);g.gain.setValueAtTime(vol||.08,t);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(AC.destination);o.start(t);o.stop(t+d+.02);}
 function noise(d,vol){if(!AC)return;const t=AC.currentTime,len=Math.floor(AC.sampleRate*d),b=AC.createBuffer(1,len,AC.sampleRate),ch=b.getChannelData(0);for(let i=0;i<len;i++)ch[i]=(Math.random()*2-1)*(1-i/len);const s=AC.createBufferSource(),g=AC.createGain(),f=AC.createBiquadFilter();f.type='lowpass';f.frequency.value=1800;s.buffer=b;g.gain.value=vol||.12;s.connect(f);f.connect(g);g.connect(AC.destination);s.start(t);}
+/* 효과음 샘플 (Kenney Impact Sounds, CC0) */
+const SND={};const SNDN=['impactPunch_medium_000','impactPunch_medium_001','impactPunch_heavy_000','impactPunch_heavy_001','impactSoft_medium_000','impactSoft_heavy_000','impactWood_heavy_000','impactWood_medium_000','impactTin_medium_000','impactGeneric_light_000'];
+function sndLoad(){if(!AC||sndLoad.done)return;sndLoad.done=1;SNDN.forEach(n=>fetch('sfx/'+n+'.mp3').then(r=>r.arrayBuffer()).then(b=>AC.decodeAudioData(b)).then(buf=>{SND[n]=buf}).catch(()=>{}))}
+function play(n,vol,rate){if(!AC||!SND[n]||SV.mute&&false)return false;const s=AC.createBufferSource(),g=AC.createGain();s.buffer=SND[n];s.playbackRate.value=rate||1;g.gain.value=vol==null?.5:vol;s.connect(g);g.connect(AC.destination);s.start();return true}
+function pick(a){return a[Math.floor(Math.random()*a.length)]}
 let BGM=null;function bgmStart(){if(!AC||BGM||SV.mute)return;const notes=[[60,64,67,72],[55,59,62,67],[57,60,64,69],[53,57,60,65]];const m=n=>440*Math.pow(2,(n-69)/12);let step=0;const g=AC.createGain();g.gain.value=.5;g.connect(AC.destination);
  const tick=()=>{if(SV.mute){return}const ch=notes[Math.floor(step/8)%4];const t=AC.currentTime+.02;const f=m(ch[[0,1,2,3,2,1,2,3][step%8]]+12);
   const o=AC.createOscillator(),gg=AC.createGain();o.type='triangle';o.frequency.value=f;gg.gain.setValueAtTime(.022,t);gg.gain.exponentialRampToValueAtTime(.0001,t+.5);o.connect(gg);gg.connect(g);o.start(t);o.stop(t+.55);
   if(step%8===0){const b=AC.createOscillator(),bg=AC.createGain();b.type='sine';b.frequency.value=m(ch[0]-12);bg.gain.setValueAtTime(.05,t);bg.gain.exponentialRampToValueAtTime(.0001,t+2.4);b.connect(bg);bg.connect(g);b.start(t);b.stop(t+2.5);}
   step++;BGM.tm=setTimeout(tick,330)};BGM={g};tick();}
 function bgmStop(){if(BGM){clearTimeout(BGM.tm);BGM=null}}
-const SFX={hit:(n)=>{noise(.06,.16);beep(95,.12,'sine',.16,.5);beep(240+n*28+Math.random()*40,.07,'triangle',.06,.5);if(n>=5)beep(1300+n*40,.05,'sine',.025,1.2)},big:()=>{noise(.18,.22);beep(110,.25,'sine',.14,.4)},jump:()=>beep(420,.12,'sine',.05,1.6),swing:()=>beep(700+Math.random()*80,.05,'triangle',.025,.6),lv:()=>{[523,659,784,1046].forEach((f,i)=>setTimeout(()=>beep(f,.18,'triangle',.07),i*90))},heal:()=>beep(880,.2,'sine',.05,1.3),skill:()=>{beep(330,.3,'sawtooth',.04,2.2);noise(.25,.08)},get:()=>{[784,988,1318].forEach((f,i)=>setTimeout(()=>beep(f,.15,'sine',.06),i*80))},hurt:()=>beep(180,.15,'square',.05,.6),coin:()=>beep(1200,.06,'sine',.04,1.4)};
+const SFX={hit:(n,heavy,friend)=>{if(play(friend?'impactSoft_medium_000':heavy?pick(['impactPunch_heavy_000','impactPunch_heavy_001']):pick(['impactPunch_medium_000','impactPunch_medium_001']),friend?.28:heavy?.75:.55,(friend?1.1:1)+Math.min(n,12)*.012+Math.random()*.06)){if(n>=5&&!friend)beep(1300+n*40,.05,'sine',.018,1.2);return}noise(.06,.16);beep(95,.12,'sine',.16,.5);beep(240+n*28+Math.random()*40,.07,'triangle',.06,.5)},big:()=>{if(play('impactWood_heavy_000',.8,.85))return;noise(.18,.22);beep(110,.25,'sine',.14,.4)},jump:()=>beep(420,.12,'sine',.05,1.6),swing:()=>beep(700+Math.random()*80,.05,'triangle',.025,.6),lv:()=>{[523,659,784,1046].forEach((f,i)=>setTimeout(()=>beep(f,.18,'triangle',.07),i*90))},heal:()=>beep(880,.2,'sine',.05,1.3),skill:()=>{beep(330,.3,'sawtooth',.04,2.2);noise(.25,.08)},get:()=>{[784,988,1318].forEach((f,i)=>setTimeout(()=>beep(f,.15,'sine',.06),i*80))},hurt:()=>beep(180,.15,'square',.05,.6),coin:()=>beep(1200,.06,'sine',.04,1.4)};
 
 /* ---------- 스테이지 (메이플식 여러 층 + 넝쿨) ---------- */
 const GROUND=470;
@@ -240,7 +245,7 @@ function dealHits(box,dmgBase,opt){
   ST.score+=dmg;if(!opt.fromFriend)ST.comboDmg=(ST.combo<=1?0:(ST.comboDmg||0))+dmg;
   if(e.hp<=0)kill(e);
  }
- if(n){SFX.hit(Math.min(ST.combo,10));if(!opt.fromFriend){hitstop(opt.stop||.06);shake((opt.sh||3)*.6);kick(opt.dir||ST.pl.face,opt.sh?5:3);ST.flash=Math.max(ST.flash||0,opt.sh>=5?.18:.08);if(opt.sh>=5)punch(.035)}else hitstop(.02);}
+ if(n){SFX.hit(Math.min(ST.combo,10),(opt.sh||0)>=5||opt.lift>200,opt.fromFriend);if(!opt.fromFriend){hitstop(opt.stop||.06);shake((opt.sh||3)*.6);kick(opt.dir||ST.pl.face,opt.sh?5:3);ST.flash=Math.max(ST.flash||0,opt.sh>=5?.18:.08);if(opt.sh>=5)punch(.035)}else hitstop(.02);}
  return n;
 }
 function kill(e){if(e.dead)return;dprog('kill',1);SV.mset=SV.mset||{};SV.mset[e.type]=1;e.dead=1;e.deadT=e.d.boss?1.2:.75;ST.kills++;SV.kills++;const kd=Math.sign(e.x-ST.pl.x)||ST.pl.face;if(!e.d.boss){e.vx=kd*(300+Math.random()*160);e.vy=-(380+Math.random()*160);e.spin=kd*(8+Math.random()*6);e.fly=1}for(let q=0;q<3;q++)ST.fx.push({kind:'ink',x:e.x+(Math.random()-.5)*36,y:e.y-e.d.h*.5+(Math.random()-.5)*30,vx:0,vy:0,life:.32,r:5+Math.random()*7,col:'240,228,205',rot:0});SFX.coin&&beep(520,.08,'triangle',.05,1.8);
@@ -290,7 +295,7 @@ function updPlayer(dt){
  p.vy+=GRAV*(Math.abs(p.vy)<140&&!p.onG?.55:1)*dt;p.x+=p.vx*dt;p.y+=p.vy*dt;
  p.x=Math.max(20,Math.min(S.len-20,p.x));
  if(ST.lock){p.x=Math.max(ST.lock.a+20,Math.min(ST.lock.b-20,p.x))}
- const fallV=p.vy;const was=p.onG;p.onG=landOn(p,prevY);if(p.onG&&!was&&ST.intro&&!ST.introLanded){ST.introLanded=1;vfx('vfx_lvup',p.x,p.y-70,{s0:.3,s1:.5,life:.9,a:.7});shake(3);SFX.big();dust(p.x,p.y,10)}if(p.onG&&!was){dust(p.x,p.y,6);p.sq={t:.14,sx:1.18,sy:.84};if(fallV>500){shake(2)}}
+ const fallV=p.vy;const was=p.onG;p.onG=landOn(p,prevY);if(p.onG&&!was&&ST.intro&&!ST.introLanded){ST.introLanded=1;vfx('vfx_lvup',p.x,p.y-70,{s0:.3,s1:.5,life:.9,a:.7});shake(3);SFX.big();dust(p.x,p.y,10)}if(p.onG&&!was){dust(p.x,p.y,6);p.sq={t:.14,sx:1.18,sy:.84};if(fallV>300)play('impactSoft_heavy_000',.16,1.4);if(fallV>500){shake(2)}}
  if(p.onG&&dir&&Math.sign(p.vx)!==dir&&Math.abs(p.vx)>120&&Math.random()<.5)dust(p.x,p.y,1);
  if(p.onG&&Math.abs(p.vx)>200){p.stepT=(p.stepT||0)-dt;if(p.stepT<=0){p.stepT=.24;dust(p.x-p.face*12,p.y,3)}}
  if(p.sq&&p.sq.t>0)p.sq.t-=dt;
@@ -333,7 +338,7 @@ function updPlayer(dt){
 function hurtPlayer(dmg,fromX){
  const p=ST.pl;if(p.inv>0||ST.done)return;if((ST.tb&&ST.tb.t>0?ST.tb.k:'')==='shield')dmg=Math.round(dmg*.5);if((synergy()||{}).fx==='def')dmg=Math.round(dmg*.9);
  // 양 방패병: 일부 피해 막기
- const sheep=ST.friends.find(f=>f.k==='sheep');if(sheep&&Math.abs(sheep.x-p.x)<90){dmg=Math.round(dmg*.6);particles(sheep.x,sheep.y-40,'#cfe7ff',6,140);}
+ const sheep=ST.friends.find(f=>f.k==='sheep');if(sheep&&Math.abs(sheep.x-p.x)<90){dmg=Math.round(dmg*.6);particles(sheep.x,sheep.y-40,'#cfe7ff',6,140);play('impactTin_medium_000',.3,1.2);}
  p.hp-=dmg;ST.dmgTaken+=dmg;p.inv=1;p.hurtT=.28;p.vx=(p.x<fromX?-1:1)*260;p.vy=-260;p.onG=false;p.onVine=null;
  popNum(p.x,p.y-80,dmg,'hurt');SFX.hurt();shake(4);ST.combo=0;
  if(p.hp<=0){p.hp=0;finishRun(false)}
@@ -417,7 +422,7 @@ function updEnemies(dt){
   if(e.lunge>0){e.lunge-=dt;if(Math.abs(p.x-e.x)<40&&Math.abs(p.y-e.y)<60)hurtPlayer(e.atk,e.x);}
   if(e.fly){if(e.hy==null)e.hy=e.y;if(e.diveT>0){e.diveT-=dt;e.y+=(tgt.y-34-e.y)*Math.min(1,dt*7)}else e.y+=(e.hy-e.y)*Math.min(1,dt*1.2);e.y+=Math.sin(e.anim*3)*20*dt;e.x+=e.vx*dt;if(e.vy){e.y+=e.vy*dt;e.vy*=.9}}
   else{const fv=e.vy;e.vy+=GRAV*(e.air?.72:1)*dt;e.x+=e.vx*dt;e.y+=e.vy*dt;const og=e.onG;e.onG=landOn(e,prevY);
-   if(e.onG&&e.air){if(fv>420&&!e.bounced){e.bounced=1;e.vy=-fv*.32;e.onG=false;e.y-=1;e.vx*=.5;dust(e.x,e.y,5);shake(2);beep(80,.1,'sine',.1,.6)}else{e.air=0;e.bounced=0;e.juggle=0;if(e.kd||fv>300){e.down=.6;e.kd=0;dust(e.x,e.y,4)}}}
+   if(e.onG&&e.air){if(fv>420&&!e.bounced){e.bounced=1;e.vy=-fv*.32;e.onG=false;e.y-=1;e.vx*=.5;dust(e.x,e.y,5);shake(2);if(!play('impactWood_medium_000',.4,1))beep(80,.1,'sine',.1,.6)}else{e.air=0;e.bounced=0;e.juggle=0;if(e.kd||fv>300){e.down=.6;e.kd=0;dust(e.x,e.y,4)}}}
    if(e.onG&&!og&&!e.air)e.vx*=.6;}
   if(e.down>0){e.down-=dt;e.vx*=Math.pow(.02,dt);e.wind=0;e.cd=Math.max(e.cd,.4);}
   if(ST.lock&&!e.field)e.x=Math.max(ST.lock.a+10,Math.min(ST.lock.b-10,e.x));
@@ -945,7 +950,7 @@ function drawTitle(dt){
  button(W-232,H-58,104,40,'📖 도감',()=>{scene='book'},'#cfe7b8');
  button(W-120,H-58,104,40,SV.mute?'🔇 음악':'🎵 음악',()=>{SV.mute=!SV.mute;save();if(SV.mute)bgmStop();else bgmStart()},'#e7e0f6');
  btns.unshift({x:0,y:0,w:W,h:H,cb:startGame});
- ctx.fillStyle='rgba(58,41,30,.7)';ctx.font='bold 12px system-ui';ctx.fillText('v0.5 · 육성 시험판',14,H-14);
+ ctx.fillStyle='rgba(58,41,30,.7)';ctx.font='bold 12px system-ui';ctx.fillText('v0.8 · 육성 시험판 · 효과음 Kenney (CC0)',14,H-14);
  if(loaded<NAMES.length){ctx.fillStyle='#fff';ctx.font='bold 13px system-ui';ctx.fillText('그림 불러오는 중… '+loaded+'/'+NAMES.length,14,24)}
  // 꽃잎 (천천히)
  for(let i=0;i<22;i++){const sp=18+(i%5)*6,x=((i*137+titleT*sp*1.4)%(W+80))-40,y=((i*89+titleT*(sp+10))%(H+60))-30;ctx.save();ctx.translate(x,y);ctx.rotate(titleT*.8+i);ctx.fillStyle=i%3?'rgba(255,214,228,.75)':'rgba(255,240,200,.7)';ctx.beginPath();ctx.ellipse(0,0,6,3,0,0,7);ctx.fill();ctx.restore()}
