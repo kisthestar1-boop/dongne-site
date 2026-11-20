@@ -20,7 +20,7 @@ function drawLeg(ctx,n,thigh,knee,len){const im=part(n);if(!im||!im.naturalWidth
 const D=Math.PI/180;
 function footLen(){const im=part('legF');const H=(im&&im.naturalHeight)||404;const cut=Math.round(H*.46);return {hk:cut*S*1.03,hs:(H-cut)*S*1.03}}
 // pose 계산: phase(0~1 한 사이클), mode
-function pose(m,ph,t,sp){
+function pose(m,ph,t,sp,k){k=k||0;const ez=x=>{x=Math.max(0,Math.min(1,x));return 1-Math.pow(1-x,3)};const lunge=(P,a)=>{P.thF=-34*a*D;P.knF=30*a*D;P.thB=26*a*D;P.knB=8*a*D};
  const P={dy:0,lean:0,thF:0,knF:0,thB:0,knB:0,arF:0,arB:0,head:0,skirt:0,skY:1,stf:0};
  if(m==='run'){const s=Math.sin(2*Math.PI*ph),c=Math.cos(2*Math.PI*ph);
   const leg=(p)=>{const sn=Math.sin(2*Math.PI*p),cs=Math.cos(2*Math.PI*p);
@@ -39,6 +39,16 @@ function pose(m,ph,t,sp){
  else if(m==='rise'){P.air=1;P.lean=4*D;P.thF=-58*D;P.knF=75*D;P.thB=18*D;P.knB=28*D;P.arF=-35*D;P.arB=-120*D;P.head=-4*D;P.skirt=6*D;P.skY=.96;P.stf=-P.arF+20*D}
  else if(m==='fall'){P.air=1;const w=Math.sin(t*14)*3;P.lean=-3*D;P.thF=-22*D;P.knF=38*D;P.thB=-6*D;P.knB=30*D;P.arF=-40*D;P.arB=(95+w)*D;P.head=3*D;P.skirt=(-4+w*.6)*D;P.skY=.88;P.skX=1.12;P.stf=-P.arF+35*D}
  else if(m==='crouch'){P.thF=-38*D;P.knF=70*D;P.thB=-30*D;P.knB=66*D;P.lean=14*D;P.arF=10*D;P.arB=30*D;P.head=4*D;P.skY=.9;P.stf=-P.arF+20*D}
+ else if(m==='a1'){const e=ez(k/.45);P.arF=(150+150*e)*D;P.stf=180*D;P.stfA=.82;P.lean=(-6+18*e)*D;lunge(P,.7*e+.2);P.arB=(20-50*e)*D;P.head=(2-4*e)*D;P.skirt=-6*e*D}
+ else if(m==='a2'){const e=ez(k/.45);P.arF=(-50-135*e)*D;P.stf=180*D;P.stfA=.82;P.lean=(12-14*e)*D;lunge(P,.8-.2*e);P.arB=(-30+60*e)*D;P.head=-3*e*D;P.skirt=5*e*D}
+ else if(m==='wind3'){P.arF=165*D;P.stf=180*D;P.stfA=.82;P.lean=-14*D;P.thF=10*D;P.knF=10*D;P.thB=-8*D;P.knB=24*D;P.arB=-40*D;P.head=4*D}
+ else if(m==='a3'){const e=ez(k/.35);P.arF=(165+135*e)*D;P.stf=180*D;P.stfA=.82;P.lean=(-14+38*e)*D;lunge(P,1.05*e);P.arB=(-40+90*e)*D;P.head=-6*e*D;P.skirt=-10*e*D;P.skY=1-.06*e}
+ else if(m==='up'){const e=ez(k/.4);P.arF=(-30-160*e)*D;P.stf=180*D;P.stfA=.82;P.lean=(10-18*e)*D;lunge(P,.5*(1-e));P.arB=(30-10*e)*D;P.head=5*e*D;P.air=k>.25?1:0;if(P.air){P.thF=-30*D;P.knF=50*D;P.thB=12*D;P.knB=30*D}}
+ else if(m==='air'){const e=ez(k/.5);P.air=1;P.arF=(150+160*e)*D;P.stf=180*D;P.stfA=.82;P.lean=(-4+20*e)*D;P.thF=-40*D;P.knF=70*D;P.thB=10*D;P.knB=50*D;P.arB=(-60+80*e)*D;P.skY=.92;P.skX=1.08}
+ else if(m==='hurt'){P.lean=-20*D;P.thF=-14*D;P.knF=22*D;P.thB=-26*D;P.knB=30*D;P.arF=-70*D;P.arB=80*D;P.head=-8*D;P.skirt=10*D;P.stf=-P.arF+40*D}
+ else if(m==='cast'){const b=Math.sin(t*18)*2;P.lean=-5*D;P.arF=(-158+b)*D;P.stf=180*D;P.stfA=.82;P.arB=(-60-b)*D;P.thF=4*D;P.thB=-6*D;P.knF=4*D;P.knB=6*D;P.head=6*D;P.skY=.95;P.skX=1.06;P.dy=-3}
+ else if(m==='brake'){P.lean=-12*D;P.thF=-30*D;P.knF=8*D;P.thB=-6*D;P.knB=40*D;P.arF=-45*D;P.arB=40*D;P.head=5*D;P.skirt=-10*D;P.stf=-P.arF+25*D}
+ else if(m==='climb'){const w=Math.sin(ph*6.283);P.air=1;P.arF=(-165+12*w)*D;P.arB=(-165-12*w)*D;P.thF=(-20+18*w)*D;P.knF=40*D;P.thB=(-20-18*w)*D;P.knB=40*D;P.stf=-P.arF+10*D}
  return P}
 // 캐릭터 그리기: (x,y)=발바닥 중앙, h=목표 키(px), face=1 오른쪽
 function draw(ctx,x,y,h,face,P,opt){if(!R.ready)return false;opt=opt||{};
@@ -54,12 +64,11 @@ function draw(ctx,x,y,h,face,P,opt){if(!R.ready)return false;opt=opt||{};
   ctx.save();ctx.translate(2,-8);ctx.rotate(P.skirt);ctx.scale(P.skX||1,P.skY);drawPart(ctx,'skirt',.5,.05,.92,.80);ctx.restore();
   ctx.save();ctx.translate(0,4);drawPart(ctx,'torso',.5,1);ctx.restore();
   ctx.save();ctx.translate(-30,-10);ctx.rotate(P.skirt*1.5);ctx.scale(.62,.62);drawPart(ctx,'bag',.5,.2);ctx.restore();
-  // 머리
-  ctx.save();ctx.translate(6,-132);ctx.rotate(P.head);drawPart(ctx,'head',.5,.93,.98,.98);ctx.restore();
-  // 앞팔 + 지팡이
-  ctx.save();ctx.translate(22,-124);ctx.rotate(P.arF);ctx.scale(.82,.82);
-   ctx.save();ctx.translate(2,160);ctx.rotate(P.stf+(opt.stfRot||0));ctx.scale(.75,.75);drawPart(ctx,'staff',.55,.62);ctx.restore();
-   drawPart(ctx,'armF',.5,.06);ctx.restore();
+  const head=()=>{ctx.save();ctx.translate(6,-132);ctx.rotate(P.head);drawPart(ctx,'head',.5,.93,.98,.98);ctx.restore()};
+  const arm=()=>{ctx.save();ctx.translate(22,-124);ctx.rotate(P.arF);ctx.scale(.82,.82);
+   ctx.save();ctx.translate(2,160);ctx.rotate(P.stf+(opt.stfRot||0));ctx.scale(.75,.75);drawPart(ctx,'staff',.55,P.stfA||.62);ctx.restore();
+   drawPart(ctx,'armF',.5,.06);ctx.restore()};
+  if(Math.cos(P.arF)<-.15){arm();head()}else{head();arm()}
  ctx.restore();
  ctx.restore();return true}
 window.SPROUT_RIG={R,pose,draw};
