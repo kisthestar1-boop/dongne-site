@@ -11,6 +11,7 @@ def guess_subj(name):
 
 def obs(a):
     n = a.get("note", "")
+    if a.get("kind")=="studio": return "지도에 홈페이지가 없어 시간표 · 가격 · 예약을 한눈에 보기 어려워요."
     if "블로그" in n: return "지금은 네이버 블로그만 보여서, 시간표·교습비·상담 신청을 한 번에 보기가 어려워요."
     if "운영 시간" in n: return "지도에 운영 시간이 비어 있고, 학원을 소개하는 홈페이지가 보이지 않아요."
     if "교습소" in n: return "교습소는 소개할 곳이 적어서, 학부모님이 수업 방식을 미리 알기 어려워요."
@@ -50,6 +51,13 @@ def phones():
 <div class="cap">찰칵홈이 만든 홈페이지 예시 — 휴대폰으로 보는 화면이에요</div>"""
 
 def letter(a):
+    h = _letter(a)
+    if a.get("kind")=="studio":
+        h = (h.replace("원장님 학원도<br>","원장님 스튜디오도<br>").replace("사진 3장 + 학원 이름","사진 3장 + 스튜디오 이름").replace("원장님 학원 사진으로","원장님 스튜디오 사진으로")
+               .replace("시간표 · 교습비 · 등록번호 표시까지","수업 시간표 · 가격 · 강사 소개까지").replace("장유 동네 학원 홈페이지 · 김해 장유","장유 동네 스튜디오 · 가게 홈페이지").replace("요즘 학부모님은 상담 전화 전에","요즘 손님은 문의 전화 전에").replace("외관 · 교실 · 수업 사진","외관 · 내부 · 수업 사진").replace("학원 사진 3장과 학원 이름만","사진 3장과 스튜디오 이름만"))
+    return h
+
+def _letter(a):
     subj = SUBJ.get(a.get("subj") or guess_subj(a["name"]), "영어·수학")
     q = f"qr_{a['slug']}.png"
     qrcode.make(f"https://chalkakhome.com/academy/?a={a["slug"]}", box_size=10, border=1).save(os.path.join(D, q))
@@ -57,27 +65,29 @@ def letter(a):
     return f"""<!doctype html><html lang="ko"><head><meta charset="utf-8"><style>{CSS}</style></head><body><div class="pg">
 <div class="top"><div class="logo">찰칵<b>홈</b></div><small>장유 동네 학원 홈페이지 · 김해 장유</small></div>
 <div class="to">{N} 원장님께</div>
-<h1>학부모님이 휴대폰으로<br><em>"장유 {subj} 학원"</em>을 검색하면<br>원장님 학원이 보이시나요?</h1>
+<h1>원장님 학원도<br><em>홈페이지 무료 시안</em>을<br>먼저 받아 보세요</h1>
 <div class="obs"><b>살펴보니</b> · {html.escape(obs(a))}<br>요즘 학부모님은 상담 전화 전에 휴대폰으로 먼저 비교해 보세요.</div>
 <img class="dino" src="dino.png"><div class="bub">시안은 무료예요!</div>
 {phones()}
-{seo("장유 "+subj+" 학원", N+" | 장유 "+subj+" 학원")}
+<div class="how"><div><i>1</i><b>사진 3장 + 학원 이름</b><span>외관 · 교실 · 수업 사진</span></div><em>→</em><div><i>2</i><b>3일 안에 무료 시안</b><span>휴대폰으로 바로 보기</span></div><em>→</em><div><i>3</i><b>마음에 들면 제작</b><span>안 하셔도 괜찮아요</span></div></div>
 <div class="offer"><div>원장님 학원 사진으로 <b>무료 시안</b> 먼저</div><div>시간표 · 교습비 · 등록번호 표시까지</div><div>상담 신청 → 원장님 휴대폰으로 알림</div><div>사이트 주소 · 도메인은 원장님 소유</div><div>원장님이 직접 소식 · 사진 수정</div><div>마음에 드실 때만 제작 (부담 없어요)</div></div>
 <div class="cta"><img class="qr" src="{q}"><div><b>📱 QR을 찍으면 찰칵홈이 만든 홈페이지들이 나와요</b><p><b style="display:inline;font-size:10.5pt;color:#FFE45C">👆 마음에 드는 업종을 눌러서 시안을 직접 확인해 보세요</b><br>무료 시안 신청 · 문의: <b style="display:inline;font-size:10.5pt">kisthestar1@gmail.com</b> · 학원 사진 3장과 학원 이름만 보내 주시면 3일 안에 시안을 보내 드려요.</p></div></div>
 <div class="foot"><span>찰칵홈 · 김해 장유 · 동네 학원 · 가게 홈페이지</span><span>필요 없으시면 버려 주세요. 다시 보내지 않을게요.</span></div>
 </div></body></html>"""
 
+CSS = CSS + ".how{display:flex;align-items:stretch;gap:3mm;margin:2mm 0 5mm;background:#F3F6FF;border:.3mm solid #D9E2FA;border-radius:4mm;padding:4.5mm}.how div{flex:1;display:flex;flex-direction:column;gap:1mm;font-size:9.5pt;color:#5B6576}.how i{font-style:normal;width:7mm;height:7mm;border-radius:50%;background:#2156D9;color:#fff;display:grid;place-items:center;font-weight:900;font-size:10pt}.how b{font-size:12pt;color:#14202B}.how em{font-style:normal;align-self:center;color:#9AA6B8;font-weight:900;font-size:14pt}"
 FCSS = CSS.replace("@page{size:A4;margin:0}", "@page{size:A5;margin:0}").replace(".pg{width:210mm;height:297mm;padding:16mm 16mm 12mm", ".pg{width:148mm;height:210mm;padding:10mm 10mm 8mm")
 def flyer():
     return f"""<!doctype html><html lang="ko"><head><meta charset="utf-8"><style>{FCSS}
 h1{{font-size:18pt}}.seo{{padding:2.5mm 3mm;gap:3mm;margin-bottom:3mm}}.seo .sb{{font-size:8pt;padding:1.5mm 2.5mm}}.seo .rs{{font-size:7pt}}.seo .rs b{{font-size:8pt}}.seo .tx{{font-size:7.5pt}}.ph{{width:27mm}}.ph div{{height:50mm;border-width:1.8mm}}.offer{{font-size:9pt;gap:1.5mm 4mm}}.cta img.qr{{width:24mm;height:24mm}}.cta b{{font-size:11.5pt}}.cta p{{font-size:8.5pt}}
+.how{{display:flex;align-items:stretch;gap:2mm;margin:1mm 0 3.5mm;background:#F3F6FF;border:.3mm solid #D9E2FA;border-radius:3mm;padding:3mm}}.how div{{flex:1;display:flex;flex-direction:column;gap:.6mm;font-size:7.5pt;color:#5B6576}}.how i{{font-style:normal;width:5.5mm;height:5.5mm;border-radius:50%;background:#2156D9;color:#fff;display:grid;place-items:center;font-weight:900;font-size:8pt}}.how b{{font-size:9.5pt;color:#14202B}}.how em{{font-style:normal;align-self:center;color:#9AA6B8;font-weight:900}}
 .dino{{right:8mm;top:30mm;width:24mm}}.bub{{right:30mm;top:30mm;font-size:8pt}}.foot{{left:10mm;right:10mm;bottom:5mm;font-size:7pt}}</style></head><body><div class="pg">
 <div class="top"><div class="logo">찰칵<b>홈</b></div><small>장유 학원 · 가게 홈페이지</small></div>
 <h1 style="margin-top:7mm">원장님 학원,<br><em>홈페이지 무료 시안</em><br>먼저 받아 보세요</h1>
 <img class="dino" src="dino.png"><div class="bub">사진 3장이면 돼요!</div>
 {phones()}
-{seo("장유 피아노 학원","○○피아노학원 | 장유 피아노")}
-<div class="offer"><div>시간표 · 교습비 표시</div><div>상담 신청 휴대폰 알림</div><div>원장님이 직접 소식 수정</div><div>마음에 들 때만 제작</div></div>
+<div class="how"><div><i>1</i><b>사진 3장 + 이름</b><span>외관 · 교실 · 수업 사진</span></div><em>→</em><div><i>2</i><b>3일 안에 무료 시안</b><span>휴대폰으로 바로 보기</span></div><em>→</em><div><i>3</i><b>마음에 들면 제작</b><span>안 하셔도 괜찮아요</span></div></div>
+<div class="offer"><div>시간표 · 교습비 · 선생님 소개</div><div>상담 신청이 휴대폰으로 알림</div><div>원장님이 직접 소식 · 사진 수정</div><div>휴대폰 · PC 모두 깔끔하게</div></div>
 <div class="cta"><img class="qr" src="qr_flyer.png"><div><b>QR로 예시 보기 · 시안 신청</b><p>kisthestar1@gmail.com<br>학원 사진 3장 + 이름 → 3일 안에 시안</p></div></div>
 <div class="foot"><span>찰칵홈 · 김해 장유</span><span>직접 전해 드리는 안내지예요</span></div>
 </div></body></html>"""
