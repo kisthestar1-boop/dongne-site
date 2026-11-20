@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>딸깍 홍보</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;700&family=Do+Hyeon&display=swap">
+<style>
+/* 딸깍 홍보: 홈페이지 공장과 같은 구조 — 왼쪽 가게 정보 · 오른쪽 결과 탭 */
+:root{--bg:#EEF2F5;--card:#fff;--ink:#16232F;--mu:#5B6B78;--ln:#D9E1E8;--acc:#2E6FA3;--acc2:#F2B630;--go:#2F9E63;--bad:#C2453D;--nv:#03C75A;--hl:#FFF0A6;
+ --disp:"Do Hyeon","IBM Plex Sans KR",sans-serif;--body:"IBM Plex Sans KR",system-ui,"Malgun Gothic",sans-serif}
+*{box-sizing:border-box}[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:14px;word-break:keep-all}
+.bar{display:flex;align-items:center;gap:12px;padding:10px 18px;background:#13212E;color:#fff;position:sticky;top:0;z-index:5;flex-wrap:wrap}
+.bar b{font-family:var(--disp);font-size:22px;font-weight:400;letter-spacing:.02em}
+.bar small{color:#9FB6C8}.bar .sp{flex:1}
+.main{display:grid;grid-template-columns:minmax(300px,380px) 1fr;min-height:calc(100vh - 52px)}
+@media (max-width:860px){.main{grid-template-columns:1fr}}
+.form{background:var(--card);border-right:1px solid var(--ln);padding:16px;display:flex;flex-direction:column;gap:12px;overflow:auto;max-height:calc(100vh - 52px);position:sticky;top:52px}
+@media (max-width:860px){.form{max-height:none;position:static}}
+.form h3{margin:4px 0 0;font-family:var(--disp);font-weight:400;font-size:18px}
+.form h3 small{font-family:var(--body);font-size:12px;color:var(--mu)}
+label{display:flex;flex-direction:column;gap:4px;font-weight:700;font-size:12.5px}
+label small{font-weight:400;color:var(--mu)}
+input,select,textarea{width:100%;min-width:0;font:inherit;padding:9px 10px;border:1px solid var(--ln);border-radius:9px;background:#fff;color:var(--ink)}
+textarea{min-height:64px;resize:vertical}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.goal{background:#13212E;color:#fff;border-radius:12px;padding:12px 14px}
+.goal small{color:#9FB6C8;display:block;font-size:11.5px}.goal b{font-size:17px;display:block;margin-top:2px}
+.goal b mark{background:var(--acc2);color:#13212E;border-radius:4px;padding:0 4px}
+.kws{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}.kws span{font-size:11.5px;background:rgba(255,255,255,.1);border-radius:99px;padding:3px 9px}
+.btn{font:inherit;font-weight:700;border:0;border-radius:10px;padding:11px 14px;cursor:pointer;background:var(--acc);color:#fff}
+.btn.big{font-size:16px;padding:14px;background:linear-gradient(90deg,#2E6FA3,#21507A)}
+.btn.ghost{background:#fff;color:var(--ink);border:1px solid var(--ln)}
+.btn.sm{padding:6px 10px;font-size:12.5px;border-radius:8px}
+.btn:disabled{opacity:.5;cursor:default}
+.btn:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #9CC7EA;outline-offset:1px}
+.st{font-size:13px;color:var(--mu);min-height:18px}.st.err{color:var(--bad)}
+.out{display:flex;flex-direction:column;min-width:0}
+.tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 14px;background:#fff;border-bottom:1px solid var(--ln);position:sticky;top:52px;z-index:4}
+.seg{display:inline-flex;border:1px solid var(--ln);border-radius:999px;overflow:hidden;flex-wrap:wrap}
+.seg button{font:inherit;font-size:13px;font-weight:700;border:0;background:#fff;color:var(--mu);padding:7px 13px;cursor:pointer}
+.seg button.on{background:#13212E;color:#fff}
+.stage{flex:1;padding:18px;overflow:auto}
+.wrap{max-width:1040px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+.card{background:#fff;border:1px solid var(--ln);border-radius:14px;padding:16px 18px}
+.card h4{margin:0 0 10px;font-size:15.5px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card h4 small{font-weight:400;color:var(--mu);font-size:12px}
+.card h4 .act{margin-left:auto;display:flex;gap:6px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}@media(max-width:1100px){.g2{grid-template-columns:1fr}}
+.empty{max-width:560px;margin:50px auto;text-align:center;color:var(--mu);display:flex;flex-direction:column;gap:12px;align-items:center}
+.empty .big{font-size:56px}
+.flow{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}.flow span{background:#fff;border:1px solid var(--ln);border-radius:999px;padding:4px 10px;font-size:12px}.flow span.on{background:var(--acc2);border-color:var(--acc2);color:#16232F;font-weight:700}
+/* 검색 결과 미리보기 */
+.serp{border:1px solid var(--ln);border-radius:12px;padding:14px 16px;background:#fff}
+.serp .q{display:flex;align-items:center;gap:8px;border:1px solid #DFE1E5;border-radius:99px;padding:8px 14px;font-size:14px;margin-bottom:12px}
+.serp .q i{font-style:normal;font-weight:900}
+.res{padding:8px 0;border-top:1px dashed #EEF1F4}.res:first-of-type{border-top:0}
+.res .u{font-size:12px;color:#4D5156;display:flex;gap:6px;align-items:center}.res .u i{width:18px;height:18px;border-radius:50%;background:#E8F0FE;display:inline-grid;place-items:center;font-style:normal;font-size:10px}
+.res .t{color:#1A0DAB;font-size:17px;margin:2px 0}.res .d{font-size:13px;color:#4D5156;line-height:1.5}
+.res.me{background:#FFFBEA;border-radius:8px;padding:8px 10px;border:1px solid #F5E2A0}
+.res.me .tag{font-size:11px;font-weight:800;color:#8A6500}
+.map{display:grid;grid-template-columns:110px 1fr;gap:10px;align-items:center;background:#F8FAFC;border-radius:10px;padding:10px}
+.map .pin{height:80px;border-radius:8px;background:linear-gradient(135deg,#DDEFE3,#CFE3F7);display:grid;place-items:center;font-size:28px}
+.nv .q{border-color:var(--nv);border-width:2px}.nv .q i{color:var(--nv)}
+/* 세트 점검 */
+.score{display:flex;align-items:center;gap:14px;margin-bottom:12px}
+.ring{width:74px;height:74px;border-radius:50%;display:grid;place-items:center;font-family:var(--disp);font-size:24px;flex:none}
+.chk{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px}
+.ci{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--ln);border-radius:10px;padding:10px 12px;cursor:pointer;background:#fff;text-align:left;font:inherit;color:inherit}
+.ci .b{flex:none;width:22px;height:22px;border-radius:6px;border:2px solid var(--ln);display:grid;place-items:center;font-weight:900;color:#fff;font-size:13px}
+.ci.ok{border-color:#BFE3CD;background:#F2FBF5}.ci.ok .b{background:var(--go);border-color:var(--go)}
+.ci b{display:block;font-size:13.5px}.ci small{color:var(--mu);font-size:11.5px;line-height:1.45;display:block}
+.ci .who{display:inline-block;font-size:10.5px;font-weight:800;border-radius:99px;padding:1px 7px;margin-top:4px}
+.who.c{background:#E7F0F8;color:var(--acc)}.who.o{background:#FFF1DE;color:#A35A00}
+/* 글 */
+.post h1{font-size:22px;line-height:1.4;margin:4px 0 12px}.post p{line-height:1.85;margin:0 0 10px;font-size:15px}.post h3{font-size:17px;margin:20px 0 6px}
+.post mark{background:var(--hl)}
+.ph{border:2px dashed var(--ln);border-radius:10px;padding:14px;text-align:center;color:var(--mu);font-size:13px;margin:6px 0 12px;background:#F7FAFC}
+.tags{display:flex;flex-wrap:wrap;gap:6px}.tags span{color:#1F7A4D;font-size:13.5px}
+.kv{display:grid;grid-template-columns:130px 1fr;gap:6px 12px;font-size:13.5px;line-height:1.6}.kv dt{color:var(--mu);font-weight:700}.kv dd{margin:0}
+pre.code{white-space:pre-wrap;word-break:break-all;background:#0F1A24;color:#CFE3F7;border-radius:10px;padding:12px;font-size:12px;margin:0}
+.lst{margin:0;padding-left:18px;line-height:1.8}
+.slides{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.slide{aspect-ratio:4/5;border-radius:12px;padding:14px;display:flex;flex-direction:column;justify-content:center;gap:6px;color:#fff;background:linear-gradient(160deg,#21507A,#13212E);font-size:13px;line-height:1.5}
+.slide b{font-family:var(--disp);font-weight:400;font-size:19px;line-height:1.25}
+.slide:nth-child(2n){background:linear-gradient(160deg,#F2B630,#E08A1E);color:#13212E}
+.cal{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}@media(max-width:900px){.cal{grid-template-columns:1fr 1fr}}
+.wk{border:1px solid var(--ln);border-radius:12px;padding:12px;background:#fff}.wk small{color:var(--mu);font-weight:700}.wk ul{margin:6px 0 0;padding-left:16px;font-size:13px;line-height:1.7}
+.note{font-size:12px;color:var(--mu);line-height:1.6;margin:0}
+.warn{background:#FFF6E5;border:1px solid #F4D9A6;border-radius:10px;padding:10px 12px;font-size:12.5px;line-height:1.6}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:#13212E;color:#fff;border-radius:99px;padding:9px 16px;font-weight:700;font-size:13px;z-index:9;opacity:0;transition:opacity .2s}.toast.on{opacity:1}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="bar"><b>📣 딸깍 홍보</b><small>"동네 + 업종"을 검색하면 우리 가게가 먼저 보이게 · 찰칵홈 세트 ② 홍보 관리</small><span class="sp"></span>
+ <button class="btn ghost sm" data-demo="chalkak">🧪 예시 · 찰칵홈</button><button class="btn ghost sm" data-demo="dance">🧪 예시 · 다이어트 댄스</button><button class="btn ghost sm" data-demo="academy">🧪 예시 · 영어수학 학원</button></div>
+<div class="main">
+ <div class="form">
+  <div class="goal"><small>🎯 목표 검색어 — 손님이 휴대폰으로 이렇게 검색할 때 1등</small><b id="goalKw">장유 + 우리 업종</b><div class="kws" id="kwList"></div></div>
+  <h3>① 가게 정보</h3>
+  <div class="row2"><label>가게 이름 *<input id="fName" placeholder="예: 비트업 다이어트댄스"></label><label>업종 *<small>손님이 검색하는 말로</small><input id="fKind" placeholder="예: 다이어트 댄스"></label></div>
+  <div class="row2"><label>동네 *<input id="fArea" placeholder="예: 장유"></label><label>주변 동네<small>쉼표로</small><input id="fNear" placeholder="율하, 대청, 삼문"></label></div>
+  <label>시 · 구<input id="fCity" placeholder="예: 김해"></label>
+  <label>우리 가게만의 강점<small>줄마다 하나 · 사실만</small><textarea id="fPoints" placeholder="첫 수업 무료&#10;몸치 환영 · 뒷줄 지정석&#10;오전 10시반 · 저녁 8시반"></textarea></label>
+  <label>원장님 · 대표 소개<input id="fOwner" placeholder="예: 김○○ 원장 · 지도 8년"></label>
+  <h3>② 손님이 연락하는 곳 <small>모든 곳에 똑같이 적어요</small></h3>
+  <div class="row2"><label>홈페이지 주소<input id="fSite" placeholder="https://..."></label><label>연락 방법<small>전화 · 카톡 채널 · 메일</small><input id="fContact" placeholder="카카오톡 채널 / 메일"></label></div>
+  <label>주소 공개<small>지도 · AI 요약에 쓰여요</small><input id="fAddr" placeholder="예: 김해시 율하○로 00, 2층 (안 쓰면 '김해 장유'만)"></label>
+  <label>영업 시간<input id="fHours" placeholder="예: 평일 10:00~22:00"></label>
+  <h3>③ 이번 달 소식 <small>선택</small></h3>
+  <label>꼭 넣을 내용<textarea id="fNews" placeholder="예: 12월 겨울 특강 · 첫 달 등록 이벤트"></textarea></label>
+  <button class="btn big" id="go">🤖 홍보 세트 만들기</button>
+  <div class="st" id="st"></div>
+  <p class="note">한 번 누르면 <b>검색 점검 · 홈페이지 세팅 · 블로그 글 · 지도 등록 글 · 인스타 · 쇼츠 · 4주 계획</b>이 한꺼번에 나와요. "1위 · 최고 · 보장" 같은 말과 손님인 척 쓰는 후기는 넣지 않아요 (표시광고법).</p>
+ </div>
+ <div class="out">
+  <div class="tools">
+   <div class="seg" id="tabs">
+    <button data-t="check" class="on">🎯 검색 1등 점검</button><button data-t="site">🌐 홈페이지 세팅</button><button data-t="blog">📝 블로그 글</button><button data-t="map">🗺 지도 등록</button><button data-t="sns">📸 인스타 · 쇼츠</button><button data-t="plan">📅 4주 계획</button>
+   </div>
+   <span style="flex:1"></span>
+   <button class="btn ghost sm" id="dl" disabled>⬇ 전부 받기 (.txt)</button>
+  </div>
+  <div class="stage" id="stage"></div>
+ </div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const PROXY="https://script.google.com/macros/s/AKfycbz09Pualc3dVyOYhjRIBLY1lVpeZMpi8YMoUFlBcqWjJ30gKJagm0HAhio3rFaIf_E/exec";
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const F=["Name","Kind","Area","Near","City","Points","Owner","Site","Contact","Addr","Hours","News"];
+let TAB="check",DATA=null;
+const DEMO={
+ chalkak:{Name:"찰칵홈",Kind:"홈페이지 제작",Area:"장유",Near:"율하, 대청, 삼문",City:"김해",Points:"사진 3장이면 무료 시안 먼저\n상담 신청이 원장님 휴대폰으로 바로 알림\n네이버 · 구글 검색 등록까지\n시간표 · 가격 · 사진은 원장님이 직접 수정",Owner:"찰칵홈 대표 · 장유에서 동네 학원 · 가게 홈페이지를 만들어요",Site:"https://chalkakhome.com/",Contact:"kisthestar1@gmail.com",Addr:"김해 장유 (방문 상담)",Hours:"평일 저녁 · 주말",News:"김해 장유 학원 · 가게 무료 시안 진행 중"},
+ dance:{Name:"비트업 다이어트댄스",Kind:"다이어트 댄스",Area:"장유",Near:"율하, 대청",City:"김해",Points:"첫 수업 무료 · 등록 강요 없음\n몸치 환영 · 뒷줄 지정석\n오전 10시반 · 저녁 8시반 반",Owner:"김○○ 원장 · 다이어트댄스 지도 8년",Site:"https://chalkakhome.com/ex/beatup/",Contact:"원장 직통 010-0000-0000",Addr:"김해시 율하○로 00, 2층",Hours:"평일 10:00~22:00",News:"12월 연말 다이어트 4주 반 모집"},
+ academy:{Name:"새봄영어수학학원",Kind:"영어학원",Area:"장유",Near:"율하, 삼문",City:"김해",Points:"한 반 최대 8명\n매주 금요일 학습 리포트 문자\n학교별 내신 4주 전부터 대비",Owner:"김하나 원장 · 영어교육 전공 · 장유에서 12년",Site:"https://kisthestar1-boop.github.io/saebom-academy/",Contact:"원장 직통 010-0000-0000",Addr:"김해시 율하○로 00, 3층",Hours:"평일 14:00~22:00",News:"겨울방학 특강 12월 22일 개강"}};
+const v=k=>($("#f"+k).value||"").trim();
+function info(){const o={};F.forEach(k=>o[k]=v(k));o.near=o.Near.split(/[,，·\s]+/).filter(Boolean);o.pts=o.Points.split(/\n+/).map(s=>s.trim()).filter(Boolean);return o}
+function kws(o){if(!o.Area||!o.Kind)return[];const k=o.Kind,a=o.Area,set=new Set([`${o.City?o.City+" ":""}${a} ${k}`,`${a} ${k}`,...o.near.slice(0,3).map(n=>`${n} ${k}`),o.City?`${o.City} ${k}`:"",`${a} ${k} 추천`,`${a} ${k} 가격`]);return[...set].filter(Boolean).slice(0,7)}
+function goal(){const o=info(),K=kws(o);$("#goalKw").innerHTML=K.length?`<mark>${esc(K[0])}</mark>`:"장유 + 우리 업종";$("#kwList").innerHTML=K.slice(1).map(x=>`<span>${esc(x)}</span>`).join("")}
+F.forEach(k=>$("#f"+k).addEventListener("input",()=>{goal();save()}));
+function save(){try{localStorage.setItem("ddk_promo_form",JSON.stringify(info()))}catch(_){}}
+function load(){try{const o=JSON.parse(localStorage.getItem("ddk_promo_form")||"null");if(o)F.forEach(k=>$("#f"+k).value=o[k]||"")}catch(_){}}
+function toast(t){const e=$("#toast");e.textContent=t;e.classList.add("on");clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove("on"),1500)}
+async function copy(t){try{await navigator.clipboard.writeText(t)}catch(_){const a=document.createElement("textarea");a.value=t;document.body.appendChild(a);a.select();document.execCommand("copy");a.remove()}toast("✓ 복사됐어요")}
+document.addEventListener("click",e=>{const d=e.target.closest("[data-demo]");if(d){const o=DEMO[d.dataset.demo];F.forEach(k=>$("#f"+k).value=o[k]||"");goal();save();DATA=null;draw();return}
+ const t=e.target.closest("#tabs [data-t]");if(t){TAB=t.dataset.t;document.querySelectorAll("#tabs button").forEach(b=>b.classList.toggle("on",b===t));draw();return}
+ const c=e.target.closest("[data-cp]");if(c){copy(CP[c.dataset.cp]||"");return}
+ const x=e.target.closest("[data-ck]");if(x){const S=chkState();S[x.dataset.ck]=!S[x.dataset.ck];try{localStorage.setItem(ckKey(),JSON.stringify(S))}catch(_){}draw()}});
+
+/* ---------- 세트 점검: "동네+업종" 1등에 필요한 10가지 ---------- */
+const SET=[
+ ["site","홈페이지 제목에 '동네 + 업종'","예: 장유 다이어트댄스 비트업 — 제목 · 첫 문장 · 설명에","c"],
+ ["schema","홈페이지에 가게 정보 코드","이름 · 주소 · 연락 · 시간 (구글 AI 요약이 읽어요)","c"],
+ ["gsc","구글 서치콘솔 등록","소유 확인 · 사이트맵 · 색인 요청","c"],
+ ["nsa","네이버 서치어드바이저 등록","네이버 로그인만 원장님 · 코드는 찰칵홈","o"],
+ ["gbp","구글 지도 (비즈니스 프로필)","지도 칸 · AI 요약에 가장 크게 나와요 · 인증은 원장님","o"],
+ ["place","네이버 지도 (플레이스)","네이버 상단 지도 칸 · 사업자 인증은 원장님","o"],
+ ["blogN","네이버 블로그 글 월 2편+","제목 앞에 '동네 + 업종' · 사진 3장+ · FAQ","c"],
+ ["blogG","구글 블로그 글 월 2편+","찰칵홈 블로그에 가게 소개 · 홈페이지 링크","c"],
+ ["sns","인스타 · 유튜브 쇼츠","같은 이름 · 같은 동네 · 홈페이지 링크","c"],
+ ["nap","모든 곳에 이름 · 동네 · 연락처 똑같이","AI 요약은 여러 곳이 같은 말을 할 때 믿어요","c"]];
+const ckKey=()=>"ddk_promo_chk_"+(v("Name")||"_");
+function chkState(){try{return JSON.parse(localStorage.getItem(ckKey())||"{}")}catch(_){return{}}}
+
+/* ---------- AI ---------- */
+function prompt(o,K){return `너는 한국 동네 가게의 검색 홍보(네이버·구글 상위 노출) 전문가야. 목표: 손님이 "${K[0]}"를 검색했을 때 이 가게가 가장 먼저 보이게 하는 홍보 세트를 만든다.
+[가게] 이름: ${o.Name} / 업종: ${o.Kind} / 동네: ${o.City} ${o.Area} (주변: ${o.near.join(", ")})
+[강점]\n${o.pts.join("\n")}
+[대표] ${o.Owner}
+[연락] ${o.Contact} / 홈페이지: ${o.Site} / 주소: ${o.Addr} / 시간: ${o.Hours}
+[이번 달] ${o.News||"없음"}
+[목표 검색어] ${K.join(", ")}
+규칙: 쉬운 존댓말(~해요). 사실만. 금지어: 1위, 최고, 최초, 보장, 100%, 무조건, 완벽. 손님인 척 쓰는 후기 금지. 확인 안 된 숫자 금지.
+JSON만 출력:
+{"site":{"title":"공백 포함 40자 안, 맨 앞에 '${K[0]}'","desc":"80~110자, 동네+업종 2번 자연스럽게","h1":"첫 화면 큰 글씨 한 줄","first":"첫 문단 2문장 (검색어 포함)"},
+"blog":{"title":"공백 빼고 25자 안, 맨 앞 '${K[0]}'","intro":"첫 문단 2~3문장 (답부터)","sections":[{"h":"손님이 검색할 질문형 소제목","p":"2~3문단(\\n)","photo":"원장님이 찍을 사진 한 줄"}],"faq":[{"q":"","a":""}],"closing":"2문장","tags":["# 없이 8개"]},
+"map":{"short":"지도 한 줄 소개 40자 안","long":"지도 상세 소개 300~500자","cats":["구글 지도 업종 후보 3개"],"keys":["네이버 플레이스 대표 키워드 5개"]},
+"insta":{"bio":"프로필 소개 3줄","caption":"게시물 글 5~7줄","hashtags":["# 없이 15개"],"cards":[{"t":"카드 큰 글씨","s":"작은 글씨"}]},
+"shorts":{"title":"유튜브 쇼츠 제목 (검색어 포함)","desc":"설명 3줄 + 홈페이지","tags":["8개"],"script":[{"sec":"0~3초","say":"","shot":""}]},
+"plan":[{"w":"1주차","todo":["할 일 3개"]}]}
+blog.sections 3개, faq 4개, insta.cards 5장, shorts.script 5줄(30초), plan 4주.`}
+async function ai(o,K){const body={contents:[{role:"user",parts:[{text:prompt(o,K)}]}],generationConfig:{temperature:.6,responseMimeType:"application/json"}};
+ const ctl=new AbortController();const tm=setTimeout(()=>ctl.abort(),70000);
+ try{const r=await fetch(PROXY,{method:"POST",body:JSON.stringify({op:"copy",body}),signal:ctl.signal});const j=await r.json();if(j.error)throw new Error(j.error);
+ const txt=j.candidates?.[0]?.content?.parts?.map(p=>p.text||"").join("")||"";const m=txt.match(/\{[\s\S]*\}/);if(!m)throw new Error("AI 답을 읽지 못했어요");return JSON.parse(m[0])}finally{clearTimeout(tm)}}
+function fallback(o,K){const k=K[0],n=o.Name,p=o.pts;const ar=`${o.City} ${o.Area}`.trim();
+ return{site:{title:`${k} ${n} | ${o.near.slice(0,2).join("·")}${o.near.length?" ":""}${o.Kind}`.slice(0,40),desc:`${ar} ${o.Kind} ${n}. ${p.slice(0,2).join(" · ")}. ${k}을 찾으신다면 편하게 문의해 주세요.`.slice(0,110),h1:`${ar} ${o.Kind}, ${n}`,first:`${k}을 찾고 계신가요? ${n}은(는) ${ar}에서 ${o.Kind}을(를) 하고 있어요. ${p[0]||""}`},
+ blog:{title:`${k}, ${n} 처음 오시는 분 안내`,intro:`${k}을 찾고 계신가요? ${n}은(는) ${ar}에 있는 ${o.Kind}이에요. ${p[0]||""}. 처음 오시는 분이 가장 궁금해하시는 것부터 정리했어요.`,
+  sections:[{h:`${o.Area} ${o.Kind}, 어디가 좋을까요?`,p:`${o.Area}에는 ${o.Kind}이 여러 곳 있어요. 고를 때는 거리, 시간, 처음 오는 사람을 얼마나 챙기는지를 보시면 좋아요.\n${n}은(는) ${p.slice(0,2).join(", ")}.`,photo:"가게 입구 · 간판이 보이는 사진"},
+   {h:`${n}은 어떤 곳인가요?`,p:`${o.Owner}.\n${p.join("\n")}`,photo:"실제 수업 · 작업 중인 모습"},
+   {h:"처음엔 어떻게 시작하나요?",p:`${o.Contact}로 편하게 물어봐 주세요.\n${o.Hours?`운영 시간은 ${o.Hours}이에요.`:""}`,photo:"상담하는 자리 · 내부 전경"}],
+  faq:[{q:"처음인데 괜찮을까요?",a:"네, 처음 오시는 분 기준으로 안내해 드려요."},{q:"위치가 어디인가요?",a:o.Addr||ar},{q:"시간은 어떻게 되나요?",a:o.Hours||"문의해 주시면 안내해 드려요."},{q:"연락은 어떻게 하나요?",a:o.Contact}],
+  closing:`${k}을 찾으셨다면 부담 없이 연락 주세요. ${o.Area} · ${o.near.join(" · ")} 어디서든 편하게 오실 수 있어요.`,tags:[...K.map(x=>x.replace(/\s/g,"")),n.replace(/\s/g,""),o.Kind.replace(/\s/g,"")].slice(0,8)},
+ map:{short:`${ar} ${o.Kind} · ${p[0]||""}`.slice(0,40),long:`${n}은(는) ${ar}에 있는 ${o.Kind}이에요. ${p.join(". ")}. ${o.Owner}. ${o.Hours?`운영 시간 ${o.Hours}.`:""} 문의: ${o.Contact}`,cats:[o.Kind],keys:K.slice(0,5)},
+ insta:{bio:`${ar} ${o.Kind}\n${p[0]||""}\n👇 ${o.Site||o.Contact}`,caption:`${k} 찾고 계신가요?\n${p.join("\n")}\n문의 ${o.Contact}`,hashtags:[...K.map(x=>x.replace(/\s/g,"")),o.Area+o.Kind.replace(/\s/g,""),n.replace(/\s/g,"")],cards:[{t:`${o.Area} ${o.Kind}`,s:n},...p.slice(0,3).map(x=>({t:x,s:n})),{t:"문의",s:o.Contact}]},
+ shorts:{title:`${k} | ${n} 30초 소개`,desc:`${ar} ${o.Kind} ${n}\n${p[0]||""}\n${o.Site}`,tags:K.slice(0,8),script:[{sec:"0~3초",say:`${k} 찾으세요?`,shot:"간판 · 입구"},{sec:"3~10초",say:p[0]||"",shot:"실제 모습"},{sec:"10~18초",say:p[1]||"",shot:"내부"},{sec:"18~25초",say:p[2]||"",shot:"원장님"},{sec:"25~30초",say:"프로필 링크에서 문의하세요",shot:"로고 · 연락"}]},
+ plan:[{w:"1주차",todo:["홈페이지 제목 · 설명 바꾸기","구글 서치콘솔 등록","네이버 서치어드바이저 등록"]},{w:"2주차",todo:["구글 지도 · 네이버 플레이스 등록 신청","블로그 글 1편 (가게 소개)","인스타 프로필 정리"]},{w:"3주차",todo:["블로그 글 2편 (처음 오시는 분 Q&A)","쇼츠 1편","지도에 사진 5장"]},{w:"4주차",todo:["목표 검색어 순위 확인","블로그 글 3편 (이번 달 소식)","다음 달 계획"]}]}}
+
+/* ---------- 그리기 ---------- */
+let CP={};
+function hl(s,K){let h=esc(s);K.slice(0,2).forEach(k=>{h=h.split(esc(k)).join(`<mark>${esc(k)}</mark>`)});return h}
+function cpb(id,txt,label){CP[id]=txt;return`<button class="btn ghost sm" data-cp="${id}">${label||"복사"}</button>`}
+function draw(){const o=info(),K=kws(o),S=$("#stage");CP={};
+ if(TAB==="check"){S.innerHTML=checkView(o,K);return}
+ if(!DATA){S.innerHTML=`<div class="empty"><div class="big">📣</div><b style="color:var(--ink);font-size:16px">왼쪽에 가게 정보를 넣고 [🤖 홍보 세트 만들기]를 눌러 주세요</b><div class="flow"><span>목표 검색어</span><span>홈페이지 세팅</span><span>블로그</span><span>지도</span><span>인스타 · 쇼츠</span><span>4주 계획</span></div><small>처음이라면 위의 [🧪 예시] 버튼으로 먼저 구경해 보세요</small></div>`;return}
+ const D=DATA;
+ if(TAB==="site"){const s=D.site||{};const schema=JSON.stringify({"@context":"https://schema.org","@type":"LocalBusiness",name:o.Name,description:s.desc,url:o.Site||undefined,address:{"@type":"PostalAddress",streetAddress:o.Addr||undefined,addressLocality:`${o.City} ${o.Area}`.trim(),addressCountry:"KR"},areaServed:[o.Area,...o.near],openingHours:o.Hours||undefined,email:/@/.test(o.Contact)?o.Contact:undefined},null,1);
+  const head=`<title>${s.title}</title>\n<meta name="description" content="${s.desc}">\n<script type="application/ld+json">${schema}<\/script>`;
+  S.innerHTML=`<div class="wrap"><div class="card"><h4>🌐 구글에 이렇게 보여요 <small>제목 · 설명이 검색 결과 그대로</small></h4>${serpG(o,K,s)}</div>
+  <div class="g2"><div class="card"><h4>제목 · 설명 <span class="act">${cpb("st",s.title,"제목")}${cpb("sd",s.desc,"설명")}</span></h4><dl class="kv"><dt>제목 (title)</dt><dd>${hl(s.title,K)} <small style="color:var(--mu)">(${(s.title||"").length}자)</small></dd><dt>설명</dt><dd>${hl(s.desc,K)} <small style="color:var(--mu)">(${(s.desc||"").length}자)</small></dd><dt>첫 화면 큰 글씨</dt><dd>${hl(s.h1,K)}</dd><dt>첫 문단</dt><dd>${hl(s.first,K)}</dd></dl></div>
+  <div class="card"><h4>홈페이지에 넣는 코드 <small>찰칵홈이 넣어 드려요</small><span class="act">${cpb("sc",head,"코드 복사")}</span></h4><pre class="code">${esc(head)}</pre></div></div>
+  <div class="warn">💡 구글 <b>AI 요약</b>(맨 위 요약 칸)은 업체를 소개할 때 <b>주소 · 연락처 · 특징</b>을 모아서 보여 줘요. 홈페이지 · 지도 · 블로그에 <b>같은 이름 · 같은 동네 · 같은 연락처</b>가 적혀 있을수록 잘 나와요. 개인 번호가 부담되면 <b>070 인터넷 전화</b>나 <b>카카오톡 채널</b>을 연락처로 쓰세요.</div></div>`;return}
+ if(TAB==="blog"){const b=D.blog||{};const body=[b.intro,...(b.sections||[]).map(x=>`\n${x.h}\n[사진: ${x.photo}]\n${x.p}`),"\n자주 묻는 질문",...(b.faq||[]).map(f=>`Q. ${f.q}\nA. ${f.a}`),"\n"+b.closing,`\n📍 ${o.Name} · ${o.Addr||o.Area}\n${o.Contact}${o.Site?"\n"+o.Site:""}`].join("\n");
+  const len=body.replace(/\s/g,"").length,tl=(b.title||"").replace(/\s/g,"").length;
+  S.innerHTML=`<div class="wrap"><div class="card"><h4>📝 블로그 글 <small>네이버 · 구글 블로그 같이 써요 · 본문 ${len}자 · 제목 ${tl}자</small><span class="act">${cpb("bt",b.title,"제목")}${cpb("bb",body,"본문")}${cpb("bg",(b.tags||[]).map(t=>"#"+t).join(" "),"태그")}</span></h4>
+  <div class="post"><h1>${hl(b.title,K)}</h1><p>${hl(b.intro,K)}</p>${(b.sections||[]).map(x=>`<h3>${hl(x.h,K)}</h3><div class="ph">📷 ${esc(x.photo)}</div>${String(x.p).split(/\n+/).map(p=>`<p>${hl(p,K)}</p>`).join("")}`).join("")}
+  <h3>자주 묻는 질문</h3>${(b.faq||[]).map(f=>`<p><b>Q. ${esc(f.q)}</b><br>A. ${esc(f.a)}</p>`).join("")}<p>${hl(b.closing,K)}</p><p style="background:#F7FAFC;border-radius:10px;padding:10px 12px">📍 ${esc(o.Name)} · ${esc(o.Addr||o.Area)}<br>${esc(o.Contact)}${o.Site?"<br>"+esc(o.Site):""}</p><div class="tags">${(b.tags||[]).map(t=>`<span>#${esc(String(t).replace(/^#/,""))}</span>`).join("")}</div></div></div>
+  <div class="card"><h4>✅ 올리기 전 확인</h4><ul class="lst"><li>제목 맨 앞에 <b>${esc(K[0])}</b> ${tl<=25?"✓":"→ 25자 안으로 줄이기"}</li><li>본문 1,500~2,000자 ${len>=1300?"✓":"→ 사진 설명을 조금 더"}</li><li>📷 자리에 <b>직접 찍은 사진</b> 3장 이상 (같은 사진 반복 X)</li><li>맨 끝 지도 첨부 · 연락처</li><li>한 달 2편 이상, 같은 요일에 꾸준히</li></ul></div></div>`;return}
+ if(TAB==="map"){const m=D.map||{};S.innerHTML=`<div class="wrap"><div class="g2"><div class="card"><h4>🗺 구글 지도 (비즈니스 프로필)<span class="act">${cpb("ml",m.long,"소개 복사")}</span></h4><dl class="kv"><dt>이름</dt><dd>${esc(o.Name)} <small style="color:var(--mu)">(키워드를 이름에 넣으면 정지될 수 있어요 · 실제 상호만)</small></dd><dt>업종 후보</dt><dd>${(m.cats||[]).map(esc).join(" · ")}</dd><dt>서비스 지역</dt><dd>${esc([o.Area,...o.near].join(", "))}</dd><dt>웹사이트</dt><dd>${esc(o.Site)}</dd><dt>소개 (750자 안)</dt><dd>${esc(m.long)}</dd></dl></div>
+  <div class="card"><h4><span style="color:var(--nv)">N</span> 네이버 플레이스<span class="act">${cpb("ms",m.short,"한 줄")}${cpb("mk",(m.keys||[]).join(", "),"키워드")}</span></h4><dl class="kv"><dt>한 줄 소개</dt><dd>${esc(m.short)}</dd><dt>대표 키워드</dt><dd>${(m.keys||[]).map(esc).join(", ")}</dd><dt>상세 설명</dt><dd>${esc(m.long)}</dd><dt>사진</dt><dd>외관 · 내부 · 실제 모습 각 3장 이상</dd></dl></div></div>
+  <div class="warn">🙋 지도 등록은 <b>원장님 인증</b>(구글: 영상 · 우편 / 네이버: 사업자등록증)이 필요해요. 입력은 찰칵홈이 다 하고, 인증 한 번만 원장님이 해 주시면 돼요.</div></div>`;return}
+ if(TAB==="sns"){const i=D.insta||{},y=D.shorts||{};S.innerHTML=`<div class="wrap"><div class="card"><h4>📸 인스타그램<span class="act">${cpb("ib",i.bio,"프로필")}${cpb("ic",i.caption+"\n\n"+(i.hashtags||[]).map(t=>"#"+String(t).replace(/^#/,"")).join(" "),"글 + 해시태그")}</span></h4>
+  <div class="g2"><div><b style="font-size:13px;color:var(--mu)">프로필 소개</b><p style="white-space:pre-line;line-height:1.7;margin:4px 0 12px">${esc(i.bio)}</p><b style="font-size:13px;color:var(--mu)">게시물 글</b><p style="white-space:pre-line;line-height:1.7;margin:4px 0 8px">${esc(i.caption)}</p><div class="tags">${(i.hashtags||[]).map(t=>`<span>#${esc(String(t).replace(/^#/,""))}</span>`).join("")}</div></div>
+  <div><b style="font-size:13px;color:var(--mu)">카드 뉴스 ${(i.cards||[]).length}장</b><div class="slides" style="margin-top:6px">${(i.cards||[]).map(c=>`<div class="slide"><b>${esc(c.t)}</b><span>${esc(c.s)}</span></div>`).join("")}</div></div></div></div>
+  <div class="card"><h4>▶ 유튜브 쇼츠 (30초)<span class="act">${cpb("yt",y.title,"제목")}${cpb("yd",y.desc+"\n\n"+(y.tags||[]).map(t=>"#"+String(t).replace(/^#|\s/g,"")).join(" "),"설명")}</span></h4><p style="margin:0 0 8px"><b>${hl(y.title,K)}</b></p><p class="note" style="white-space:pre-line;margin-bottom:10px">${esc(y.desc)}</p>
+  <dl class="kv">${(y.script||[]).map(s=>`<dt>${esc(s.sec)}</dt><dd>🎙 ${esc(s.say)} <small style="color:var(--mu)">· 🎥 ${esc(s.shot)}</small></dd>`).join("")}</dl></div></div>`;return}
+ if(TAB==="plan"){S.innerHTML=`<div class="wrap"><div class="card"><h4>📅 4주 계획 <small>"${esc(K[0])}" 1등을 향해 · 매달 반복</small></h4><div class="cal">${(D.plan||[]).map(p=>`<div class="wk"><small>${esc(p.w)}</small><ul>${(p.todo||[]).map(t=>`<li>${esc(t)}</li>`).join("")}</ul></div>`).join("")}</div></div>
+  <div class="card"><h4>📈 확인하는 법</h4><ul class="lst"><li>구글에 <b>${esc(K[0])}</b> 검색 → 몇 번째에 나오는지 매주 기록</li><li>구글 서치콘솔 → 실적 → 검색어별 노출 · 클릭</li><li>네이버 서치어드바이저 → 리포트</li><li>순위는 약속할 수 없어요. 대신 위 10가지를 빠짐없이 채우는 게 우리 일이에요.</li></ul></div></div>`}}
+function serpG(o,K,s){s=s||{};const k=K[0]||"동네 업종";return`<div class="serp"><div class="q"><i style="color:#4285F4">G</i>${esc(k)}</div>
+ <div class="map"><div class="pin">📍</div><div><b>${esc(o.Name||"우리 가게")}</b><br><small style="color:var(--mu)">${esc(o.Kind)} · ${esc(o.Addr||o.Area)}</small><br><small style="color:var(--mu)">${esc(o.Hours||"")}</small><div style="font-size:11px;font-weight:800;color:#8A6500;margin-top:2px">⬆ 구글 지도 칸 (비즈니스 프로필)</div></div></div>
+ <div class="res me"><div class="u"><i>🌐</i>${esc((o.Site||"우리가게.kr").replace(/^https?:\/\//,"").replace(/\/$/,""))}</div><div class="t">${esc(s.title||`${k} ${o.Name}`)}</div><div class="d">${esc(s.desc||"")}</div><div class="tag">⬆ 우리 홈페이지</div></div>
+ <div class="res"><div class="u"><i>📝</i>blog · ${esc(o.Name)}</div><div class="t">${esc((DATA&&DATA.blog&&DATA.blog.title)||`${k}, 처음 오시는 분 안내`)}</div><div class="d">블로그 글이 함께 뜨면 한 화면을 우리 가게가 채워요</div></div></div>`}
+function checkView(o,K){const S=chkState(),done=SET.filter(x=>S[x[0]]).length,pc=Math.round(done/SET.length*100);const col=pc>=80?"var(--go)":pc>=40?"var(--acc2)":"var(--bad)";
+ return`<div class="wrap"><div class="card"><div class="score"><div class="ring" style="background:conic-gradient(${col} ${pc*3.6}deg,#E8EDF2 0);"><div style="width:56px;height:56px;border-radius:50%;background:#fff;display:grid;place-items:center">${pc}</div></div>
+ <div><b style="font-size:17px">"${esc(K[0]||"동네 + 업종")}" 검색 1등 준비도</b><br><small style="color:var(--mu)">${esc(o.Name||"가게")} · 10가지 중 ${done}개 완료 · 누르면 체크돼요 (이 브라우저에 저장)</small></div></div>
+ <div class="chk">${SET.map(x=>`<button class="ci ${S[x[0]]?"ok":""}" data-ck="${x[0]}"><span class="b">${S[x[0]]?"✓":""}</span><span><b>${esc(x[1])}</b><small>${esc(x[2])}</small><span class="who ${x[3]}">${x[3]==="c"?"찰칵홈이 해요":"원장님 인증 1번"}</span></span></button>`).join("")}</div></div>
+ <div class="g2"><div class="card"><h4>🔎 구글 · 목표 화면</h4>${serpG(o,K,DATA&&DATA.site)}</div>
+ <div class="card"><h4><span style="color:var(--nv)">N</span> 네이버 · 목표 화면</h4><div class="serp nv"><div class="q"><i>N</i>${esc(K[0]||"동네 업종")}</div><div class="map"><div class="pin">📍</div><div><b>${esc(o.Name||"우리 가게")}</b><br><small style="color:var(--mu)">${esc(o.Kind)} · ${esc(o.Area)}</small><div style="font-size:11px;font-weight:800;color:#8A6500;margin-top:2px">⬆ 플레이스 (네이버 지도)</div></div></div><div class="res me"><div class="u"><i>📝</i>블로그</div><div class="t">${esc((DATA&&DATA.blog&&DATA.blog.title)||`${K[0]||""}, 처음 오시는 분 안내`)}</div><div class="tag">⬆ 블로그 · 카페 칸</div></div><div class="res"><div class="u"><i>🌐</i>웹사이트</div><div class="t">${esc(o.Name)}</div><div class="d">서치어드바이저 등록 후 웹사이트 칸</div></div></div></div></div>
+ <div class="card"><h4>🎯 목표 검색어 ${K.length}개 <small>제목 · 블로그 · 태그에 골고루</small><span class="act">${(CP.kw=K.join(", "),'<button class="btn ghost sm" data-cp="kw">복사</button>')}</span></h4><div class="tags">${K.map(k=>`<span style="background:#EEF6F1;border-radius:99px;padding:4px 10px">${esc(k)}</span>`).join("")}</div></div></div>`}
+$("#go").onclick=async()=>{const o=info(),K=kws(o);if(!o.Name||!o.Kind||!o.Area){$("#st").className="st err";$("#st").textContent="가게 이름 · 업종 · 동네는 꼭 넣어 주세요";return}
+ const b=$("#go");b.disabled=true;b.textContent="🤖 만드는 중… (20~40초)";$("#st").className="st";$("#st").textContent=`"${K[0]}" 1등 홍보 세트를 쓰고 있어요…`;
+ try{DATA=await ai(o,K);$("#st").textContent="✅ 다 만들었어요 · 위 탭을 하나씩 눌러 보세요"}catch(err){DATA=fallback(o,K);$("#st").textContent="✅ 기본 틀로 만들었어요 (AI 연결이 안 돼서 · 내용은 그대로 써도 돼요)"}
+ b.disabled=false;b.textContent="🤖 홍보 세트 만들기";$("#dl").disabled=false;if(TAB==="check"){TAB="site";document.querySelectorAll("#tabs button").forEach(x=>x.classList.toggle("on",x.dataset.t==="site"))}draw()};
+$("#dl").onclick=()=>{if(!DATA)return;const o=info(),K=kws(o),D=DATA,b=D.blog||{},s=D.site||{},m=D.map||{},i=D.insta||{},y=D.shorts||{};
+ const t=[`[딸깍 홍보] ${o.Name} · 목표 검색어: ${K.join(", ")}`,"\n■ 홈페이지",`제목: ${s.title}`,`설명: ${s.desc}`,`큰 글씨: ${s.h1}`,`첫 문단: ${s.first}`,"\n■ 블로그",b.title,b.intro,...(b.sections||[]).map(x=>`\n${x.h}\n[사진: ${x.photo}]\n${x.p}`),...(b.faq||[]).map(f=>`Q. ${f.q}\nA. ${f.a}`),b.closing,(b.tags||[]).map(x=>"#"+x).join(" "),"\n■ 지도",`한 줄: ${m.short}`,`소개: ${m.long}`,`키워드: ${(m.keys||[]).join(", ")}`,"\n■ 인스타",i.bio,i.caption,(i.hashtags||[]).map(x=>"#"+x).join(" "),"\n■ 쇼츠",y.title,y.desc,...(y.script||[]).map(x=>`${x.sec} ${x.say} (${x.shot})`),"\n■ 4주 계획",...(D.plan||[]).map(p=>`${p.w}: ${(p.todo||[]).join(" / ")}`)].join("\n");
+ const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([t],{type:"text/plain;charset=utf-8"}));a.download=`딸깍홍보_${o.Name}.txt`;a.click()};
+load();if(!v("Name")){const o=DEMO.chalkak;F.forEach(k=>$("#f"+k).value=o[k])}goal();draw();
+</script>
+</body>
+</html>
