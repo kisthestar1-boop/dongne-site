@@ -771,7 +771,7 @@ function sprite(img,x,y,h,face,opt){
 function trailX(d){const T=ST.trail;if(!T||!T.length)return ST.pl.x-ST.pl.face*d;let acc=0,px=ST.pl.x;for(let i=T.length-1;i>=0;i--){acc+=Math.abs(px-T[i]);if(acc>=d)return T[i];px=T[i]}return T[0]}
 function pushTrail(){const p=ST.pl;ST.trail=ST.trail||[];const T=ST.trail;if(!T.length||Math.abs(T[T.length-1]-p.x)>3){T.push(p.x);if(T.length>120)T.shift()}}
 {const _arc=CanvasRenderingContext2D.prototype.arc;CanvasRenderingContext2D.prototype.arc=function(x,y,r,a,b,c){return _arc.call(this,x,y,r>0?r:0,a,b,c)}}
-const RC_O=[6,3,1,5,2,0,4,7],RC_D=[13.3,13.3,13.3,13.3,13.3,13.3,13.3,13.3],RC_Y=[0,1,0,-1.5,0,1,0,-1.5];
+const RC_O=[6,3,1,5,2,0,4,7],RC_D=[13.3,13.3,13.3,13.3,13.3,13.3,13.3,13.3],RC_Y=[0,2.5,-.5,-3.5,0,2.5,-.5,-3.5];
 function RCN(){if(RCN.n!=null)return RCN.n;let n=0;while(n<8&&IMG['p_rc'+n]&&IMG['p_rc'+n].naturalWidth)n++;if(n<6)return 0;return (document.readyState==='complete')?(RCN.n=n):n}
 function drawPlayer(cx){
  const p=ST.pl,x=p.x-cx;const t=p.anim;
