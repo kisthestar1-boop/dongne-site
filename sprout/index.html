@@ -64,7 +64,7 @@ function fit(){
 addEventListener('resize',fit);fit();
 
 /* ---------- 이미지 ---------- */
-const IMG={};const NAMES=['sprout','hedgehog','fox','bunny','owl','frog','sheep','baker','sprite_e0','sprite_e1','sprite_e2','sprite_e3','boss','bg_forest','p_idle','p_run','p_swing','p_jump','p_cast','fx_leaf','fox_idle','fox_shoot','bunny_idle','bunny_heal','hedgehog_idle','hedgehog_atk','sheep_idle','sheep_atk','ground','plat','bg_village','bg_marsh','m_e0','m_e1','m_e2','m_e3','boss2','it_bread','it_clover','it_mush','it_star','it_twig','it_seed','it_chest','it_jar','owl_idle','owl_cast','frog_idle','frog_play','baker','rival','thief','castle_me','castle_foe','fg1','fg2','fg3','vfx_slash','vfx_heal','vfx_hit','vfx_lvup','vfx_star','vfx_leaf','fox_w1','fox_w2','fox_w3','fox_a','sheep_w1','sheep_w2','sheep_w3','sheep_a','bunny_w1','bunny_w2','bunny_w3','bunny_a','owl_w1','owl_w2','owl_w3','owl_a','dmg_n','dmg_c','board','chest','trophy','p_run2','p_k1','p_k2','p_k3','p_k4','p_k5','p_rc0','p_rc1','p_rc2','p_rc3','p_rc4','p_rc5','p_rc6','p_rc7'];
+const IMG={};const NAMES=['sprout','hedgehog','fox','bunny','owl','frog','sheep','baker','sprite_e0','sprite_e1','sprite_e2','sprite_e3','boss','bg_forest','p_idle','p_run','p_swing','p_jump','p_cast','fx_leaf','fox_idle','fox_shoot','bunny_idle','bunny_heal','hedgehog_idle','hedgehog_atk','sheep_idle','sheep_atk','ground','plat','bg_village','bg_marsh','m_e0','m_e1','m_e2','m_e3','boss2','it_bread','it_clover','it_mush','it_star','it_twig','it_seed','it_chest','it_jar','owl_idle','owl_cast','frog_idle','frog_play','baker','rival','thief','castle_me','castle_foe','fg1','fg2','fg3','vfx_slash','vfx_heal','vfx_hit','vfx_lvup','vfx_star','vfx_leaf','fox_w1','fox_w2','fox_w3','fox_a','sheep_w1','sheep_w2','sheep_w3','sheep_a','bunny_w1','bunny_w2','bunny_w3','bunny_a','owl_w1','owl_w2','owl_w3','owl_a','dmg_n','dmg_c','board','chest','trophy','p_run2','p_k1','p_k2','p_k3','p_k4','p_k5','p_rc0','p_rc1','p_rc2','p_rc3','p_rc4','p_rc5','p_rc6','p_rc7','p_jc','p_jr','p_jf','p_jl'];
 let loaded=0;
 NAMES.forEach(n=>{const i=new Image();i.onload=()=>{loaded++};i.onerror=()=>{loaded++};i.src='img/'+n+(n.startsWith('bg_')?'.jpg':'.webp')+'?v=5';IMG[n]=i;});
 
@@ -287,22 +287,22 @@ function updPlayer(dt){
   if(!dir&&Math.abs(p.vx)>180&&!(p.brakeT>0)&&!(p.dashT>0)){p.brakeT=.16;p.brakeD=Math.sign(p.vx);dust(p.x+p.brakeD*14,p.y,3);p.sq={t:.12,sx:1.08,sy:.94}}
   if(dir&&Math.abs(p.vx)>140&&Math.sign(p.vx)!==dir&&!(p.turnT>0)){p.turnT=.12;dust(p.x,p.y,3);p.sq={t:.1,sx:.9,sy:1.07}}
   if(dir&&Math.abs(p.vx)<20&&!(p.startT>0)){p.startT=.1;p.rph=.13;dust(p.x-dir*10,p.y,2)}}
- if(p.brakeT>0)p.brakeT-=dt;if(p.turnT>0)p.turnT-=dt;if(p.startT>0)p.startT-=dt;
- if(dir){p.vx+=dir*accel*dt;if(p.atkT<=0)p.face=dir;}else{p.vx*=p.onG?Math.pow(.0005,dt):Math.pow(.3,dt)}
+ if(p.brakeT>0)p.brakeT-=dt;if(p.jcT>0)p.jcT-=dt;if(p.landT>0)p.landT-=dt;if(p.turnT>0)p.turnT-=dt;if(p.startT>0)p.startT-=dt;
+ if(dir){if(p.onG&&Math.sign(p.vx)===-dir&&Math.abs(p.vx)>140&&p.turnT>=.11)p.vx*=.35;p.vx+=dir*accel*dt;if(p.atkT<=0)p.face=dir;}else{if(p.onG){const sp=Math.max(0,Math.abs(p.vx)-2000*dt);p.vx=Math.sign(p.vx)*sp}else p.vx*=Math.pow(.3,dt)}
  p.vx=Math.max(-maxV,Math.min(maxV,p.vx));if(Math.abs(p.vx)>maxV&&maxV===0)p.vx*=.9;
  // 점프 (코요테 타임 0.08초)
  if(p.onG)p.coyote=.08;else p.coyote-=dt;
  if(p.jumpBuf>0&&!hurt){
   if(K.down&&p.onG){const pl=onPlat(p);if(pl&&!pl.ground){p.drop=.25;p.onG=false;p.vy=40;p.jumpBuf=0;}}
-  else if(p.coyote>0){p.vy=-640;p.onG=false;p.coyote=0;p.jumpBuf=0;SFX.jump();dust(p.x,p.y,4);p.sq={t:.12,sx:.86,sy:1.16};}
+  else if(p.coyote>0){p.vy=-640;p.onG=false;p.coyote=0;p.jumpBuf=0;p.jcT=.06;SFX.jump();dust(p.x,p.y,4);p.sq={t:.12,sx:.86,sy:1.16};}
  }
  if(!K.jump&&p.vy<-200)p.vy+=GRAV*.9*dt; // 짧게 누르면 낮은 점프
  p.vy+=GRAV*(Math.abs(p.vy)<140&&!p.onG?.55:1)*dt;p.x+=p.vx*dt;p.y+=p.vy*dt;
  p.x=Math.max(20,Math.min(S.len-20,p.x));
  if(ST.lock){p.x=Math.max(ST.lock.a+20,Math.min(ST.lock.b-20,p.x))}
- const fallV=p.vy;const was=p.onG;p.onG=landOn(p,prevY);if(p.onG&&!was&&ST.intro&&!ST.introLanded){ST.introLanded=1;vfx('vfx_lvup',p.x,p.y-70,{s0:.3,s1:.5,life:.9,a:.7});shake(3);SFX.big();dust(p.x,p.y,10)}if(p.onG&&!was){dust(p.x,p.y,6);p.sq={t:.14,sx:1.18,sy:.84};if(fallV>300)play('impactSoft_heavy_000',.16,1.4);if(fallV>500){shake(2)}}
+ const fallV=p.vy;const was=p.onG;p.onG=landOn(p,prevY);if(p.onG&&!was&&ST.intro&&!ST.introLanded){ST.introLanded=1;vfx('vfx_lvup',p.x,p.y-70,{s0:.3,s1:.5,life:.9,a:.7});shake(3);SFX.big();dust(p.x,p.y,10)}if(p.onG&&!was){if(fallV>220)p.landT=.11;dust(p.x-10,p.y,5);dust(p.x+10,p.y,5);p.sq={t:.1,sx:1.18,sy:.82};if(fallV>300)play('impactSoft_heavy_000',.16,1.4);if(fallV>500){shake(2)}}
  if(p.onG&&dir&&Math.sign(p.vx)!==dir&&Math.abs(p.vx)>120&&Math.random()<.5)dust(p.x,p.y,1);
- if(p.onG&&Math.abs(p.vx)>30){const N=RCN();if(N){const prev=Math.floor((p.rph||0)*N)%N;p.rph=((p.rph||0)+Math.abs(p.vx)*dt/150)%1;const fr=Math.floor(p.rph*N)%N;if(fr!==prev&&(fr===0||fr===N/2)&&Math.abs(p.vx)>200){dust(p.x-p.face*10,p.y,2);if(!play('impactSoft_medium_000',.05,1.6+Math.random()*.2)){}}}else if(Math.abs(p.vx)>200){p.stepT=(p.stepT||0)-dt;if(p.stepT<=0){p.stepT=.24;dust(p.x-p.face*12,p.y,3)}}}
+ if(p.onG&&Math.abs(p.vx)>30){const N=RCN();if(N){const prev=Math.floor((p.rph||0)*N)%N;p.rph=((p.rph||0)+Math.abs(p.vx)*dt/125)%1;const fr=Math.floor(p.rph*N)%N;if(fr!==prev&&(fr===0||fr===N/2)&&Math.abs(p.vx)>200){dust(p.x-p.face*10,p.y,2);if(!play('impactSoft_medium_000',.05,1.6+Math.random()*.2)){}}}else if(Math.abs(p.vx)>200){p.stepT=(p.stepT||0)-dt;if(p.stepT<=0){p.stepT=.24;dust(p.x-p.face*12,p.y,3)}}}
  if(p.sq&&p.sq.t>0)p.sq.t-=dt;
  // 공격 콤보 (3단 + 공중 + 올려치기)
  if(p.atkT>0)p.atkT-=dt;
@@ -351,16 +351,16 @@ function hurtPlayer(dmg,fromX){
 
 /* ---------- 친구 AI (자동) ---------- */
 function updFriends(dt){
- const p=ST.pl;
+ const p=ST.pl;pushTrail();
  ST.friends.forEach((f,i)=>{
   f.anim+=dt;f.cd-=dt;if(f.act>0)f.act-=dt;
   const prevY=f.y;
   // 목표 위치
   let tx;const near=nearestEnemy(f.x,600);
   if(f.k==='sheep'&&near)tx=Math.min(near.x-40*Math.sign(near.x-p.x||1),p.x+160*Math.sign(near.x-p.x||1));
-  else if(f.k==='fox'||f.k==='owl')tx=p.x-p.face*(70+i*30);
+  else if((f.k==='fox'||f.k==='owl')&&near)tx=p.x-p.face*(70+i*30);
   else if(f.k==='hedgehog'&&near)tx=near.x-30*Math.sign(near.x-f.x||1);
-  else tx=p.x-p.face*(50+i*36);
+  else tx=trailX(52+i*40);
   for(const o of ST.friends){if(o!==f&&Math.abs(o.x-f.x)<34)tx+=(f.x>=o.x?1:-1)*22}
   if(Math.abs(p.x-f.x)<30&&!near)tx+=(f.x>=p.x?1:-1)*24;
   const dx=tx-f.x;f.vx=Math.abs(dx)>14?Math.sign(dx)*Math.min(300,Math.abs(dx)*3):f.vx*.8;
@@ -767,32 +767,35 @@ function sprite(img,x,y,h,face,opt){
  if(opt.flash>0){ctx.globalCompositeOperation='lighter';ctx.globalAlpha=Math.min(.7,opt.flash);ctx.drawImage(img,-w/2,-h,w,h);}
  ctx.restore();
 }
+function trailX(d){const T=ST.trail;if(!T||!T.length)return ST.pl.x-ST.pl.face*d;let acc=0,px=ST.pl.x;for(let i=T.length-1;i>=0;i--){acc+=Math.abs(px-T[i]);if(acc>=d)return T[i];px=T[i]}return T[0]}
+function pushTrail(){const p=ST.pl;ST.trail=ST.trail||[];const T=ST.trail;if(!T.length||Math.abs(T[T.length-1]-p.x)>3){T.push(p.x);if(T.length>120)T.shift()}}
 function RCN(){if(RCN.n!=null)return RCN.n;let n=0;while(n<8&&IMG['p_rc'+n]&&IMG['p_rc'+n].naturalWidth)n++;if(n<6)return 0;return (document.readyState==='complete')?(RCN.n=n):n}
 function drawPlayer(cx){
  const p=ST.pl,x=p.x-cx;const t=p.anim;
  let dy=0,sx=1,sy=1,rot=0,img=IMG.p_idle;
  const RF=[IMG.p_r1,IMG.p_r2,IMG.p_r3,IMG.p_r4];
- const N=RCN();if(p.state==='run'&&N){img=IMG['p_rc'+(Math.floor((p.rph||0)*N)%N)];rot+=.02}
+ const N=RCN();if(p.state==='run'&&N){img=IMG['p_rc'+(Math.floor((p.rph||0)*N)%N)];dy=-2.2*(1-Math.cos((p.rph||0)*Math.PI*4));if(p.turnT>0){img=IMG.p_rc0;sx*=1.06;sy*=.95}if(p.startT>0)rot+=Math.sign(p.vx)*.06}
  else if(p.state==='idle'&&p.brakeT>0){const k=p.brakeT/.16;img=N?IMG.p_rc0:IMG.p_idle;rot=-p.brakeD*.1*k;sx*=1+.05*k;sy*=1-.04*k}
  else if(p.state==='run'){img=IMG.p_run2&&IMG.p_run2.naturalWidth?IMG.p_run2:IMG.p_run;const ph=t*13;const c=Math.sin(ph);dy=-Math.abs(c)*9;sy*=1+Math.abs(c)*.03-(1-Math.abs(c))*.035;sx*=1-Math.abs(c)*.015+(1-Math.abs(c))*.03;rot+=Math.sin(ph*.5)*.035}
- else if(p.state==='idle'){sy=1+Math.sin(t*3)*.012}
- else if(p.state==='jump'){img=N?(p.vy<-150?IMG.p_rc1:p.vy<150?IMG.p_rc2:IMG.p_rc5):(p.vy<120?IMG.p_jump:IMG.p_run);sy*=p.vy<0?1.05:.98;sx*=p.vy<0?.97:1.02;rot+=Math.max(-.08,Math.min(.1,p.vy/5000))}
+ else if(p.state==='idle'){const b=Math.sin(t*3.9);sy=1+b*.012;sx=1-b*.006;dy=-Math.max(0,b)*1.2}
+ else if(p.state==='jump'){const JK=n=>IMG[n]&&IMG[n].naturalWidth?IMG[n]:null;img=(p.jcT>0&&JK('p_jc'))||(p.vy<-60&&JK('p_jr'))||JK('p_jf')||(p.vy<120?IMG.p_jump:IMG.p_run);sy*=p.vy<0?1.05:.98;sx*=p.vy<0?.97:1.02;rot+=Math.max(-.08,Math.min(.1,p.vy/5000))}
  else if(p.state==='climb'){img=IMG.p_jump;rot=Math.sin(p.y*.05)*.05}
  const KF=n=>IMG[n]&&IMG[n].naturalWidth?IMG[n]:IMG.p_swing;
  if(p.state==='a1'){const k=1-p.atkT/.2;img=KF(k<.3?'p_k1':'p_k2');rot=k<.3?-.04:.03}
  else if(p.state==='a2'){const k=1-p.atkT/.2;img=KF(k<.3?'p_k2':'p_k4');rot=k<.3?.02:-.02}
  else if(p.state==='a3'){if(p.wind3>0){img=KF('p_k3');rot=-.08;sy*=.96;sx*=1.04}else{const k=1-p.atkT/.34;img=KF(k<.55?'p_k5':'p_k4');sx*=1.04}}
  else if(p.state==='air'||p.state==='up'){img=KF(p.state==='up'?'p_k5':'p_k2');rot=p.state==='up'?-.3:.15}
+ if(p.landT>0&&p.onG&&(p.state==='idle'||p.state==='run')&&IMG.p_jl&&IMG.p_jl.naturalWidth){img=IMG.p_jl;dy=0}
  if(p.skillT>0)img=IMG.p_cast;
  if(p.hurtT>0){img=IMG.p_idle;rot=-p.face*.22*Math.min(1,p.hurtT*4);sx*=1.05;sy*=.95}
- if(p.sq&&p.sq.t>0){const k=p.sq.t/.14;sx*=1+(p.sq.sx-1)*k;sy*=1+(p.sq.sy-1)*k}
+ if(p.sq&&p.sq.t>0){const k=Math.min(1,p.sq.t/.1);sx*=1+(p.sq.sx-1)*k;sy*=1+(p.sq.sy-1)*k}
  p.vf=p.vf==null?p.face:p.vf+(p.face-p.vf)*Math.min(1,(1/60)*28);const vfs=Math.abs(p.vf)<.25?.25*Math.sign(p.vf||1):p.vf;
- if(p.onG&&p.state==='run')rot+=Math.max(-1,Math.min(1,p.vx/260))*.07;
+ if(p.onG&&p.state==='run')rot+=Math.max(-1,Math.min(1,p.vx/260))*.11;
  const blink=p.inv>0&&Math.floor(p.inv*20)%2===0;
  if(p.atkT>0&&p.state!=='climb'){drawSlash(p,x)}
  if(p.dashT>0){ST.ghost=ST.ghost||[];if(!ST.ghostT||ST.t-ST.ghostT>.035){ST.ghostT=ST.t;ST.ghost.push({img,x:p.x,y:p.y,face:p.face,life:.18})}}
  if(ST.ghost){for(const g of ST.ghost){g.life-=1/60;if(g.life>0&&g.img&&g.img.naturalWidth){ctx.save();ctx.globalAlpha=g.life*2.2;ctx.globalCompositeOperation='lighter';sprite(g.img,g.x-(p.x-x),g.y,0,g.face,{k:.58,noShadow:1,alpha:g.life*1.6});ctx.restore()}}ST.ghost=ST.ghost.filter(g=>g.life>0)}
- const isRC=img&&img.src&&img.src.indexOf('p_rc')>0;sprite(img&&img.naturalWidth?img:IMG.sprout,x,p.y,110,1,{k:img&&img.naturalWidth?(isRC?.43:.58):0,dy:dy+(isRC?4:0),sx:sx*vfs,sy2:sy,rot,alpha:blink?.62:1,flash:p.hurtT>.12?.28:0});
+ const isRC=img&&img.src&&/p_(rc\d|j[crfl])\./.test(img.src);sprite(img&&img.naturalWidth?img:IMG.sprout,x,p.y,110,1,{k:img&&img.naturalWidth?(isRC?.43:.58):0,dy:dy+(isRC?4:0),sx:sx*vfs,sy2:sy,rot,alpha:blink?.62:1,flash:p.hurtT>.12?.28:0});
  if(p.skillT>0&&IMG.fx_leaf.naturalWidth){ctx.save();ctx.globalAlpha=Math.min(1,p.skillT*3);sprite(IMG.fx_leaf,x+p.face*60,p.y-20,0,p.face,{k:.6+(0.5-p.skillT),noShadow:1,rot:ST.t*4});ctx.restore()}
  nameTag(x,p.y+18,(SV.job?'꽃의 기사':'새싹 소녀')+(SV.wpn?' +'+SV.wpn:''),SV.job?'#ffd86b':(SV.wpn>=10?'#ffd86b':'#fbf5e6'));
 }
