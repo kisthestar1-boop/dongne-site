@@ -12,44 +12,59 @@ html,body{margin:0;height:100%;background:#1e2a1c;overflow:hidden;font-family:"P
 #wrap{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
 canvas{display:block;background:#cfe3c0;border-radius:6px;box-shadow:0 10px 40px rgba(0,0,0,.4)}
 .pad{position:fixed;bottom:max(30px,calc(env(safe-area-inset-bottom) + 18px));display:none;gap:10px;z-index:5}
-.touch .pad{display:flex}
+.touch .pad{display:grid}
+#padL{grid-template-areas:". u ." "l . r" ". d .";grid-template-columns:repeat(3,auto);place-items:center;gap:2px 4px}
+#padR{grid-template-areas:"s f" "j a";grid-template-columns:repeat(2,auto);place-items:center;gap:4px 8px}
 #padL{left:max(14px,env(safe-area-inset-left))}
-#padR{right:max(14px,env(safe-area-inset-right));align-items:flex-end}
+#padR{right:max(14px,env(safe-area-inset-right))}
 .btn{width:56px;height:56px;border-radius:50%;border:2px solid rgba(255,255,255,.6);background:rgba(251,245,230,.32);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:900;color:#3a2f22;box-shadow:0 3px 10px rgba(0,0,0,.25)}
 .btn.s{width:46px;height:46px;font-size:18px}
 .btn.big{width:70px;height:70px;font-size:28px;background:rgba(255,226,140,.5)}
 .btn.on{transform:scale(.92);background:rgba(255,255,255,.9)}
 .col{display:flex;flex-direction:column;gap:10px;align-items:center}
-#rot{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:#1e2a1c;color:#fbf5e6;font-size:18px;text-align:center;z-index:9;padding:20px;line-height:1.6}
-@media (orientation:portrait) and (max-width:700px){#rot{display:flex}}
+.portrait #wrap{align-items:flex-start;padding-top:max(8vh,env(safe-area-inset-top))}
+.portrait canvas{border-radius:0}
+.portrait .pad{bottom:max(12vh,calc(env(safe-area-inset-bottom) + 40px))}
+.portrait .btn{width:66px;height:66px;font-size:30px;background:rgba(251,245,230,.18);border-color:rgba(255,255,255,.45);color:#fbf5e6}
+.portrait .btn.s{width:54px;height:54px;font-size:20px}
+.portrait .btn.big{width:86px;height:86px;font-size:36px;background:rgba(255,226,140,.35)}
+.portrait #padL{left:16px}.portrait #padR{right:16px}
+#hint{position:fixed;left:0;right:0;text-align:center;color:rgba(251,245,230,.55);font-size:13px;display:none}
+.portrait #hint{display:block;bottom:max(3vh,env(safe-area-inset-bottom))}
 </style>
 </head>
 <body>
 <div id="wrap"><canvas id="c" width="960" height="540"></canvas></div>
 <div class="pad" id="padL">
-  <div class="btn" data-k="left">◀</div>
-  <div class="col"><div class="btn s" data-k="up">▲</div><div class="btn s" data-k="down">▼</div></div>
-  <div class="btn" data-k="right">▶</div>
+  <div class="btn s" data-k="up" style="grid-area:u">▲</div>
+  <div class="btn" data-k="left" style="grid-area:l">◀</div>
+  <div class="btn" data-k="right" style="grid-area:r">▶</div>
+  <div class="btn s" data-k="down" style="grid-area:d">▼</div>
 </div>
 <div class="pad" id="padR">
-  <div class="col"><div class="btn s" data-k="friend" style="background:rgba(243,166,181,.7)">🌸</div><div class="btn s" data-k="skill" style="background:rgba(160,210,140,.75)">🍃</div></div>
-  <div class="col"><div class="btn" data-k="jump">⤒</div></div>
-  <div class="btn big" data-k="atk">⚔</div>
+  <div class="btn s" data-k="skill" style="grid-area:s;background:rgba(160,210,140,.55)">🍃</div>
+  <div class="btn s" data-k="friend" style="grid-area:f;background:rgba(243,166,181,.55)">🌸</div>
+  <div class="btn" data-k="jump" style="grid-area:j">⤒</div>
+  <div class="btn big" data-k="atk" style="grid-area:a">⚔</div>
 </div>
-<div id="rot">🌱 새싹 원정대<br>핸드폰을 <b>가로로</b> 돌려 주세요</div>
+<div id="hint">가로로 돌리면 더 크게 볼 수 있어요</div>
 <script>
 "use strict";
 /* ============ 새싹 원정대 · 육성 시험판 v0.1 ============
    설계서: 메이플 화면 + 그랜드체이스 콤보 + 친구 파티(자동) + 계속 쌓이는 성장 */
 const W=960,H=540;
 const cv=document.getElementById('c'),ctx=cv.getContext('2d');
-function fit(){const s=Math.min(innerWidth/W,innerHeight/H);cv.style.width=(W*s)+'px';cv.style.height=(H*s)+'px';}
+let SCALE=1;
+function fit(){const port=innerHeight>innerWidth*1.1;document.body.classList.toggle('portrait',port);
+ const s=port?innerWidth/W:Math.min(innerWidth/W,innerHeight/H);const cw=W*s,ch=H*s;cv.style.width=cw+'px';cv.style.height=ch+'px';
+ const dpr=Math.min(3,window.devicePixelRatio||1);let bw=Math.round(cw*dpr);if(bw>2880)bw=2880;if(bw<W)bw=W;
+ cv.width=bw;cv.height=Math.round(bw*H/W);SCALE=cv.width/W;ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';}
 addEventListener('resize',fit);fit();
 const isTouch=('ontouchstart' in window)||navigator.maxTouchPoints>0;
 if(isTouch)document.body.classList.add('touch');
 
 /* ---------- 이미지 ---------- */
-const IMG={};const NAMES=['sprout','hedgehog','fox','bunny','owl','frog','sheep','baker','sprite_e0','sprite_e1','sprite_e2','sprite_e3','boss','bg_forest','p_idle','p_run','p_swing','p_jump','p_cast','fx_leaf','fox_idle','fox_shoot','bunny_idle','bunny_heal','hedgehog_idle','hedgehog_atk','sheep_idle','sheep_atk'];
+const IMG={};const NAMES=['sprout','hedgehog','fox','bunny','owl','frog','sheep','baker','sprite_e0','sprite_e1','sprite_e2','sprite_e3','boss','bg_forest','p_idle','p_run','p_swing','p_jump','p_cast','fx_leaf','fox_idle','fox_shoot','bunny_idle','bunny_heal','hedgehog_idle','hedgehog_atk','sheep_idle','sheep_atk','ground','plat'];
 let loaded=0;
 NAMES.forEach(n=>{const i=new Image();i.onload=()=>{loaded++};i.onerror=()=>{loaded++};i.src='img/'+n+(n==='bg_forest'?'.jpg':'.webp');IMG[n]=i;});
 
@@ -404,15 +419,16 @@ function drawBG(){
 }
 function drawPlat(p,cx){
  const x=p.x-cx,y=p.y;
- if(p.ground){ctx.fillStyle='#9a7a52';ctx.fillRect(0,y+10,W,H-y);const g=ctx.createLinearGradient(0,y,0,y+26);g.addColorStop(0,'#86b866');g.addColorStop(1,'#6a9a50');ctx.fillStyle=g;ctx.fillRect(0,y-4,W,24);
-  ctx.fillStyle='rgba(255,255,255,.18)';for(let i=-(cx%60);i<W;i+=60){ctx.beginPath();ctx.ellipse(i+20,y+2,14,4,0,0,7);ctx.fill()}
-  ctx.fillStyle='rgba(80,55,30,.25)';for(let i=-(cx*1%90);i<W;i+=90){ctx.beginPath();ctx.ellipse(i+30,y+60,10,5,0,0,7);ctx.fill()}return}
- if(x>W+20||x+p.w<-20)return;
- ctx.save();ctx.shadowColor='rgba(40,30,20,.25)';ctx.shadowBlur=10;ctx.shadowOffsetY=6;
- ctx.fillStyle='#9a7a52';roundRect(x,y+6,p.w,26,13);ctx.fill();ctx.restore();
- ctx.fillStyle='#7d6142';ctx.beginPath();ctx.moveTo(x+18,y+30);ctx.quadraticCurveTo(x+p.w/2,y+58,x+p.w-18,y+30);ctx.fill();
+ if(p.ground){
+  ctx.fillStyle='#c4a07c';ctx.fillRect(0,y+30,W,H-y);
+  const g=IMG.ground;if(g.naturalWidth){const k=.62,tw=g.naturalWidth*k,th=g.naturalHeight*k;let sx=-((cx*1)%tw);if(sx>0)sx-=tw;for(;sx<W;sx+=tw-1)ctx.drawImage(g,sx,y-33*k,tw,th);}
+  else{ctx.fillStyle='#86b866';ctx.fillRect(0,y-4,W,24)}
+  return}
+ if(x>W+40||x+p.w<-40)return;
+ const im=IMG.plat;
+ if(im.naturalWidth){const dw=p.w+36,dh=74;ctx.save();ctx.shadowColor='rgba(40,30,20,.18)';ctx.shadowBlur=12;ctx.shadowOffsetY=8;ctx.drawImage(im,x-18,y-dh*30/174,dw,dh);ctx.restore();return}
+ ctx.fillStyle='#9a7a52';roundRect(x,y+6,p.w,26,13);ctx.fill();
  const g=ctx.createLinearGradient(0,y-6,0,y+12);g.addColorStop(0,'#9ccb76');g.addColorStop(1,'#6e9e52');ctx.fillStyle=g;roundRect(x-4,y-6,p.w+8,16,8);ctx.fill();
- ctx.fillStyle='#b7dd8c';for(let i=8;i<p.w;i+=18){ctx.beginPath();ctx.moveTo(x+i,y-4);ctx.lineTo(x+i+4,y-12);ctx.lineTo(x+i+7,y-4);ctx.fill()}
 }
 function roundRect(x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath()}
 function drawVine(v,cx){const x=v.x-cx;if(x<-20||x>W+20)return;ctx.strokeStyle='#5c8a3c';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(x,v.y1);for(let y=v.y1;y<v.y2;y+=10)ctx.lineTo(x+Math.sin(y*.08)*3,y);ctx.stroke();ctx.fillStyle='#86bf5c';for(let y=v.y1+12;y<v.y2;y+=26){ctx.beginPath();ctx.ellipse(x+(y%52?7:-7),y,7,4,(y%52?.6:-.6),0,7);ctx.fill()}}
@@ -601,6 +617,7 @@ function drawResult(dt){
 /* ---------- 메인 루프 ---------- */
 let last=performance.now();
 function loop(now){
+ ctx.setTransform(SCALE,0,0,SCALE,0,0);
  let dt=Math.min(.05,(now-last)/1000);last=now;
  if(tapXY){for(const b of btns){if(tapXY.x>=b.x&&tapXY.x<=b.x+b.w&&tapXY.y>=b.y&&tapXY.y<=b.y+b.h){b.cb();break}}tapXY=null}
  if(scene==='title'){if(pressed('atk')||pressed('jump')){newRun();scene='play'}drawTitle(dt);}
