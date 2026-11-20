@@ -1025,7 +1025,8 @@ function updCtl(){const ctl=scene==='play'&&!(ST&&ST.dlg);if(ctl!==updCtl.v){doc
  const m=(ST.pl.mp%100)/100,lv=Math.floor(ST.pl.mp/100);bS.style.background='conic-gradient(rgba(140,230,255,.55) '+(m*360)+'deg,transparent 0)';bS.parentNode.style.boxShadow=lv?'0 0 '+(6+lv*6)+'px rgba(140,230,255,.9)':'';}
 /* ---------- 메인 루프 ---------- */
 let last=performance.now();
-function loop(now){
+function loop(now){frame(now);requestAnimationFrame(loop)}
+function frame(now){
  ctx.setTransform(SCALE,0,0,SCALE,0,0);
  let dt=Math.min(.05,(now-last)/1000);last=now;
  updCtl();
@@ -1059,10 +1060,9 @@ function loop(now){
   if(ST.warp){ST.warp.t-=dt;ctx.fillStyle='rgba(30,25,20,'+Math.min(1,1-ST.warp.t/.6)+')';ctx.fillRect(0,0,W,H);if(ST.warp.t<=0){const to=ST.warp.to;newRun(to);}}
   if(scene==='play'&&!ST.done&&(pressed('atk')&&false)){}
  }
- requestAnimationFrame(loop);
 }
 requestAnimationFrame(loop);
-window.__G={spawnE:spawn,startDuel,get DU(){return DU},get ST(){return ST},get scene(){return scene},SV,K,P,set scene(v){scene=v},newRun};
+window.__G={tick:(n,ms)=>{ms=ms||1000/60;for(let i=0;i<n;i++){frame(last+ms)}},spawnE:spawn,startDuel,get DU(){return DU},get ST(){return ST},get scene(){return scene},SV,K,P,set scene(v){scene=v},newRun};
 </script>
 </body>
 </html>
