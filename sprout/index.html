@@ -159,7 +159,7 @@ function newRun(region){
 }
 function mkPlayer(){
  const lv=SV.lv;
- return {x:380,y:GROUND,vx:0,vy:0,face:1,w:34,h:70,onG:true,onVine:null,hp:100+lv*12,hpMax:100+lv*12,mp:0,mpMax:300,atk:10+lv*3,
+ return {x:380,y:GROUND,vx:0,vy:0,face:1,w:34,h:70,onG:true,onVine:null,hp:100+lv*12,hpMax:100+lv*12,mp:0,mpMax:300,atk:Math.round((10+lv*3)*(1+(SV.wpn||0)*.08)),
   combo:0,atkT:0,atkCD:0,buf:0,inv:0,hurtT:0,coyote:0,jumpBuf:0,state:'idle',anim:0,drop:0,skillT:0};
 }
 function mkFriend(k,i){const st=SV.fstar[k]||1;return {k,x:330-i*40,y:GROUND,vx:0,vy:0,face:1,onG:true,cd:1+i*.4,anim:Math.random()*6,act:0,lv:st,hop:0,taunt:0}}
@@ -231,7 +231,7 @@ function kill(e){if(e.dead)return;e.dead=1;e.deadT=.6;ST.kills++;SV.kills++;
  if(e.d.boss){shake(10);hitstop(.25);SFX.big();setTimeout(()=>finishRun(true),1400)}
 }
 function gainExp(v,x,y){SV.exp+=v;popNum(x,y-14,'+'+v+' EXP','exp');
- while(SV.exp>=expNeed(SV.lv)){SV.exp-=expNeed(SV.lv);SV.lv++;const p=ST.pl;p.hpMax=100+SV.lv*12;p.hp=p.hpMax;p.atk=10+SV.lv*3;
+ while(SV.exp>=expNeed(SV.lv)){SV.exp-=expNeed(SV.lv);SV.lv++;const p=ST.pl;p.hpMax=100+SV.lv*12;p.hp=p.hpMax;p.atk=Math.round((10+SV.lv*3)*(1+(SV.wpn||0)*.08));
   SFX.lv();banner('레벨 업!  Lv.'+SV.lv,SV.lv===10?'전직할 수 있어요: 꽃의 기사':'공격력·체력이 올랐어요');particles(p.x,p.y-40,'#ffe27a',30,320,'star');vfx('vfx_lvup',p.x,p.y-110,{s0:.5,s1:.62,life:1.4,a:1});}
  save();
 }
@@ -464,7 +464,9 @@ function give(rw){const p=ST.pl;const out=[];
  SFX.get();save();return out.join(' · ')}
 function talk(npc){
  const N=NPC[npc];const id=npcQuest(npc);const D={who:npc,name:N.n,opts:[]};
- if(npc==='thief'){D.text='반짝이는 걸 모으고 있어. 바꿔 줄래?';
+ if(npc==='thief'){D.text='반짝이는 걸 모으고 있어. 바꿔 줄래? 지팡이 강화도 해 줄게.';
+  const wl=SV.wpn||0,cost=Math.round(60*Math.pow(wl+1,1.5)),rate=Math.max(.35,.95-wl*.05);
+  if(wl<15)D.opts.push({t:'⚒ 지팡이 +'+(wl+1)+' 강화 🪙'+cost+' ('+Math.round(rate*100)+'%)',ok:SV.gold>=cost,cb:()=>{SV.gold-=cost;if(Math.random()<rate){SV.wpn=wl+1;ST.pl.atk=Math.round((10+SV.lv*3)*(1+SV.wpn*.08));SFX.lv();vfx('vfx_lvup',ST.pl.x,ST.pl.y-110,{s0:.4,s1:.55,life:1.2});D.text='✨ 강화 성공! 지팡이 +'+SV.wpn+' (공격력 +'+Math.round(SV.wpn*8)+'%)';}else{SFX.hurt();D.text='앗, 실패… 지팡이는 그대로예요. 다시 해 볼까?';}save();talkRefresh(D)}});
   D.opts.push({t:'마른 가지 5 → 🪙50',ok:(SV.inv.it_twig||0)>=5,cb:()=>{SV.inv.it_twig-=5;SV.gold+=50;SFX.coin();save();D.text='고마워! 다음에 또 와.'}});
   D.opts.push({t:'별 조각 2 → 친구 ★+1',ok:(SV.inv.it_star||0)>=2&&SV.party.some(k=>(SV.fstar[k]||1)<5),cb:()=>{SV.inv.it_star-=2;const k=SV.party.filter(k=>(SV.fstar[k]||1)<5).sort((a,b)=>(SV.fstar[a]||1)-(SV.fstar[b]||1))[0];SV.fstar[k]=(SV.fstar[k]||1)+1;SFX.lv();save();D.text=FR[k].n+' 별이 하나 늘었어! ★'+SV.fstar[k]}});
   D.opts.push({t:'보물 상자 열기',ok:(SV.inv.it_chest||0)>=1,cb:()=>{SV.inv.it_chest-=1;const g=80+Math.floor(Math.random()*120);SV.gold+=g;SV.inv.it_star=(SV.inv.it_star||0)+1;SFX.get();save();D.text='상자 속에 🪙'+g+' 와 별 조각 1개!'}});
@@ -477,6 +479,7 @@ else if(!id){D.text=npc==='baker'?'오늘도 빵 냄새 좋지? 친구들이 쉬
  }
  if(npc==='rival')D.opts.push({t:'⚔ 카드 대전',ok:1,cb:()=>startDuel()});
  ST.dlg=D;}
+function talkRefresh(D){const t=D.text;talk(D.who);ST.dlg.text=t}
 function villageEnter(){
  banner('🌱 새싹 마을','◀ 버섯 숲   ·   반딧불 늪 ▶');
  const now=Date.now();
@@ -525,11 +528,11 @@ function drawVillageUI(){
  // 말걸기 버튼
  if(ST.near&&!ST.dlg){button(W/2-80,H-92,160,44,'▲ '+NPC[ST.near].n,()=>talk(ST.near),'#fff3c4');}
  // 대화창
- if(ST.dlg){const D=ST.dlg;panel(40,H-210,W-80,170);
+ if(ST.dlg){const D=ST.dlg;const extra=D.opts.length>2?46:0;panel(40,H-210-extra,W-80,170+extra);
   sprite(IMG[NPC[D.who].img],120,H-46,0,1,{k:.62,noShadow:1});
-  ctx.fillStyle='#c2410c';ctx.font='900 17px system-ui';ctx.fillText(D.name,200,H-178);
-  ctx.fillStyle='#3a2f22';ctx.font='bold 15px system-ui';D.text.split('\n').forEach((l,i)=>ctx.fillText(l,200,H-150+i*22));
-  let bx=200;D.opts.forEach((o,i)=>{const w=Math.max(150,ctx.measureText(o.t).width+40);button(bx,H-96,w,40,o.t,()=>{if(o.ok)o.cb()},o.ok?'#ffe08a':'#e5dcc6');bx+=w+10;});
+  ctx.fillStyle='#c2410c';ctx.font='900 17px system-ui';ctx.fillText(D.name,200,H-178-extra);
+  ctx.fillStyle='#3a2f22';ctx.font='bold 15px system-ui';D.text.split('\n').forEach((l,i)=>ctx.fillText(l,200,H-150-extra+i*22));
+  let bx=200,by=H-96;ctx.font='900 18px system-ui';const rows=[];D.opts.forEach(o=>{const w=Math.max(150,ctx.measureText(o.t).width+30);if(bx+w>W-180){bx=200;by-=46}rows.push([o,bx,by,w]);bx+=w+10});rows.forEach(([o,x,y,w])=>button(x,y,w,40,o.t,()=>{if(o.ok)o.cb()},o.ok?'#ffe08a':'#e5dcc6'));
   button(W-170,H-96,110,40,'닫기',()=>{ST.dlg=null},'#cfe7b8');
   if(pressed('jump'))ST.dlg=null;else if(pressed('atk')&&D.opts[0]&&D.opts[0].ok&&D.opts.length===1)D.opts[0].cb();}
  // 새 친구 카드 연출
@@ -712,7 +715,7 @@ function drawPlayer(cx){
  if(p.atkT>0&&p.state!=='climb'){drawSlash(p,x)}
  sprite(img&&img.naturalWidth?img:IMG.sprout,x,p.y,110,p.face,{k:img&&img.naturalWidth?.58:0,dy,sx,sy2:sy,rot,alpha:blink?.35:1,flash:p.hurtT>0?.6:0});
  if(p.skillT>0&&IMG.fx_leaf.naturalWidth){ctx.save();ctx.globalAlpha=Math.min(1,p.skillT*3);sprite(IMG.fx_leaf,x+p.face*60,p.y-20,0,p.face,{k:.6+(0.5-p.skillT),noShadow:1,rot:ST.t*4});ctx.restore()}
- nameTag(x,p.y+18,SV.job?'꽃의 기사':'새싹 소녀',SV.job?'#ffd86b':'#fbf5e6');
+ nameTag(x,p.y+18,(SV.job?'꽃의 기사':'새싹 소녀')+(SV.wpn?' +'+SV.wpn:''),SV.job?'#ffd86b':(SV.wpn>=10?'#ffd86b':'#fbf5e6'));
 }
 function drawSlash(p,x){
  const prog=1-p.atkT/(p.state==='a3'?.34:.22);const r=p.state==='a3'?92:70;
@@ -835,23 +838,33 @@ function button(x,y,w,h,t,cb,col){btns.push({x,y,w,h,cb});ctx.fillStyle=col||'#f
 function panel(x,y,w,h){ctx.fillStyle='rgba(251,245,230,.93)';ctx.save();ctx.shadowColor='rgba(0,0,0,.3)';ctx.shadowBlur=20;roundRect(x,y,w,h,20);ctx.fill();ctx.restore()}
 function drawTitle(dt){
  titleT+=dt;drawBG();
- // 친구들 행진
- const all=SV.friends;all.forEach((k,i)=>{const x=(W+200)-((titleT*70+i*90)%(W+300));sprite(IMG[FR[k].img],x,GROUND+10,70,-1,{dy:-Math.abs(Math.sin(titleT*8+i))*6})});
- sprite(IMG.sprout,W/2-250,GROUND+16,170,1,{sy2:1+Math.sin(titleT*3)*.015});
- ctx.fillStyle='#86b866';ctx.fillRect(0,GROUND+10,W,H);ctx.fillStyle='#9a7a52';ctx.fillRect(0,GROUND+30,W,H);
- panel(W/2-110,60,460,300);
- ctx.textAlign='center';ctx.fillStyle='#5e8f4a';ctx.font='900 46px system-ui';ctx.fillText('🌱 새싹 원정대',W/2+120,124);
- ctx.fillStyle='#8a6a4a';ctx.font='bold 15px system-ui';ctx.fillText('육성 v0.3 · 마을 · 카드 대전',W/2+120,150);
- ctx.font='bold 14px system-ui';ctx.fillStyle='#3a2f22';
- ctx.fillText('Lv.'+SV.lv+'  ·  친구 '+SV.friends.length+'/'+ORDER.length+'  ·  🪙 '+SV.gold+'  ·  🏰 영토 '+(SV.land||0)+'칸',W/2+120,180);
- const st=r=>'★'.repeat(SV.stars[r]||0)+'☆'.repeat(3-(SV.stars[r]||0));ctx.fillText('🍄 숲 '+st('forest')+'   🌙 늪 '+(SV.cleared.forest?st('marsh'):'🔒'),W/2+120,204);
- ctx.textAlign='left';btns=[];
- button(W/2+20,226,200,50,'▶ 마을로 가기',()=>{newRun('village');scene='play'});
- button(W/2+20,286,96,40,'친구 도감',()=>{scene='book'},'#cfe7b8');
- button(W/2+124,286,96,40,SV.mute?'🔇 음악 끔':'🎵 음악 켬',()=>{SV.mute=!SV.mute;save();if(SV.mute)bgmStop();else bgmStart()},'#e7e0f6');
- ctx.fillStyle='rgba(251,245,230,.9)';ctx.font='bold 12px system-ui';ctx.textAlign='center';
- ctx.fillText(isTouch?'◀▶ 이동 · ▲▼ 넝쿨 · ⤒ 점프 · ⚔ 공격(연타=3단 콤보) · 🍃 스킬(MP 1·2·3단) · 🌸 친구 기술':'←→ 이동 · ↑↓ 넝쿨 · C/Space 점프 · X 공격(연타 3단, ↑+X 올려치기) · Z 스킬 · V 친구 기술',W/2,H-14);ctx.textAlign='left';
- if(loaded<NAMES.length){ctx.fillStyle='#fff';ctx.fillText('그림 불러오는 중… '+loaded+'/'+NAMES.length,20,30)}
+ // 아래 땅 + 앞 수풀
+ const g=IMG.ground;if(g.naturalWidth){const k=.31,tw=g.naturalWidth*k,th=g.naturalHeight*k;for(let x=-((titleT*30)%tw);x<W;x+=tw-1)ctx.drawImage(g,x,GROUND-66*k,tw,th)}
+ ctx.fillStyle='#c4a07c';ctx.fillRect(0,GROUND+30,W,H);
+ // 친구들 행진 (걷기 동작)
+ SV.friends.forEach((k,i)=>{const x=W+120-((titleT*60+i*110)%(W+260));const wf=IMG[k+'_w1'];let im=IMG[FR[k].img],kk=0,h=70;if(wf&&wf.naturalWidth){im=IMG[k+'_w'+(1+Math.floor(titleT*8+i)%3)];kk=.5}sprite(im,x,GROUND,h,-1,{k:kk})});
+ // 주인공 크게
+ const pim=IMG.p_cast&&IMG.p_cast.naturalWidth?IMG.p_cast:IMG.sprout;const ph=H*.66,pw=pim.naturalWidth*ph/pim.naturalHeight;
+ ctx.save();ctx.globalAlpha=.25;ctx.fillStyle='#3a2f22';ctx.beginPath();ctx.ellipse(W*.24,GROUND+6,pw*.32,10,0,0,7);ctx.fill();ctx.restore();
+ ctx.drawImage(pim,W*.24-pw/2,GROUND+4-ph+Math.sin(titleT*2)*2,pw,ph);
+ // 로고
+ const cx=W*.62;ctx.textAlign='center';ctx.lineJoin='round';
+ ctx.font='italic 900 76px system-ui';ctx.lineWidth=16;ctx.strokeStyle='#fffaf0';ctx.strokeText('새싹 원정대',cx,150);
+ ctx.lineWidth=7;ctx.strokeStyle='#3f6b2e';ctx.strokeText('새싹 원정대',cx,150);
+ const lg=ctx.createLinearGradient(0,92,0,150);lg.addColorStop(0,'#c9f28a');lg.addColorStop(1,'#5e9e3a');ctx.fillStyle=lg;ctx.fillText('새싹 원정대',cx,150);
+ ctx.font='900 18px system-ui';ctx.lineWidth=5;ctx.strokeStyle='rgba(63,107,46,.85)';ctx.strokeText('SPROUT  EXPEDITION',cx,182);ctx.fillStyle='#fffaf0';ctx.fillText('SPROUT  EXPEDITION',cx,182);
+ // 내 기록
+ ctx.fillStyle='rgba(30,24,18,.5)';roundRect(cx-210,200,420,64,16);ctx.fill();
+ ctx.font='900 15px system-ui';ctx.fillStyle='#ffe9a8';ctx.fillText('Lv.'+SV.lv+'   ·   친구 '+SV.friends.length+'/'+ORDER.length+'   ·   🪙 '+SV.gold+'   ·   🏰 영토 '+(SV.land||0)+'칸',cx,226);
+ const st=r=>'★'.repeat(SV.stars[r]||0)+'☆'.repeat(3-(SV.stars[r]||0));ctx.fillStyle='#fbf5e6';ctx.fillText('🍄 숲 '+st('forest')+'     🌙 늪 '+(SV.cleared.forest?st('marsh'):'🔒')+'     ⚔ 대전 '+((SV.duel&&SV.duel.win)||0)+'승',cx,252);
+ btns=[];
+ const a=.6+.4*Math.sin(titleT*2.2);ctx.save();ctx.globalAlpha=a;ctx.font='900 24px system-ui';ctx.lineWidth=6;ctx.strokeStyle='rgba(40,30,20,.6)';ctx.strokeText(isTouch?'화면을 눌러 시작':'아무 곳이나 클릭 · X 키로 시작',cx,318);ctx.fillStyle='#fffaf0';ctx.fillText(isTouch?'화면을 눌러 시작':'아무 곳이나 클릭 · X 키로 시작',cx,318);ctx.restore();
+ ctx.textAlign='left';
+ button(W-232,H-58,104,40,'📖 도감',()=>{scene='book'},'#cfe7b8');
+ button(W-120,H-58,104,40,SV.mute?'🔇 음악':'🎵 음악',()=>{SV.mute=!SV.mute;save();if(SV.mute)bgmStop();else bgmStart()},'#e7e0f6');
+ btns.push({x:0,y:0,w:W,h:H,cb:()=>{newRun('village');scene='play'}});
+ ctx.fillStyle='rgba(251,245,230,.75)';ctx.font='bold 11px system-ui';ctx.fillText('v0.4 · 육성 시험판',12,H-12);
+ if(loaded<NAMES.length){ctx.fillStyle='#fff';ctx.font='bold 13px system-ui';ctx.fillText('그림 불러오는 중… '+loaded+'/'+NAMES.length,14,24)}
 }
 function drawBook(){
  drawBG();panel(60,40,W-120,H-80);btns=[];
