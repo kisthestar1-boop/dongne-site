@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>온결 필라테스 · 김해 장유 기구 필라테스 · 체험 수업 (찰칵홈 예시)</title>
+<meta name="description" content="김해 장유 삼문동 기구 필라테스 · 1:1 · 듀엣 · 그룹 · 체형 교정. 주간 시간표, 이용권 가격, 체험 수업 예약. (찰칵홈이 만든 예시 사이트)">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,500&display=swap">
+<style>
+:root{--sg:#6E8B74;--sg2:#4E6A55;--cr:#F6F2EA;--sand:#EDE5D8;--ink:#2B2A26;--mu:#77736A;--ln:#E4DDD0;--serif:"Cormorant Garamond",serif}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;font-family:"Pretendard Variable",Pretendard,system-ui,sans-serif;color:var(--ink);background:#fff;font-size:16.5px;line-height:1.7;letter-spacing:-.01em}
+a{color:inherit;text-decoration:none}img{display:block;max-width:100%}
+.w{max-width:1180px;margin:0 auto;padding:0 22px}
+h1,h2,h3{margin:0;font-weight:700;letter-spacing:-.03em;line-height:1.3}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:15px 26px;border-radius:99px;font:inherit;font-weight:700;border:0;cursor:pointer}
+.btn.s{background:var(--sg2);color:#fff}.btn.l{background:rgba(255,255,255,.9);color:var(--ink)}
+header{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--ln)}
+header .w{display:flex;align-items:center;height:74px;gap:30px}
+.logo{font-family:var(--serif);font-size:28px;color:var(--sg2);line-height:1}.logo small{display:block;font-family:"Pretendard Variable",sans-serif;font-size:11px;letter-spacing:.3em;color:var(--mu);margin-top:3px}
+header nav{display:flex;gap:28px;margin-left:auto;font-size:15px;font-weight:600}
+header .btn{padding:11px 20px;font-size:14.5px}
+@media(max-width:900px){header nav{display:none}}
+.hero{position:relative;min-height:min(86vh,760px);display:flex;align-items:flex-end;color:#fff;background:#8A9A86 center/cover}
+.hero:before{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(30,34,28,.72),rgba(30,34,28,.1) 60%)}
+.hero .w{position:relative;padding-block:0 80px;width:100%}
+.hero .ey{font-size:13px;letter-spacing:.3em;opacity:.9}
+.hero h1{font-size:clamp(38px,5.4vw,70px);font-weight:600;margin:14px 0 14px}.hero h1 i{font-family:var(--serif);font-weight:500}
+.hero p{max-width:32em;font-size:18px;opacity:.92;margin:0 0 28px}
+.strip{background:var(--cr)}.strip .w{display:grid;grid-template-columns:repeat(4,1fr)}
+.strip div{padding:24px 18px;border-left:1px solid var(--ln)}.strip div:first-child{border-left:0}.strip b{display:block;font-size:20px}.strip span{color:var(--mu);font-size:14.5px}
+@media(max-width:760px){.strip .w{grid-template-columns:1fr 1fr}.strip div{border-top:1px solid var(--ln)}.strip div:nth-child(3){border-left:0}}
+section{padding-block:100px}section.alt{background:var(--cr)}
+.sh{margin-bottom:46px}.sh .k{font-family:var(--serif);font-style:italic;font-size:22px;color:var(--sg)}.sh h2{font-size:clamp(28px,3.4vw,42px);margin-top:4px}.sh p{color:var(--mu);margin:10px 0 0;max-width:44em}.sh.c{text-align:center}.sh.c p{margin-inline:auto}
+.intro{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.intro .im{aspect-ratio:4/5;border-radius:200px 200px 24px 24px;background:var(--sand) center/cover}
+.intro q{display:block;font-family:var(--serif);font-size:clamp(26px,2.8vw,36px);line-height:1.35;color:var(--sg2);margin-bottom:20px}.intro q:before,.intro q:after{content:""}
+.intro ul{list-style:none;padding:0;margin:24px 0 0;display:grid;gap:12px}.intro li{display:flex;gap:12px}.intro li b{flex:none;width:28px;height:28px;border-radius:50%;background:var(--sg);color:#fff;display:grid;place-items:center;font-size:13px}
+@media(max-width:860px){.intro{grid-template-columns:1fr}}
+.cls{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.cl{background:#fff;border-radius:24px;overflow:hidden;border:1px solid var(--ln)}
+.cl .im{aspect-ratio:1/1;background:var(--sand) center/cover}.cl .in{padding:20px}.cl h3{font-size:20px}.cl small{display:block;color:var(--sg);font-weight:700;margin:2px 0 6px}.cl p{margin:0;color:var(--mu);font-size:15px}
+@media(max-width:960px){.cls{grid-template-columns:1fr 1fr}}@media(max-width:560px){.cls{grid-template-columns:1fr}}
+.sch{overflow-x:auto;border:1px solid var(--ln);border-radius:20px;background:#fff}
+.sch table{width:100%;min-width:720px;border-collapse:collapse;font-size:14.5px}.sch th,.sch td{padding:12px;text-align:center;border-bottom:1px solid var(--ln)}.sch th{background:var(--cr);font-weight:700}
+.sch td span{display:block;border-radius:10px;padding:6px 4px;font-weight:700;font-size:13.5px}
+.t1{background:#E4ECE3;color:var(--sg2)}.t2{background:#F3E8D6;color:#8A6A3A}.t3{background:#E8E3EF;color:#5E4E7A}
+.legend{display:flex;gap:14px;margin-top:12px;font-size:14px;color:var(--mu)}.legend i{display:inline-block;width:12px;height:12px;border-radius:4px;margin-right:6px;vertical-align:-1px}
+.price{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.pr{background:#fff;border:1px solid var(--ln);border-radius:24px;padding:30px}.pr.on{border:2px solid var(--sg);position:relative}.pr.on:after{content:"가장 많이 선택";position:absolute;top:-13px;left:24px;background:var(--sg);color:#fff;font-size:12px;font-weight:700;border-radius:99px;padding:4px 12px}
+.pr b{font-size:20px}.pr .n{font-size:34px;font-weight:800;margin:10px 0 4px}.pr .n small{font-size:15px;color:var(--mu);font-weight:500}.pr ul{margin:12px 0 0;padding-left:18px;color:var(--mu);font-size:15px}
+@media(max-width:860px){.price{grid-template-columns:1fr}}
+.tch{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.tc .im{aspect-ratio:3/4;border-radius:24px;background:var(--sand) center 25%/cover}.tc b{display:block;font-size:19px;margin-top:14px}.tc small{color:var(--sg);font-weight:700}.tc p{margin:6px 0 0;color:var(--mu);font-size:15px}
+@media(max-width:860px){.tch{grid-template-columns:1fr}}
+.gal{display:grid;grid-template-columns:2fr 1fr 1fr;grid-template-rows:220px 220px;gap:14px}.gal div{border-radius:20px;background:var(--sand) center/cover}.gal div:first-child{grid-row:span 2}
+@media(max-width:760px){.gal{grid-template-columns:1fr 1fr;grid-template-rows:180px 180px 180px}.gal div:first-child{grid-column:span 2;grid-row:auto}}
+.revs{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.rv{background:#fff;border-radius:20px;padding:24px;border:1px solid var(--ln)}.rv q{display:block;font-size:16px}.rv q:before,.rv q:after{content:""}.rv small{display:block;color:var(--mu);margin-top:10px}
+@media(max-width:860px){.revs{grid-template-columns:1fr}}
+.bk{display:grid;grid-template-columns:.9fr 1.1fr;gap:30px;background:var(--sg2);color:#fff;border-radius:32px;padding:46px}
+.bk h2{font-size:clamp(28px,3vw,40px)}.bk p{opacity:.85}
+.bk form{background:#fff;color:var(--ink);border-radius:22px;padding:24px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.bk label{display:flex;flex-direction:column;gap:6px;font-weight:700;font-size:14px}.bk .full{grid-column:1/-1}
+.bk input,.bk select,.bk textarea{font:inherit;padding:12px;border:1px solid var(--ln);border-radius:12px}
+.slots{display:flex;flex-wrap:wrap;gap:6px}.slots button{border:1.5px solid var(--ln);background:#fff;border-radius:99px;padding:7px 12px;font:inherit;font-size:14px;cursor:pointer}.slots button.on{background:var(--sg);border-color:var(--sg);color:#fff}
+.ok{grid-column:1/-1;font-weight:700;color:var(--sg2)}
+@media(max-width:860px){.bk{grid-template-columns:1fr;padding:28px}.bk form{grid-template-columns:1fr}}
+.info{display:grid;grid-template-columns:1.2fr 1fr;gap:24px}.map{border-radius:20px;background:var(--sand);min-height:280px;display:grid;place-items:center;color:var(--mu);text-align:center}
+.info table{width:100%;border-collapse:collapse}.info th,.info td{text-align:left;padding:13px 4px;border-bottom:1px solid var(--ln)}.info th{width:100px;color:var(--mu);font-weight:600}
+@media(max-width:860px){.info{grid-template-columns:1fr}}
+footer{background:#2F3A31;color:#B9C2B5;padding-block:44px;font-size:14px}footer b{color:#fff}
+.fab{position:fixed;right:18px;bottom:18px;z-index:40;display:flex;flex-direction:column;gap:8px;align-items:flex-end}.fab a{display:flex;align-items:center;gap:8px;background:var(--sg2);color:#fff;font-weight:700;border-radius:99px;padding:14px 20px;box-shadow:0 12px 26px rgba(0,0,0,.22)}
+.badge{position:fixed;left:14px;bottom:14px;z-index:40;background:rgba(47,58,49,.9);color:#fff;font-size:12px;font-weight:600;border-radius:99px;padding:7px 12px}.badge a{color:#D9E8C9}
+
+.offer{display:inline-flex;flex-direction:column;gap:2px;background:rgba(255,255,255,.88);border-left:4px solid var(--sg);border-radius:10px;padding:12px 18px;margin:0 0 22px;color:#2E3A30}.offer b{font-size:20px}.offer span{font-size:13.5px;opacity:.75}
+.hb{display:flex;gap:10px;flex-wrap:wrap}.btn.g{background:rgba(255,255,255,.9);color:#2E3A30}
+.cap{display:block;margin-top:16px;font-size:14.5px;opacity:.9}
+.fv{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.fv div{background:#fff;border:1px solid rgba(0,0,0,.07);border-radius:18px;padding:26px}.fv b{font-size:18px}.fv p{margin:10px 0 0;color:var(--mu,#6b6b6b)}
+@media(max-width:760px){.fv{grid-template-columns:1fr}}
+.sch td span em{display:block;font-style:normal;font-size:11.5px;opacity:.7;margin-top:2px}
+.fcall{position:fixed;left:18px;bottom:64px;z-index:40;background:#fff;color:var(--ink);font-weight:800;border-radius:99px;padding:13px 18px;box-shadow:0 12px 26px rgba(0,0,0,.18)}
+
+.fqw{display:grid;grid-template-columns:.8fr 1.2fr;gap:40px;align-items:start}
+.fq{border-bottom:1px solid rgba(0,0,0,.1)}.fq summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;gap:12px;padding:18px 4px;font-weight:700;font-size:16.5px}.fq summary::-webkit-details-marker{display:none}.fq i{font-style:normal;font-size:22px;opacity:.5}.fq[open] i{transform:rotate(45deg)}.fq p{margin:0 4px 18px;opacity:.78;line-height:1.75}
+.kk{display:inline-block;margin-top:18px;background:#FEE500;color:#191600;font-weight:800;border-radius:12px;padding:13px 18px}
+.askw{display:grid;grid-template-columns:1fr 1fr;gap:34px;align-items:start}.cw{display:grid;gap:10px}.cc{display:block;background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:16px;padding:18px 20px}.cc b{display:block;font-size:17px}.cc small{opacity:.7}.kk2{background:#FEE500;border-color:#FEE500;color:#191600}
+#qf{background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:20px;padding:24px;display:grid;gap:12px}#qf label{display:grid;gap:6px;font-size:14px;font-weight:700}#qf input,#qf textarea{font:inherit;border:1px solid rgba(0,0,0,.15);border-radius:10px;padding:11px 12px}
+.kkm{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:90;display:grid;place-items:center;padding:16px}.kkm[hidden]{display:none}.kkm>div{background:#fff;border-radius:18px;padding:24px;max-width:360px}.kkm p{opacity:.8;line-height:1.7}.kkm button{border:0;background:#FEE500;font-weight:800;border-radius:10px;padding:10px 18px;cursor:pointer}
+.fkk{background:#FEE500!important;color:#191600!important}
+@media(max-width:820px){.fqw,.askw{grid-template-columns:1fr}}
+.hv{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(1.12);transform-origin:30% 20%}.hero{overflow:hidden}.hero:before{z-index:1}.hero .w{z-index:2}
+@media (prefers-reduced-motion:reduce){.hv{display:none}}
+
+html{scroll-behavior:auto!important}
+.kkm>div.kw{background:#B2C7DA;padding:0;max-width:none;border-radius:20px}.kkm{position:fixed;inset:auto 18px 18px auto;z-index:96;background:none;display:block;padding:0;place-items:initial}.kkm[hidden]{display:none}
+.kw{width:min(360px,calc(100vw - 36px));height:min(560px,calc(100vh - 36px));background:#B2C7DA;border-radius:20px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 24px 60px rgba(0,0,0,.3)}
+.kh{display:flex;align-items:center;gap:10px;background:#A7BCD0;padding:12px 14px}.kh div{flex:1;display:grid}.kh small{font-size:12px;opacity:.7}.kh button{border:0;background:rgba(255,255,255,.5);border-radius:9px;width:30px;height:30px;cursor:pointer}
+.ka{width:38px;height:38px;border-radius:14px;background:#FEE500;display:grid;place-items:center;font-weight:900;color:#191600}
+.kb{flex:1;overflow:auto;padding:14px;display:flex;flex-direction:column;gap:8px}.bu,.me{max-width:82%;padding:10px 13px;border-radius:14px;font-size:14.5px;line-height:1.55;background:#fff;align-self:flex-start;color:#222}.me{align-self:flex-end;background:#FEE500}
+.kq{display:flex;gap:6px;overflow-x:auto;padding:8px 12px;background:rgba(255,255,255,.35)}.kq button{flex:none;border:1px solid rgba(0,0,0,.1);background:#fff;border-radius:99px;padding:7px 12px;font:inherit;font-size:13px;font-weight:700;cursor:pointer;color:#222}
+.kf{display:grid;gap:6px;padding:10px 12px;background:#fff}.kf input{font:inherit;font-size:14px;border:1px solid #E1E4EA;border-radius:10px;padding:9px 10px;min-width:0}.kf>input{display:block}.kr{display:flex;gap:6px}.kr input{flex:1}.kr button{border:0;background:#FEE500;font-weight:800;border-radius:10px;padding:0 14px;cursor:pointer}
+.kn{display:block;background:#fff;padding:0 12px 10px;font-size:11px;color:#888}
+
+.pk{position:fixed;inset:0;z-index:150;background:rgba(15,20,30,.5);display:grid;place-items:center;padding:14px}.pk[hidden]{display:none}
+.pkb{position:relative;background:#fff;border-radius:22px;width:min(1040px,100%);max-height:92vh;overflow:auto;box-shadow:0 30px 80px rgba(0,0,0,.3)}
+.pkb>#pkc>section,.pkb>#pkc>div{margin:0!important}.pkb #pkc section{padding:34px 0 30px!important}
+.pkx{position:sticky;top:12px;float:right;margin:12px 12px 0 0;border:0;background:#EEF1F5;width:38px;height:38px;border-radius:12px;cursor:pointer;font-size:16px;z-index:3}
+</style>
+</head>
+<body>
+<header><div class="w"><a class="logo" href="#">Ongyeol<small>온결 필라테스 · 장유</small></a>
+ <nav><a href="#about">소개</a><a href="#class">수업</a><a href="#sch">시간표</a><a href="#price">이용권</a><a href="#tch">강사</a><a href="#faq">FAQ</a><a href="#ask">문의</a><a href="#info">오시는 길</a></nav>
+ <a class="btn s" href="#book">체험 예약</a></div></header>
+
+<div class="hero" style="background-image:url(img/hero.jpg)"><video class="hv" autoplay muted loop playsinline preload="metadata" poster="img/hero.jpg"><source src="img/hero.mp4" type="video/mp4"></video><div class="w">
+ <div class="ey">PILATES STUDIO · JANGYU</div>
+ <h1>몸의 결을<br><i>다시 바르게.</i></h1>
+ <p>바른 자세와 가벼운 몸. 기구 필라테스로 내 몸에 맞춘 1:1부터 소그룹까지, 장유 삼문동 온결 필라테스입니다.</p>
+ <div class="offer"><b>첫 체험 1회 1만 원</b><span>체형 분석 포함 · 처음 오신 분만 · 예시 가격</span></div>
+ <div class="hb"><a class="btn l" href="#book">첫 체험 수업 예약 →</a><a class="btn g" href="#sch">이번 주 시간표</a></div>
+ <small class="cap">👥 수업당 최대 4명이라 동작 하나하나 봐 드려요</small>
+</div></div>
+<div class="strip"><div class="w"><div><b>최대 4명</b><span>소그룹 기구 수업</span></div><div><b>체형 분석</b><span>첫 수업 무료 진단</span></div><div><b>평일 22시</b><span>퇴근 후에도</span></div><div><b>주차 2시간</b><span>건물 무료 주차</span></div></div></div>
+
+<section id="about"><div class="w"><div class="intro">
+ <div class="im" style="background-image:url(img/about.jpg)"></div>
+ <div><span class="sh"><span class="k">About</span></span><q>“운동이 처음이어도 괜찮아요. 몸이 먼저 달라지는 걸 느끼실 거예요.”</q>
+  <p style="color:var(--mu)">온결은 '바른 결'이라는 뜻이에요. 굽은 어깨, 뻐근한 허리, 출산 후 약해진 코어까지. 체형을 먼저 살피고 나에게 맞는 동작부터 시작합니다.</p>
+  <ul><li><b>1</b><span><strong>체형 분석</strong> — 첫 수업에서 자세 사진으로 불균형을 확인해요</span></li><li><b>2</b><span><strong>맞춤 프로그램</strong> — 목표에 맞춰 수업 종류와 횟수를 추천해요</span></li><li><b>3</b><span><strong>변화 기록</strong> — 한 달마다 자세 사진을 비교해 드려요</span></li></ul></div>
+</div></div></section>
+
+<section id="first"><div class="w">
+ <div class="sh c"><span class="k">First visit</span><h2>처음 오시나요?</h2><p>운동이 처음이어도 괜찮아요. 첫날은 이렇게 진행돼요.</p></div>
+ <div class="fv">
+  <div><b>👟 준비물</b><p>편한 운동복과 양말만 챙겨 오세요. 미끄럼 방지 양말은 무료로 드려요.</p></div>
+  <div><b>📷 체형 분석 15분</b><p>자세 사진을 찍고 어깨 · 골반 균형을 같이 확인해요.</p></div>
+  <div><b>🧘 맞춤 체험 35분</b><p>내 몸에 맞는 동작 몇 가지를 리포머로 천천히 해 봐요.</p></div>
+ </div>
+</div></section>
+
+<section id="class" class="alt"><div class="w">
+ <div class="sh c"><span class="k">Classes</span><h2>수업 안내</h2><p>목표와 몸 상태에 맞게 골라 보세요. 처음이면 체험 수업 때 추천해 드려요.</p></div>
+ <div class="cls">
+  <div class="cl"><div class="im" style="background-image:url(img/c1.jpg)"></div><div class="in"><h3>1:1 개인 레슨</h3><small>50분 · 맞춤</small><p>체형 교정 · 통증 관리가 필요할 때</p></div></div>
+  <div class="cl"><div class="im" style="background-image:url(img/c2.jpg)"></div><div class="in"><h3>듀엣 레슨</h3><small>50분 · 2인</small><p>친구 · 부부 · 가족과 함께</p></div></div>
+  <div class="cl"><div class="im" style="background-image:url(img/c3.jpg)"></div><div class="in"><h3>소그룹 기구</h3><small>50분 · 최대 4명</small><p>리포머 · 체어 · 바렐</p></div></div>
+  <div class="cl"><div class="im" style="background-image:url(img/c4.jpg)"></div><div class="in"><h3>산전 · 산후</h3><small>50분 · 1:1/듀엣</small><p>약해진 코어 · 골반 회복</p></div></div>
+ </div>
+</div></section>
+
+<section id="sch"><div class="w">
+ <div class="sh"><span class="k">Schedule</span><h2>주간 시간표</h2><p>소그룹 수업 시간이에요. 1:1과 듀엣은 원하는 시간으로 예약해요.</p></div>
+ <div class="sch"><table id="tb"></table></div>
+ <div class="legend"><span><i class="t1"></i>기구 소그룹</span><span><i class="t2"></i>바른 자세 · 초급</span><span><i class="t3"></i>코어 집중</span></div>
+</div></section>
+
+<section id="price" class="alt"><div class="w">
+ <div class="sh c"><span class="k">Membership</span><h2>이용권</h2><p>※ 찰칵홈 예시 사이트라 가격은 예시예요.</p></div>
+ <div class="price">
+  <div class="pr"><b>소그룹 8회</b><div class="n">22만<small> 원 · 2개월</small></div><ul><li>주 1~2회</li><li>회당 27,500원</li><li>첫 체형 분석 포함</li></ul></div>
+  <div class="pr on"><b>소그룹 24회</b><div class="n">54만<small> 원 · 4개월</small></div><ul><li>주 2회 추천</li><li>회당 22,500원</li><li>한 달마다 자세 비교 사진</li></ul></div>
+  <div class="pr"><b>1:1 개인 10회</b><div class="n">65만<small> 원 · 3개월</small></div><ul><li>체형 교정 · 통증 관리</li><li>회당 65,000원</li><li>원하는 시간 예약</li></ul></div>
+ </div>
+</div></section>
+
+<section id="tch"><div class="w">
+ <div class="sh"><span class="k">Instructors</span><h2>강사 소개</h2></div>
+ <div class="tch">
+  <div class="tc"><div class="im" style="background-image:url(img/t1.jpg)"></div><b>정유나 원장</b><small>재활 필라테스 · 8년</small><p>국제 필라테스 자격 · 산전산후 전문 과정</p></div>
+  <div class="tc"><div class="im" style="background-image:url(img/t2.jpg)"></div><b>한지수 강사</b><small>기구 소그룹 · 5년</small><p>체형 교정 · 바른 자세 프로그램</p></div>
+  <div class="tc"><div class="im" style="background-image:url(img/t3.jpg)"></div><b>오세린 강사</b><small>코어 · 다이어트 · 4년</small><p>퇴근 후 저녁반 담당</p></div>
+ </div>
+</div></section>
+
+<section class="alt"><div class="w">
+ <div class="sh"><span class="k">Space</span><h2>공간</h2><p>햇살이 드는 넓은 기구 룸과 개인 레슨 룸, 샤워실과 파우더룸이 있어요.</p></div>
+ <div class="gal"><div style="background-image:url(img/s1.jpg)"></div><div style="background-image:url(img/s2.jpg)"></div><div style="background-image:url(img/s3.jpg)"></div><div style="background-image:url(img/s4.jpg)"></div><div style="background-image:url(img/s5.jpg)"></div></div>
+</div></section>
+
+<section><div class="w">
+ <div class="sh c"><span class="k">Reviews</span><h2>회원 후기</h2><p>※ 예시 사이트라 후기는 예시 문구예요.</p></div>
+ <div class="revs">
+  <div class="rv"><q>운동이 처음인데 동작 하나하나 잡아 주셔서 무섭지 않았어요. 한 달 만에 어깨가 가벼워졌어요.</q><small>30대 직장인 · 예시</small></div>
+  <div class="rv"><q>출산 후 허리가 계속 아팠는데 산후 수업 받고 나서 많이 좋아졌어요.</q><small>30대 회원 · 예시</small></div>
+  <div class="rv"><q>저녁 9시 수업이 있어서 퇴근하고 와도 돼요. 주차도 편해요.</q><small>40대 회원 · 예시</small></div>
+ </div>
+</div></section>
+
+<section id="book" class="alt"><div class="w"><div class="bk">
+ <div><h2>첫 체험 수업 예약</h2><p>체험 수업 50분 + 체형 분석이 포함돼요. 예약하시면 원장님이 확인 문자를 보내 드려요.</p><p style="font-size:15px">· 편한 운동복만 챙겨 오세요<br>· 양말은 미끄럼 방지 양말을 드려요</p></div>
+ <form id="f">
+  <label>이름<input id="n" required></label><label>연락처<input id="c" required placeholder="010-"></label>
+  <label>희망 수업<select id="k"><option>소그룹 기구</option><option>1:1 개인</option><option>듀엣</option><option>산전 · 산후</option></select></label>
+  <label>희망 날짜<input id="d" type="date"></label>
+  <div class="full"><b style="font-size:14px">희망 시간</b><div class="slots" id="sl"></div></div>
+  <label class="full">몸 상태 · 목표 (선택)<textarea id="m" rows="2" placeholder="예: 허리가 자주 아파요 / 운동이 처음이에요"></textarea></label>
+  <button class="btn s full" style="justify-content:center">체험 예약하기 →</button><div class="ok" id="ok" hidden></div>
+ </form>
+</div></div></section>
+
+
+<section id="faq"><div class="w"><div class="fqw">
+ <div><span class="k" style="font-weight:800;letter-spacing:.16em;font-size:12px;opacity:.7">GOOD TO KNOW</span><h2 style="margin:6px 0 10px">처음이라 궁금하시죠?</h2><p style="opacity:.75">운동이 처음인 분들이 가장 많이 묻는 질문이에요. 더 궁금한 건 카카오톡으로 편하게 물어보세요.</p><a class="kk" href="#" data-kk>💬 카카오톡으로 물어보기</a></div>
+ <div><details class="fq"><summary><span>🎁 체험 수업은 어떻게 하나요?</span><i>+</i></summary><p>첫 체험 1회 1만 원(예시)이에요. 체형 분석 15분 + 맞춤 체험 35분이고, 등록은 천천히 결정하셔도 돼요.</p></details><details class="fq"><summary><span>🧘 운동이 처음인데 괜찮을까요?</span><i>+</i></summary><p>대부분 처음 오세요. 기구 사용법부터 천천히 알려 드리고, 소그룹도 최대 4명이라 동작을 하나씩 잡아 드려요.</p></details><details class="fq"><summary><span>👟 준비물이 있나요?</span><i>+</i></summary><p>편한 운동복만 챙겨 오세요. 미끄럼 방지 양말은 첫날 무료로 드려요.</p></details><details class="fq"><summary><span>🤰 임신 중이거나 출산 직후도 가능한가요?</span><i>+</i></summary><p>산전·산후 전문 과정을 마친 원장님이 1:1이나 듀엣으로 진행해요. 담당 의사와 먼저 상의해 주세요.</p></details><details class="fq"><summary><span>🩹 허리·목이 아픈데 해도 되나요?</span><i>+</i></summary><p>첫 체형 분석에서 상태를 확인하고 무리 없는 동작부터 시작해요. 통증이 심하면 병원 진료를 먼저 권해 드려요.</p></details><details class="fq"><summary><span>📅 예약 변경·취소는 어떻게 하나요?</span><i>+</i></summary><p>수업 전날 22시까지 앱이나 카카오톡으로 변경하시면 차감되지 않아요.</p></details><details class="fq"><summary><span>🚗 주차가 되나요?</span><i>+</i></summary><p>건물 주차장 2시간 무료예요.</p></details><details class="fq"><summary><span>💳 결제와 환불은요?</span><i>+</i></summary><p>카드·계좌이체 모두 돼요. 환불은 체육시설법 기준에 맞춰 남은 횟수만큼 해 드려요.</p></details></div>
+</div></div></section>
+<section id="ask" class="alt"><div class="w">
+ <div class="askw">
+  <div><span class="k" style="font-weight:800;letter-spacing:.16em;font-size:12px;opacity:.7">CONTACT</span><h2 style="margin:6px 0 14px">문의하기</h2>
+   <div class="cw">
+    <a href="#" data-kk class="cc kk2"><b>💬 카카오톡 상담</b><small>가장 빨라요 · 평균 10분 안에 답장</small></a>
+    <a href="tel:0550000000" class="cc"><b>📞 전화 상담</b><small>055-000-0000 · 평일 9~22시</small></a>
+    <a href="sms:0550000000" class="cc"><b>✉️ 문자 문의</b><small>수업 중엔 문자가 편해요</small></a>
+   </div></div>
+  <form id="qf"><b style="font-size:17px">📝 남겨 두시면 연락드려요</b>
+   <label>이름<input id="qn" required></label><label>연락처<input id="qc" required placeholder="010-"></label>
+   <label>문의 내용<textarea id="qm" rows="3" required placeholder="예: 허리가 아픈데 1:1부터 해야 할까요?"></textarea></label>
+   <button class="btn full" style="justify-content:center;background:var(--sg2);color:#fff">문의 보내기 →</button><div class="ok" id="qok" hidden></div>
+  </form>
+ </div>
+</div></section>
+<div class="kkm" id="kkm" hidden role="dialog" aria-label="카카오톡 상담"><div class="kw">
+ <div class="kh"><span class="ka">온</span><div><b>온결 필라테스</b><small>보통 10분 안에 답장해요</small></div><button data-kkx aria-label="닫기">✕</button></div>
+ <div class="kb" id="kb"><div class="bu">안녕하세요, 온결 필라테스이에요 😊<br>궁금한 걸 눌러 보시거나, 아래에 남겨 주세요.</div></div>
+ <div class="kq" id="kq"><button type="button" data-a="0">🎁 체험 수업 가격은?</button><button type="button" data-a="1">🧘 운동이 처음이에요</button><button type="button" data-a="2">🚗 주차 돼요?</button><button type="button" data-a="3">⏰ 저녁 수업 있어요?</button></div>
+ <form class="kf" id="kf"><input id="kfn" placeholder="이름" required><input id="kfc" placeholder="연락처 010-" required inputmode="tel"><div class="kr"><input id="kfm" placeholder="메시지를 입력하세요" required><button>전송</button></div></form>
+ <small class="kn">※ 찰칵홈 예시 · 실제 사이트에선 온결 필라테스 카카오톡 채널과 연결돼요</small>
+</div></div>
+<section id="info"><div class="w">
+ <div class="sh"><span class="k">Location</span><h2>오시는 길</h2></div>
+ <div class="info"><div class="map">🗺 지도 자리<br><small>실제 사이트에서는 네이버·카카오 지도</small></div>
+  <table><tr><th>주소</th><td>경남 김해시 장유 삼문동 ○○로 ○○, 4층 (예시)</td></tr><tr><th>운영</th><td>평일 09:00 ~ 22:00 · 토 09:00 ~ 14:00 · 일 휴무</td></tr><tr><th>전화</th><td>055-000-0000 (예시)</td></tr><tr><th>주차</th><td>건물 주차장 2시간 무료</td></tr></table></div>
+</div></section>
+
+<footer><div class="w"><b>온결 필라테스</b> (예시) · 김해 장유<br>© 2026 Ongyeol Pilates · 이 사이트는 <a href="https://kisthestar1-boop.github.io/minsung-ai/web/" style="color:#D9E8C9">찰칵홈</a>이 만든 예시예요 · 상호·가격·후기는 가상</div></footer>
+<a class="fcall" href="tel:055-000-0000">📞 바로 전화</a><div class="fab"><a href="#" data-kk class="fkk">💬 카톡 상담</a><a href="#book">🧘 체험 예약 · 1만 원</a></div>
+<div class="badge">찰칵홈 예시 · 가상 스튜디오 · <a href="https://kisthestar1-boop.github.io/minsung-ai/web/">만들기 문의</a></div>
+<script>
+const D=["월","화","수","목","금","토"],TM=["09:30","11:00","19:00","20:10","21:20"];
+const C={"월":{"09:30":1,"19:00":2,"20:10":1,"21:20":3},"화":{"11:00":2,"19:00":1,"20:10":3},"수":{"09:30":1,"19:00":2,"20:10":1,"21:20":3},"목":{"11:00":2,"19:00":1,"20:10":3},"금":{"09:30":1,"19:00":1,"20:10":2},"토":{"09:30":2,"11:00":1}};
+const N={1:"기구 소그룹",2:"바른 자세",3:"코어 집중"};const $=s=>document.querySelector(s);
+$("#tb").innerHTML=`<tr><th>시간</th>${D.map(d=>`<th>${d}</th>`).join("")}</tr>`+TM.map(t=>`<tr><td><b>${t}</b></td>${D.map(d=>{const k=(C[d]||{})[t];const r=(d.charCodeAt(0)+t.charCodeAt(1)+t.charCodeAt(3))%4;return `<td>${k?`<span class="t${k}">${N[k]}<em>${r?`${r}자리`:"마감"}</em></span>`:""}</td>`}).join("")}</tr>`).join("");
+let slot="";$("#sl").innerHTML=["오전 9~12시","오후 12~17시","저녁 18~20시","밤 20~22시"].map(x=>`<button type="button">${x}</button>`).join("");
+$("#sl").onclick=e=>{const b=e.target.closest("button");if(!b)return;slot=b.textContent;[...$("#sl").children].forEach(x=>x.classList.toggle("on",x===b))};
+$("#f").onsubmit=async e=>{e.preventDefault();const ok=$("#ok"),b=e.target.querySelector("button.btn");b.disabled=true;ok.hidden=false;ok.textContent="보내는 중…";
+ const msg=`수업: ${$("#k").value} · 날짜: ${$("#d").value||"미정"} · 시간: ${slot||"미정"}\n${$("#m").value}`;
+ try{const j=await (await fetch("https://script.google.com/macros/s/AKfycbz09Pualc3dVyOYhjRIBLY1lVpeZMpi8YMoUFlBcqWjJ30gKJagm0HAhio3rFaIf_E/exec",{method:"POST",body:JSON.stringify({op:"hpq",f:{kind:"🧘 체험 예약 · 온결필라테스(예시)",name:$("#n").value,contact:$("#c").value,msg}})})).json();if(j.error)throw new Error(j.error);ok.textContent=`✅ 예약 신청됐어요 (번호 ${j.id}). 확인 문자를 드릴게요.`;e.target.reset()}
+ catch(err){ok.textContent="보내지 못했어요. 전화로 문의해 주세요."}b.disabled=false};
+</script>
+<script>
+
+document.getElementById("qf").onsubmit=async e=>{e.preventDefault();const ok=document.getElementById("qok"),b=e.target.querySelector("button");b.disabled=true;ok.hidden=false;ok.textContent="보내는 중…";
+ try{const j=await (await fetch("https://script.google.com/macros/s/AKfycbz09Pualc3dVyOYhjRIBLY1lVpeZMpi8YMoUFlBcqWjJ30gKJagm0HAhio3rFaIf_E/exec",{method:"POST",body:JSON.stringify({op:"hpq",f:{kind:"🧘 온결필라테스(예시) 일반 문의",name:qn.value,contact:qc.value,msg:qm.value}})})).json();if(j.error)throw 0;ok.textContent="✅ 문의가 접수됐어요 (번호 "+j.id+"). 곧 연락드릴게요.";e.target.reset()}catch(_){ok.textContent="보내지 못했어요. 전화나 문자로 문의해 주세요."}b.disabled=false};
+</script>
+<script>(()=>{const v=document.querySelector(".hv");if(!v)return;v.playbackRate=.8;v.addEventListener("error",()=>v.remove(),true);v.querySelector("source").addEventListener("error",()=>v.remove())})()</script>
+<script>(()=>{const M=document.getElementById("kkm"),B=document.getElementById("kb"),A=["첫 체험 1회 1만 원(예시)이에요. 체형 분석 포함!", "대부분 처음 오세요. 최대 4명이라 하나씩 잡아 드려요.", "건물 주차장 2시간 무료예요.", "평일 22시까지 있어요."];
+const add=(t,me)=>{const d=document.createElement("div");d.className=me?"me":"bu";d.textContent=t;B.appendChild(d);B.scrollTop=B.scrollHeight};
+document.addEventListener("click",e=>{const k=e.target.closest("[data-kk]");if(k){e.preventDefault();e.stopPropagation();const lm=document.getElementById("lm");if(lm)lm.hidden=true;document.body.style.overflow="";M.hidden=false;return}
+ if(e.target.closest("[data-kkx]")){M.hidden=true;return}
+ const q=e.target.closest("#kq button");if(q){add(q.textContent,1);setTimeout(()=>add(A[+q.dataset.a]),350)}},true);
+document.getElementById("kf").onsubmit=async e=>{e.preventDefault();const m=kfm.value;add(m,1);kfm.value="";
+ try{const j=await (await fetch("https://script.google.com/macros/s/AKfycbz09Pualc3dVyOYhjRIBLY1lVpeZMpi8YMoUFlBcqWjJ30gKJagm0HAhio3rFaIf_E/exec",{method:"POST",body:JSON.stringify({op:"hpq",f:{kind:"🧘 온결필라테스(예시) 카톡 상담",name:kfn.value,contact:kfc.value,msg:m}})})).json();if(j.error)throw 0;add("메시지 잘 받았어요! (번호 "+j.id+") 곧 "+kfc.value+"로 연락드릴게요 🙏")}catch(_){add("앗, 전송이 안 됐어요. 전화로 문의해 주세요.")}};
+})()</script>
+<div class="pk" id="pk" hidden role="dialog" aria-modal="true"><div class="pkb"><button class="pkx" data-pkx aria-label="닫기">✕</button><div id="pkc"></div></div></div><script>(()=>{const P=document.getElementById("pk"),C=document.getElementById("pkc"),EX="".split(",");let node=null,mark=null;
+const close=()=>{if(node&&mark){mark.parentNode.insertBefore(node,mark);mark.remove()}node=mark=null;P.hidden=true;document.body.style.overflow=""};
+const open=id=>{const t=document.getElementById(id);if(!t)return false;close();node=t.closest("section")||t;mark=document.createComment("pk");node.parentNode.insertBefore(mark,node);C.appendChild(node);P.hidden=false;document.body.style.overflow="hidden";P.querySelector(".pkb").scrollTop=0;const f=node.querySelector("input,select,textarea");if(f&&f.offsetParent)setTimeout(()=>f.focus({preventScroll:true}),60);return true};
+document.addEventListener("click",e=>{if(e.target.closest("[data-pkx]")||e.target===P){close();return}
+ const a=e.target.closest('a[href^="#"]:not(nav a):not(.logo)');if(!a)return;const h=(a.getAttribute("href")||"").slice(1);if(!h||EX.includes(h))return;if(P.contains(a)&&node&&node.id===h)return;
+ if(open(h)){e.preventDefault();e.stopPropagation()}},true);
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!P.hidden)close()});window.__pkClose=close;})()</script>
+<script>window.UXK={pop:".cl,.tc",cta:"#book,#ask",ctaText:"체험 레슨 예약하기"}</script>
+<!--UXKIT v1 (삼흥테크 방식: 스크롤 차분 등장 · 눌러서 크게 보기)-->
+<style id="uxk-css">
+html{scroll-behavior:smooth}section[id]{scroll-margin-top:84px}
+header.uxk-sc{box-shadow:0 6px 22px rgba(0,0,0,.08);transition:box-shadow .3s ease}
+.uxk-r{opacity:0;transform:translateY(12px);transition:opacity .7s ease,transform .7s ease;transition-delay:var(--d,0s)}
+.uxk-r.uxk-on{opacity:1;transform:none}
+.uxk-p{cursor:pointer;transition:transform .25s ease,box-shadow .25s ease}
+.uxk-p:hover{transform:translateY(-3px);box-shadow:0 14px 34px rgba(0,0,0,.12)}
+.uxk-p:focus-visible{outline:3px solid currentColor;outline-offset:3px}
+.uxk-hint{display:block;margin-top:8px;font-size:12.5px;font-weight:800;opacity:.55}
+nav a.uxk-act{opacity:1;text-decoration:underline;text-underline-offset:6px;text-decoration-thickness:2px}
+#uxk-md{position:fixed;inset:0;z-index:200;background:rgba(15,15,25,.55);display:grid;place-items:center;padding:14px}
+#uxk-md[hidden]{display:none}
+#uxk-md:not([hidden]){animation:uxkF .22s ease both}
+#uxk-md .mb{background:#fff;color:#222;border-radius:24px;max-width:640px;width:100%;max-height:88vh;overflow:auto;padding:26px 24px 22px;position:relative;animation:uxkM .26s ease both;word-break:keep-all}
+#uxk-md .mb>.cx{position:absolute;right:12px;top:12px;border:0;background:#f1f1f4;border-radius:99px;width:38px;height:38px;font-size:18px;cursor:pointer}
+#uxk-md .bd{font-size:17px;line-height:1.75}#uxk-md .bd img{max-width:100%;border-radius:14px}
+#uxk-md .bd .uxk-hint{display:none}
+#uxk-md .bd .im{aspect-ratio:16/10;background-size:cover;background-position:center;border-radius:14px;margin-bottom:14px}#uxk-md .bd h3{font-size:22px;margin:4px 0 6px}
+#uxk-md .ft{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px;align-items:center}
+#uxk-md .ft button,#uxk-md .ft a{font:inherit;font-weight:800;border-radius:99px;padding:11px 18px;border:2px solid #e6e6ea;background:#fff;color:#222;cursor:pointer;text-decoration:none}
+#uxk-md .ft .go{background:var(--uxk-c,#222);border-color:transparent;color:#fff;margin-left:auto}
+@keyframes uxkF{from{opacity:0}}@keyframes uxkM{from{opacity:0;transform:scale(.985)}}
+@media (prefers-reduced-motion:reduce){.uxk-r{opacity:1!important;transform:none!important}#uxk-md,#uxk-md .mb{animation:none!important}.uxk-p:hover{transform:none}}
+</style>
+<div id="uxk-md" hidden role="dialog" aria-modal="true"><div class="mb"><button class="cx" aria-label="닫기">✕</button><div class="bd"></div><div class="ft"></div></div></div>
+<script>
+(()=>{const C=Object.assign({reveal:'section h2,section .lead,.card,blockquote,details,.gal,form,.map,table,.cl,.tc,.rv,.fq,.sh,.price,figure',
+ pop:'.card,.cl,.tc',cta:'#apply,#book,#ask,#contact',ctaText:'체험 수업 신청하기'},window.UXK||{});
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const hdr=$('header');addEventListener('scroll',()=>hdr&&hdr.classList.toggle('uxk-sc',scrollY>10),{passive:true});
+// 메뉴 현재 위치 표시
+const links=$$('nav a[href^="#"]');if(links.length&&'IntersectionObserver' in window){const io2=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)links.forEach(a=>a.classList.toggle('uxk-act',a.getAttribute('href')==='#'+e.target.id))}),{rootMargin:'-45% 0px -50% 0px'});links.forEach(a=>{const t=document.getElementById(a.getAttribute('href').slice(1));t&&io2.observe(t)})}
+// 눌러서 크게 보기
+const md=$('#uxk-md'),bd=md.querySelector('.bd'),ft=md.querySelector('.ft');let list=[],cur=0;
+const cta=C.cta.split(',').map(s=>$(s)).find(Boolean);
+const col=getComputedStyle(document.documentElement);['--c1','--a','--sg2','--or','--p','--main'].some(v=>{const x=col.getPropertyValue(v).trim();if(x){md.style.setProperty('--uxk-c',x);return true}});
+function show(i){cur=i;const el=list[i];bd.innerHTML=el.innerHTML;bd.querySelectorAll('[id]').forEach(x=>x.removeAttribute('id'));
+ ft.innerHTML=(i>0?'<button data-uxk="-1">← 이전</button>':'')+(i<list.length-1?'<button data-uxk="1">다음 →</button>':'')+(cta?`<button class="go" data-uxk="go">${C.ctaText}</button>`:'');}
+function open(el){list=$$(C.pop).filter(x=>x.parentElement===el.parentElement);show(list.indexOf(el));md.hidden=false;document.body.style.overflow='hidden';md.querySelector('.cx').focus()}
+function close(){md.hidden=true;document.body.style.overflow=''}
+$$(C.pop).forEach(el=>{if(el.closest('form,a,button,#uxk-md')||el.querySelector('form,input,select'))return;el.classList.add('uxk-p');el.tabIndex=0;el.setAttribute('role','button');
+ if(!el.querySelector('.uxk-hint'))el.insertAdjacentHTML('beforeend','<small class="uxk-hint">눌러서 자세히 보기 ›</small>');
+ el.addEventListener('click',e=>{if(e.target.closest('a,button,input,select,textarea,label'))return;open(el)});
+ el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open(el)}})});
+md.addEventListener('click',e=>{const b=e.target.closest('[data-uxk]');if(e.target===md||e.target.closest('.cx'))return close();if(!b)return;
+ if(b.dataset.uxk==='go'){close();cta.scrollIntoView({behavior:'smooth'});const f=cta.querySelector('input,select,textarea');f&&setTimeout(()=>f.focus({preventScroll:true}),700)}else show(cur+ +b.dataset.uxk)});
+addEventListener('keydown',e=>{if(md.hidden)return;if(e.key==='Escape')close();if(e.key==='ArrowRight'&&cur<list.length-1)show(cur+1);if(e.key==='ArrowLeft'&&cur>0)show(cur-1)});
+// 스크롤 차분 등장
+if(!('IntersectionObserver' in window)||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('uxk-on');io.unobserve(e.target)}}),{rootMargin:'0px 0px -8% 0px',threshold:.08});
+const g=new Map();$$(C.reveal).filter(e=>!e.closest('.hero,header,#uxk-md')).forEach(e=>{const p=e.parentElement,i=g.get(p)||0;g.set(p,i+1);e.style.setProperty('--d',Math.min(i,6)*.07+'s');e.classList.add('uxk-r');
+ if(e.getBoundingClientRect().top<innerHeight*.92)requestAnimationFrame(()=>e.classList.add('uxk-on'));else io.observe(e)});})();
+</script>
+<!--/UXKIT-->
+
+</body>
+</html>
