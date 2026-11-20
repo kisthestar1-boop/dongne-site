@@ -356,6 +356,8 @@ function updFriends(dt){
   else if(f.k==='fox'||f.k==='owl')tx=p.x-p.face*(70+i*30);
   else if(f.k==='hedgehog'&&near)tx=near.x-30*Math.sign(near.x-f.x||1);
   else tx=p.x-p.face*(50+i*36);
+  for(const o of ST.friends){if(o!==f&&Math.abs(o.x-f.x)<34)tx+=(f.x>=o.x?1:-1)*22}
+  if(Math.abs(p.x-f.x)<30&&!near)tx+=(f.x>=p.x?1:-1)*24;
   const dx=tx-f.x;f.vx=Math.abs(dx)>14?Math.sign(dx)*Math.min(300,Math.abs(dx)*3):f.vx*.8;
   if(Math.abs(f.vx)>10)f.face=Math.sign(f.vx);if(near&&f.act>0)f.face=Math.sign(near.x-f.x)||f.face;
   // 높이 따라가기 (폴짝)
