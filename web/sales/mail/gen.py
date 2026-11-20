@@ -27,11 +27,11 @@ h1{font-size:21pt;line-height:1.28;margin:0 0 4mm;letter-spacing:-.02em}
 h1 em{font-style:normal;background:linear-gradient(transparent 58%,#FFE45C 58%)}
 .obs{background:#F3F6FF;border-left:4px solid #2F6BFF;padding:4mm 5mm;border-radius:2mm;font-size:11pt;line-height:1.6}
 .obs b{color:#2F6BFF}
-.phones{display:flex;gap:6mm;justify-content:center;margin:5mm 0 2mm}
-.ph{width:32mm;text-align:center}.ph div{height:62mm;border:2.4mm solid #1A1A2E;border-radius:6mm;overflow:hidden;background:#eee}
+.phones{display:flex;gap:6mm;justify-content:center;margin:4mm 0 1.5mm}
+.ph{width:32mm;text-align:center}.ph div{height:48mm;border:2.4mm solid #1A1A2E;border-radius:6mm;overflow:hidden;background:#eee}
 .ph img{width:100%;display:block}.ph small{display:block;margin-top:2mm;font-size:8.5pt;color:#555}
-.cap{text-align:center;font-size:9pt;color:#777;margin-bottom:5mm}
-.offer{display:grid;grid-template-columns:1fr 1fr;gap:2mm 6mm;font-size:10.5pt;margin-bottom:5mm}
+.cap{text-align:center;font-size:9pt;color:#777;margin-bottom:4mm}
+.offer{display:grid;grid-template-columns:1fr 1fr;gap:1.6mm 6mm;font-size:10.5pt;margin-bottom:4mm}
 .offer div:before{content:"✔ ";color:#2F6BFF;font-weight:900}
 .cta{display:flex;gap:6mm;align-items:center;background:#1A1A2E;color:#fff;border-radius:4mm;padding:5mm 6mm}
 .cta img.qr{width:30mm;height:30mm;background:#fff;padding:1.5mm;border-radius:2mm}
@@ -42,7 +42,8 @@ h1 em{font-style:normal;background:linear-gradient(transparent 58%,#FFE45C 58%)}
 """
 
 def seo(q, title):
-    return f"""<div class="seo"><div class="sb"><span>G</span>{q}</div><div class="rs"><i>원장님학원.kr ›</i><b>{title}</b>시간표 · 교습비 · 상담 신청까지 한 번에</div><div class="tx"><b>구글 · 네이버 검색 노출</b><br>"동네 + 과목" 검색에 잘 나오도록 제목·지도·검색 등록까지 세팅해 드려요</div></div>"""
+    return f"""<div class="seo"><div style="flex:1.15;display:grid;gap:1.6mm"><div class="sb"><span style="color:#03C75A">N</span>{q}</div><div class="sb"><span>G</span>{q}</div></div><div class="rs"><i>원장님가게.kr ›</i><b>{title}</b>📞 전화 · 🕑 영업시간 · 📍 주소까지 한 번에</div><div class="tx"><b>네이버 · 구글 검색에 나오게</b><br>검색 등록 + 네이버 지도 · 구글 지도에 <b style="color:#1A1A2E">연락처 · 영업시간 · 주소</b> 등록까지 해 드려요</div></div>
+<div style="font-size:7.5pt;color:#999;margin:-3.5mm 0 4mm;text-align:right">※ 검색 순위는 보장하지 않아요 (표시광고법)</div>"""
 
 def phones():
     return """<div class="phones" style="margin-top:3mm"><div class="ph"><div><img src="pf_ac_m.jpg"></div><small>영어·수학 학원</small></div><div class="ph"><div><img src="pf_bu_m.jpg"></div><small>다이어트댄스</small></div><div class="ph"><div><img src="pf_pl_m.jpg"></div><small>필라테스 스튜디오</small></div></div>
@@ -93,8 +94,9 @@ def walk():
     import re as _re
     h=_re.sub(r'<h1>.*?</h1>','<h1>손님이 휴대폰으로 <em>"장유 + 우리 업종"</em>을<br>검색하면, 원장님 가게가<br>먼저 보이시나요?</h1><div class="chips"><span>영어 · 수학 학원</span><span>다이어트 댄스</span><span>필라테스 · 요가</span><span>피아노 · 음악</span><span>태권도 · 체육</span><span>미술 · 공방</span></div>',h,count=1,flags=_re.S)
     h=h.replace('요즘 학부모님은 상담 전화 전에 휴대폰으로 먼저 비교해 보세요.','요즘 학부모님 · 손님은 전화하기 전에 휴대폰으로 먼저 비교해 보세요.')
-    h=_re.sub(r'<div class="sb"><span>G</span>[^<]*</div>','<div class="sb"><span>G</span>장유 다이어트 댄스</div>',h,count=1)
-    h=_re.sub(r'<div class="rs"><i>원장님학원.kr ›</i><b>[^<]*</b>시간표 · 교습비 · 상담 신청까지 한 번에','<div class="rs"><i>원장님가게.kr ›</i><b>○○댄스 | 장유 다이어트 댄스</b>수업 영상 · 가격 · 체험 예약까지 한 번에',h,count=1)
+    h=_re.sub(r'(<span style="color:#03C75A">N</span>)[^<]*','\\1장유 다이어트 댄스',h,count=1)
+    h=_re.sub(r'(<span>G</span>)[^<]*','\\1장유 영어 학원',h,count=1)
+    h=_re.sub(r'<i>원장님가게.kr ›</i><b>[^<]*</b>','<i>원장님가게.kr ›</i><b>○○댄스 | 장유 다이어트 댄스</b>',h,count=1)
     h=h.replace('원장님 학원 사진으로 <b>무료 시안</b> 먼저','원장님 가게 사진으로 <b>무료 시안</b> 먼저').replace('시간표 · 교습비 · 등록번호 표시까지','시간표 · 가격 · (학원은 등록번호) 표시')
     h=h.replace('QR을 찍으면 학원 시안 예시를 바로 볼 수 있어요','QR을 찍으면 업종별 시안 예시를 바로 볼 수 있어요').replace('학원 사진 3장과 학원 이름만','가게 사진 3장과 이름만')
     h=h.replace('</style>','.chips{display:flex;flex-wrap:wrap;gap:2mm;margin:-1mm 0 4mm;max-width:140mm}.chips span{font-size:9.5pt;font-weight:800;border:1.4px solid #1A1A2E;border-radius:99px;padding:1mm 3.5mm}.chips span:nth-child(2){background:#FF2D87;color:#fff;border-color:#FF2D87}</style>',1)
