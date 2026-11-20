@@ -164,7 +164,7 @@ function newRun(region){
  ST.fadeIn=.5;ST.loot={};
  if(REGION==='village'){ST.pl.x=ST.fromRight?2150:480;ST.friends.forEach((f,i)=>{f.x=ST.pl.x-60-i*40});villageEnter();}
  else{banner(REGIONS[REGION].n+' · 1구역','친구들과 함께 앞으로!');
-  const E=REGIONS[REGION].e;for(let x=700;x<3450;x+=230+Math.random()*120){const t=E[Math.floor(Math.random()*3)];const pl=ST.S.plats.filter(p=>!p.ground&&x>p.x+20&&x<p.x+p.w-20);const y=pl.length&&Math.random()<.5?pl[0].y:GROUND;const e=spawn(t,x,y);e.field=1;e.home=x;e.spawnT=0;}}
+  const E=REGIONS[REGION].e;for(let x=950;x<3450;x+=230+Math.random()*120){const t=E[Math.floor(Math.random()*3)];const pl=ST.S.plats.filter(p=>!p.ground&&x>p.x+20&&x<p.x+p.w-20);const y=pl.length&&Math.random()<.5?pl[0].y:GROUND;const e=spawn(t,x,y);e.field=1;e.home=x;e.spawnT=0;}}
 }
 function mkPlayer(){
  const lv=SV.lv;
@@ -193,7 +193,7 @@ function spawn(type,x,y){const d=ENEMY[type];const sc=(1+(SV.lv-1)*.12)*(REGION=
 
 /* ---------- 연출 ---------- */
 function vfx(name,x,y,o){o=o||{};ST.vfx=ST.vfx||[];ST.vfx.push({im:IMG[name],x,y,s0:o.s0||.4,s1:o.s1||.8,rot:o.rot||0,vr:o.vr||0,life:o.life||.3,max:o.life||.3,flip:o.flip||1,a:o.a||1,follow:o.follow})}
-function drawVfx(cx,dt){if(!ST.vfx)return;ctx.save();ctx.globalCompositeOperation='lighter';for(const v of ST.vfx){v.life-=dt;if(!v.im||!v.im.naturalWidth)continue;const t=1-v.life/v.max;const sc=(v.s0+(v.s1-v.s0)*Math.min(1,t*1.6))/HD;const w=v.im.naturalWidth*sc,h=v.im.naturalHeight*sc;let x=v.x,y=v.y;if(v.follow){x=v.follow.x+v.ox;y=v.follow.y+v.oy}ctx.globalAlpha=Math.max(0,Math.min(1,v.a*(t<.15?t/.15:(1-t)*1.4)));ctx.save();ctx.translate(x-cx,y);ctx.rotate(v.rot+v.vr*t);ctx.scale(v.flip,1);ctx.drawImage(v.im,-w/2,-h/2,w,h);ctx.restore()}ctx.restore();ST.vfx=ST.vfx.filter(v=>v.life>0)}
+function drawVfx(cx,dt){if(!ST.vfx)return;ctx.save();ctx.globalCompositeOperation='screen';for(const v of ST.vfx){v.life-=dt;if(!v.im||!v.im.naturalWidth)continue;const t=1-v.life/v.max;const sc=(v.s0+(v.s1-v.s0)*Math.min(1,t*1.6))/HD;const w=v.im.naturalWidth*sc,h=v.im.naturalHeight*sc;let x=v.x,y=v.y;if(v.follow){x=v.follow.x+v.ox;y=v.follow.y+v.oy}ctx.globalAlpha=Math.max(0,Math.min(1,v.a*(t<.15?t/.15:(1-t)*1.4)));ctx.save();ctx.translate(x-cx,y);ctx.rotate(v.rot+v.vr*t);ctx.scale(v.flip,1);ctx.drawImage(v.im,-w/2,-h/2,w,h);ctx.restore()}ctx.restore();ST.vfx=ST.vfx.filter(v=>v.life>0)}
 function banner(t,s){ST.banner={t,s,life:2.1}}
 function logMsg(t,col){if(!ST)return;ST.log=ST.log||[];const L=ST.log;if(L.length&&L[L.length-1].t===t&&L[L.length-1].life>2){L[L.length-1].n++;L[L.length-1].life=3.2;return}L.push({t,col:col||'#fffaf0',life:3.2,n:1});if(L.length>6)L.shift()}
 function dust(x,y,n){for(let i=0;i<n;i++)ST.fx.push({kind:'ink',x:x+(Math.random()-.5)*26,y:y-4-Math.random()*6,vx:0,vy:0,life:.35+Math.random()*.2,r:4+Math.random()*5,col:'236,226,200',rot:0})}
