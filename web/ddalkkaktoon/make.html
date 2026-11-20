@@ -137,9 +137,16 @@ async function compose(o,imgs){const F=window.DDK_FORMULA;const W=F.scroll.width
  ctx.fillStyle="#1D2A23";ctx.font="44px 'Gowun Dodum'";ctx.textAlign="center";ctx.fillText(o.title||"딸깍툰",W/2,95);
  o.panels.forEach((p,i)=>{const b=blocks[i],x=(W-b.w)/2,im=ims[i];if(im)ctx.drawImage(im,x,b.y,b.w,b.h);else{ctx.fillStyle="#EEF3EF";ctx.fillRect(x,b.y,b.w,b.h);ctx.fillStyle="#8A9A90";ctx.font="22px 'Noto Sans KR'";ctx.fillText("(맛보기는 1컷만 그려요)",W/2,b.y+b.h/2)}
   let by=b.y+18;(p.lines||[]).slice(0,3).forEach((ln,j)=>{ctx.font="24px 'Noto Sans KR'";const narr=/나레이션|narration/i.test(ln.who||"");const ls=wrap(ctx,ln.text||"",300);const bw=Math.max(...ls.map(s=>ctx.measureText(s).width))+44,bh=ls.length*34+26;
-   const left=j%2===0;const bx=left?x+18:x+b.w-bw-18;ctx.fillStyle=narr?"#FFF7E6":"#fff";ctx.strokeStyle="#1D2A23";ctx.lineWidth=2.5;ctx.beginPath();
-   if(narr){ctx.rect(bx,by,bw,bh)}else{const r=Math.min(26,bh/2);ctx.moveTo(bx+r,by);ctx.arcTo(bx+bw,by,bx+bw,by+bh,r);ctx.arcTo(bx+bw,by+bh,bx,by+bh,r);ctx.lineTo(bx+(left?60:bw-36),by+bh);ctx.lineTo(bx+(left?44:bw-56),by+bh+18);ctx.lineTo(bx+(left?36:bw-60),by+bh);ctx.arcTo(bx,by+bh,bx,by,r);ctx.arcTo(bx,by,bx+bw,by,r)}
-   ctx.closePath();ctx.fill();ctx.stroke();ctx.fillStyle="#1D2A23";ctx.textAlign="center";ls.forEach((s,k)=>ctx.fillText(s,bx+bw/2,by+38+k*34));by+=bh+26})});
+   const left=ln.side?ln.side==="l":j%2===0;let bx=left?x+18:x+b.w-bw-18,byy=by;
+   if(ln.at){bx=x+ln.at[0]*b.w-bw/2;byy=b.y+ln.at[1]*b.h}bx=Math.max(x+14,Math.min(x+b.w-bw-14,bx));byy=Math.max(b.y+12,Math.min(b.y+b.h-bh-12,byy));
+   ctx.fillStyle=narr?"#FFF7E6":"#fff";ctx.strokeStyle="#1D2A23";ctx.lineWidth=2.5;
+   const r=Math.min(26,bh/2);const rr=()=>{ctx.beginPath();if(narr){ctx.rect(bx,byy,bw,bh)}else{ctx.moveTo(bx+r,byy);ctx.arcTo(bx+bw,byy,bx+bw,byy+bh,r);ctx.arcTo(bx+bw,byy+bh,bx,byy+bh,r);ctx.arcTo(bx,byy+bh,bx,byy,r);ctx.arcTo(bx,byy,bx+bw,byy,r)}ctx.closePath()};
+   let tail=null;if(!narr){let T;if(ln.to){T=[x+ln.to[0]*b.w,b.y+ln.to[1]*b.h]}else{T=[bx+(left?50:bw-50),byy+bh+40]}
+    const below=T[1]>byy+bh/2;const ey=below?byy+bh:byy;const cx=Math.max(bx+r+16,Math.min(bx+bw-r-16,T[0]));
+    let dx=T[0]-cx,dy=T[1]-ey;const dl=Math.hypot(dx,dy)||1;const L=Math.min(48,Math.max(20,dl-24));const tip=[cx+dx/dl*L,ey+dy/dl*L];tail={cx,ey,tip}}
+   rr();ctx.fill();ctx.stroke();
+   if(tail){const {cx,ey,tip}=tail;ctx.beginPath();ctx.moveTo(cx-13,ey);ctx.lineTo(tip[0],tip[1]);ctx.lineTo(cx+13,ey);ctx.fillStyle="#fff";ctx.fill();ctx.stroke();ctx.beginPath();ctx.moveTo(cx-11,ey);ctx.lineTo(cx+11,ey);ctx.strokeStyle="#fff";ctx.lineWidth=5;ctx.stroke();ctx.strokeStyle="#1D2A23";ctx.lineWidth=2.5}
+   ctx.fillStyle="#1D2A23";ctx.textAlign="center";ls.forEach((s,k)=>ctx.fillText(s,bx+bw/2,byy+38+k*34));by=Math.max(by,byy)+bh+26})});
  ctx.fillStyle="#9AA8A0";ctx.font="18px 'Noto Sans KR'";ctx.textAlign="center";ctx.fillText("딸깍툰 · AI로 그린 웹툰",W/2,H-36);return c}
 function slices(c){const F=window.DDK_FORMULA,out=[];for(let y=0;y<c.height;y+=F.scroll.sliceMax){const h=Math.min(F.scroll.sliceMax,c.height-y);const s=document.createElement("canvas");s.width=c.width;s.height=h;s.getContext("2d").drawImage(c,0,y,c.width,h,0,0,c.width,h);out.push(s.toDataURL("image/jpeg",.9))}return out}
 
