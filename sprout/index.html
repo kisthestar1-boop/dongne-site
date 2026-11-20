@@ -169,7 +169,7 @@ function newRun(region){
  ST.fadeIn=.5;ST.loot={};
  if(REGION==='village'){ST.pl.x=ST.fromRight?2150:480;ST.friends.forEach((f,i)=>{f.x=ST.pl.x-60-i*40});villageEnter();}
  else{banner(REGIONS[REGION].n+' · 1구역','친구들과 함께 앞으로!');
-  const E=REGIONS[REGION].e;for(let x=950;x<3450;x+=230+Math.random()*120){const t=E[Math.floor(Math.random()*3)];const pl=ST.S.plats.filter(p=>!p.ground&&x>p.x+20&&x<p.x+p.w-20);const y=pl.length&&Math.random()<.5?pl[0].y:GROUND;const e=spawn(t,x,y);e.field=1;e.home=x;e.spawnT=0;}}
+  const E=REGIONS[REGION].e;for(let x=1250;x<3450;x+=230+Math.random()*120){if(x>2300&&x<2500||x>3500)continue;const t=E[Math.floor(Math.random()*3)];const pl=ST.S.plats.filter(p=>!p.ground&&x>p.x+20&&x<p.x+p.w-20);const y=pl.length&&Math.random()<.5?pl[0].y:GROUND;const e=spawn(t,x,y);e.field=1;e.home=x;e.spawnT=0;}}
 }
 function mkPlayer(){
  const lv=SV.lv;
@@ -203,7 +203,7 @@ function banner(t,s){ST.banner={t,s,life:2.1}}
 function logMsg(t,col){if(!ST)return;ST.log=ST.log||[];const L=ST.log;if(L.length&&L[L.length-1].t===t&&L[L.length-1].life>2){L[L.length-1].n++;L[L.length-1].life=3.2;return}L.push({t,col:col||'#fffaf0',life:3.2,n:1});if(L.length>6)L.shift()}
 function dust(x,y,n){for(let i=0;i<n;i++)ST.fx.push({kind:'ink',x:x+(Math.random()-.5)*26,y:y-4-Math.random()*6,vx:0,vy:0,life:.35+Math.random()*.2,r:4+Math.random()*5,col:'236,226,200',rot:0})}
 function popTag(x,y,t){ST.nums.push({x,y,v:t,kind:'tag',life:.8,vy:-90,s:1})}
-function popNum(x,y,v,kind){kind=kind||'n';if(kind==='n'||kind==='crit'||kind==='f'){let g=0;while(g++<6&&ST.nums.some(n=>n.life>.3&&(n.kind==='n'||n.kind==='crit'||n.kind==='f')&&Math.abs(n.x-x)<38&&Math.abs(n.y-y)<(kind==='crit'||n.kind==='crit'?40:30)))y-=kind==='crit'?40:30}ST.nums.push({x,y,v,kind,life:.62,vy:-110,s:kind==='crit'?1.25:1})}
+function popNum(x,y,v,kind){kind=kind||'n';if(kind==='n'||kind==='crit'||kind==='f'){let g=0;while(g++<6&&ST.nums.some(n=>n.life>.3&&(n.kind==='n'||n.kind==='crit'||n.kind==='f')&&Math.abs(n.x-x)<38&&Math.abs(n.y-y)<(kind==='crit'||n.kind==='crit'?40:30)))y-=kind==='crit'?40:30}ST.nums.push({x,y,v,kind,life:kind==='crit'?.6:.5,vy:-110,s:kind==='crit'?1.25:1})}
 function particles(x,y,col,n,spd,kind){for(let i=0;i<n;i++){const a=Math.random()*Math.PI*2,s=spd*(.4+Math.random()*.8);ST.fx.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-60,life:.5+Math.random()*.4,col,r:2+Math.random()*4,kind:kind||'dot',rot:Math.random()*6})}}
 function shake(a){ST.shake=Math.max(ST.shake,a*(SV.calm?0.4:1))}
 function kick(dx,amt){ST.kickX=(ST.kickX||0)+dx*amt}
@@ -853,7 +853,7 @@ function drawFX(cx,dt){
 }
 function drawNums(cx,dt){
  for(const n of ST.nums){n.life-=dt;n.y+=n.vy*dt;n.vy*=Math.pow(.05,dt);const x=Math.max(46,Math.min(VW-60,n.x-cx)),y=Math.max(n.kind==='crit'?165:135,n.y);
-  const pop=n.life>.5?1+(n.life-.5)*3:1;ctx.save();ctx.translate(x,y);ctx.scale(pop*n.s,pop*n.s);ctx.globalAlpha=Math.min(1,n.life*3);
+  const pop=n.life>.4?1+(n.life-.4)*3.5:1;ctx.save();ctx.translate(x,y);ctx.scale(pop*n.s,pop*n.s);ctx.globalAlpha=Math.min(1,n.life*4)*(ST.tc?.25:1);
   ctx.textAlign='center';ctx.lineJoin='round';
   const dimg=IMG[n.kind==='crit'?'dmg_c':'dmg_n'];
   if((n.kind==='n'||n.kind==='crit'||n.kind==='f')&&dimg&&dimg.naturalWidth){const str=String(n.v);const dh=n.kind==='f'?26:n.kind==='crit'?44:34;const cw=dimg.naturalWidth/10,ch=dimg.naturalHeight;const dw=cw*dh/ch,step=dw*.72;let x0=-(str.length-1)*step/2;if(n.kind==='f')ctx.globalAlpha*=.85;for(const c of str){const d=+c;ctx.drawImage(dimg,d*cw,0,cw,ch,x0-dw/2,-dh,dw,dh);x0+=step}if(n.kind==='crit'){ctx.font='900 13px system-ui';ctx.lineWidth=4;ctx.strokeStyle='#7a1030';ctx.textAlign='center';ctx.strokeText('CRITICAL',0,-dh-4);ctx.fillStyle='#fff';ctx.fillText('CRITICAL',0,-dh-4)}}
@@ -1014,7 +1014,7 @@ function drawTCard(){if(ST.tc){const n=3,cw=92,ch=118,gx=W/2-(n*cw+(n-1)*12)/2,y
  if(ST.tb&&ST.tb.t>0){const k=ST.tb.k;card(316,12,150,30,15,.85);ctx.font='900 13px system-ui';ctx.fillStyle='#2f6a9a';ctx.fillText(TCARDS[k][0]+' '+TCARDS[k][1]+' '+Math.ceil(ST.tb.t)+'초',328,32)}}
 /* ---------- 자동 사냥 (메이플M식 AUTO) ---------- */
 function autoPilot(dt){const p=ST.pl;ST.apT=(ST.apT||0)-dt;let n=null,bd=1e9;
- for(const e of ST.ents){if(e.dead||e.spawnT>0)continue;const dy=e.y-p.y;const d=Math.abs(e.x-p.x)+Math.abs(dy)*(dy<-150?6:2.5);if(d<bd){bd=d;n=e}}
+ for(const e of ST.ents){if(e.dead||e.spawnT>0)continue;if(ST.lock&&(e.x<ST.lock.a||e.x>ST.lock.b))continue;const dy=e.y-p.y;const d=Math.abs(e.x-p.x)+Math.abs(dy)*(dy<-150?6:2.5);if(d<bd){bd=d;n=e}}
  K.left=0;K.right=0;K.up=0;K.down=0;
  // 막힘 감지: 3초간 콤보가 안 늘면 앞으로
  ST.apStuck=(ST.apStuck||0)+dt;if(ST.combo!==ST.apLastC){ST.apLastC=ST.combo;ST.apStuck=0}
@@ -1055,6 +1055,7 @@ function frame(now){
   // 카메라
   const tx=Math.max(0,Math.min(ST.S.len-VW,ST.pl.x-VW*.44+(ST.lookX=(ST.lookX||0)+((ST.pl.face*60)-(ST.lookX||0))*Math.min(1,dt*3))));ST.camX+=(tx-ST.camX)*Math.min(1,dt*6);
   if(ST.lock)ST.camX=Math.max(ST.lock.a-40,Math.min(ST.lock.b-VW+40,ST.camX));
+  ST.camX=Math.max(ST.camX,ST.pl.x-(VW-180/ZOOM));ST.camX=Math.min(ST.camX,ST.pl.x-140/ZOOM);
   let sx=0,sy=0;if(ST.shake>0){sx=(Math.random()-.5)*ST.shake*2;sy=(Math.random()-.5)*ST.shake*2;ST.shake=Math.max(0,ST.shake-dt*30)}
   if(ST.kickX){sx+=ST.kickX;ST.kickX*=Math.pow(.0005,dt);if(Math.abs(ST.kickX)<.1)ST.kickX=0}
   const zp=ST.zp||0;if(zp>0)ST.zp=Math.max(0,zp-dt*(ST.intro?.12:.25));
