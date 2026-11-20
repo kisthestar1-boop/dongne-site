@@ -63,7 +63,7 @@ def letter(a):
 {phones()}
 {seo("장유 "+subj+" 학원", N+" | 장유 "+subj+" 학원")}
 <div class="offer"><div>원장님 학원 사진으로 <b>무료 시안</b> 먼저</div><div>시간표 · 교습비 · 등록번호 표시까지</div><div>상담 신청 → 원장님 휴대폰으로 알림</div><div>사이트 주소 · 도메인은 원장님 소유</div><div>원장님이 직접 소식 · 사진 수정</div><div>마음에 드실 때만 제작 (부담 없어요)</div></div>
-<div class="cta"><img class="qr" src="{q}"><div><b>QR을 찍으면 학원 시안 예시를 바로 볼 수 있어요</b><p>무료 시안 신청 · 문의: <b style="display:inline;font-size:10.5pt">kisthestar1@gmail.com</b><br>학원 사진 3장과 학원 이름만 보내 주시면, 3일 안에 시안을 보내 드릴게요.</p></div></div>
+<div class="cta"><img class="qr" src="{q}"><div><b>📱 QR을 찍으면 찰칵홈이 만든 홈페이지들이 나와요</b><p><b style="display:inline;font-size:10.5pt;color:#FFE45C">👆 마음에 드는 업종을 눌러서 시안을 직접 확인해 보세요</b><br>무료 시안 신청 · 문의: <b style="display:inline;font-size:10.5pt">kisthestar1@gmail.com</b> · 학원 사진 3장과 학원 이름만 보내 주시면 3일 안에 시안을 보내 드려요.</p></div></div>
 <div class="foot"><span>찰칵홈 · 김해 장유 · 동네 학원 · 가게 홈페이지</span><span>필요 없으시면 버려 주세요. 다시 보내지 않을게요.</span></div>
 </div></body></html>"""
 
@@ -98,7 +98,7 @@ def walk():
     h=_re.sub(r'(<span>G</span>)[^<]*','\\1장유 영어 학원',h,count=1)
     h=_re.sub(r'<i>원장님가게.kr ›</i><b>[^<]*</b>','<i>원장님가게.kr ›</i><b>○○댄스 | 장유 다이어트 댄스</b>',h,count=1)
     h=h.replace('원장님 학원 사진으로 <b>무료 시안</b> 먼저','원장님 가게 사진으로 <b>무료 시안</b> 먼저').replace('시간표 · 교습비 · 등록번호 표시까지','시간표 · 가격 · (학원은 등록번호) 표시')
-    h=h.replace('QR을 찍으면 학원 시안 예시를 바로 볼 수 있어요','QR을 찍으면 업종별 시안 예시를 바로 볼 수 있어요').replace('학원 사진 3장과 학원 이름만','가게 사진 3장과 이름만')
+    h=h.replace('학원 사진 3장과 학원 이름만','가게 사진 3장과 이름만')
     h=h.replace('</style>','.chips{display:flex;flex-wrap:wrap;gap:2mm;margin:-1mm 0 4mm;max-width:140mm}.chips span{font-size:9.5pt;font-weight:800;border:1.4px solid #1A1A2E;border-radius:99px;padding:1mm 3.5mm}.chips span:nth-child(2){background:#FF2D87;color:#fff;border-color:#FF2D87}</style>',1)
     return h
 
