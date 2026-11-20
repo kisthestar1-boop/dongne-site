@@ -52,7 +52,7 @@ def phones():
 def letter(a):
     subj = SUBJ.get(a.get("subj") or guess_subj(a["name"]), "영어·수학")
     q = f"qr_{a['slug']}.png"
-    qrcode.make(f"https://kisthestar1-boop.github.io/minsung-ai/web/academy/?a={a["slug"]}", box_size=10, border=1).save(os.path.join(D, q))
+    qrcode.make(f"https://chalkakhome.com/academy/?a={a["slug"]}", box_size=10, border=1).save(os.path.join(D, q))
     N = html.escape(a["name"])
     return f"""<!doctype html><html lang="ko"><head><meta charset="utf-8"><style>{CSS}</style></head><body><div class="pg">
 <div class="top"><div class="logo">찰칵<b>홈</b></div><small>장유 동네 학원 홈페이지 · 김해 장유</small></div>
@@ -86,7 +86,8 @@ h1{{font-size:18pt}}.seo{{padding:2.5mm 3mm;gap:3mm;margin-bottom:3mm}}.seo .sb{
 def walk():
     a={"slug":"walk","name":"원장","note":""}
     h=letter(a)
-    qrcode.make("https://kisthestar1-boop.github.io/minsung-ai/web/academy/?src=walk", box_size=10, border=1).save(os.path.join(D,"qr_walk.png"))
+    qrcode.make("https://chalkakhome.com/academy/?src=walk", box_size=10, border=1).save(os.path.join(D,"qr_walk.png"))
+    qrcode.make("https://chalkakhome.com/academy/?src=flyer", box_size=10, border=1).save(os.path.join(D,"qr_flyer.png"))
     h=h.replace('<div class="to">원장 원장님께</div>','<div class="to">장유 · 율하 학원 · 교습소 · 운동 스튜디오 원장님께</div>')
     h=h.replace("원장 | 장유","○○학원 | 장유").replace("장유 영어·수학 학원","장유 영어·수학 학원")
     h=h.replace('<b>살펴보니</b> · 학원 이름으로 검색했을 때 학원을 소개하는 홈페이지가 보이지 않아요.','<b>알고 계셨나요?</b> · 블로그 · 지도만으로는 시간표 · 교습비 · 상담 신청을 한 번에 보기 어려워요.')
