@@ -113,10 +113,17 @@ def walk():
     h=h.replace('</style>','.chips{display:flex;flex-wrap:wrap;gap:2mm;margin:-1mm 0 4mm;max-width:140mm}.chips span{font-size:9.5pt;font-weight:800;border:1.4px solid #1A1A2E;border-radius:99px;padding:1mm 3.5mm}.chips span:nth-child(2){background:#FF2D87;color:#fff;border-color:#FF2D87}</style>',1)
     return h
 
+def common():
+    h=walk()
+    qrcode.make("https://chalkakhome.com/academy/?src=mail_common", box_size=10, border=1).save(os.path.join(D,"qr_common.png"))
+    h=h.replace('qr_walk.png','qr_common.png').replace('직접 전해 드리는 안내지예요 · 찰칵홈','필요 없으시면 버려 주세요. 다시 보내지 않을게요.')
+    return h
+
 if __name__ == "__main__":
     L = json.load(open(os.path.join(D, "targets.json")))
     for a in L:
         open(os.path.join(D, f"letter_{a['slug']}.html"), "w").write(letter(a))
     open(os.path.join(D, "flyer.html"), "w").write(flyer())
     open(os.path.join(D, "promo_a4.html"), "w").write(walk())
+    open(os.path.join(D, "letter_common.html"), "w").write(common())
     print(len(L), "letters + flyer")
