@@ -1001,7 +1001,7 @@ function drawResult(dt){
 /* ---------- 전술 카드 (자동 전투 중 3장 중 1장) ---------- */
 const TCARDS={spd:['⚡','신속','공격 속도 2배'],crit:['💥','치명','치명타 +30%'],heal:['🌿','치유의 비','체력 40% 회복'],mag:['🧲','자석','아이템 모두 끌어옴'],shield:['🛡','양털 보호막','받는 피해 절반'],call:['🌸','친구 호출','친구 기술 바로 사용']};
 function updTCard(dt){if(ST.S.village||ST.done)return;if(ST.tb&&ST.tb.t>0)ST.tb.t-=dt;ST.tcT=(ST.tcT==null?14:ST.tcT)-dt;
- if(!ST.tc&&ST.tcT<=0){const ks=Object.keys(TCARDS).sort(()=>Math.random()-.5).slice(0,3);ST.tc={ks,t:7};ST.tcT=28;SFX.get();}
+ if(!ST.tc&&ST.tcT<=0&&!(ST.fcut>0)&&!(ST.cutin>0)&&!(ST.lvFx&&ST.lvFx.t>0)){const ks=Object.keys(TCARDS).sort(()=>Math.random()-.5).slice(0,3);ST.tc={ks,t:7};ST.tcT=28;SFX.get();}
  if(ST.tc){ST.tc.t-=dt;for(let i=0;i<3;i++)if(pressed('d'+(i+1)))pickTC(i);if(ST.tc&&(ST.tc.t<=0||(SV.auto&&ST.tc.t<5.5)))pickTC(SV.auto?ST.tc.ks.indexOf(ST.pl.hp<ST.pl.hpMax*.5&&ST.tc.ks.includes('heal')?'heal':ST.tc.ks[0]):0);}}
 function pickTC(i){dprog('card',1);const k=ST.tc.ks[i];ST.tc=null;const p=ST.pl;SFX.skill();logMsg('🃏 전술 카드: '+TCARDS[k][1],'#bfe9ff');
  if(k==='heal'){const h=Math.round(p.hpMax*.4);p.hp=Math.min(p.hpMax,p.hp+h);popNum(p.x,p.y-100,'+'+h,'heal');vfx('vfx_heal',p.x,p.y-50,{s0:.35,s1:.6,life:.8})}
