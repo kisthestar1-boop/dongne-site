@@ -51,7 +51,7 @@ def phones():
 def letter(a):
     subj = SUBJ.get(a.get("subj") or guess_subj(a["name"]), "영어·수학")
     q = f"qr_{a['slug']}.png"
-    qrcode.make(f"https://kisthestar1-boop.github.io/minsung-ai/web/?src=mail_{a['slug']}#contact", box_size=10, border=1).save(os.path.join(D, q))
+    qrcode.make(f"https://kisthestar1-boop.github.io/minsung-ai/web/academy/?a={a["slug"]}", box_size=10, border=1).save(os.path.join(D, q))
     N = html.escape(a["name"])
     return f"""<!doctype html><html lang="ko"><head><meta charset="utf-8"><style>{CSS}</style></head><body><div class="pg">
 <div class="top"><div class="logo">찰칵<b>홈</b></div><small>장유 동네 학원 홈페이지 · 김해 장유</small></div>
@@ -62,7 +62,7 @@ def letter(a):
 {phones()}
 {seo("장유 "+subj+" 학원", N+" | 장유 "+subj+" 학원")}
 <div class="offer"><div>원장님 학원 사진으로 <b>무료 시안</b> 먼저</div><div>시간표 · 교습비 · 등록번호 표시까지</div><div>상담 신청 → 원장님 휴대폰으로 알림</div><div>사이트 주소 · 도메인은 원장님 소유</div><div>원장님이 직접 소식 · 사진 수정</div><div>마음에 드실 때만 제작 (부담 없어요)</div></div>
-<div class="cta"><img class="qr" src="{q}"><div><b>QR을 찍으면 예시를 바로 볼 수 있어요</b><p>무료 시안 신청 · 문의: <b style="display:inline;font-size:10.5pt">kisthestar1@gmail.com</b><br>학원 사진 3장과 학원 이름만 보내 주시면, 3일 안에 시안을 보내 드릴게요.</p></div></div>
+<div class="cta"><img class="qr" src="{q}"><div><b>QR을 찍으면 학원 시안 예시를 바로 볼 수 있어요</b><p>무료 시안 신청 · 문의: <b style="display:inline;font-size:10.5pt">kisthestar1@gmail.com</b><br>학원 사진 3장과 학원 이름만 보내 주시면, 3일 안에 시안을 보내 드릴게요.</p></div></div>
 <div class="foot"><span>찰칵홈 · 김해 장유 · 동네 학원 · 가게 홈페이지</span><span>필요 없으시면 버려 주세요. 다시 보내지 않을게요.</span></div>
 </div></body></html>"""
 
