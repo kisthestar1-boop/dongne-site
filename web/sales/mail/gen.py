@@ -81,9 +81,21 @@ h1{{font-size:18pt}}.seo{{padding:2.5mm 3mm;gap:3mm;margin-bottom:3mm}}.seo .sb{
 <div class="foot"><span>찰칵홈 · 김해 장유</span><span>직접 전해 드리는 안내지예요</span></div>
 </div></body></html>"""
 
+
+def walk():
+    a={"slug":"walk","name":"원장","note":""}
+    h=letter(a)
+    qrcode.make("https://kisthestar1-boop.github.io/minsung-ai/web/academy/?src=walk", box_size=10, border=1).save(os.path.join(D,"qr_walk.png"))
+    h=h.replace('<div class="to">원장 원장님께</div>','<div class="to">장유 · 율하 학원 · 교습소 · 운동 스튜디오 원장님께</div>')
+    h=h.replace("원장 | 장유","○○학원 | 장유").replace("장유 영어·수학 학원","장유 영어·수학 학원")
+    h=h.replace('<b>살펴보니</b> · 학원 이름으로 검색했을 때 학원을 소개하는 홈페이지가 보이지 않아요.','<b>알고 계셨나요?</b> · 블로그 · 지도만으로는 시간표 · 교습비 · 상담 신청을 한 번에 보기 어려워요.')
+    h=h.replace('필요 없으시면 버려 주세요. 다시 보내지 않을게요.','직접 전해 드리는 안내지예요 · 찰칵홈')
+    return h
+
 if __name__ == "__main__":
     L = json.load(open(os.path.join(D, "targets.json")))
     for a in L:
         open(os.path.join(D, f"letter_{a['slug']}.html"), "w").write(letter(a))
     open(os.path.join(D, "flyer.html"), "w").write(flyer())
+    open(os.path.join(D, "promo_a4.html"), "w").write(walk())
     print(len(L), "letters + flyer")
