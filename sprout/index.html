@@ -362,7 +362,7 @@ function updFriends(dt){
   else if(f.k==='hedgehog'&&near)tx=near.x-30*Math.sign(near.x-f.x||1);
   else tx=trailX(52+i*40);
   for(const o of ST.friends){if(o!==f&&Math.abs(o.x-f.x)<34)tx+=(f.x>=o.x?1:-1)*22}
-  if(f.onG&&!near&&Math.abs(p.x-f.x)<34&&Math.abs(p.vx)>150&&Math.sign(p.vx)===Math.sign(f.x-p.x)&&!(f.hopCD>0)){f.vy=-360;f.onG=false;f.hopCD=.6;f.vx=-Math.sign(p.vx)*60}
+  if(f.onG&&!near&&Math.abs(p.x-f.x)<42&&Math.abs(p.vx)>150&&Math.sign(p.vx)===Math.sign(f.x-p.x)&&!(f.hopCD>0)){f.vy=-360;f.onG=false;f.hopCD=.6;f.vx=-Math.sign(p.vx)*80}
   if(f.hopCD>0)f.hopCD-=dt;
   if(Math.abs(p.x-f.x)<30&&!near)tx+=(f.x>=p.x?1:-1)*24;
   const dx=tx-f.x;f.vx=Math.abs(dx)>14?Math.sign(dx)*Math.min(300,Math.abs(dx)*3):f.vx*.8;
@@ -765,7 +765,7 @@ function sprite(img,x,y,h,face,opt){
  ctx.translate(0,opt.dy||0);if(opt.rot)ctx.rotate(opt.rot);
  ctx.scale((face<0?-1:1)*(opt.sx||1),opt.sy2||1);
  if(opt.alpha!=null)ctx.globalAlpha=opt.alpha;
- if(opt.br!=null&&!opt.noOl){const o=outl(img),sc=h/img.naturalHeight,pp=o.pp*sc,DW=w+pp*2,DH=h+pp*2,N=28,sh=o.height/N;const br=opt.br,sw=opt.sw||0;let yb=0;const hs=[];let tot=0;for(let i=0;i<N;i++){const v=i/N,up=Math.max(0,Math.min(1,(.62-v)/.62));const hh=DH/N*(1+br*.035*up);hs.push(hh);tot+=hh}let y=-h-pp-(tot-DH);for(let i=0;i<N;i++){const v=i/N,top=Math.pow(Math.max(0,1-v/.55),2);const xo=sw*3.2*top;ctx.drawImage(o,0,i*sh,o.width,sh+1,-w/2-pp+xo,y,DW,hs[i]+.6);y+=hs[i]}}
+ if(opt.br!=null&&!opt.noOl){const o=outl(img),sc=h/img.naturalHeight,pp=o.pp*sc,DW=w+pp*2,DH=h+pp*2,N=28,sh=o.height/N;const br=opt.br,sw=opt.sw||0;let yb=0;const hs=[];let tot=0;for(let i=0;i<N;i++){const v=i/N,up=Math.max(0,Math.min(1,(.62-v)/.62));const hh=DH/N*(1+br*.048*up);hs.push(hh);tot+=hh}let y=-h-pp-(tot-DH);for(let i=0;i<N;i++){const v=i/N,top=Math.pow(Math.max(0,1-v/.55),2);const xo=sw*4*top;ctx.drawImage(o,0,i*sh,o.width,sh+1,-w/2-pp+xo,y,DW,hs[i]+.6);y+=hs[i]}}
  else if(opt.noOl)ctx.drawImage(img,-w/2,-h,w,h);else{const o=outl(img),sc=h/img.naturalHeight,pp=o.pp*sc;ctx.drawImage(o,-w/2-pp,-h-pp,w+pp*2,h+pp*2)}
  if(opt.flash>0){ctx.globalCompositeOperation='lighter';ctx.globalAlpha=Math.min(.7,opt.flash);ctx.drawImage(img,-w/2,-h,w,h);}
  ctx.restore();
@@ -971,7 +971,7 @@ function drawTitle(dt){
  button(W-232,H-58,104,40,'📖 도감',()=>{scene='book'},'#cfe7b8');
  button(W-120,H-58,104,40,SV.mute?'🔇 음악':'🎵 음악',()=>{SV.mute=!SV.mute;save();if(SV.mute)bgmStop();else bgmStart()},'#e7e0f6');
  btns.unshift({x:0,y:0,w:W,h:H,cb:startGame});
- ctx.fillStyle='rgba(58,41,30,.7)';ctx.font='bold 12px system-ui';ctx.fillText('v0.9.5 · 육성 시험판 · 효과음 Kenney (CC0)',14,H-14);
+ ctx.fillStyle='rgba(58,41,30,.7)';ctx.font='bold 12px system-ui';ctx.fillText('v0.9.6 · 육성 시험판 · 효과음 Kenney (CC0)',14,H-14);
  if(loaded<NAMES.length){ctx.fillStyle='#fff';ctx.font='bold 13px system-ui';ctx.fillText('그림 불러오는 중… '+loaded+'/'+NAMES.length,14,24)}
  // 꽃잎 (천천히)
  for(let i=0;i<22;i++){const sp=18+(i%5)*6,x=((i*137+titleT*sp*1.4)%(W+80))-40,y=((i*89+titleT*(sp+10))%(H+60))-30;ctx.save();ctx.translate(x,y);ctx.rotate(titleT*.8+i);ctx.fillStyle=i%3?'rgba(255,214,228,.75)':'rgba(255,240,200,.7)';ctx.beginPath();ctx.ellipse(0,0,6,3,0,0,7);ctx.fill();ctx.restore()}
