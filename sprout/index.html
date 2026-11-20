@@ -152,6 +152,9 @@ function makeStage(region){
 /* ---------- 상태 ---------- */
 let ST,scene='title',titleT=0;
 let REGION='forest';
+function startGame(){if(startGame.busy)return;startGame.busy=1;SFX.get();titleOut=.55;setTimeout(()=>{newRun('village');ST.intro=1;introSetup();scene='play';startGame.busy=0},550)}
+let titleOut=0;
+function introSetup(){const p=ST.pl;p.y=GROUND-300;p.vy=60;p.onG=false;p.sq=null;ST.friends.forEach((f,i)=>{f.y=GROUND-320-i*60;f.vy=0;f.onG=false;f.hold=.35+i*.18});ST.zp=.16;ST.fadeIn=.6;ST.introT=0;ST.camX=Math.max(0,p.x-VW*.44)}
 function newRun(region){
  REGION=region||REGION;const S=makeStage(REGION);
  ST={S,t:0,camX:0,shake:0,hitstop:0,ents:[],fx:[],nums:[],shots:[],zone:0,waveIdx:0,waveOn:false,lock:null,
@@ -168,6 +171,7 @@ function mkPlayer(){
  return {x:380,y:GROUND,vx:0,vy:0,face:1,w:34,h:70,onG:true,onVine:null,hp:100+lv*12,hpMax:100+lv*12,mp:0,mpMax:300,atk:Math.round((10+lv*3)*(1+(SV.wpn||0)*.08+bookBonus())),
   combo:0,atkT:0,atkCD:0,buf:0,inv:0,hurtT:0,coyote:0,jumpBuf:0,state:'idle',anim:0,drop:0,skillT:0};
 }
+function friendHold(f,dt){if(f.hold>0){f.hold-=dt;f.vy=0;return true}return false}
 function mkFriend(k,i){const st=SV.fstar[k]||1;return {k,x:330-i*40,y:GROUND,vx:0,vy:0,face:1,onG:true,cd:1+i*.4,anim:Math.random()*6,act:0,lv:st,hop:0,taunt:0}}
 const ENEMY={
  e0:{n:'시든 새싹',img:'sprite_e0',hp:38,atk:8,spd:55,h:56,exp:6,col:'#a8834e'},
@@ -286,7 +290,7 @@ function updPlayer(dt){
  p.vy+=GRAV*(Math.abs(p.vy)<140&&!p.onG?.55:1)*dt;p.x+=p.vx*dt;p.y+=p.vy*dt;
  p.x=Math.max(20,Math.min(S.len-20,p.x));
  if(ST.lock){p.x=Math.max(ST.lock.a+20,Math.min(ST.lock.b-20,p.x))}
- const fallV=p.vy;const was=p.onG;p.onG=landOn(p,prevY);if(p.onG&&!was){dust(p.x,p.y,6);p.sq={t:.14,sx:1.18,sy:.84};if(fallV>500){shake(2)}}
+ const fallV=p.vy;const was=p.onG;p.onG=landOn(p,prevY);if(p.onG&&!was&&ST.intro&&!ST.introLanded){ST.introLanded=1;vfx('vfx_lvup',p.x,p.y-70,{s0:.3,s1:.5,life:.9,a:.7});shake(3);SFX.big();dust(p.x,p.y,10)}if(p.onG&&!was){dust(p.x,p.y,6);p.sq={t:.14,sx:1.18,sy:.84};if(fallV>500){shake(2)}}
  if(p.onG&&dir&&Math.sign(p.vx)!==dir&&Math.abs(p.vx)>120&&Math.random()<.5)dust(p.x,p.y,1);
  if(p.onG&&Math.abs(p.vx)>200){p.stepT=(p.stepT||0)-dt;if(p.stepT<=0){p.stepT=.22;dust(p.x-p.face*10,p.y,1)}}
  if(p.sq&&p.sq.t>0)p.sq.t-=dt;
@@ -352,7 +356,7 @@ function updFriends(dt){
   if(f.onG&&p.y<f.y-60&&Math.abs(p.x-f.x)<200&&!p.onVine){f.vy=-700;f.onG=false;}
   if(f.onG&&p.y>f.y+60){f.drop=.25;f.onG=false;f.vy=40}
   if(f.drop>0)f.drop-=dt;
-  f.vy+=GRAV*dt;f.x+=f.vx*dt;f.y+=f.vy*dt;f.onG=landOn(f,prevY);
+  if(friendHold(f,dt))return;const wasG=f.onG;f.vy+=GRAV*dt;f.x+=f.vx*dt;f.y+=f.vy*dt;f.onG=landOn(f,prevY);if(f.onG&&!wasG&&ST.intro){dust(f.x,f.y,4);f.hop=.15;beep(660+Math.random()*200,.08,'sine',.05,1.4);popTag(f.x,f.y-90,'♪')}
   if(Math.abs(f.x-p.x)>700){f.x=p.x-p.face*60;f.y=p.y;f.vy=0}
   // 행동
   const sy=(synergy()||{}).fx;const pow=(1+(f.lv-1)*.25)*(sy==='heal'&&f.k==='bunny'?1.3:1),atk=ST.pl.atk*.55*pow*(sy==='fatk'?1.2:1);
@@ -918,12 +922,12 @@ function drawTitle(dt){
  // 주인공 크게
  const pim=IMG.sprout;const ph=H*.54,pw=pim.naturalWidth*ph/pim.naturalHeight;
  ctx.save();ctx.globalAlpha=.25;ctx.fillStyle='#3a2f22';ctx.beginPath();ctx.ellipse(W*.24,GROUND+6,pw*.32,10,0,0,7);ctx.fill();ctx.restore();
- ctx.drawImage(pim,W*.24-pw/2,GROUND+4-ph+Math.sin(titleT*2)*2,pw,ph);
+ {const br=1+Math.sin(titleT*2.2)*.012;ctx.save();ctx.translate(W*.24,GROUND+4);ctx.rotate(Math.sin(titleT*1.1)*.012);ctx.scale(1/br*1.0+ (br-1)*.2,br);ctx.drawImage(pim,-pw/2,-ph,pw,ph);ctx.restore()}
  // 로고
  const cx=W*.62;ctx.textAlign='center';ctx.lineJoin='round';
  ctx.font='italic 900 76px system-ui';ctx.lineWidth=16;ctx.strokeStyle='#fffaf0';ctx.strokeText('새싹 원정대',cx,150);
  ctx.lineWidth=7;ctx.strokeStyle='#3f6b2e';ctx.strokeText('새싹 원정대',cx,150);
- const lg=ctx.createLinearGradient(0,92,0,150);lg.addColorStop(0,'#c9f28a');lg.addColorStop(1,'#5e9e3a');ctx.fillStyle=lg;ctx.fillText('새싹 원정대',cx,150);
+ const lg=ctx.createLinearGradient(0,92,0,150);lg.addColorStop(0,'#c9f28a');lg.addColorStop(1,'#5e9e3a');ctx.fillStyle=lg;ctx.fillText('새싹 원정대',cx,150);{const sw=(titleT%4)/4;if(sw<.35){ctx.save();ctx.globalCompositeOperation='source-atop';const sx=cx-260+sw/.35*520;const sg=ctx.createLinearGradient(sx-40,0,sx+40,0);sg.addColorStop(0,'rgba(255,255,255,0)');sg.addColorStop(.5,'rgba(255,255,255,.75)');sg.addColorStop(1,'rgba(255,255,255,0)');ctx.fillStyle=sg;ctx.fillText('새싹 원정대',cx,150);ctx.restore()}}
  ctx.font='900 18px system-ui';ctx.lineWidth=5;ctx.strokeStyle='rgba(63,107,46,.85)';ctx.strokeText('SPROUT  EXPEDITION',cx,182);ctx.fillStyle='#fffaf0';ctx.fillText('SPROUT  EXPEDITION',cx,182);
  // 내 기록
  card(cx-215,200,430,64,16,.88);
@@ -934,9 +938,12 @@ function drawTitle(dt){
  ctx.textAlign='left';
  button(W-232,H-58,104,40,'📖 도감',()=>{scene='book'},'#cfe7b8');
  button(W-120,H-58,104,40,SV.mute?'🔇 음악':'🎵 음악',()=>{SV.mute=!SV.mute;save();if(SV.mute)bgmStop();else bgmStart()},'#e7e0f6');
- btns.unshift({x:0,y:0,w:W,h:H,cb:()=>{newRun('village');scene='play'}});
+ btns.unshift({x:0,y:0,w:W,h:H,cb:startGame});
  ctx.fillStyle='rgba(58,41,30,.7)';ctx.font='bold 12px system-ui';ctx.fillText('v0.5 · 육성 시험판',14,H-14);
  if(loaded<NAMES.length){ctx.fillStyle='#fff';ctx.font='bold 13px system-ui';ctx.fillText('그림 불러오는 중… '+loaded+'/'+NAMES.length,14,24)}
+ // 꽃잎 (천천히)
+ for(let i=0;i<22;i++){const sp=18+(i%5)*6,x=((i*137+titleT*sp*1.4)%(W+80))-40,y=((i*89+titleT*(sp+10))%(H+60))-30;ctx.save();ctx.translate(x,y);ctx.rotate(titleT*.8+i);ctx.fillStyle=i%3?'rgba(255,214,228,.75)':'rgba(255,240,200,.7)';ctx.beginPath();ctx.ellipse(0,0,6,3,0,0,7);ctx.fill();ctx.restore()}
+ if(titleOut>0){titleOut-=dt;ctx.fillStyle='rgba(255,250,238,'+Math.min(1,1-titleOut/.55)+')';ctx.fillRect(0,0,W,H)}
 }
 function drawBook(){
  drawBG();panel(60,40,W-120,H-80);btns=[];
@@ -1019,7 +1026,7 @@ function loop(now){
  updCtl();
  if(tapXY){for(let i=btns.length-1;i>=0;i--){const b=btns[i];if(tapXY.x>=b.x&&tapXY.x<=b.x+b.w&&tapXY.y>=b.y&&tapXY.y<=b.y+b.h){b.cb();break}}tapXY=null}
  btns=[];
- if(scene==='title'){if(pressed('atk')||pressed('jump')){newRun('village');scene='play'}drawTitle(dt);}
+ if(scene==='title'){if(pressed('atk')||pressed('jump'))startGame();drawTitle(dt);}
  else if(scene==='book'){drawBook();}
  else if(scene==='duel'){updDuel(dt);drawDuel(dt);}
  else{
@@ -1036,13 +1043,14 @@ function loop(now){
   if(ST.lock)ST.camX=Math.max(ST.lock.a-40,Math.min(ST.lock.b-VW+40,ST.camX));
   let sx=0,sy=0;if(ST.shake>0){sx=(Math.random()-.5)*ST.shake*2;sy=(Math.random()-.5)*ST.shake*2;ST.shake=Math.max(0,ST.shake-dt*30)}
   if(ST.kickX){sx+=ST.kickX;ST.kickX*=Math.pow(.0005,dt);if(Math.abs(ST.kickX)<.1)ST.kickX=0}
-  const zp=ST.zp||0;if(zp>0)ST.zp=Math.max(0,zp-dt*.25);
+  const zp=ST.zp||0;if(zp>0)ST.zp=Math.max(0,zp-dt*(ST.intro?.12:.25));
   ctx.save();drawBG();ctx.translate(sx,sy);{const zz=ZOOM*(1+zp);const fx=(ST.pl.x-ST.camX)*ZOOM;ctx.translate(fx,H*.9);ctx.scale(zz/ZOOM,zz/ZOOM);ctx.translate(-fx,-H*.9);ctx.translate(0,H);ctx.scale(ZOOM,ZOOM);ctx.translate(0,-H);}const cx=Math.round(ST.camX);
   ST.S.plats.forEach(p=>drawPlat(p,cx));ST.S.vines.forEach(v=>drawVine(v,cx));if(ST.S.village)drawVillageObjs(cx);
   drawEnemies(cx);drawFriends(cx);drawPlayer(cx);drawShots(cx);drawFX(cx,sim);drawVfx(cx,sim);if(scene!=='result'&&!ST.dlg)drawNums(cx,sim);
   ctx.restore();drawFG();if(ST.flash>0){ctx.fillStyle='rgba(255,252,240,'+(ST.flash*1.4)+')';ctx.fillRect(0,0,W,H);ST.flash-=dt}drawHUD();
   if(scene==='result')drawResult(dt);
-  if(ST.fadeIn>0){ctx.fillStyle='rgba(30,25,20,'+Math.min(1,ST.fadeIn*2)+')';ctx.fillRect(0,0,W,H);ST.fadeIn-=dt}
+  if(ST.fadeIn>0){ctx.fillStyle=(ST.intro?'rgba(255,250,238,':'rgba(30,25,20,')+Math.min(1,ST.fadeIn*2)+')';ctx.fillRect(0,0,W,H);ST.fadeIn-=dt}
+  if(ST.intro){ST.introT+=dt;if(ST.introT>3)ST.intro=0;}
   if(ST.warp){ST.warp.t-=dt;ctx.fillStyle='rgba(30,25,20,'+Math.min(1,1-ST.warp.t/.6)+')';ctx.fillRect(0,0,W,H);if(ST.warp.t<=0){const to=ST.warp.to;newRun(to);}}
   if(scene==='play'&&!ST.done&&(pressed('atk')&&false)){}
  }
