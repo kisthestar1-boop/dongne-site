@@ -36,7 +36,7 @@ header .btn{padding:11px 20px;font-size:15px}
 @media(max-width:900px){nav{display:none}header .btn{display:none}}
 /* 히어로 */
 .hero{position:relative;min-height:min(88vh,760px);display:flex;align-items:flex-end;color:#fff;overflow:hidden;background:#222}
-.hero picture,.hero img.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:60% 40%}
+.hero video.bg,.hero img.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:55% 45%}
 .hero:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(14,8,18,.86) 0%,rgba(14,8,18,.55) 42%,rgba(14,8,18,.05) 75%),linear-gradient(0deg,rgba(14,8,18,.7),transparent 45%)}
 .hero .w{position:relative;z-index:2;width:100%;padding-bottom:70px}
 .hero .tag{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);border-radius:99px;padding:7px 14px;font-weight:700;font-size:14px;backdrop-filter:blur(4px)}
@@ -147,7 +147,7 @@ footer{background:var(--ink);color:#BDB4C6;padding:40px 0 110px;font-size:13.5px
 <nav><a href="#first">처음 오세요?</a><a href="#class">수업·시간표</a><a href="#price">가격</a><a href="#review">후기</a><a href="#book">오시는 길</a></nav>
 <a class="btn pk" href="#book">첫 수업 무료</a></div></header>
 
-<section class="hero" style="padding:0"><picture><source media="(max-width:700px)" srcset="img/hero_m.jpg"><img class="bg" src="img/hero.jpg" alt="장유 다이어트댄스 저녁반 수업 중 회원들이 함께 점프하는 모습"></picture>
+<section class="hero" style="padding:0"><video class="bg" autoplay muted loop playsinline preload="metadata" poster="img/hero_poster.jpg" aria-label="저녁반 수업 영상 - 강사와 회원들이 함께 춤추는 모습"><source media="(max-width:700px)" src="img/hero_m.mp4" type="video/mp4"><source src="img/hero.mp4" type="video/mp4"></video>
 <div class="w"><span class="tag">💃 장유 · 30~60대 여성 · K-POP 다이어트댄스</span>
 <h1 class="hd">땀나게 <em>웃는</em><br>한 시간.</h1>
 <p>몸치여도, 오랜만이어도 괜찮아요. 신나는 노래에 맞춰 따라 하다 보면 한 시간이 금방 가요. 오전 10시반 · 저녁 8시반.</p>
@@ -307,4 +307,5 @@ const g=new Map();$$(C.reveal).filter(e=>!e.closest('.hero,header,#uxk-md')).for
 </script>
 <!--/UXKIT-->
 
+<script>(()=>{const v=document.querySelector(".hero video");if(!v)return;if(matchMedia("(prefers-reduced-motion: reduce)").matches){v.removeAttribute("autoplay");v.pause()}document.addEventListener("visibilitychange",()=>{document.hidden?v.pause():v.play().catch(()=>{})})})()</script>
 </body></html>
