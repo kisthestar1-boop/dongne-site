@@ -305,7 +305,7 @@ function updPlayer(dt){
  if(p.buf>0&&p.atkCD<=0&&!hurt){
   p.buf=0;SFX.swing();
   if(!p.onG){p.state='air';p.atkT=.22;p.atkCD=.22;vfx('vfx_slash',p.x+p.face*52,p.y-40,{s0:.42,s1:.62,life:.2,flip:-p.face,rot:p.face*1.2});dealHits(attackBox(p,80,90),p.atk*1.1,{kb:90,lift:120,stun:.35,col:'#d8f0b0',leaf:1});p.vy=Math.min(p.vy,-60);}
-  else if(K.up){p.state='up';p.atkT=.3;p.atkCD=.34;setTimeout(()=>{if(ST&&ST.pl===p&&p.onG){p.vy=-430;p.onG=false;dust(p.x,p.y,6)}},70);for(let q=0;q<6;q++)ST.fx.push({kind:'ink',x:p.x+p.face*50+(Math.random()-.5)*16,y:p.y-20-q*22,vx:0,vy:-60,life:.35,r:6+Math.random()*4,col:'220,245,200',rot:0});vfx('vfx_slash',p.x+p.face*30,p.y-84,{s0:.5,s1:.78,life:.25,flip:-p.face,rot:-p.face*1.4});dealHits(attackBox(p,75,110),p.atk*1.2,{kb:40,lift:620,stun:.6,stop:.07,col:'#fff1a8'});p.combo=0;}
+  else if(K.up){p.state='up';p.atkT=.3;p.atkCD=.34;setTimeout(()=>{if(ST&&ST.pl===p&&p.onG){p.vy=-430;p.onG=false;dust(p.x,p.y,6)}},70);for(let q=0;q<6;q++)ST.fx.push({kind:'ink',x:p.x+p.face*50+(Math.random()-.5)*16,y:p.y-20-q*22,vx:0,vy:-60,life:.35,r:6+Math.random()*4,col:'220,245,200',rot:0});vfx('vfx_slash',p.x+p.face*30,p.y-84,{s0:.5,s1:.78,life:.25,flip:-p.face,rot:-p.face*1.4});dealHits(attackBox(p,75,110),p.atk*1.2,{kb:40,lift:500,stun:.7,stop:.055,sh:4,col:'#fff1a8'});p.combo=0;}
   else{
    if(p.comboWin>0&&p.combo<3)p.combo++;else p.combo=1;
    const c=p.combo;p.state='a'+c;p.comboWin=.45;
