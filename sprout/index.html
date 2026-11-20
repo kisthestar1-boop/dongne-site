@@ -723,13 +723,13 @@ function drawBG(){
  if(bg.complete&&bg.naturalWidth){const bw=bg.naturalWidth*(H/bg.naturalHeight);let x=-((ST?ST.camX:titleT*40)*par)%bw;if(x>0)x-=bw;for(;x<W;x+=bw)ctx.drawImage(bgi,x,0,bw,H);}
  else{ctx.fillStyle='#d9ead0';ctx.fillRect(0,0,W,H)}
  // 아래쪽 안개
- const g=ctx.createLinearGradient(0,H*.55,0,H);g.addColorStop(0,'rgba(251,245,230,0)');g.addColorStop(1,'rgba(251,245,230,.55)');ctx.fillStyle=g;ctx.fillRect(0,H*.55,W,H*.45);
+ const g=ctx.createLinearGradient(0,H*.55,0,H);g.addColorStop(0,'rgba(251,245,230,0)');g.addColorStop(1,'rgba(251,245,230,.28)');ctx.fillStyle=g;ctx.fillRect(0,H*.55,W,H*.45);
 }
 const FGSEQ=[['fg1',0],['fg3',620],['fg2',1180],['fg1',1700],['fg2',2300],['fg3',2900]];
 function drawFG(){if(!ST||ST.S.village&&false)return;const par=1.35,span=3400,cx=ST.camX*par;
  for(const [n,x0] of FGSEQ){const im=IMG[n];if(!im||!im.naturalWidth)continue;const h=n==='fg1'?70:n==='fg2'?82:105;const w=im.naturalWidth*(h/im.naturalHeight);
   let x=((x0-cx)%span+span)%span-300;if(x>W+50)continue;ctx.globalAlpha=.96;ctx.drawImage(im,x,H-h+18,w,h);ctx.globalAlpha=1}}
-const SOFT=new Map();function softBG(img){let c=SOFT.get(img);if(c)return c;c=document.createElement('canvas');const sc=Math.min(1,1080/img.naturalHeight);c.width=Math.round(img.naturalWidth*sc);c.height=Math.round(img.naturalHeight*sc);const x=c.getContext('2d');x.filter='saturate(.82) brightness(.98)';x.drawImage(img,0,0,c.width,c.height);if(x.filter==='none'||!('filter' in x)){x.globalAlpha=.12;x.fillStyle='#f3ece0';x.fillRect(0,0,c.width,c.height)}SOFT.set(img,c);return c}
+const SOFT=new Map();function softBG(img){let c=SOFT.get(img);if(c)return c;c=document.createElement('canvas');const sc=Math.min(1,1080/img.naturalHeight);c.width=Math.round(img.naturalWidth*sc);c.height=Math.round(img.naturalHeight*sc);const x=c.getContext('2d');x.filter='saturate(.92) contrast(1.06) brightness(.95)';x.drawImage(img,0,0,c.width,c.height);if(x.filter==='none'||!('filter' in x)){x.globalAlpha=.12;x.fillStyle='#f3ece0';x.fillRect(0,0,c.width,c.height)}SOFT.set(img,c);return c}
 function drawPlat(p,cx){
  const x=p.x-cx,y=p.y;
  if(p.ground){
