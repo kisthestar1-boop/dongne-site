@@ -766,6 +766,7 @@ function drawPlayer(cx){
  else if(p.state==='a3'){if(p.wind3>0){img=KF('p_k3');rot=-.08;sy*=.96;sx*=1.04}else{const k=1-p.atkT/.34;img=KF(k<.55?'p_k5':'p_k4');sx*=1.04}}
  else if(p.state==='air'||p.state==='up'){img=KF(p.state==='up'?'p_k5':'p_k2');rot=p.state==='up'?-.3:.15}
  if(p.skillT>0)img=IMG.p_cast;
+ if(p.hurtT>0){img=IMG.p_idle;rot=-p.face*.22*Math.min(1,p.hurtT*4);sx*=1.05;sy*=.95}
  if(p.sq&&p.sq.t>0){const k=p.sq.t/.14;sx*=1+(p.sq.sx-1)*k;sy*=1+(p.sq.sy-1)*k}
  p.vf=p.vf==null?p.face:p.vf+(p.face-p.vf)*Math.min(1,(1/60)*28);const vfs=Math.abs(p.vf)<.25?.25*Math.sign(p.vf||1):p.vf;
  if(p.onG&&p.state==='run')rot+=Math.max(-1,Math.min(1,p.vx/260))*.07;
