@@ -56,7 +56,7 @@ if(isTouch)document.body.classList.add('touch');
 function fit(){
  const vw=innerWidth,vh=innerHeight;ROT=isTouch&&vh>vw;const sw=ROT?vh:vw,sh=ROT?vw:vh;
  stage.style.width=sw+'px';stage.style.height=sh+'px';stage.style.transform=ROT?'rotate(90deg) translateY(-100%)':'none';
- W=isTouch?Math.max(860,Math.min(1240,Math.round(H*sw/sh))):960;ZOOM=isTouch?1.24:1.08;VW=W/ZOOM;
+ W=isTouch?Math.max(860,Math.min(1240,Math.round(H*sw/sh))):960;ZOOM=isTouch?1.4:1.12;VW=W/ZOOM;
  const k=Math.min(sw/W,sh/H);const cw=W*k,ch=H*k;cv.style.width=cw+'px';cv.style.height=ch+'px';
  const dpr=Math.min(3,window.devicePixelRatio||1);let bw=Math.round(cw*dpr);if(bw>3000)bw=3000;if(bw<W)bw=W;
  cv.width=bw;cv.height=Math.round(bw*H/W);SCALE=cv.width/W;ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';
@@ -203,7 +203,7 @@ function banner(t,s){ST.banner={t,s,life:2.1}}
 function logMsg(t,col){if(!ST)return;ST.log=ST.log||[];const L=ST.log;if(L.length&&L[L.length-1].t===t&&L[L.length-1].life>2){L[L.length-1].n++;L[L.length-1].life=3.2;return}L.push({t,col:col||'#fffaf0',life:3.2,n:1});if(L.length>6)L.shift()}
 function dust(x,y,n){for(let i=0;i<n;i++)ST.fx.push({kind:'ink',x:x+(Math.random()-.5)*26,y:y-4-Math.random()*6,vx:0,vy:0,life:.35+Math.random()*.2,r:4+Math.random()*5,col:'236,226,200',rot:0})}
 function popTag(x,y,t){ST.nums.push({x,y,v:t,kind:'tag',life:.8,vy:-90,s:1})}
-function popNum(x,y,v,kind){kind=kind||'n';if(kind==='n'||kind==='crit'||kind==='f'){const near=ST.nums.filter(n=>n.life>.3&&Math.abs(n.x-x)<36&&Math.abs(n.y-y)<60).length;if(near){ST.nslot=((ST.nslot||0)+1)%4;x+=[-26,26,-48,48][ST.nslot]}const act=ST.nums.filter(n=>n.life>0&&(n.kind==='n'||n.kind==='crit'||n.kind==='f'));if(act.length>=6){act.sort((a,b)=>a.life-b.life);act[0].life=0}let g=0;while(g++<6&&ST.nums.some(n=>n.life>.3&&(n.kind==='n'||n.kind==='crit'||n.kind==='f')&&Math.abs(n.x-x)<42&&Math.abs(n.y-y)<(kind==='crit'||n.kind==='crit'?40:30)))y-=kind==='crit'?40:30;x=Math.max(x,ST.camX+VW*.19);y=Math.max(y,178)}ST.nums.push({x,y,v,kind,life:kind==='crit'?.6:.5,vy:-110,s:kind==='crit'?1.25:1})}
+function popNum(x,y,v,kind){kind=kind||'n';if(kind==='n'||kind==='crit'||kind==='f'){x=Math.max(x,ST.camX+VW*.19+20);const near=ST.nums.filter(n=>n.life>.3&&Math.abs(n.x-x)<36&&Math.abs(n.y-y)<60).length;if(near){ST.nslot=((ST.nslot||0)+1)%4;x+=[-26,26,-48,48][ST.nslot]}const act=ST.nums.filter(n=>n.life>0&&(n.kind==='n'||n.kind==='crit'||n.kind==='f'));if(act.length>=6){act.sort((a,b)=>a.life-b.life);act[0].life=0}let g=0;while(g++<6&&ST.nums.some(n=>n.life>.3&&(n.kind==='n'||n.kind==='crit'||n.kind==='f')&&Math.abs(n.x-x)<42&&Math.abs(n.y-y)<(kind==='crit'||n.kind==='crit'?40:30)))y-=kind==='crit'?40:30;{const mx=ST.camX+VW*.19+20;if(x<mx)x=mx+((ST.nslot||0)%4)*34}y=Math.max(y,178)}ST.nums.push({x,y,v,kind,life:kind==='crit'?.6:.5,vy:-110,s:kind==='crit'?1.25:1})}
 function particles(x,y,col,n,spd,kind){for(let i=0;i<n;i++){const a=Math.random()*Math.PI*2,s=spd*(.4+Math.random()*.8);ST.fx.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-60,life:.5+Math.random()*.4,col,r:2+Math.random()*4,kind:kind||'dot',rot:Math.random()*6})}}
 function shake(a){ST.shake=Math.max(ST.shake,a*(SV.calm?0.4:1))}
 function kick(dx,amt){ST.kickX=(ST.kickX||0)+dx*amt}
@@ -378,7 +378,7 @@ function updFriends(dt){
   const sy=(synergy()||{}).fx;const pow=(1+(f.lv-1)*.25)*(sy==='heal'&&f.k==='bunny'?1.3:1),atk=ST.pl.atk*.55*pow*(sy==='fatk'?1.2:1);
   if(f.cd<=0){
    if(f.k==='fox'&&near&&Math.abs(near.x-f.x)<520){f.cd=1.1;f.act=.25;f.face=Math.sign(near.x-f.x)||1;ST.shots.push({x:f.x+f.face*20,y:f.y-38,vx:f.face*760,life:.8,kind:'arrow',dmg:atk,r:12,from:1});SFX.swing();}
-   else if(f.k==='sheep'&&near&&Math.abs(near.x-f.x)<70){f.cd=1.3;f.act=.3;dealHits({x1:f.x-60,x2:f.x+60,y1:f.y-80,y2:f.y+10},atk*.7,{kb:220,stun:.4,fromFriend:1,dir:Math.sign(near.x-f.x)||1,col:'#e8f4ff'});f.taunt=1.2;}
+   else if(f.k==='sheep'&&near&&Math.abs(near.x-f.x)<70){f.cd=1.3;f.act=.3;dealHits({x1:f.x-60,x2:f.x+60,y1:f.y-80,y2:f.y+10},atk*.7,{kb:220,stun:.4,fromFriend:1,dir:Math.sign(near.x-f.x)||1,col:'#e8f4ff'});f.taunt=(f.tauntN=(f.tauntN||0)+1)%3===1?1.2:0;}
    else if(f.k==='bunny'){if(p.hp<p.hpMax*.8){f.cd=5;f.act=.5;const h=Math.round(p.hpMax*.12*pow);p.hp=Math.min(p.hpMax,p.hp+h);popNum(p.x,p.y-90,'+'+h,'heal');particles(p.x,p.y-40,'#ffc2d4',14,140,'heart');vfx('vfx_heal',p.x,p.y-50,{s0:.25,s1:.42,life:.6,a:.8});SFX.heal();}else f.cd=1;}
    else if(f.k==='hedgehog'&&near&&Math.abs(near.x-f.x)<90){f.cd=1;f.act=.3;f.vx=f.face*300;dealHits({x1:f.x-70,x2:f.x+70,y1:f.y-70,y2:f.y+10},atk*1.2,{kb:200,stun:.35,fromFriend:1,dir:f.face,col:'#ffe0b0'});}
    else if(f.k==='owl'&&near&&Math.abs(near.x-f.x)<480){f.cd=2.6;f.act=.4;const tx2=near.x;ST.fx.push({kind:'star',x:tx2,y:near.y-200,vx:0,vy:600,life:.35,col:'#d8cfff',r:9});setTimeout(()=>{if(ST&&!ST.done)vfx('vfx_star',tx2,near.y-50,{s0:.25,s1:.5,life:.4,a:.9});if(ST&&!ST.done)dealHits({x1:tx2-80,x2:tx2+80,y1:GROUND-400,y2:H},atk*1.4,{kb:100,stun:.4,fromFriend:1,dir:1,col:'#d8cfff'})},330);}
@@ -430,8 +430,8 @@ function updEnemies(dt){
    }}
   }
   if(e.lunge>0){e.lunge-=dt;if(Math.abs(p.x-e.x)<40&&Math.abs(p.y-e.y)<60)hurtPlayer(e.atk,e.x);}
-  if(e.fly){if(e.hy==null)e.hy=e.y;if(e.diveT>0){e.diveT-=dt;e.y+=(tgt.y-34-e.y)*Math.min(1,dt*7)}else e.y+=(e.hy-e.y)*Math.min(1,dt*1.2);e.y+=Math.sin(e.anim*3)*20*dt;e.x+=e.vx*dt;if(e.vy){e.y+=e.vy*dt;e.vy*=.9}}
-  else{if(!e.d.boss&&e.onG&&!e.air&&!(e.down>0)&&e.y<GROUND-60&&p.y>e.y+60&&Math.abs(p.x-e.x)<320){e.dropW=(e.dropW||0)+dt;if(e.dropW>.6){e.dropW=0;e.drop=.22;e.vy=-280;e.onG=false;e.vx=Math.sign(p.x-e.x)*130}}else e.dropW=0;
+  if(e.fly){if(e.hy==null)e.hy=Math.max(e.y,GROUND-150);if(e.diveT>0){e.diveT-=dt;e.y+=(tgt.y-34-e.y)*Math.min(1,dt*7)}else e.y+=(e.hy-e.y)*Math.min(1,dt*1.2);e.y+=Math.sin(e.anim*3)*20*dt;e.x+=e.vx*dt;if(e.vy){e.y+=e.vy*dt;e.vy*=.9}}
+  else{if(!e.d.boss&&e.onG&&!e.air&&!(e.down>0)&&e.y<GROUND-60&&Math.max(p.y,p.onG?p.y:GROUND)>e.y+60&&Math.abs(p.x-e.x)<360){e.dropW=(e.dropW||0)+dt;if(e.dropW>.6){e.dropW=0;e.drop=.45;e.vy=-140;e.onG=false;e.vx=Math.sign(p.x-e.x)*130}}else e.dropW=Math.max(0,(e.dropW||0)-dt*.5);
    if(e.drop>0)e.drop-=dt;const fv=e.vy;e.vy+=GRAV*(e.air?.72:1)*dt;e.x+=e.vx*dt;e.y+=e.vy*dt;const og=e.onG;e.onG=landOn(e,prevY);
    if(e.onG&&e.air){if(fv>420&&!e.bounced){e.bounced=1;e.vy=-fv*.32;e.onG=false;e.y-=1;e.vx*=.5;dust(e.x,e.y,5);shake(2);if(!play('impactWood_medium_000',.4,1))beep(80,.1,'sine',.1,.6)}else{e.air=0;e.bounced=0;e.juggle=0;if(e.kd||fv>300){e.down=.6;e.kd=0;dust(e.x,e.y,4)}}}
    if(e.onG&&!og&&!e.air)e.vx*=.6;}
@@ -484,7 +484,7 @@ function updZones(dt){
    SFX.get();}
  }
 }
-function spawnWave(w,z){for(let i=0;i<w.length;i+=2){const t=w[i],n=w[i+1];for(let j=0;j<n;j++){const side=Math.random()<.7?1:-1;const x=ST.pl.x+side*(260+Math.random()*260);const plat=ST.S.plats.filter(p=>!p.ground&&x>p.x&&x<p.x+p.w);const y=(plat.length&&Math.random()<.35)?plat[0].y:GROUND;const e=spawn(t,Math.max(z.x-180,Math.min(z.x+740,x)),y);e.spawnT=.5+j*.15}}}
+function spawnWave(w,z){for(let i=0;i<w.length;i+=2){const t=w[i],n=w[i+1];for(let j=0;j<n;j++){const side=(ST.pl.x-z.x<320||Math.random()<.85)?1:-1;const x=ST.pl.x+side*(260+Math.random()*260);const plat=ST.S.plats.filter(p=>!p.ground&&x>p.x&&x<p.x+p.w);const y=(plat.length&&Math.random()<.35)?plat[0].y:GROUND;const e=spawn(t,Math.max(z.x-180,Math.min(z.x+740,x)),y);e.spawnT=.5+j*.15}}}
 
 /* ---------- 새싹 마을 (부탁 · 빵집 · 교환) ---------- */
 const NPC={
@@ -973,7 +973,7 @@ function drawTitle(dt){
  button(W-232,H-58,104,40,'📖 도감',()=>{scene='book'},'#cfe7b8');
  button(W-120,H-58,104,40,SV.mute?'🔇 음악':'🎵 음악',()=>{SV.mute=!SV.mute;save();if(SV.mute)bgmStop();else bgmStart()},'#e7e0f6');
  btns.unshift({x:0,y:0,w:W,h:H,cb:startGame});
- ctx.fillStyle='rgba(58,41,30,.7)';ctx.font='bold 12px system-ui';ctx.fillText('v1.3 · 육성 시험판 · 효과음 Kenney (CC0)',14,H-14);
+ ctx.fillStyle='rgba(58,41,30,.7)';ctx.font='bold 12px system-ui';ctx.fillText('v1.4 · 육성 시험판 · 효과음 Kenney (CC0)',14,H-14);
  if(loaded<NAMES.length){ctx.fillStyle='#fff';ctx.font='bold 13px system-ui';ctx.fillText('그림 불러오는 중… '+loaded+'/'+NAMES.length,14,24)}
  // 꽃잎 (천천히)
  for(let i=0;i<22;i++){const sp=18+(i%5)*6,x=((i*137+titleT*sp*1.4)%(W+80))-40,y=((i*89+titleT*(sp+10))%(H+60))-30;ctx.save();ctx.translate(x,y);ctx.rotate(titleT*.8+i);ctx.fillStyle=i%3?'rgba(255,214,228,.75)':'rgba(255,240,200,.7)';ctx.beginPath();ctx.ellipse(0,0,6,3,0,0,7);ctx.fill();ctx.restore()}
@@ -1022,7 +1022,7 @@ function drawResult(dt){
 /* ---------- 전술 카드 (자동 전투 중 3장 중 1장) ---------- */
 const TCARDS={spd:['⚡','신속','공격 속도 2배'],crit:['💥','치명','치명타 +30%'],heal:['🌿','치유의 비','체력 40% 회복'],mag:['🧲','자석','아이템 모두 끌어옴'],shield:['🛡','양털 보호막','받는 피해 절반'],call:['🌸','친구 호출','친구 기술 바로 사용']};
 function updTCard(dt){if(ST.S.village||ST.done)return;if(ST.tb&&ST.tb.t>0)ST.tb.t-=dt;ST.tcT=(ST.tcT==null?14:ST.tcT)-dt;
- if(!ST.tc&&ST.tcT<=0&&!(ST.fcut>0)&&!(ST.cutin>0)&&!(ST.lvFx&&ST.lvFx.t>0)){const ks=Object.keys(TCARDS).sort(()=>Math.random()-.5).slice(0,3);ST.tc={ks,t:7};ST.tcT=28;SFX.get();}
+ if(!ST.tc&&ST.tcT<=0&&!ST.ents.some(e=>!e.dead&&!e.field)&&!(ST.fcut>0)&&!(ST.cutin>0)&&!(ST.lvFx&&ST.lvFx.t>0)){const ks=Object.keys(TCARDS).sort(()=>Math.random()-.5).slice(0,3);ST.tc={ks,t:7};ST.tcT=28;SFX.get();}
  if(ST.tc){ST.tc.t-=dt;for(let i=0;i<3;i++)if(pressed('d'+(i+1)))pickTC(i);if(ST.tc&&(ST.tc.t<=0||(SV.auto&&ST.tc.t<5.5)))pickTC(SV.auto?ST.tc.ks.indexOf(ST.pl.hp<ST.pl.hpMax*.5&&ST.tc.ks.includes('heal')?'heal':ST.tc.ks[0]):0);}}
 function pickTC(i){dprog('card',1);const k=ST.tc.ks[i];ST.tc=null;const p=ST.pl;SFX.skill();logMsg('🃏 전술 카드: '+TCARDS[k][1],'#bfe9ff');
  if(k==='heal'){const h=Math.round(p.hpMax*.4);p.hp=Math.min(p.hpMax,p.hp+h);popNum(p.x,p.y-100,'+'+h,'heal');vfx('vfx_heal',p.x,p.y-50,{s0:.35,s1:.6,life:.8})}
@@ -1077,7 +1077,7 @@ function frame(now){
   // 카메라
   const tx=Math.max(0,Math.min(ST.S.len-VW,ST.pl.x-VW*.44+(ST.lookX=(ST.lookX||0)+((ST.pl.face*60)-(ST.lookX||0))*Math.min(1,dt*3))));ST.camX+=(tx-ST.camX)*Math.min(1,dt*6);
   if(ST.lock)ST.camX=Math.max(ST.lock.a-40,Math.min(ST.lock.b-VW+40,ST.camX));
-  ST.camX=Math.max(ST.camX,ST.pl.x-(VW-250/ZOOM));ST.camX=Math.min(ST.camX,ST.pl.x-140/ZOOM);
+  ST.camX=Math.max(ST.camX,ST.pl.x-(VW-340/ZOOM));ST.camX=Math.min(ST.camX,ST.pl.x-140/ZOOM);
   let sx=0,sy=0;if(ST.shake>0){sx=(Math.random()-.5)*ST.shake*2;sy=(Math.random()-.5)*ST.shake*2;ST.shake=Math.max(0,ST.shake-dt*30)}
   if(ST.kickX){sx+=ST.kickX;ST.kickX*=Math.pow(.0005,dt);if(Math.abs(ST.kickX)<.1)ST.kickX=0}
   const zp=ST.zp||0;if(zp>0)ST.zp=Math.max(0,zp-dt*(ST.intro?.12:.25));
