@@ -45,7 +45,7 @@ def seo(q, title):
     return f"""<div class="seo"><div class="sb"><span>G</span>{q}</div><div class="rs"><i>원장님학원.kr ›</i><b>{title}</b>시간표 · 교습비 · 상담 신청까지 한 번에</div><div class="tx"><b>구글 · 네이버 검색 노출</b><br>"동네 + 과목" 검색에 잘 나오도록 제목·지도·검색 등록까지 세팅해 드려요</div></div>"""
 
 def phones():
-    return """<div class="phones"><div class="ph"><div><img src="pf_ac_m.jpg"></div><small>영어·수학 학원</small></div><div class="ph"><div><img src="pf_bu_m.jpg"></div><small>다이어트댄스</small></div><div class="ph"><div><img src="pf_pl_m.jpg"></div><small>필라테스 스튜디오</small></div></div>
+    return """<div class="phones" style="margin-top:3mm"><div class="ph"><div><img src="pf_ac_m.jpg"></div><small>영어·수학 학원</small></div><div class="ph"><div><img src="pf_bu_m.jpg"></div><small>다이어트댄스</small></div><div class="ph"><div><img src="pf_pl_m.jpg"></div><small>필라테스 스튜디오</small></div></div>
 <div class="cap">찰칵홈이 만든 홈페이지 예시 — 휴대폰으로 보는 화면이에요</div>"""
 
 def letter(a):
@@ -90,6 +90,14 @@ def walk():
     h=h.replace("원장 | 장유","○○학원 | 장유").replace("장유 영어·수학 학원","장유 영어·수학 학원")
     h=h.replace('<b>살펴보니</b> · 학원 이름으로 검색했을 때 학원을 소개하는 홈페이지가 보이지 않아요.','<b>알고 계셨나요?</b> · 블로그 · 지도만으로는 시간표 · 교습비 · 상담 신청을 한 번에 보기 어려워요.')
     h=h.replace('필요 없으시면 버려 주세요. 다시 보내지 않을게요.','직접 전해 드리는 안내지예요 · 찰칵홈')
+    import re as _re
+    h=_re.sub(r'<h1>.*?</h1>','<h1>손님이 휴대폰으로 <em>"장유 + 우리 업종"</em>을<br>검색하면, 원장님 가게가<br>먼저 보이시나요?</h1><div class="chips"><span>영어 · 수학 학원</span><span>다이어트 댄스</span><span>필라테스 · 요가</span><span>피아노 · 음악</span><span>태권도 · 체육</span><span>미술 · 공방</span></div>',h,count=1,flags=_re.S)
+    h=h.replace('요즘 학부모님은 상담 전화 전에 휴대폰으로 먼저 비교해 보세요.','요즘 학부모님 · 손님은 전화하기 전에 휴대폰으로 먼저 비교해 보세요.')
+    h=_re.sub(r'<div class="sb"><span>G</span>[^<]*</div>','<div class="sb"><span>G</span>장유 다이어트 댄스</div>',h,count=1)
+    h=_re.sub(r'<div class="rs"><i>원장님학원.kr ›</i><b>[^<]*</b>시간표 · 교습비 · 상담 신청까지 한 번에','<div class="rs"><i>원장님가게.kr ›</i><b>○○댄스 | 장유 다이어트 댄스</b>수업 영상 · 가격 · 체험 예약까지 한 번에',h,count=1)
+    h=h.replace('원장님 학원 사진으로 <b>무료 시안</b> 먼저','원장님 가게 사진으로 <b>무료 시안</b> 먼저').replace('시간표 · 교습비 · 등록번호 표시까지','시간표 · 가격 · (학원은 등록번호) 표시')
+    h=h.replace('QR을 찍으면 학원 시안 예시를 바로 볼 수 있어요','QR을 찍으면 업종별 시안 예시를 바로 볼 수 있어요').replace('학원 사진 3장과 학원 이름만','가게 사진 3장과 이름만')
+    h=h.replace('</style>','.chips{display:flex;flex-wrap:wrap;gap:2mm;margin:-1mm 0 4mm;max-width:140mm}.chips span{font-size:9.5pt;font-weight:800;border:1.4px solid #1A1A2E;border-radius:99px;padding:1mm 3.5mm}.chips span:nth-child(2){background:#FF2D87;color:#fff;border-color:#FF2D87}</style>',1)
     return h
 
 if __name__ == "__main__":
