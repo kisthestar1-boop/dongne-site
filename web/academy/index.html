@@ -13,7 +13,8 @@ header a.go{margin-left:auto;background:var(--ink);color:#fff;text-decoration:no
 .hero{padding:44px 0 20px}.hi{font-size:15px;font-weight:800;color:var(--b)}
 h1{font-size:clamp(28px,4.4vw,44px);line-height:1.28;margin:8px 0 12px;letter-spacing:-.02em}h1 em{font-style:normal;background:linear-gradient(transparent 58%,var(--y) 58%)}
 .lead{color:var(--mu);font-size:17px;margin:0}
-.demos{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin:34px 0 10px}@media(max-width:760px){.demos{grid-template-columns:1fr;max-width:340px;margin-left:auto;margin-right:auto}}
+.demos{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin:26px 0 10px}@media(max-width:760px){.demos{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:14px;margin:18px -20px 6px;padding:4px 20px 14px;-webkit-overflow-scrolling:touch}.demo{flex:0 0 58vw;scroll-snap-align:center}.ph{border-radius:26px;padding:7px}.ph div{border-radius:20px}.hero h1{font-size:25px!important}.lead{font-size:15px!important}.swipe{display:block!important}}
+.swipe{display:none;text-align:center;font-size:13px;color:var(--mu);font-weight:700}
 .demo{text-decoration:none;display:block;text-align:center}
 .ph{background:#14182B;border-radius:34px;padding:10px;box-shadow:0 20px 40px rgba(20,24,43,.18);transition:transform .25s ease}
 .demo:hover .ph{transform:translateY(-4px)}
@@ -37,16 +38,16 @@ button{font:inherit;font-weight:900;border:0;border-radius:99px;padding:14px;bac
 .ok{font-weight:800;color:var(--y)}.mail{margin-top:14px;font-size:15px}.mail b{color:#fff}
 footer{padding:28px 0 40px;color:var(--mu);font-size:13px;text-align:center}
 </style></head><body>
-<header><div class="w"><a class="logo" href="#">찰칵<b>홈</b><small>학원 홈페이지</small></a><a class="go" href="#ask">무료 시안 신청</a></div></header>
+<header><div class="w"><a class="logo" href="#">찰칵<b>홈</b><small>동네 학원 · 가게 홈페이지</small></a><a class="go" href="#ask">무료 시안 신청</a></div></header>
 <section class="hero" style="padding-bottom:10px"><div class="w">
 <div class="hi" id="hi">장유 · 율하 학원 원장님께</div>
 <h1><span id="who">원장님</span>, 학원 홈페이지<br><em>시안부터 먼저</em> 보여 드릴게요</h1>
-<p class="lead">아래는 찰칵홈이 만든 예시예요. 눌러 보시면 실제 휴대폰에서 보는 그대로 열려요. 원장님 학원도 사진 3장이면 이렇게 만들어 드려요.</p>
+<p class="lead">👇 찰칵홈이 만든 예시예요. 눌러 보시면 휴대폰에서 보는 그대로 열려요.</p>
 <div class="demos">
-<a class="demo" href="https://kisthestar1-boop.github.io/saebom-academy/" target="_blank" rel="noopener"><div class="ph"><div><img src="../img/pf_ac_m.jpg" alt="영어·수학 학원 예시 화면"></div></div><b>영어 · 수학 학원</b><small>학교별 시간표 · 레벨테스트 신청</small><span>예시 열어 보기 ↗</span></a>
+<a class="demo" href="https://kisthestar1-boop.github.io/saebom-academy/" target="_blank" rel="noopener"><div class="ph"><div><img src="../img/pf_ac_m.jpg" alt="영어·수학 학원 예시 화면"></div></div><b>영어 · 수학 학원</b><small>매주 리포트 · 교습비 공개 · 실사 영상</small><span>예시 열어 보기 ↗</span></a>
 <a class="demo" href="../ex/beatup/" target="_blank" rel="noopener"><div class="ph"><div><img src="../img/pf_bu_m.jpg" alt="다이어트댄스 예시 화면"></div></div><b>다이어트댄스</b><small>수업 영상 · 가격 공개 · 첫 수업 예약</small><span>예시 열어 보기 ↗</span></a>
-<a class="demo" href="https://kisthestar1-boop.github.io/ongyeol-pilates/" target="_blank" rel="noopener"><div class="ph"><div><img src="../img/pf_pl_m.jpg" alt="필라테스 예시 화면"></div></div><b>필라테스 스튜디오</b><small>남은 자리 시간표 · 체험 예약</small><span>예시 열어 보기 ↗</span></a>
-</div></div></section>
+<a class="demo" href="https://kisthestar1-boop.github.io/ongyeol-pilates/" target="_blank" rel="noopener"><div class="ph"><div><img src="../img/pf_pl_m.jpg" alt="필라테스 예시 화면"></div></div><b>필라테스 스튜디오</b><small>실제 수업 사진 · 원장 직통 · 체험 예약</small><span>예시 열어 보기 ↗</span></a>
+</div><div class="swipe">← 옆으로 넘겨 보세요 →</div><p class="lead" style="margin-top:14px">원장님 가게도 사진 3장이면 이렇게 만들어 드려요. 시안은 무료예요.</p></div></section>
 
 <section style="padding-top:30px"><div class="w"><h2>학원 홈페이지에 꼭 필요한 것만</h2><p class="lead">학부모님이 상담 전화 전에 휴대폰으로 확인하는 것들이에요.</p>
 <div class="feat"><div><i>🗓</i><b>시간표 · 교습비 · 등록번호</b><p>학원법상 인터넷 광고에 필요한 표시까지 처음부터 넣어 드려요.</p></div><div><i>📲</i><b>상담 신청 → 원장님 알림</b><p>학부모님이 신청하면 원장님 휴대폰으로 바로 알림이 가요.</p></div><div><i>✏️</i><b>원장님이 직접 수정</b><p>방학 특강, 공지, 사진은 휴대폰으로 바로 바꿀 수 있어요.</p></div></div>
@@ -64,6 +65,7 @@ footer{padding:28px 0 40px;color:var(--mu);font-size:13px;text-align:center}
 <script>
 const NAMES={"ybm-ingloo":"YBM잉글루영어수학학원","hansuwi":"한수위영어수학전문학원","gnb":"삼문GnB영어전문학원","gcamp":"지캠프클래스 김해장유학원","ilta":"일타수학학원","hansaem-math":"한선생수학학원","julies":"줄리스 잉글리쉬톡 영어교습소","ppuri":"뿌리깊은수학학원","dehan":"더한수학학원"};
 const q=new URLSearchParams(location.search),a=q.get("a"),src=q.get("src")||(a?"mail_"+a:"direct");
+if(src==="walk"||src==="flyer"){document.getElementById("hi").textContent="장유 · 율하 원장님 · 사장님께";document.querySelector("h1").innerHTML='원장님 가게 홈페이지,<br><em>시안부터 먼저</em> 보여 드릴게요'}
 if(a&&NAMES[a]){const n=NAMES[a];document.getElementById("who").textContent=n+" 원장님";document.getElementById("seoName").textContent=n;document.getElementById("co").value=n;document.title=n+" 원장님께 · 찰칵홈 학원 홈페이지 무료 시안"}
 const PROXY="https://script.google.com/macros/s/AKfycbz09Pualc3dVyOYhjRIBLY1lVpeZMpi8YMoUFlBcqWjJ30gKJagm0HAhio3rFaIf_E/exec";
 document.getElementById("f").onsubmit=async e=>{e.preventDefault();const $=id=>document.getElementById(id).value.trim();const ok=document.getElementById("ok"),b=document.getElementById("bt");
