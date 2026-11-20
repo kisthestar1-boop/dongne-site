@@ -86,6 +86,9 @@ const FR={
 };
 const ORDER=['fox','sheep','bunny','hedgehog','owl','frog'];
 const SYN=[{ks:['fox','sheep','bunny'],n:'🌳 숲의 수호대',d:'받는 피해 -10%',fx:'def'},{ks:['fox','owl','hedgehog'],n:'🌪 바람의 정찰대',d:'친구 공격력 +20%',fx:'fatk'},{ks:['sheep','frog','bunny'],n:'🎵 따뜻한 합창단',d:'회복량 +30%',fx:'heal'},{ks:['hedgehog','frog','fox'],n:'⚔ 돌격 3형제',d:'치명타 +10%',fx:'crit'},{ks:['owl','bunny','frog'],n:'✨ 별빛 마법단',d:'MP 회복 +30%',fx:'mp'}];
+function bookPct(){const m=Object.keys(SV.mset||{}).length,i=Object.keys(SV.iset||{}).length,f=SV.friends.length;const tot=Object.keys(ENEMY).length+Object.keys(ITEMS).length+ORDER.length;return Math.round((m+i+f)/tot*100)}
+function bookTitle(){const p=bookPct();return p>=100?'🌳 숲의 기록자':p>=75?'🌼 꽃길 탐험가':p>=50?'🌿 새싹 수집가':p>=25?'🌱 호기심 새싹':'—'}
+function bookBonus(){const p=bookPct();return (p>=25?.02:0)+(p>=50?.02:0)+(p>=75?.02:0)+(p>=100?.04:0)}
 function synergy(){const P=(SV.party||[]).slice(0,3);return SYN.find(s=>s.ks.every(k=>P.includes(k)))||null}
 
 /* ---------- 입력 ---------- */
@@ -162,7 +165,7 @@ function newRun(region){
 }
 function mkPlayer(){
  const lv=SV.lv;
- return {x:380,y:GROUND,vx:0,vy:0,face:1,w:34,h:70,onG:true,onVine:null,hp:100+lv*12,hpMax:100+lv*12,mp:0,mpMax:300,atk:Math.round((10+lv*3)*(1+(SV.wpn||0)*.08)),
+ return {x:380,y:GROUND,vx:0,vy:0,face:1,w:34,h:70,onG:true,onVine:null,hp:100+lv*12,hpMax:100+lv*12,mp:0,mpMax:300,atk:Math.round((10+lv*3)*(1+(SV.wpn||0)*.08+bookBonus())),
   combo:0,atkT:0,atkCD:0,buf:0,inv:0,hurtT:0,coyote:0,jumpBuf:0,state:'idle',anim:0,drop:0,skillT:0};
 }
 function mkFriend(k,i){const st=SV.fstar[k]||1;return {k,x:330-i*40,y:GROUND,vx:0,vy:0,face:1,onG:true,cd:1+i*.4,anim:Math.random()*6,act:0,lv:st,hop:0,taunt:0}}
@@ -233,7 +236,7 @@ function dealHits(box,dmgBase,opt){
  if(n){SFX.hit(Math.min(ST.combo,10));if(!opt.fromFriend){hitstop(opt.stop||.06);shake((opt.sh||3)*.6);kick(opt.dir||ST.pl.face,opt.sh?5:3);ST.flash=Math.max(ST.flash||0,opt.sh>=5?.18:.08);if(opt.sh>=5)punch(.035)}else hitstop(.02);}
  return n;
 }
-function kill(e){if(e.dead)return;dprog('kill',1);e.dead=1;e.deadT=e.d.boss?1.2:.75;ST.kills++;SV.kills++;const kd=Math.sign(e.x-ST.pl.x)||ST.pl.face;if(!e.d.boss){e.vx=kd*(300+Math.random()*160);e.vy=-(380+Math.random()*160);e.spin=kd*(8+Math.random()*6);e.fly=1}for(let q=0;q<5;q++)ST.fx.push({kind:'ink',x:e.x+(Math.random()-.5)*40,y:e.y-e.d.h*.5+(Math.random()-.5)*40,vx:0,vy:0,life:.6,r:8+Math.random()*10,col:'255,250,235',rot:0});SFX.coin&&beep(520,.08,'triangle',.05,1.8);
+function kill(e){if(e.dead)return;dprog('kill',1);SV.mset=SV.mset||{};SV.mset[e.type]=1;e.dead=1;e.deadT=e.d.boss?1.2:.75;ST.kills++;SV.kills++;const kd=Math.sign(e.x-ST.pl.x)||ST.pl.face;if(!e.d.boss){e.vx=kd*(300+Math.random()*160);e.vy=-(380+Math.random()*160);e.spin=kd*(8+Math.random()*6);e.fly=1}for(let q=0;q<5;q++)ST.fx.push({kind:'ink',x:e.x+(Math.random()-.5)*40,y:e.y-e.d.h*.5+(Math.random()-.5)*40,vx:0,vy:0,life:.6,r:8+Math.random()*10,col:'255,250,235',rot:0});SFX.coin&&beep(520,.08,'triangle',.05,1.8);
  particles(e.x,e.y-e.d.h*.5,e.d.col,18,300,'leaf');
  const exp=Math.round(e.d.exp*(1+(SV.lv-1)*.15));gainExp(exp,e.x,e.y-e.d.h);
  SV.qk[e.type]=(SV.qk[e.type]||0)+1;
@@ -242,7 +245,7 @@ function kill(e){if(e.dead)return;dprog('kill',1);e.dead=1;e.deadT=e.d.boss?1.2:
  if(e.d.boss){shake(10);hitstop(.25);SFX.big();ST.slow=1.1;punch(.08);ST.flash=.35;setTimeout(()=>finishRun(true),1600)}
 }
 function gainExp(v,x,y){SV.exp+=v;ST.expAcc=(ST.expAcc||0)+v;logMsg('경험치 +'+v,'#e9d6ff');
- while(SV.exp>=expNeed(SV.lv)){SV.exp-=expNeed(SV.lv);SV.lv++;const p=ST.pl;p.hpMax=100+SV.lv*12;p.hp=p.hpMax;p.atk=Math.round((10+SV.lv*3)*(1+(SV.wpn||0)*.08));
+ while(SV.exp>=expNeed(SV.lv)){SV.exp-=expNeed(SV.lv);SV.lv++;const p=ST.pl;p.hpMax=100+SV.lv*12;p.hp=p.hpMax;p.atk=Math.round((10+SV.lv*3)*(1+(SV.wpn||0)*.08+bookBonus()));
   ST.lvFx={t:2.2,lv:SV.lv};SFX.lv();banner('',SV.lv===10?'전직할 수 있어요: 꽃의 기사':'공격력·체력이 올랐어요');particles(p.x,p.y-40,'#ffe27a',30,320,'star');vfx('vfx_lvup',p.x,p.y-110,{s0:.5,s1:.62,life:1.4,a:1});}
  save();
 }
@@ -488,7 +491,7 @@ function talk(npc){if(npc==='board'){talkBoard();return}
  const N=NPC[npc];const id=npcQuest(npc);const D={who:npc,name:N.n,opts:[]};
  if(npc==='thief'){D.text='반짝이는 걸 모으고 있어. 바꿔 줄래? 지팡이 강화도 해 줄게.';
   const wl=SV.wpn||0,cost=Math.round(60*Math.pow(wl+1,1.5)),pity=SV.pity||0,rate=pity>=100?1:Math.max(.35,.95-wl*.05);
-  if(wl<15)D.opts.push({t:'⚒ +'+(wl+1)+' 강화 🪙'+cost+' ('+(pity>=100?'확정!':Math.round(rate*100)+'%')+')',ok:SV.gold>=cost,cb:()=>{SV.gold-=cost;if(Math.random()<rate){SV.pity=0;SV.wpn=wl+1;ST.pl.atk=Math.round((10+SV.lv*3)*(1+SV.wpn*.08));SFX.lv();vfx('vfx_lvup',ST.pl.x,ST.pl.y-110,{s0:.4,s1:.55,life:1.2});D.text='✨ 강화 성공! 지팡이 +'+SV.wpn+' (공격력 +'+Math.round(SV.wpn*8)+'%)';}else{SFX.hurt();SV.pity=Math.min(100,(SV.pity||0)+34);D.text='앗, 실패… 대신 축복 게이지가 '+SV.pity+'% 찼어요.'+(SV.pity>=100?' 다음은 확정 성공!':'');}save();talkRefresh(D)}});
+  if(wl<15)D.opts.push({t:'⚒ +'+(wl+1)+' 강화 🪙'+cost+' ('+(pity>=100?'확정!':Math.round(rate*100)+'%')+')',ok:SV.gold>=cost,cb:()=>{SV.gold-=cost;if(Math.random()<rate){SV.pity=0;SV.wpn=wl+1;ST.pl.atk=Math.round((10+SV.lv*3)*(1+SV.wpn*.08+bookBonus()));SFX.lv();vfx('vfx_lvup',ST.pl.x,ST.pl.y-110,{s0:.4,s1:.55,life:1.2});D.text='✨ 강화 성공! 지팡이 +'+SV.wpn+' (공격력 +'+Math.round(SV.wpn*8)+'%)';}else{SFX.hurt();SV.pity=Math.min(100,(SV.pity||0)+34);D.text='앗, 실패… 대신 축복 게이지가 '+SV.pity+'% 찼어요.'+(SV.pity>=100?' 다음은 확정 성공!':'');}save();talkRefresh(D)}});
   D.opts.push({t:'마른 가지 5 → 🪙50',ok:(SV.inv.it_twig||0)>=5,cb:()=>{SV.inv.it_twig-=5;SV.gold+=50;SFX.coin();save();D.text='고마워! 다음에 또 와.'}});
   D.opts.push({t:'별 조각 2 → 친구 ★+1',ok:(SV.inv.it_star||0)>=2&&SV.party.some(k=>(SV.fstar[k]||1)<5),cb:()=>{SV.inv.it_star-=2;const k=SV.party.filter(k=>(SV.fstar[k]||1)<5).sort((a,b)=>(SV.fstar[a]||1)-(SV.fstar[b]||1))[0];SV.fstar[k]=(SV.fstar[k]||1)+1;SFX.lv();save();D.text=FR[k].n+' 별이 하나 늘었어! ★'+SV.fstar[k]}});
   D.opts.push({t:'보물 상자 열기',ok:(SV.inv.it_chest||0)>=1,cb:()=>{SV.inv.it_chest-=1;const g=80+Math.floor(Math.random()*120);SV.gold+=g;SV.inv.it_star=(SV.inv.it_star||0)+1;SFX.get();save();D.text='상자 속에 🪙'+g+' 와 별 조각 1개!'}});
@@ -805,7 +808,7 @@ function drawFX(cx,dt){
    const p=ST.pl;if(f.life<2.4&&Math.abs(p.x-f.x)<((ST.tb&&ST.tb.t>0?ST.tb.k:'')==='mag'?700:120)){f.x+=(p.x-f.x)*dt*8;f.y+=(p.y-40-f.y)*dt*8;if(Math.abs(p.x-f.x)<20){f.life=0;SV.gold+=f.g;SFX.coin();logMsg('🪙 코인 +'+f.g,'#ffd86b')}}
    ctx.fillStyle='#f2c14e';ctx.beginPath();ctx.ellipse(f.x-cx,f.y,7*Math.abs(Math.cos(ST.t*6)),7,0,0,7);ctx.fill();continue}
   if(f.kind==='item'){f.vy+=1200*dt;f.x+=f.vx*dt;f.y+=f.vy*dt;if(f.y>GROUND-4){f.y=GROUND-4;f.vy*=-.3;f.vx*=.6}
-   const p=ST.pl;if(f.life<5.4&&Math.abs(p.x-f.x)<((ST.tb&&ST.tb.t>0?ST.tb.k:'')==='mag'?700:140)){f.x+=(p.x-f.x)*dt*7;f.y+=(p.y-40-f.y)*dt*7;if(Math.abs(p.x-f.x)<22){f.life=0;SV.inv[f.it]=(SV.inv[f.it]||0)+1;ST.loot[f.it]=(ST.loot[f.it]||0)+1;SFX.get();logMsg('🎒 '+ITEMS[f.it]+' 획득','#ffe9a8');save()}}
+   const p=ST.pl;if(f.life<5.4&&Math.abs(p.x-f.x)<((ST.tb&&ST.tb.t>0?ST.tb.k:'')==='mag'?700:140)){f.x+=(p.x-f.x)*dt*7;f.y+=(p.y-40-f.y)*dt*7;if(Math.abs(p.x-f.x)<22){f.life=0;SV.inv[f.it]=(SV.inv[f.it]||0)+1;ST.loot[f.it]=(ST.loot[f.it]||0)+1;SV.iset=SV.iset||{};SV.iset[f.it]=1;SFX.get();logMsg('🎒 '+ITEMS[f.it]+' 획득','#ffe9a8');save()}}
    if(f.life<=0)continue;if(f.life<1.2)f.life=1.2;ctx.save();ctx.globalAlpha=.35;ctx.fillStyle='#fff6c8';ctx.beginPath();ctx.arc(f.x-cx,f.y-16,22+Math.sin(ST.t*6)*3,0,7);ctx.fill();ctx.restore();
    sprite(IMG[f.it],f.x-cx,f.y,34,1,{noShadow:1,dy:-Math.abs(Math.sin(ST.t*4))*4});continue}
   if(f.kind==='ink'){f.r+=60*dt;ctx.fillStyle='rgba('+f.col+','+Math.max(0,f.life*.9)+')';ctx.beginPath();ctx.arc(f.x-cx,f.y,f.r,0,7);ctx.fill();ctx.fillStyle='rgba('+f.col+','+Math.max(0,f.life*.6)+')';ctx.beginPath();ctx.arc(f.x-cx+f.r*.7,f.y-f.r*.4,f.r*.35,0,7);ctx.fill();continue}
@@ -926,6 +929,7 @@ function drawTitle(dt){
 function drawBook(){
  drawBG();panel(60,40,W-120,H-80);btns=[];
  ctx.fillStyle='#5e8f4a';ctx.font='900 26px system-ui';ctx.fillText('📖 친구 도감 '+SV.friends.length+'/'+ORDER.length,90,84);
+ {const bp=bookPct();ctx.font='900 14px system-ui';ctx.fillStyle='#2f6a9a';ctx.fillText('📚 도감 완성도 '+bp+'%  ·  칭호 '+bookTitle()+'  ·  공격력 +'+Math.round(bookBonus()*100)+'%  (몬스터·아이템·친구를 모아요)',90,H-82);}
  {const sy=synergy();ctx.font='900 14px system-ui';ctx.fillStyle=sy?'#8a4a10':'#a89880';ctx.fillText(sy?'파티 시너지: '+sy.n+' — '+sy.d:'파티 시너지: 없음 (조합을 바꿔 보세요: 숲의 수호대·바람의 정찰대·따뜻한 합창단·돌격 3형제·별빛 마법단)',90,H-60);}
  ctx.fillStyle='#8a6a4a';ctx.font='bold 13px system-ui';ctx.fillText('숲을 깨거나 마을 부탁을 들어주면 새 친구가 와요 · 쉬는 친구는 빵을 구워요 · 파티는 3명',90,106);
  ORDER.forEach((k,i)=>{const x=90+(i%3)*270,y=124+Math.floor(i/3)*170,has=SV.friends.includes(k),inP=SV.party.includes(k);
