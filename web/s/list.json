@@ -1,0 +1,112 @@
+[
+ {
+  "slug": "ybm-ingloo",
+  "name": "YBM잉글루영어수학학원",
+  "short": "YBM잉글루",
+  "en": "YBM INGLOO",
+  "area": "장유 번화",
+  "addr": "김해시 번화1로84번길 12, 케이투빌딩 504호",
+  "tel": "010-9205-3534",
+  "subj": "em",
+  "note": "네이버 블로그만"
+ },
+ {
+  "slug": "hansuwi",
+  "name": "한수위영어수학전문학원",
+  "short": "한수위",
+  "en": "HANSUWI ACADEMY",
+  "area": "장유 대청",
+  "addr": "김해시 장유 대청리 62-5",
+  "tel": "055-314-5501",
+  "subj": "em",
+  "note": "운영 시간도 미등록"
+ },
+ {
+  "slug": "jungssam",
+  "name": "정쌤의 공부비법 공부방",
+  "short": "정쌤 공부방",
+  "en": "JUNGSSAM STUDY",
+  "area": "장유 번화",
+  "addr": "김해시 번화1로",
+  "tel": "010-2705-0733",
+  "subj": "em",
+  "note": "1인 공부방"
+ },
+ {
+  "slug": "gnb",
+  "name": "삼문GnB영어전문학원",
+  "short": "GnB영어",
+  "en": "GNB ENGLISH",
+  "area": "장유 삼문",
+  "addr": "김해시 장유 삼문리 79-5",
+  "tel": "055-313-0880",
+  "subj": "e",
+  "note": ""
+ },
+ {
+  "slug": "gcamp",
+  "name": "지캠프클래스 김해장유학원",
+  "short": "지캠프클래스",
+  "en": "G-CAMP CLASS",
+  "area": "장유 대청",
+  "addr": "김해시 장유 대청리 61-4",
+  "tel": "055-312-3090",
+  "subj": "e",
+  "note": ""
+ },
+ {
+  "slug": "ilta",
+  "name": "일타수학학원",
+  "short": "일타수학",
+  "en": "ILTA MATH",
+  "area": "장유 대청",
+  "addr": "김해시 장유 대청리 61-7",
+  "tel": "010-3908-2246",
+  "subj": "m",
+  "note": ""
+ },
+ {
+  "slug": "hansaem-math",
+  "name": "한선생수학학원",
+  "short": "한선생수학",
+  "en": "HAN MATH",
+  "area": "장유 대청",
+  "addr": "김해시 장유 대청리 61-7",
+  "tel": "055-311-1761",
+  "subj": "m",
+  "note": ""
+ },
+ {
+  "slug": "julies",
+  "name": "줄리스 잉글리쉬톡 영어교습소",
+  "short": "줄리스 잉글리쉬톡",
+  "en": "JULIE'S ENGLISH TALK",
+  "area": "장유 번화",
+  "addr": "김해시 번화1로114번길 3-13",
+  "tel": "010-9165-9500",
+  "subj": "e",
+  "note": "교습소"
+ },
+ {
+  "slug": "ppuri",
+  "name": "뿌리깊은수학학원",
+  "short": "뿌리깊은수학",
+  "en": "PPURI MATH",
+  "area": "장유 삼문",
+  "addr": "김해시 능동로21번길 4-4",
+  "tel": "055-313-2510",
+  "subj": "m",
+  "note": ""
+ },
+ {
+  "slug": "dehan",
+  "name": "더한수학학원",
+  "short": "더한수학",
+  "en": "DEHAN MATH",
+  "area": "장유 대청",
+  "addr": "김해시 반룡로 63, 2층",
+  "tel": "010-8585-0733",
+  "subj": "m",
+  "note": ""
+ }
+]
