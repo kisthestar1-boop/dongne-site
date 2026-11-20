@@ -100,16 +100,16 @@ def walk():
     qrcode.make("https://chalkakhome.com/academy/?src=flyer", box_size=10, border=1).save(os.path.join(D,"qr_flyer.png"))
     h=h.replace('<div class="to">원장 원장님께</div>','<div class="to">장유 · 율하 학원 · 교습소 · 운동 스튜디오 원장님께</div>')
     h=h.replace("원장 | 장유","○○학원 | 장유").replace("장유 영어·수학 학원","장유 영어·수학 학원")
-    h=h.replace('<b>살펴보니</b> · 학원 이름으로 검색했을 때 학원을 소개하는 홈페이지가 보이지 않아요.','<b>알고 계셨나요?</b> · 블로그 · 지도만으로는 시간표 · 교습비 · 상담 신청을 한 번에 보기 어려워요.')
+    h=h.replace('<b>살펴보니</b> · 학원 이름으로 검색했을 때 학원을 소개하는 홈페이지가 보이지 않아요.','<b>알고 계셨나요?</b> · 블로그 · 지도만으로는 시간표 · 가격 · 상담 신청을 한 번에 보기 어려워요.')
     h=h.replace('필요 없으시면 버려 주세요. 다시 보내지 않을게요.','직접 전해 드리는 안내지예요 · 찰칵홈')
     import re as _re
-    h=_re.sub(r'<h1>.*?</h1>','<h1>손님이 휴대폰으로 <em>"장유 + 우리 업종"</em>을<br>검색하면, 원장님 가게가<br>먼저 보이시나요?</h1><div class="chips"><span>영어 · 수학 학원</span><span>다이어트 댄스</span><span>필라테스 · 요가</span><span>피아노 · 음악</span><span>태권도 · 체육</span><span>미술 · 공방</span></div>',h,count=1,flags=_re.S)
+    h=_re.sub(r'<h1>.*?</h1>','<h1>장유 학원 · 가게 원장님,<br><em>홈페이지 무료 시안</em>을<br>먼저 받아 보세요</h1><div class="chips"><span>영어 · 수학 학원</span><span>다이어트 댄스</span><span>필라테스 · 요가</span><span>피아노 · 음악</span><span>태권도 · 체육</span><span>미술 · 공방</span></div>',h,count=1,flags=_re.S)
     h=h.replace('요즘 학부모님은 상담 전화 전에 휴대폰으로 먼저 비교해 보세요.','요즘 학부모님 · 손님은 전화하기 전에 휴대폰으로 먼저 비교해 보세요.')
     h=_re.sub(r'(<span style="color:#03C75A">N</span>)[^<]*','\\1장유 다이어트 댄스',h,count=1)
     h=_re.sub(r'(<span>G</span>)[^<]*','\\1장유 영어 학원',h,count=1)
     h=_re.sub(r'<i>원장님가게.kr ›</i><b>[^<]*</b>','<i>원장님가게.kr ›</i><b>○○댄스 | 장유 다이어트 댄스</b>',h,count=1)
     h=h.replace('원장님 학원 사진으로 <b>무료 시안</b> 먼저','원장님 가게 사진으로 <b>무료 시안</b> 먼저').replace('시간표 · 교습비 · 등록번호 표시까지','시간표 · 가격 · (학원은 등록번호) 표시')
-    h=h.replace('학원 사진 3장과 학원 이름만','가게 사진 3장과 이름만')
+    h=h.replace('학원 사진 3장과 학원 이름만','가게 사진 3장과 이름만').replace('사진 3장 + 학원 이름','사진 3장 + 가게 이름')
     h=h.replace('</style>','.chips{display:flex;flex-wrap:wrap;gap:2mm;margin:-1mm 0 4mm;max-width:140mm}.chips span{font-size:9.5pt;font-weight:800;border:1.4px solid #1A1A2E;border-radius:99px;padding:1mm 3.5mm}.chips span:nth-child(2){background:#FF2D87;color:#fff;border-color:#FF2D87}</style>',1)
     return h
 
