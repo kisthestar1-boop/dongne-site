@@ -1,0 +1,71 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>도토리 영어공부방 | 장유 초등 영어 공부방 (찰칵홈 예시)</title>
+<meta name="description" content="김해 장유 도토리 영어공부방(가상) — 한 반 4명, 집처럼 편한 초등 영어. 파닉스부터 리딩까지, 매일 칭찬 알림. 찰칵홈이 만든 공부방 홈페이지 예시예요.">
+<meta name="robots" content="noindex">
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#3A2A1E;--mu:#7A6656;--bg:#FFF8EE;--card:#fff;--ln:#F0E2CE;--a:#E07A3A;--g:#6BAA5A;--b:#FFE7C2}
+*{box-sizing:border-box}body{margin:0;word-break:keep-all;font-family:"Noto Sans KR",system-ui,sans-serif;color:var(--ink);background:var(--bg);line-height:1.7}
+a{color:inherit}.w{max-width:1080px;margin:0 auto;padding:0 20px}
+header .w{display:flex;align-items:center;gap:14px;height:72px}.logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo span:first-child{font-size:34px}.logo b{font-family:"Gowun Dodum";font-size:26px}
+nav{margin-left:auto;display:flex;gap:18px;font-weight:700;font-size:15px}nav a{text-decoration:none;color:var(--mu)}@media(max-width:760px){nav{display:none}}
+.btn{display:inline-block;background:var(--a);color:#fff;text-decoration:none;font-weight:900;border-radius:999px;padding:13px 22px;border:0;font:inherit;font-weight:900;cursor:pointer}
+.btn.k{background:#FEE500;color:#3A1D1D}.btn.o{background:#fff;color:var(--ink);border:2px solid var(--ln)}
+.hero{padding:40px 0 70px}.hero .w{display:grid;grid-template-columns:1fr 1fr;gap:36px;align-items:center}@media(max-width:820px){.hero .w{grid-template-columns:1fr}}
+h1{font-family:"Gowun Dodum";font-size:clamp(36px,5.6vw,62px);line-height:1.2;margin:10px 0 14px;letter-spacing:-.02em}h1 em{font-style:normal;color:var(--a);background:linear-gradient(transparent 62%,var(--b) 62%)}
+.hero p{font-size:18px;color:var(--mu);margin:0 0 24px}
+.room{position:relative;aspect-ratio:1;border-radius:40px;background:radial-gradient(circle at 30% 30%,#FFF1DA,#FFD9A8);box-shadow:inset 0 -20px 0 rgba(224,122,58,.12)}
+.room i{position:absolute;font-style:normal}.room .t{left:12%;top:16%;font-size:84px}.room .b{right:14%;top:20%;font-size:64px}.room .c{left:20%;bottom:16%;font-size:72px}.room .d{right:18%;bottom:18%;font-size:90px}
+.room .note{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:#fff;border-radius:22px;padding:14px 18px;font-weight:900;box-shadow:0 10px 24px rgba(0,0,0,.08);text-align:center}
+.room .note small{display:block;font-weight:400;color:var(--mu)}
+section{padding:70px 0}h2{font-family:"Gowun Dodum";font-size:clamp(28px,3.6vw,40px);margin:0 0 6px}.lead{color:var(--mu);margin:0 0 30px}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}@media(max-width:820px){.cards{grid-template-columns:1fr 1fr}}
+.cards div{background:var(--card);border:2px solid var(--ln);border-radius:24px;padding:20px;text-align:center}.cards b{display:block;font-size:40px}.cards h3{margin:6px 0 4px;font-size:17px}.cards p{margin:0;color:var(--mu);font-size:14px}
+.day{display:grid;gap:10px;max-width:640px}.day div{display:grid;grid-template-columns:80px 1fr;gap:12px;align-items:center;background:var(--card);border:2px solid var(--ln);border-radius:18px;padding:12px 16px}.day b{color:var(--a)}
+.lv{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}@media(max-width:820px){.lv{grid-template-columns:1fr}}
+.lv div{border-radius:24px;padding:22px;background:var(--card);border:2px solid var(--ln)}.lv span{font-size:13px;font-weight:900;color:#fff;border-radius:99px;padding:3px 10px}
+.lv h3{margin:12px 0 4px}.lv p{margin:0;color:var(--mu);font-size:14.5px}
+.msg{max-width:440px;background:#B2C7DA;border-radius:24px;padding:18px;display:grid;gap:8px}.msg p{margin:0;background:#fff;border-radius:16px 16px 16px 4px;padding:10px 14px;font-size:14.5px;width:fit-content;max-width:90%}
+.msg p.me{justify-self:end;background:#FEE500;border-radius:16px 16px 4px 16px}
+details{background:var(--card);border:2px solid var(--ln);border-radius:18px;padding:14px 18px;margin-bottom:10px}summary{font-weight:900;cursor:pointer}details p{margin:8px 0 0;color:var(--mu)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:start}@media(max-width:820px){.two{grid-template-columns:1fr}}
+form{display:grid;gap:10px;background:var(--card);border:2px solid var(--ln);border-radius:24px;padding:22px}input,textarea,select{font:inherit;padding:12px;border-radius:14px;border:2px solid var(--ln);background:#FFFDF9}
+footer{padding:28px 0 90px;color:var(--mu);font-size:13px}
+.fab{position:fixed;right:16px;bottom:16px;display:grid;gap:8px;z-index:9}.fab a{box-shadow:0 8px 20px rgba(0,0,0,.15)}
+.badge{position:fixed;left:12px;bottom:12px;z-index:21;background:#3A2A1E;color:#fff;font-size:12px;padding:6px 10px;border-radius:99px}.badge a{color:#FFD45C}
+</style>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"EducationalOrganization","name":"도토리 영어공부방(예시)","areaServed":"김해 장유","description":"한 반 4명, 집처럼 편한 초등 영어 공부방"}</script>
+</head><body>
+<header><div class="w"><a class="logo" href="#"><span>🌰</span><b>도토리 영어공부방</b></a><nav><a href="#why">왜 도토리</a><a href="#day">하루 수업</a><a href="#level">단계</a><a href="#faq">FAQ</a></nav><a class="btn" href="#apply">체험 수업 신청</a></div></header>
+
+<section class="hero"><div class="w"><div>
+ <span style="font-weight:900;color:var(--g)">🏡 장유 · 초등 1~6학년 영어</span>
+ <h1>집처럼 편하게,<br><em>영어가 자라는</em> 공부방</h1>
+ <p>한 반 4명. 선생님이 아이 한 명 한 명의 목소리를 매일 들어요. 파닉스부터 리딩까지, 아이 속도에 맞춰 천천히 단단하게.</p>
+ <a class="btn" href="#apply">무료 체험 수업 →</a> <a class="btn k" href="#">💬 카톡으로 물어보기</a></div>
+ <div class="room"><i class="t">📚</i><i class="b">🖍️</i><i class="c">🧸</i><i class="d">🌰</i><div class="note">오늘의 칭찬 🌟<small>"민지가 챕터북 1권을 다 읽었어요!"</small></div></div>
+</div></section>
+
+<section id="why" style="background:#fff"><div class="w"><h2>왜 도토리일까요?</h2><p class="lead">작아서 더 잘 보이는 공부방이에요.</p>
+<div class="cards"><div><b>👧</b><h3>한 반 4명</h3><p>모두가 매일 말하고 읽어요</p></div><div><b>🔊</b><h3>매일 소리 내어 읽기</h3><p>읽기 녹음을 선생님이 들어요</p></div><div><b>🌟</b><h3>칭찬 알림</h3><p>잘한 걸 매일 카톡으로</p></div><div><b>🏡</b><h3>집 같은 교실</h3><p>낯가림 많은 아이도 편하게</p></div></div></div></section>
+
+<section id="day"><div class="w"><h2>도토리의 하루 수업 (60분)</h2><p class="lead">짧고 꽉 차게, 매일 같은 리듬으로 습관을 만들어요.</p>
+<div class="day"><div><b>10분</b><span>👋 오늘의 영어 인사 · 단어 퀴즈</span></div><div><b>20분</b><span>📖 레벨별 리딩 · 소리 내어 읽기</span></div><div><b>15분</b><span>✏️ 파닉스 · 문장 쓰기</span></div><div><b>15분</b><span>🎲 말하기 게임 · 오늘의 칭찬</span></div></div></div></section>
+
+<section id="level" style="background:#fff"><div class="w"><h2>단계별 과정</h2><p class="lead">레벨 체크 후 아이에게 맞는 단계부터 시작해요.</p>
+<div class="lv"><div><span style="background:#F2A65A">씨앗</span><h3>파닉스</h3><p>알파벳 소리부터 짧은 단어 읽기까지</p></div><div><span style="background:#6BAA5A">새싹</span><h3>리더스북</h3><p>쉬운 이야기책을 혼자 소리 내어 읽기</p></div><div><span style="background:#4E8FCB">나무</span><h3>챕터북</h3><p>긴 이야기 읽고 내 생각 한 줄 쓰기</p></div></div>
+<div style="margin-top:30px" class="msg"><p>어머님, 오늘 서준이가 처음으로 혼자 한 페이지를 읽었어요! 🌟 (예시)</p><p class="me">와 정말요? 집에서도 칭찬해 줄게요 😊</p></div></div></section>
+
+<section id="faq"><div class="w"><h2>자주 묻는 질문</h2><div style="margin-top:18px">
+<details><summary>체험 수업은 무료인가요?</summary><p>네, 한 번 와서 수업을 들어 보고 결정하셔도 돼요.</p></details>
+<details><summary>영어를 처음 시작해도 괜찮나요?</summary><p>그럼요. '씨앗' 단계에서 알파벳 소리부터 천천히 시작해요.</p></details>
+<details><summary>수업 시간은 어떻게 정하나요?</summary><p>학교 끝나는 시간에 맞춰 반을 정해요. 상담 때 가능한 시간을 알려 드려요.</p></details></div></div></section>
+
+<section id="apply" style="background:#fff"><div class="w two"><div><h2>무료 체험 수업 신청</h2><p class="lead">남겨 주시면 선생님이 직접 연락드려요.</p><p>📍 김해시 장유 ○○아파트 상가 2층 (예시)<br>🕑 평일 13:00 – 19:00<br>📞 010-0000-0000 (예시)</p></div>
+<form onsubmit="event.preventDefault();this.querySelector('small').hidden=false"><input placeholder="아이 이름" required><select><option>초1</option><option>초2</option><option>초3</option><option>초4</option><option>초5</option><option>초6</option></select><input placeholder="연락처 010-" required><textarea placeholder="아이에 대해 알려 주세요 (선택)"></textarea><button class="btn">체험 수업 신청하기</button><small hidden>예시 사이트라 실제로 접수되지는 않아요 🙂</small></form></div></section>
+
+<footer><div class="w">도토리 영어공부방 (예시) · 김해 장유 · 개인과외교습자 신고번호 제○○○호<br>© 2026 · 이 사이트는 <a href="https://kisthestar1-boop.github.io/minsung-ai/web/">찰칵홈</a>이 만든 예시예요 · 이름·후기는 가상</div></footer>
+<div class="fab"><a class="btn" href="#apply">체험 신청</a><a class="btn k" href="#">카톡 상담</a></div>
+<div class="badge">찰칵홈 예시 · 가상 공부방 · <a href="https://kisthestar1-boop.github.io/minsung-ai/web/">만들기 문의</a></div>
+</body></html>
