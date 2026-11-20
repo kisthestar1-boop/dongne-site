@@ -88,7 +88,7 @@ const ORDER=['fox','sheep','bunny','hedgehog','owl','frog'];
 
 /* ---------- 입력 ---------- */
 const K={left:0,right:0,up:0,down:0,jump:0,atk:0,skill:0,friend:0};const P={};
-const KEYMAP={ArrowLeft:'left',ArrowRight:'right',ArrowUp:'up',ArrowDown:'down',KeyA:'left',KeyD:'right',KeyW:'up',KeyS:'down',KeyC:'jump',Space:'jump',KeyX:'atk',KeyJ:'atk',KeyZ:'skill',KeyK:'skill',KeyV:'friend',KeyL:'friend',Enter:'atk'};
+const KEYMAP={ArrowLeft:'left',ArrowRight:'right',ArrowUp:'up',ArrowDown:'down',KeyA:'left',KeyD:'right',KeyW:'up',KeyS:'down',KeyC:'jump',Space:'jump',KeyX:'atk',KeyJ:'atk',KeyZ:'skill',KeyK:'skill',KeyV:'friend',Digit1:'d1',Digit2:'d2',Digit3:'d3',Digit4:'d4',Digit5:'d5',KeyL:'friend',Enter:'atk'};
 addEventListener('keydown',e=>{const k=KEYMAP[e.code];if(k){if(!K[k])P[k]=1;K[k]=1;e.preventDefault();audioInit();}});
 addEventListener('keyup',e=>{const k=KEYMAP[e.code];if(k){K[k]=0;}});
 document.querySelectorAll('.btn').forEach(b=>{const k=b.dataset.k;
@@ -446,12 +446,13 @@ function talk(npc){
   D.opts.push({t:'별 조각 2 → 친구 ★+1',ok:(SV.inv.it_star||0)>=2&&SV.party.some(k=>(SV.fstar[k]||1)<5),cb:()=>{SV.inv.it_star-=2;const k=SV.party.filter(k=>(SV.fstar[k]||1)<5).sort((a,b)=>(SV.fstar[a]||1)-(SV.fstar[b]||1))[0];SV.fstar[k]=(SV.fstar[k]||1)+1;SFX.lv();save();D.text=FR[k].n+' 별이 하나 늘었어! ★'+SV.fstar[k]}});
   D.opts.push({t:'보물 상자 열기',ok:(SV.inv.it_chest||0)>=1,cb:()=>{SV.inv.it_chest-=1;const g=80+Math.floor(Math.random()*120);SV.gold+=g;SV.inv.it_star=(SV.inv.it_star||0)+1;SFX.get();save();D.text='상자 속에 🪙'+g+' 와 별 조각 1개!'}});
  }
- else if(!id){D.text=npc==='baker'?'오늘도 빵 냄새 좋지? 친구들이 쉬는 동안 같이 구워 줘.':'다음엔 진짜 대결이야. 대전 모드에서 만나!';}
+else if(!id){D.text=npc==='baker'?'오늘도 빵 냄새 좋지? 친구들이 쉬는 동안 같이 구워 줘.':'다음엔 진짜 대결이야. 대전 모드에서 만나!';}
  else{const q=QUESTS[id];
   if(!SV.qon.includes(id)){D.text='부탁이 있어요: '+q.n+'\n'+q.d;D.opts.push({t:'좋아요!',ok:1,cb:()=>{SV.qon.push(id);if(q.kill){SV.qbase=SV.qbase||{};SV.qbase[id]=SV.qk[q.kill[0]]||0}save();SFX.get();D.text='고마워요! 진행은 오른쪽 위에 보여요.';D.opts=[]}});}
   else if(qReady(id)){D.text=q.n+' 완료! 정말 고마워요.';D.opts.push({t:'보상 받기',ok:1,cb:()=>{if(q.need)for(const k in q.need)SV.inv[k]-=q.need[k];SV.qon=SV.qon.filter(x=>x!==id);SV.qdone[id]=1;D.text='보상: '+give(q.rw);D.opts=[]}});}
   else{const [a,b]=qProg(id);D.text=q.n+' ('+a+'/'+b+')\n'+q.d;}
  }
+ if(npc==='rival')D.opts.push({t:'⚔ 카드 대전',ok:1,cb:()=>startDuel()});
  ST.dlg=D;}
 function villageEnter(){
  banner('🌱 새싹 마을','◀ 버섯 숲   ·   반딧불 늪 ▶');
@@ -514,6 +515,103 @@ function drawVillageUI(){
 function autoBread(dt){const p=ST.pl;ST.breadCD=(ST.breadCD||0)-dt;
  if(p.hp>0&&p.hp<p.hpMax*.35&&(SV.inv.it_bread||0)>0&&ST.breadCD<=0){SV.inv.it_bread--;ST.breadCD=10;const h=Math.round(p.hpMax*.35);p.hp=Math.min(p.hpMax,p.hp+h);popNum(p.x,p.y-110,'🍞 냠! +'+h,'heal');SFX.heal();save();}}
 
+/* ---------- 카드 대전 (캐슬파이트식 미리보기) ---------- */
+const DG=455;
+const UCARD={
+ fox:{cost:3,hp:60,dmg:9,range:250,spd:55,rate:1.1,shot:1},
+ sheep:{cost:4,hp:200,dmg:5,range:42,spd:40,rate:1.2},
+ bunny:{cost:3,hp:60,dmg:3,range:200,spd:50,rate:1.4,heal:14},
+ hedgehog:{cost:3,hp:95,dmg:14,range:38,spd:85,rate:.8},
+ owl:{cost:5,hp:70,dmg:12,range:230,spd:45,rate:1.6,splash:70,shot:1},
+ frog:{cost:4,hp:110,dmg:7,range:40,spd:50,rate:1,buff:1}
+};
+const ECARD={
+ e0:{cost:2,hp:50,dmg:6,range:36,spd:50,rate:1},e1:{cost:2,hp:40,dmg:8,range:30,spd:95,rate:.9},
+ e2:{cost:4,hp:150,dmg:7,range:40,spd:35,rate:1.2},e3:{cost:3,hp:45,dmg:8,range:220,spd:45,rate:1.3,shot:1},
+ m0:{cost:3,hp:110,dmg:10,range:38,spd:45,rate:1.1},m1:{cost:3,hp:60,dmg:11,range:34,spd:100,rate:.8},
+ m2:{cost:4,hp:70,dmg:11,range:230,spd:40,rate:1.4,shot:1},m3:{cost:4,hp:70,dmg:12,range:220,spd:50,rate:1.3,shot:1}
+};
+let DU=null;
+function duelDeck(){return SV.friends.slice().sort((a,b)=>(SV.party.includes(b)?1:0)-(SV.party.includes(a)?1:0)).slice(0,5)}
+function startDuel(){SV.duel=SV.duel||{win:0,lose:0};SV.land=SV.land||0;
+ const lg=Math.min(8,SV.duel.win);const cm=600*(1+lg*.12);
+ DU={t:0,lg,en:5,ee:4,units:[],fx:[],deck:duelDeck(),me:{hp:600,max:600},foe:{hp:cm,max:cm},done:null,T:0,aiT:2,
+  pool:lg>=2?['e0','e1','e2','e3','m0','m1','m2','m3']:['e0','e1','e2','e3']};
+ ST.dlg=null;scene='duel';SFX.get();}
+function duelSpawn(side,k){const d=side>0?UCARD[k]:ECARD[k];
+ const m=side>0?(1+((SV.fstar[k]||1)-1)*.15)*(1+(SV.lv-1)*.03):(1.15+DU.lg*.1);
+ DU.units.push({side,k,d,x:side>0?120:840,y:DG-2+Math.random()*16,hp:d.hp*m,hpMax:d.hp*m,dmg:d.dmg*m,cd:.5,act:0,anim:Math.random()*5,hit:0});
+ for(let i=0;i<8;i++)DU.fx.push({x:side>0?120:840,y:DG-30,vx:(Math.random()-.5)*160,vy:-Math.random()*200,life:.5,col:side>0?'#cdeaa0':'#c9b6ff',r:4});}
+function duelPlay(k){if(DU.done)return;const c=UCARD[k];if(DU.en<c.cost){popDU(140,380,'에너지 부족','#ff9a9a');return}DU.en-=c.cost;duelSpawn(1,k);SFX.swing();}
+function popDU(x,y,t,col){DU.fx.push({x,y,vx:0,vy:-60,life:.9,txt:t,col})}
+function updDuel(dt){const D=DU;if(D.done){D.T+=dt;return}D.t+=dt;
+ D.en=Math.min(10,D.en+dt/1.1);D.ee=Math.min(10,D.ee+dt/(1.0-Math.min(.3,D.lg*.04)));
+ D.aiT-=dt;if(D.aiT<=0){const k=D.pool[Math.floor(Math.random()*D.pool.length)];if(D.ee>=ECARD[k].cost){D.ee-=ECARD[k].cost;duelSpawn(-1,k);D.aiT=.8+Math.random()*1.2}else D.aiT=.4}
+ for(const u of D.units){u.anim+=dt;if(u.act>0)u.act-=dt;if(u.hit>0)u.hit-=dt;u.cd-=dt;
+  let tgt=null,bd=1e9;for(const o of D.units){if(o.side===u.side||o.hp<=0)continue;const dd=(o.x-u.x)*u.side;if(dd>-20&&dd<bd){bd=dd;tgt=o}}
+  const castleX=u.side>0?880:80,cd=(castleX-u.x)*u.side;
+  if(u.d.heal){const hurt=D.units.filter(o=>o.side===u.side&&o!==u&&o.hp>0&&o.hp<o.hpMax&&Math.abs(o.x-u.x)<u.d.range).sort((a,b)=>a.hp/a.hpMax-b.hp/b.hpMax)[0];
+   if(hurt&&u.cd<=0){hurt.hp=Math.min(hurt.hpMax,hurt.hp+u.d.heal*(u.dmg/u.d.dmg));u.cd=u.d.rate;u.act=.3;DU.fx.push({x:hurt.x,y:hurt.y-60,vx:0,vy:-50,life:.7,txt:'♥',col:'#ff8fb0'});continue}}
+  const buff=D.units.some(o=>o.side===u.side&&o.d.buff&&o.hp>0&&Math.abs(o.x-u.x)<160)?1.3:1;
+  if(tgt&&bd<=u.d.range){if(u.cd<=0){u.cd=u.d.rate;u.act=.3;const dm=u.dmg*buff;
+    if(u.d.splash){for(const o of D.units)if(o.side!==u.side&&Math.abs(o.x-tgt.x)<u.d.splash){o.hp-=dm;o.hit=.15}DU.fx.push({x:tgt.x,y:tgt.y-40,vx:0,vy:0,life:.4,ring:1,col:'#d8cfff',r:10})}
+    else{tgt.hp-=dm;tgt.hit=.15}
+    if(u.d.shot)DU.fx.push({x:u.x,y:u.y-40,tx:tgt.x,ty:tgt.y-40,life:.18,beam:1,col:u.side>0?'#ffe0a0':'#b89cff'});
+    DU.fx.push({x:tgt.x,y:tgt.y-70,vx:0,vy:-70,life:.6,txt:Math.round(dm),col:'#fff3c4'});}}
+  else if(cd<=u.d.range+10){if(u.cd<=0){u.cd=u.d.rate;u.act=.3;const c=u.side>0?D.foe:D.me;c.hp-=u.dmg*buff;c.hit=.15;shakeD=4;if(u.d.shot)DU.fx.push({x:u.x,y:u.y-40,tx:castleX,ty:DG-90,life:.18,beam:1,col:'#ffe0a0'});}}
+  else u.x+=u.side*u.d.spd*dt;}
+ for(const u of D.units)if(u.hp<=0&&!u.dead){u.dead=.5;if(u.side<0)D.en=Math.min(10,D.en+.3)}
+ D.units.forEach(u=>{if(u.dead)u.dead-=dt});D.units=D.units.filter(u=>!u.dead||u.dead>0);
+ if(D.me.hp<=0||D.foe.hp<=0||D.t>=180)duelEnd(D.foe.hp<=0||(D.t>=180&&D.foe.hp/D.foe.max<D.me.hp/D.me.max));}
+let shakeD=0;
+function duelEnd(win){const D=DU;D.done={win,gold:win?50+D.lg*20:15,land:win?1:0,star:win&&Math.random()<.5};
+ if(win){SV.duel.win++;SV.land=(SV.land||0)+1;if(D.done.star)SV.inv.it_star=(SV.inv.it_star||0)+1;SFX.lv()}else{SV.duel.lose++;SFX.hurt()}
+ SV.gold+=D.done.gold;save();}
+function drawCastle(x,side,c){const y=DG;ctx.save();ctx.translate(x,y);if(c.hit>0){ctx.translate((Math.random()-.5)*6,0);c.hit-=1/60}
+ ctx.fillStyle=side>0?'#b98a5a':'#7a6a8a';roundRect(-42,-130,84,130,8);ctx.fill();
+ ctx.fillStyle=side>0?'#8fbf6a':'#6a5a9a';ctx.beginPath();ctx.moveTo(-54,-126);ctx.lineTo(0,-190);ctx.lineTo(54,-126);ctx.closePath();ctx.fill();
+ ctx.fillStyle='#3a2f22';roundRect(-14,-46,28,46,10);ctx.fill();ctx.fillStyle='#ffe9a8';ctx.fillRect(-26,-100,14,16);ctx.fillRect(12,-100,14,16);
+ ctx.strokeStyle='#5a3a1a';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(0,-190);ctx.lineTo(0,-226);ctx.stroke();ctx.fillStyle=side>0?'#7fd36a':'#b89cff';ctx.beginPath();ctx.moveTo(0,-226);ctx.lineTo(side*30,-216);ctx.lineTo(0,-206);ctx.fill();
+ ctx.restore();bar(x-50,y-250,100,12,c.hp/c.max,side>0?'#7fd36a':'#b89cff','');}
+function drawDuel(dt){const D=DU;btns=[];
+ const bg=IMG.bg_forest;if(bg.naturalWidth){const bw=bg.naturalWidth*(H/bg.naturalHeight);ctx.drawImage(bg,-200,0,bw,H)}
+ ctx.save();if(shakeD>0){ctx.translate((Math.random()-.5)*shakeD,(Math.random()-.5)*shakeD);shakeD=Math.max(0,shakeD-dt*20)}
+ drawPlat({x:-200,y:DG,w:2000,ground:1},0);
+ drawCastle(70,1,D.me);drawCastle(890,-1,D.foe);
+ D.units.slice().sort((a,b)=>a.y-b.y).forEach(u=>{const al=u.dead?Math.max(0,u.dead*2):1;
+  if(u.side>0){const fr=FIMG[u.k];const im=fr?IMG[fr[u.act>0?1:0]]:IMG[FR[u.k].img];sprite(im,u.x,u.y,0,1,{k:.34,dy:-Math.abs(Math.sin(u.anim*8))*3,alpha:al,flash:u.hit>0?.7:0})}
+  else sprite(IMG[ENEMY[u.k].img],u.x,u.y,ENEMY[u.k].h*.95,1,{dy:-Math.abs(Math.sin(u.anim*7))*2,alpha:al,flash:u.hit>0?.7:0});
+  if(!u.dead){ctx.fillStyle='rgba(0,0,0,.35)';roundRect(u.x-18,u.y-(u.side>0?78:ENEMY[u.k].h+6),36,5,2);ctx.fill();ctx.fillStyle=u.side>0?'#7fd36a':'#ff8a8a';roundRect(u.x-18,u.y-(u.side>0?78:ENEMY[u.k].h+6),36*Math.max(0,u.hp/u.hpMax),5,2);ctx.fill()}});
+ for(const f of D.fx){f.life-=dt;ctx.save();ctx.globalAlpha=Math.max(0,Math.min(1,f.life*3));
+  if(f.beam){ctx.strokeStyle=f.col;ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(f.x,f.y);ctx.lineTo(f.tx,f.ty);ctx.stroke()}
+  else if(f.ring){f.r+=300*dt;ctx.strokeStyle=f.col;ctx.lineWidth=4;ctx.beginPath();ctx.arc(f.x,f.y,f.r,0,7);ctx.stroke()}
+  else if(f.txt!=null){f.y+=f.vy*dt;ctx.font='900 16px system-ui';ctx.textAlign='center';ctx.lineWidth=4;ctx.strokeStyle='rgba(40,30,20,.7)';ctx.strokeText(f.txt,f.x,f.y);ctx.fillStyle=f.col;ctx.fillText(f.txt,f.x,f.y);ctx.textAlign='left'}
+  else{f.x+=f.vx*dt;f.y+=f.vy*dt;f.vy+=400*dt;ctx.fillStyle=f.col;ctx.beginPath();ctx.arc(f.x,f.y,f.r,0,7);ctx.fill()}
+  ctx.restore()}
+ D.fx=D.fx.filter(f=>f.life>0);ctx.restore();
+ // 위: 정보
+ ctx.fillStyle='rgba(40,32,24,.65)';roundRect(W/2-170,10,340,40,12);ctx.fill();ctx.textAlign='center';ctx.fillStyle='#ffe9a8';ctx.font='900 16px system-ui';
+ ctx.fillText('⚔ 카드 대전 · '+(D.lg+1)+'단계  vs 서리   '+Math.max(0,Math.ceil(180-D.t))+'초',W/2,36);ctx.textAlign='left';
+ ctx.fillStyle='#fbf5e6';ctx.font='bold 12px system-ui';ctx.fillText('🏰 영토 '+(SV.land||0)+'칸',20,30);
+ // 아래: 카드 손패
+ ctx.fillStyle='rgba(40,32,24,.78)';ctx.fillRect(0,H-84,W,84);
+ ctx.fillStyle='#7ad1ff';for(let i=0;i<10;i++){ctx.globalAlpha=i<Math.floor(D.en)?1:.25;roundRect(20+i*24,H-76,20,10,3);ctx.fill()}ctx.globalAlpha=1;
+ ctx.fillStyle='#fff';ctx.font='bold 11px system-ui';ctx.fillText('에너지 '+Math.floor(D.en),270,H-66);
+ D.deck.forEach((k,i)=>{const c=UCARD[k],x=330+i*122,y=H-80,ok=D.en>=c.cost;btns.push({x,y,w:114,h:74,cb:()=>duelPlay(k)});
+  ctx.fillStyle=ok?'#fff3c4':'#bfb6a4';roundRect(x,y,114,74,12);ctx.fill();sprite(IMG[FR[k].img],x+30,y+70,58,1,{noShadow:1,alpha:ok?1:.5});
+  ctx.fillStyle='#3a2f22';ctx.font='900 13px system-ui';ctx.fillText(FR[k].n.split(' ').pop(),x+58,y+24);ctx.font='bold 11px system-ui';ctx.fillStyle='#8a6a4a';ctx.fillText('★'+(SV.fstar[k]||1)+' · '+FR[k].role,x+58,y+42);
+  ctx.fillStyle='#2f86c9';ctx.beginPath();ctx.arc(x+100,y+60,11,0,7);ctx.fill();ctx.fillStyle='#fff';ctx.font='900 13px system-ui';ctx.textAlign='center';ctx.fillText(c.cost,x+100,y+65);ctx.textAlign='left';
+  if(!isTouch){ctx.fillStyle='#8a6a4a';ctx.font='bold 10px system-ui';ctx.fillText(i+1,x+6,y+14)}});
+ for(let i=0;i<5;i++)if(pressed('d'+(i+1))&&D.deck[i])duelPlay(D.deck[i]);
+ if(pressed('friend')&&D.deck[0])duelPlay(D.deck[0]);
+ if(D.done){const R=D.done;ctx.fillStyle='rgba(30,40,25,.45)';ctx.fillRect(0,0,W,H);panel(W/2-240,90,480,320);btns=[];ctx.textAlign='center';
+  ctx.font='900 34px system-ui';ctx.fillStyle=R.win?'#5e8f4a':'#a85a5a';ctx.fillText(R.win?'대전 승리!':'아쉽게 졌어요',W/2,148);
+  ctx.font='bold 16px system-ui';ctx.fillStyle='#3a2f22';ctx.fillText('🪙 +'+R.gold+(R.win?'   ·   🏰 영토 +1칸 (총 '+SV.land+'칸)':''),W/2,192);
+  if(R.star)ctx.fillText('별 조각 +1',W/2,220);
+  ctx.font='bold 14px system-ui';ctx.fillStyle='#8a6a4a';ctx.fillText('전적 '+SV.duel.win+'승 '+SV.duel.lose+'패 · 이길수록 서리가 강해져요',W/2,250);
+  ctx.fillText(R.win?'영토는 나중에 나라 버전 지도에 그대로 이어져요':'친구 별을 올리면 카드도 강해져요',W/2,276);ctx.textAlign='left';
+  button(W/2-210,320,200,46,'↻ 다시 대전',()=>startDuel());button(W/2+10,320,200,46,'🏠 마을로',()=>{scene='play'},'#cfe7b8');}
+}
 /* ---------- 결과 · 성장 ---------- */
 function rankOf(){const t=(performance.now()-ST.start)/1000;let s=0;s+=Math.min(40,ST.maxCombo*1.2);s+=ST.dmgTaken<60?30:ST.dmgTaken<160?18:6;s+=t<150?30:t<240?20:10;return s>=85?'S':s>=65?'A':s>=45?'B':'C'}
 function finishRun(win){
@@ -698,9 +796,9 @@ function drawTitle(dt){
  ctx.fillStyle='#86b866';ctx.fillRect(0,GROUND+10,W,H);ctx.fillStyle='#9a7a52';ctx.fillRect(0,GROUND+30,W,H);
  panel(W/2-110,60,460,300);
  ctx.textAlign='center';ctx.fillStyle='#5e8f4a';ctx.font='900 46px system-ui';ctx.fillText('🌱 새싹 원정대',W/2+120,124);
- ctx.fillStyle='#8a6a4a';ctx.font='bold 15px system-ui';ctx.fillText('육성 시험판 v0.2 · 새싹 마을',W/2+120,150);
+ ctx.fillStyle='#8a6a4a';ctx.font='bold 15px system-ui';ctx.fillText('육성 v0.3 · 마을 · 카드 대전',W/2+120,150);
  ctx.font='bold 14px system-ui';ctx.fillStyle='#3a2f22';
- ctx.fillText('Lv.'+SV.lv+'  ·  친구 '+SV.friends.length+'/'+ORDER.length+'  ·  🪙 '+SV.gold+'  ·  최고 콤보 '+SV.bestCombo,W/2+120,180);
+ ctx.fillText('Lv.'+SV.lv+'  ·  친구 '+SV.friends.length+'/'+ORDER.length+'  ·  🪙 '+SV.gold+'  ·  🏰 영토 '+(SV.land||0)+'칸',W/2+120,180);
  const st=r=>'★'.repeat(SV.stars[r]||0)+'☆'.repeat(3-(SV.stars[r]||0));ctx.fillText('🍄 숲 '+st('forest')+'   🌙 늪 '+(SV.cleared.forest?st('marsh'):'🔒'),W/2+120,204);
  ctx.textAlign='left';btns=[];
  button(W/2+20,226,200,50,'▶ 마을로 가기',()=>{newRun('village');scene='play'});
@@ -753,6 +851,7 @@ function loop(now){
  if(tapXY){for(const b of btns){if(tapXY.x>=b.x&&tapXY.x<=b.x+b.w&&tapXY.y>=b.y&&tapXY.y<=b.y+b.h){b.cb();break}}tapXY=null}
  if(scene==='title'){if(pressed('atk')||pressed('jump')){newRun('village');scene='play'}drawTitle(dt);}
  else if(scene==='book'){drawBook();}
+ else if(scene==='duel'){updDuel(dt);drawDuel(dt);}
  else{
   let sim=dt;if(ST.hitstop>0){ST.hitstop-=dt;sim=dt*.06;}
   if(ST.buff>0){ST.buff-=dt;if(ST.pl.atkCD>0)ST.pl.atkCD-=dt*.5}
@@ -776,7 +875,7 @@ function loop(now){
  requestAnimationFrame(loop);
 }
 requestAnimationFrame(loop);
-window.__G={get ST(){return ST},get scene(){return scene},SV,K,P,set scene(v){scene=v},newRun};
+window.__G={startDuel,get DU(){return DU},get ST(){return ST},get scene(){return scene},SV,K,P,set scene(v){scene=v},newRun};
 </script>
 </body>
 </html>
