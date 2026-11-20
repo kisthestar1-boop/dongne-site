@@ -300,7 +300,7 @@ function updPlayer(dt){
  p.vy+=GRAV*(Math.abs(p.vy)<140&&!p.onG?.55:1)*dt;p.x+=p.vx*dt;p.y+=p.vy*dt;
  p.x=Math.max(20,Math.min(S.len-20,p.x));
  if(ST.lock){p.x=Math.max(ST.lock.a+20,Math.min(ST.lock.b-20,p.x))}
- const fallV=p.vy;const was=p.onG;p.onG=landOn(p,prevY);if(p.onG&&!was&&ST.intro&&!ST.introLanded){ST.introLanded=1;vfx('vfx_lvup',p.x,p.y-70,{s0:.3,s1:.5,life:.9,a:.7});shake(3);SFX.big();dust(p.x,p.y,10)}if(p.onG&&!was){if(fallV>220)p.landT=.11;dust(p.x-10,p.y,5);dust(p.x+10,p.y,5);p.sq={t:.1,sx:1.18,sy:.82};if(fallV>300)play('impactSoft_heavy_000',.16,1.4);if(fallV>500){shake(2)}}
+ const fallV=p.vy;const was=p.onG;p.onG=landOn(p,prevY);if(p.onG&&!was&&ST.intro&&!ST.introLanded){ST.introLanded=1;vfx('vfx_lvup',p.x,p.y-70,{s0:.3,s1:.5,life:.9,a:.7});shake(3);SFX.big();dust(p.x,p.y,10)}if(p.onG&&!was){if(fallV>220)p.landT=(K.left||K.right)?.05:.11;dust(p.x-10,p.y,5);dust(p.x+10,p.y,5);p.sq={t:.1,sx:1.18,sy:.82};if(fallV>300)play('impactSoft_heavy_000',.16,1.4);if(fallV>500){shake(2)}}
  if(p.onG&&dir&&Math.sign(p.vx)!==dir&&Math.abs(p.vx)>120&&Math.random()<.5)dust(p.x,p.y,1);
  if(p.onG&&Math.abs(p.vx)>30){const N=RCN();if(N){const prev=p.ri||0;p.rdist=(p.rdist||0)+Math.abs(p.vx)*dt;p.ri=prev;while(p.rdist>=RC_D[p.ri]){p.rdist-=RC_D[p.ri];p.ri=(p.ri+1)%8}const fr=p.ri;if(fr!==prev&&(fr===0||fr===4)&&Math.abs(p.vx)>200){dust(p.x-p.face*10,p.y,2);if(!play('impactSoft_medium_000',.05,1.6+Math.random()*.2)){}}}else if(Math.abs(p.vx)>200){p.stepT=(p.stepT||0)-dt;if(p.stepT<=0){p.stepT=.24;dust(p.x-p.face*12,p.y,3)}}}
  if(p.sq&&p.sq.t>0)p.sq.t-=dt;
@@ -362,6 +362,8 @@ function updFriends(dt){
   else if(f.k==='hedgehog'&&near)tx=near.x-30*Math.sign(near.x-f.x||1);
   else tx=trailX(52+i*40);
   for(const o of ST.friends){if(o!==f&&Math.abs(o.x-f.x)<34)tx+=(f.x>=o.x?1:-1)*22}
+  if(f.onG&&!near&&Math.abs(p.x-f.x)<34&&Math.abs(p.vx)>150&&Math.sign(p.vx)===Math.sign(f.x-p.x)&&!(f.hopCD>0)){f.vy=-360;f.onG=false;f.hopCD=.6;f.vx=-Math.sign(p.vx)*60}
+  if(f.hopCD>0)f.hopCD-=dt;
   if(Math.abs(p.x-f.x)<30&&!near)tx+=(f.x>=p.x?1:-1)*24;
   const dx=tx-f.x;f.vx=Math.abs(dx)>14?Math.sign(dx)*Math.min(300,Math.abs(dx)*3):f.vx*.8;
   if(Math.abs(f.vx)>10)f.face=Math.sign(f.vx);if(near&&f.act>0)f.face=Math.sign(near.x-f.x)||f.face;
@@ -969,7 +971,7 @@ function drawTitle(dt){
  button(W-232,H-58,104,40,'📖 도감',()=>{scene='book'},'#cfe7b8');
  button(W-120,H-58,104,40,SV.mute?'🔇 음악':'🎵 음악',()=>{SV.mute=!SV.mute;save();if(SV.mute)bgmStop();else bgmStart()},'#e7e0f6');
  btns.unshift({x:0,y:0,w:W,h:H,cb:startGame});
- ctx.fillStyle='rgba(58,41,30,.7)';ctx.font='bold 12px system-ui';ctx.fillText('v0.9.4 · 육성 시험판 · 효과음 Kenney (CC0)',14,H-14);
+ ctx.fillStyle='rgba(58,41,30,.7)';ctx.font='bold 12px system-ui';ctx.fillText('v0.9.5 · 육성 시험판 · 효과음 Kenney (CC0)',14,H-14);
  if(loaded<NAMES.length){ctx.fillStyle='#fff';ctx.font='bold 13px system-ui';ctx.fillText('그림 불러오는 중… '+loaded+'/'+NAMES.length,14,24)}
  // 꽃잎 (천천히)
  for(let i=0;i<22;i++){const sp=18+(i%5)*6,x=((i*137+titleT*sp*1.4)%(W+80))-40,y=((i*89+titleT*(sp+10))%(H+60))-30;ctx.save();ctx.translate(x,y);ctx.rotate(titleT*.8+i);ctx.fillStyle=i%3?'rgba(255,214,228,.75)':'rgba(255,240,200,.7)';ctx.beginPath();ctx.ellipse(0,0,6,3,0,0,7);ctx.fill();ctx.restore()}
