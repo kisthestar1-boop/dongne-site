@@ -164,6 +164,7 @@ def page(s):
     progs = "".join(f'<div class="card"><b class="ic">{p[0]}</b><h3>{E(p[1])}</h3><p>{E(p[2])}</p></div>' for p in s["progs"])
     why = "".join(f'<div class="card"><b class="ic">{p[0]}</b><h3>{E(p[1])}</h3><p>{E(p[2])}</p></div>' for p in s["why"])
     rows = "".join(f'<tr><td>{E(a)}</td><td>{E(b)}</td><td>{E(c)}</td><td><span class="tag">{E(d)}</span></td></tr>' for a,b,c,d in s["sched"])
+    fees = "".join(f'<tr><td>{E(a)}</td><td>{E(b)} · {E(c)}</td><td>○○○,000원</td><td>{E(d)}</td></tr>' for a,b,c,d in s["sched"])
     faq = "".join(f'<details><summary>{E(q)}</summary><p>{E(a)}</p></details>' for q,a in s["faq"])
     opts = "".join(f"<option>{E(p[1])}</option>" for p in s["progs"])
     J = lambda o: json.dumps(o, ensure_ascii=False).replace("<","\\u003c")
@@ -203,6 +204,8 @@ table{{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(
 details{{background:#fff;border:1px solid var(--ln);border-radius:16px;padding:16px 18px;margin-bottom:10px}}summary{{font-weight:900;cursor:pointer}}details p{{margin:8px 0 0;color:var(--mu)}}
 .two{{display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:start}}@media(max-width:860px){{.two{{grid-template-columns:1fr}}}}
 form{{display:grid;gap:10px;background:#fff;border:1px solid var(--ln);border-radius:22px;padding:22px}}input,select,textarea{{font:inherit;padding:12px;border-radius:12px;border:1px solid var(--ln)}}
+.gal{{background:#fff;border:1px dashed var(--ln);border-radius:18px;aspect-ratio:4/3;display:grid;place-items:center;font-size:44px;text-align:center}}.gal small{{display:block;font-size:13px;color:var(--mu);font-weight:700}}
+@media(max-width:560px){{header .w>.cta{{display:none}}.logo b{{white-space:nowrap}}}}
 .map{{border-radius:18px;background:repeating-linear-gradient(45deg,#fff,#fff 12px,var(--bg) 12px,var(--bg) 24px);border:1px solid var(--ln);height:180px;display:grid;place-items:center;color:var(--mu);font-weight:700;margin-top:14px}}
 .notice{{background:var(--c2);color:#fff;text-align:center;font-weight:800;font-size:14px;padding:9px 12px}}
 footer{{padding:28px 0 100px;color:var(--mu);font-size:13px;background:#fff;border-top:1px solid var(--ln)}}
@@ -212,18 +215,25 @@ footer{{padding:28px 0 100px;color:var(--mu);font-size:13px;background:#fff;bord
 </style></head><body>
 <div class="notice">📢 겨울방학 특강 접수 중 · 신규생 {E(s["cta"])} 예약 가능</div>
 <header><div class="w"><a class="logo" href="#"><i>{E(s["name"][0])}</i><span><b>{E(s["name"])}</b><small>{E(s["en"])} · 김해 장유</small></span></a>
-<nav><a href="#prog">수업</a><a href="#class">시간표</a><a href="#why">특별한 점</a><a href="#faq">FAQ</a><a href="#map">오시는 길</a></nav><a class="cta" href="#apply">{E(s["cta"])}</a></div></header>
+<nav><a href="#prog">수업</a><a href="#class">시간표</a><a href="#fee">교습비</a><a href="#why">특별한 점</a><a href="#faq">FAQ</a><a href="#map">오시는 길</a></nav><a class="cta" href="#apply">{E(s["cta"])}</a></div></header>
 {hero}
 <section id="prog" class="alt"><div class="w"><span class="k">PROGRAMS</span><h2>수업 안내</h2><p class="lead">아이(수강생)의 지금 단계에서 시작해요. 상담 후 반을 정해요.</p><div class="grid4">{progs}</div></div></section>
 <section id="class"><div class="w"><span class="k">TIMETABLE</span><h2>시간표</h2><p class="lead">※ 예시 시간표예요. 정확한 시간은 상담 때 안내해 드려요.</p>
 <table><tr><th>반</th><th>요일</th><th>시간</th><th>정원</th></tr>{rows}</table></div></section>
 <section id="why" class="alt"><div class="w"><span class="k">WHY US</span><h2>{E(s["name"])}이 특별한 이유</h2><p class="lead">학부모(수강생)가 가장 궁금해하는 것부터 챙겼어요.</p><div class="grid3">{why}</div>
-<div class="rv" style="margin-top:16px"><blockquote>"처음엔 걱정했는데 지금은 먼저 가자고 해요."<cite>학부모 · 예시 후기</cite></blockquote><blockquote>"매번 알림으로 오늘 한 걸 볼 수 있어서 안심돼요."<cite>학부모 · 예시 후기</cite></blockquote><blockquote>"선생님이 하나하나 챙겨 주셔서 좋아요."<cite>수강생 · 예시 후기</cite></blockquote></div></div></section>
-<section id="faq"><div class="w"><span class="k">FAQ</span><h2>자주 묻는 질문</h2><div style="margin-top:18px">{faq}</div></div></section>
-<section id="apply" class="alt"><div class="w two"><div id="map"><span class="k">CONTACT</span><h2>{E(s["cta"])} 신청</h2><p class="lead">남겨 주시면 원장님이 오늘 안에 연락드려요.</p>
-<p>📍 {LOC}<br>🕑 평일 10:00 – 21:00 · 토 10:00 – 14:00<br>📞 055-000-0000 (예시)<br>🅿️ 건물 주차 1시간 무료</p><div class="map">🗺 네이버·카카오 지도가 들어가는 자리</div></div>
-<form onsubmit="event.preventDefault();this.querySelector('small').hidden=false"><input placeholder="이름" required><select>{opts}</select><input placeholder="연락처 010-" required inputmode="tel"><textarea placeholder="궁금한 점 (선택)"></textarea><label style="font-size:13px;color:var(--mu)"><input type="checkbox" required style="width:auto"> 상담 연락을 위한 이름·연락처 수집에 동의해요</label><button class="cta">{E(s["cta"])} 신청하기 →</button><small hidden>예시 사이트라 실제로 접수되지는 않아요 🙂</small></form></div></section>
-<footer><div class="w"><b>{E(s["name"])}</b> (예시) · {E(" · ".join(kw[:3]))}<br>{LOC} · 학원 등록번호 제○○○호 (예시)<br>© 2026 · 이 사이트는 <a href="https://kisthestar1-boop.github.io/minsung-ai/web/">찰칵홈</a>이 만든 예시예요 · 이름·숫자·후기는 가상</div></footer>
+<div class="rv" style="margin-top:16px"><p style="grid-column:1/-1;margin:0;font-size:13px;color:var(--mu)">※ 실제 후기·합격 실적은 본인 동의를 받은 것만 올려요.</p><blockquote>"처음엔 걱정했는데 지금은 먼저 가자고 해요."<cite>학부모 · 예시 후기</cite></blockquote><blockquote>"매번 알림으로 오늘 한 걸 볼 수 있어서 안심돼요."<cite>학부모 · 예시 후기</cite></blockquote><blockquote>"선생님이 하나하나 챙겨 주셔서 좋아요."<cite>수강생 · 예시 후기</cite></blockquote></div></div></section>
+<section id="news"><div class="w"><span class="k">NEWS</span><h2>학원 소식</h2><p class="lead">원장님이 휴대폰으로 바로 올리는 공지 자리예요.</p>
+<div class="grid3"><div class="card"><small style="color:var(--c1);font-weight:900">공지 · 12/01</small><h3>겨울방학 특강 접수</h3><p>12월 첫 주부터 방학 특강 신청을 받아요. (예시)</p></div><div class="card"><small style="color:var(--c1);font-weight:900">행사 · 12/20</small><h3>연말 발표회 · 공개 수업</h3><p>가족을 초대하는 작은 발표회가 있어요. (예시)</p></div><div class="card"><small style="color:var(--c1);font-weight:900">안내 · 매월</small><h3>이달의 수업 사진</h3><p>네이버 블로그에 수업 사진을 올려요 → 블로그 연결</p></div></div></div></section>
+<section class="alt"><div class="w"><span class="k">GALLERY</span><h2>교실 둘러보기</h2><p class="lead">등록 전에 가장 많이 보시는 곳 — 교실 · 대기 공간 · 화장실 · 주차장 사진 자리예요.</p>
+<div class="grid4"><div class="gal">🏫<small>교실</small></div><div class="gal">🛋<small>대기 공간</small></div><div class="gal">🧼<small>화장실·세면대</small></div><div class="gal">🅿️<small>주차장·입구</small></div></div></div></section>
+<section id="fee"><div class="w"><span class="k">TUITION</span><h2>교습비 안내</h2><p class="lead">교육청에 신고한 금액 그대로 게시해요. 학원법상 인터넷 광고엔 교습비·등록번호·명칭·과목 표시가 필수라, 미리 다 넣어 드려요.</p>
+<table><tr><th>과정</th><th>교습 시간</th><th>월 교습비</th><th>비고</th></tr>{fees}</table>
+<p style="font-size:13px;color:var(--mu);margin-top:10px">※ 예시 금액이에요. 실제 사이트에는 교육청 신고 교습비·등록번호를 그대로 넣어요. 교재비·재료비는 별도 안내.</p></div></section>
+<section id="faq" class="alt"><div class="w"><span class="k">FAQ</span><h2>자주 묻는 질문</h2><div style="margin-top:18px">{faq}</div></div></section>
+<section id="apply"><div class="w two"><div id="map"><span class="k">CONTACT</span><h2>{E(s["cta"])} 신청</h2><p class="lead">남겨 주시면 원장님이 오늘 안에 연락드려요.</p>
+<p>📍 {LOC}<br>🕑 평일 10:00 – 21:00 · 토 10:00 – 14:00<br>📞 055-000-0000 (예시)<br>🅿️ 건물 주차 1시간 무료</p><div class="map">🗺 네이버·카카오 지도가 들어가는 자리</div><p style="margin-top:10px;font-size:14px">⭐ <a href="#">네이버 플레이스 리뷰 보기</a> · 📝 <a href="#">블로그 수업 일기</a></p></div>
+<form onsubmit="event.preventDefault();this.querySelector('small').hidden=false"><input placeholder="이름" required><select>{opts}</select><input placeholder="연락처 010-" required inputmode="tel"><textarea placeholder="궁금한 점 (선택)"></textarea><label style="font-size:13px;color:var(--mu)"><input type="checkbox" required style="width:auto"> 상담 연락을 위한 이름·연락처 수집에 동의해요</label><button class="cta">{E(s["cta"])} 신청하기 →</button><small style="color:var(--mu)">📲 신청하면 원장님 휴대폰으로 바로 알림이 가요</small><small hidden>예시 사이트라 실제로 접수되지는 않아요 🙂</small></form></div></section>
+<footer><div class="w"><b>{E(s["name"])}</b> (예시) · {E(" · ".join(kw[:3]))}<br>{LOC} · 학원 등록번호 제○○○호 (예시) · 교습과목 {E(s["kind"])} · 교습비 <a href="#fee">교습비 안내</a> 참고<br>© 2026 · 이 사이트는 <a href="https://kisthestar1-boop.github.io/minsung-ai/web/">찰칵홈</a>이 만든 예시예요 · 이름·숫자·후기는 가상</div></footer>
 <div class="dock"><a class="y" href="#apply">{E(s["cta"])}</a><a href="#">💬 카톡 상담</a><a href="tel:0550000000">📞 전화</a></div>
 <div class="badge">찰칵홈 예시 · 가상 학원 · <a href="https://kisthestar1-boop.github.io/minsung-ai/web/">만들기 문의</a></div>
 </body></html>'''
@@ -231,4 +241,4 @@ footer{{padding:28px 0 100px;color:var(--mu);font-size:13px;background:#fff;bord
 if __name__ == "__main__":
     for s in SITES:
         d = os.path.join(OUT, s["slug"]); os.makedirs(d, exist_ok=True)
-        open(os.path.join(d, "index.html"), "w").write(page(s)); print("ok", s["slug"])
+        open(os.path.join(d, "index.html"), "w").write(page(s).replace("</body>", open(os.path.join(os.path.dirname(os.path.abspath(__file__)),"kit","ux_kit.html")).read()+"\n</body>",1)); print("ok", s["slug"])

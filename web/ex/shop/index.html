@@ -57,4 +57,5 @@ $("of").onsubmit=async e=>{e.preventDefault();const sub=draw();if(!sub){toast("�
 const b=e.submitter||$("of").querySelector(".btn");b.disabled=true;b.textContent="접수 중…";
 try{const j=await (await fetch(PROXY,{method:"POST",body:JSON.stringify({op:"hpq",f:{kind:"🛒 주문 · 달빛공방(예시몰)",name:$("o_n").value,contact:$("o_p").value,company:"달빛공방(예시몰)",msg:"[주문]\n"+list+"\n합계(배송비 포함): "+won(sub+3000)+"\n주소: "+$("o_a").value+"\n요청: "+$("o_m").value}})})).json();if(j.error)throw new Error(j.error);
 $("of").hidden=true;$("od").innerHTML=`<div class="done">✅ 주문이 접수됐어요 (주문번호 <b>${j.id}</b>)<br>합계 <b>${won(sub+3000)}</b><br>공방에서 입금 안내 문자를 보내 드려요. 입금이 확인되면 바로 제작을 시작해요.<br><small style="color:#888">※ 예시 쇼핑몰이에요. 실제 상품은 발송되지 않아요.</small></div>`;Object.keys(C).forEach(k=>delete C[k]);$("cartN").textContent=0}
-catch(err){toast("접수 실패: "+err.message)}finally{b.disabled=false;b.textContent="주문하기"}}})();</script></body></html>
+catch(err){toast("접수 실패: "+err.message)}finally{b.disabled=false;b.textContent="주문하기"}}})();</script>
+</body></html>

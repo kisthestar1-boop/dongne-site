@@ -482,5 +482,6 @@ $("#rf").onsubmit=async e=>{e.preventDefault();const v=id=>document.getElementBy
  try{const j=await (await fetch("https://script.google.com/macros/s/AKfycbz09Pualc3dVyOYhjRIBLY1lVpeZMpi8YMoUFlBcqWjJ30gKJagm0HAhio3rFaIf_E/exec",{method:"POST",body:JSON.stringify({op:"hpq",f:{kind:"📐 견적 · 한빛정밀(예시)",company:v("co"),name:v("nm"),contact:v("ct"),msg}})})).json();if(j.error)throw new Error(j.error);ok.style.display="block";ok.innerHTML=`✅ 견적 요청이 접수됐습니다 (접수번호 <b>${j.id}</b>). 영업팀이 1영업일 안에 연락드립니다.`;e.target.reset()}
  catch(err){ok.style.display="block";ok.textContent="보내지 못했습니다. 055-000-0000으로 연락 주세요. ("+err.message+")"}finally{b.disabled=false;b.textContent="견적 요청 보내기 →"}};
 </script>
+
 </body>
 </html>
