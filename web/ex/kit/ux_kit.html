@@ -34,7 +34,7 @@ const links=$$('nav a[href^="#"]');if(links.length&&'IntersectionObserver' in wi
 // 눌러서 크게 보기
 const md=$('#uxk-md'),bd=md.querySelector('.bd'),ft=md.querySelector('.ft');let list=[],cur=0;
 const cta=C.cta.split(',').map(s=>$(s)).find(Boolean);
-const col=getComputedStyle(document.documentElement);['--c1','--a','--sg2','--or','--p','--main'].some(v=>{const x=col.getPropertyValue(v).trim();if(x){md.style.setProperty('--uxk-c',x);return true}});
+const col=getComputedStyle(document.documentElement);['--c1','--pk','--a','--sg2','--or','--p','--main'].some(v=>{const x=col.getPropertyValue(v).trim();if(x){md.style.setProperty('--uxk-c',x);return true}});
 function show(i){cur=i;const el=list[i];bd.innerHTML=el.innerHTML;bd.querySelectorAll('[id]').forEach(x=>x.removeAttribute('id'));
  ft.innerHTML=(i>0?'<button data-uxk="-1">← 이전</button>':'')+(i<list.length-1?'<button data-uxk="1">다음 →</button>':'')+(cta?`<button class="go" data-uxk="go">${C.ctaText}</button>`:'');}
 function open(el){list=$$(C.pop).filter(x=>x.parentElement===el.parentElement);show(list.indexOf(el));md.hidden=false;document.body.style.overflow='hidden';md.querySelector('.cx').focus()}
