@@ -798,7 +798,7 @@ function drawFriends(cx){
 function drawEnemies(cx){
  for(const e of ST.ents){const x=e.x-cx;if(x<-200||x>VW+200)continue;const h=e.d.h*(e.d.boss?1.5:1.02);
   let alpha=1,dy=0,sy=1,rot=0;
-  if(e.spawnT>0){alpha=1-e.spawnT/.6;dy=e.spawnT*30}
+  if(e.spawnT>0){const k=Math.max(0,1-e.spawnT/.6);alpha=Math.min(1,k*1.6);dy=0;sy=.4+k*.6+Math.sin(k*Math.PI)*.18;if(!e.puffed){e.puffed=1;dust(e.x,e.y,6);for(let q=0;q<2;q++)ST.fx.push({kind:'ink',x:e.x+(Math.random()-.5)*30,y:e.y-20,vx:0,vy:0,life:.4,r:8+Math.random()*6,col:'200,180,230',rot:0})}}
   if(e.dead){alpha=Math.max(0,Math.min(1,e.deadT/.35));if(e.spin)rot=e.spin*(.75-e.deadT);else sy=1-(1.2-e.deadT)*.5;}
   if(e.wind>0){sy=.9;rot=-e.face*.08;}
   if(e.stun>0&&!e.dead)rot=e.face*.15;
