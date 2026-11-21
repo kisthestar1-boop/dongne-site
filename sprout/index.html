@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
-<title>새싹 원정대 v4.5</title>
+<title>새싹 원정대 v4.6</title>
 <meta name="theme-color" content="#2f4a2c">
 <style>
 :root{--ink:#3a2f22;--cream:#fbf5e6}
@@ -67,7 +67,7 @@ addEventListener('resize',fit);fit();
 /* ---------- 이미지 ---------- */
 const IMG={};const NAMES=['sprout','hedgehog','fox','bunny','owl','frog','sheep','baker','sprite_e0','sprite_e1','sprite_e2','sprite_e3','boss','bg_forest','p_idle','p_run','p_swing','p_jump','p_cast','fx_leaf','fox_idle','fox_shoot','bunny_idle','bunny_heal','hedgehog_idle','hedgehog_atk','sheep_idle','sheep_atk','ground','plat','bg_village','bg_marsh','m_e0','m_e1','m_e2','m_e3','boss2','it_bread','it_clover','it_mush','it_star','it_twig','it_seed','it_chest','it_jar','owl_idle','owl_cast','frog_idle','frog_play','baker','rival','thief','castle_me','castle_foe','fg1','fg2','fg3','vfx_slash','vfx_heal','vfx_hit','vfx_lvup','vfx_star','vfx_leaf','fox_w1','fox_w2','fox_w3','fox_a','sheep_w1','sheep_w2','sheep_w3','sheep_a','bunny_w1','bunny_w2','bunny_w3','bunny_a','owl_w1','owl_w2','owl_w3','owl_a','dmg_n','dmg_c','board','chest','trophy','bg_duel','bg_wide','bg_desert','bg_blossom','bg_world','b_fox','b_sheep','b_bunny','b_hedgehog','b_owl','b_frog','b_ice','b_spire','tw_me','tw_foe','hb0','hb1','hb2','hb3','frost_h0','frost_h1','frost_h2','frost_h3','thief_h0','thief_h1','thief_h2','thief_h3','baker_h0','baker_h1','baker_h2','baker_h3','p_run2','p_k1','p_k2','p_k3','p_k4','p_k5','p_rc0','p_rc1','p_rc2','p_rc3','p_rc4','p_rc5','p_rc6','p_rc7','p_rt0','p_rt1','p_rt2','p_rt3','p_rt4','p_rt5','p_rt6','p_rt7','p_jc','p_jr','p_jf','p_jl','bg_canyon','castle_lava','castle_ghost','jg_dragon','jg_icedragon','bush','heal_fruit'];
 let loaded=0,loadedS=0;const NSM=[...new Set(NAMES.filter(n=>!n.startsWith('bg_')))],NBG=[...new Set(NAMES.filter(n=>n.startsWith('bg_')))];
-function ldImg(n){const i=IMG[n];if(i.src)return;i.src='img/'+n+(n.startsWith('bg_')?'.jpg':'.webp')+'?v=5'}
+function ldImg(n){const i=IMG[n];if(i.src)return;i.src='img/'+n+(n.startsWith('bg_')?'.jpg':'.webp')+'?v=6'}
 [...NSM,...NBG].forEach(n=>{const i=new Image(),sm=!n.startsWith('bg_');i.onload=i.onerror=()=>{loaded++;if(sm){loadedS++;if(loadedS>=NSM.length)NBG.forEach(ldImg)}};IMG[n]=i;});
 NSM.forEach(ldImg);['bg_duel','bg_village'].forEach(ldImg);setTimeout(()=>NBG.forEach(ldImg),6000);
 function mapsReady(){let ok=loadedS>=NSM.length;const pm=DU&&DU.pendM,need=[pm==='rpg'?MAPS.findIndex(m=>m.only==='rpg'):pm==='lol'&&MAPS.findIndex(m=>m.only==='lol')>=0?MAPS.findIndex(m=>m.only==='lol'):(SV.map||0),0];MAPS.forEach((m,i)=>{ldImg(m.img);if(need.includes(i)&&!IMG[m.img].complete)ok=false});return ok}
@@ -1328,7 +1328,7 @@ function drawTitle(dt){
  button(W-232,H-58,104,40,'📖 도감',()=>{scene='book'},'#cfe7b8');
  button(W-120,H-58,104,40,SV.mute?'🔇 음악':'🎵 음악',()=>{SV.mute=!SV.mute;save();if(SV.mute)bgmStop();else bgmStart()},'#e7e0f6');
  btns.unshift({x:0,y:0,w:W,h:H,cb:startGame});
- ctx.fillStyle='rgba(58,41,30,.7)';ctx.font='bold 12px system-ui';ctx.fillText('v4.5 · 선명한 그림 시험판 · 효과음 Kenney (CC0)',14,H-14);
+ ctx.fillStyle='rgba(58,41,30,.7)';ctx.font='bold 12px system-ui';ctx.fillText('v4.6 · 선명한 그림 시험판 · 효과음 Kenney (CC0)',14,H-14);
  if(loaded<NAMES.length){ctx.fillStyle='#fff';ctx.font='bold 13px system-ui';ctx.fillText('그림 불러오는 중… '+loaded+'/'+NAMES.length,14,24)}
  // 꽃잎 (천천히)
  for(let i=0;i<22;i++){const sp=18+(i%5)*6,x=((i*137+titleT*sp*1.4)%(W+80))-40,y=((i*89+titleT*(sp+10))%(H+60))-30;ctx.save();ctx.translate(x,y);ctx.rotate(titleT*.8+i);ctx.fillStyle=i%3?'rgba(255,214,228,.75)':'rgba(255,240,200,.7)';ctx.beginPath();ctx.ellipse(0,0,6,3,0,0,7);ctx.fill();ctx.restore()}
