@@ -628,7 +628,7 @@ const ECARD={
 };
 let DU=null;
 function duelDeck(){return SV.friends.slice().sort((a,b)=>(SV.party.includes(b)?1:0)-(SV.party.includes(a)?1:0)).slice(0,5)}
-const DMODE={cmd:['🏰','진영 대전','건물을 지어 군대를 보내 서리의 성을 무너뜨려요','캐슬파이트 방식'],rpg:['🧭','모험','맵을 돌아다니며 사냥하고 퀘스트를 깨고 서리를 물리쳐요','워3 롤플레잉 방식'],grow:['🌱','키우기','몰려오는 물결을 막으며 끝없이 성장해요','방치형 키우기 방식'],hero:['🎮','영웅 대전','',''],luck:['🎲','운빨 소환','','']};const DMSEL=['story','rpg','lol','cmd','fps','grow'];DMODE.lol=['⚔','협곡 대전','세 갈래 길에서 병사들과 함께 포탑을 부수고 정글을 돌며 영웅으로 싸워요','롤 방식'];
+const DMODE={cmd:['🏰','진영 대전','건물을 지어 군대를 보내 서리의 성을 무너뜨려요','캐슬파이트 방식'],rpg:['🧭','모험','맵을 돌아다니며 사냥하고 퀘스트를 깨고 서리를 물리쳐요','워3 롤플레잉 방식'],grow:['🌱','키우기','몰려오는 물결을 막으며 끝없이 성장해요','방치형 키우기 방식'],hero:['🎮','영웅 대전','',''],luck:['🎲','운빨 소환','','']};const DMSEL=['story','rpg','lol'];DMODE.lol=['⚔','협곡 대전','세 갈래 길에서 병사들과 함께 포탑을 부수고 정글을 돌며 영웅으로 싸워요','롤 방식'];
 const JG=[[.37,0,['e1','e3']],[.37,1,['e0','e3']],[.63,0,['m1','m3']],[.63,1,['m1','m2']],[.5,0,['m0'],1],[.5,1,['e2'],1]];
 function jgSpawn(j){const D=DU,q=JG[j],LY=LANEY(),cx=DW()*q[0],cy=MAPS[D.map].lanes?FY0+WH()*(q[1]?.86:.14):(LY[q[1]]+LY[q[1]+1])/2+14;q[2].forEach((k,i)=>{const ox=(i-(q[2].length-1)/2)*34;duelSpawn(-1,k,{side:-1,x:cx+ox+26,y:cy,r:1});const u=D.units[D.units.length-1];u.y=cy;u.camp={x:cx+ox,y:cy,i:-1};u.neu=1;u.jg=j;const m=1.4+D.t/120;u.hp=u.hpMax=u.hpMax*m*(q[3]?5:1.6);u.dmg*=m*(q[3]?1.5:1);if(q[3]){u.elite=1;u.big=1;u.rad*=1.5}})}
 function lolSetup(){const D=DU;SV.rpg=true;D.tl=360;D.deck.slice(0,3).forEach((k,r)=>duelBuild(1,k,1,r));const pl=D.pool;for(let r=0;r<3;r++)duelBuild(-1,pl[r%pl.length],1,r);D.jg=JG.map(()=>({t:0}));JG.forEach((q,j)=>jgSpawn(j));D.en=10}
@@ -996,7 +996,7 @@ function drawDuel(dt){const D=DU;btns=[];
    ctx.font='bold 11px system-ui';ctx.fillStyle='#8a6a4a';ctx.fillText(q[3],x+cw/2,y+ch-34);if(k==='grow'&&SV.growBest){ctx.fillStyle='#5e8f4a';ctx.fillText('최고 '+SV.growBest+'번째 물결 · 씨앗 '+(SV.seeds||0),x+cw/2,y+ch-16)}if(k==='rpg'&&SV.rpgBest){ctx.fillStyle='#5e8f4a';ctx.fillText('최고 기록 '+Math.floor(SV.rpgBest/60)+'분 '+SV.rpgBest%60+'초',x+cw/2,y+ch-16)}
    if(last){ctx.fillStyle='#e0a53a';roundRect(x+cw-62,y-9,58,20,10);ctx.fill();ctx.font='900 11px system-ui';ctx.fillStyle='#fff';ctx.fillText('지난번',x+cw-33,y+5)}});
   {const n=MAPS.filter((m,i)=>mapOk(i)&&!m.only).length,bw=330,bx=W/2-bw/2,by=y+ch+12;if(n>1){ctx.fillStyle='rgba(50,32,14,.9)';roundRect(bx,by,bw,34,17);ctx.fill();ctx.strokeStyle='#e0a53a';ctx.lineWidth=2;roundRect(bx,by,bw,34,17);ctx.stroke();ctx.font='900 14px system-ui';ctx.fillStyle='#fff2c0';ctx.fillText('🗺 맵: '+MAPS[D.map].n+'  ▸ 바꾸기',W/2,by+23);btns.push({x:bx,y:by-4,w:bw,h:42,cb:()=>{let i=DU.map;do{i=(i+1)%MAPS.length}while(!mapOk(i)||MAPS[i].only);DU.map=i;SV.map=i;DU.cam=0;save();SFX.get()}})}}
-  ctx.font='bold 13px system-ui';ctx.fillStyle='#fff2c0';if(MAPS.filter((m,i)=>mapOk(i)).length<2)ctx.fillText('여섯 가지를 다 해 보고 제일 재미있는 걸로 키워 가요',W/2,y+ch+34);ctx.textAlign='left';return}
+  ctx.font='bold 13px system-ui';ctx.fillStyle='#fff2c0';if(MAPS.filter((m,i)=>mapOk(i)).length<2)ctx.fillText('세 가지를 다 해 보고 제일 재미있는 걸로 키워 가요',W/2,y+ch+34);ctx.textAlign='left';return}
  if(D.done&&D.T>1.5){const R=D.done;ctx.fillStyle='rgba(30,40,25,.45)';ctx.fillRect(0,0,W,H);panel(W/2-240,90,480,320);btns=[];ctx.textAlign='center';
   ctx.font='900 34px system-ui';ctx.fillStyle=R.win?'#5e8f4a':'#a85a5a';ctx.fillText(R.mz?(R.win?'🌙 미로 '+(R.lv+1)+'단계 탈출!':'별똥별에 쓰러졌어요'):R.rpgm?'🧭 모험 완료! 서리를 물리쳤어요':R.grow?'🌱 '+R.wave+'번째 물결까지 막았어요':R.win?'대전 승리!':'아쉽게 졌어요',W/2,148);
   ctx.font='bold 16px system-ui';ctx.fillStyle='#3a2f22';ctx.fillText('🪙 +'+R.gold+(R.win?'   ·   🏰 영토 +1칸 (총 '+SV.land+'칸)':''),W/2,192);
@@ -1287,7 +1287,7 @@ function drawTitle(dt){
  button(W-232,H-58,104,40,'📖 도감',()=>{scene='book'},'#cfe7b8');
  button(W-120,H-58,104,40,SV.mute?'🔇 음악':'🎵 음악',()=>{SV.mute=!SV.mute;save();if(SV.mute)bgmStop();else bgmStart()},'#e7e0f6');
  btns.unshift({x:0,y:0,w:W,h:H,cb:startGame});
- ctx.fillStyle='rgba(58,41,30,.7)';ctx.font='bold 12px system-ui';ctx.fillText('v3.8 · 육성 시험판 · 효과음 Kenney (CC0)',14,H-14);
+ ctx.fillStyle='rgba(58,41,30,.7)';ctx.font='bold 12px system-ui';ctx.fillText('v3.9 · 육성 시험판 · 효과음 Kenney (CC0)',14,H-14);
  if(loaded<NAMES.length){ctx.fillStyle='#fff';ctx.font='bold 13px system-ui';ctx.fillText('그림 불러오는 중… '+loaded+'/'+NAMES.length,14,24)}
  // 꽃잎 (천천히)
  for(let i=0;i<22;i++){const sp=18+(i%5)*6,x=((i*137+titleT*sp*1.4)%(W+80))-40,y=((i*89+titleT*(sp+10))%(H+60))-30;ctx.save();ctx.translate(x,y);ctx.rotate(titleT*.8+i);ctx.fillStyle=i%3?'rgba(255,214,228,.75)':'rgba(255,240,200,.7)';ctx.beginPath();ctx.ellipse(0,0,6,3,0,0,7);ctx.fill();ctx.restore()}
